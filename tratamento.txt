@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Tratamento - Lesão por Pressão</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Lesão por Pressão</h1>
+    <p>Conteúdo educativo em enfermagem</p>
+</header>
+
+<nav>
+    <a href="index.html">Início</a>
+    <a href="tratamento.html">Tratamento</a>
+</nav>
+
+<main>
+
+<section class="card">
+    <h2>Métodos de Tratamento</h2>
+    <p>
+    O tratamento da lesão por pressão depende do estágio da lesão,
+    condições clínicas do paciente e avaliação multiprofissional.
+    </p>
+</section>
+
+<section class="card">
+    <h3>1. Alívio da Pressão</h3>
+    <p>
+    Mudança de decúbito a cada 2 horas, uso de colchões especiais e superfícies de redistribuição de pressão.
+    </p>
+</section>
+
+<section class="card">
+    <h3>2. Desbridamento</h3>
+    <p>
+    Remoção de tecido desvitalizado por métodos autolítico, mecânico, enzimático ou cirúrgico.
+    </p>
+</section>
+
+<section class="card">
+    <h3>3. Curativos</h3>
+    <p>
+    Selecionados conforme o tipo de tecido e exsudato: hidrocoloides, espumas, alginatos ou terapia por pressão negativa.
+    </p>
+</section>
+
+<section class="card">
+    <h3>4. Suporte Nutricional</h3>
+    <p>
+    Avaliação nutricional é fundamental para cicatrização tecidual adequada.
+    </p>
+</section>
+
+</main>
+
+</body>
+</html>
