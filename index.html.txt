@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Educação em Enfermagem - Lesão por Pressão</title>
+<style>
+body {
+    font-family: Arial;
+    margin: 40px;
+    background-color: #f0f4f8;
+}
+h1 {
+    color: #0a3d62;
+}
+h2 {
+    color: #1e3799;
+}
+section {
+    margin-bottom: 30px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Educação em Enfermagem</h1>
+<p>Site educativo sobre prevenção de lesão por pressão.</p>
+
+<section>
+<h2>O que é Lesão por Pressão?</h2>
+<p>
+Segundo o National Pressure Injury Advisory Panel, trata-se de dano localizado
+na pele e/ou tecido subjacente geralmente sobre proeminência óssea,
+resultante de pressão prolongada.
+</p>
+</section>
+
+<section>
+<h2>Fatores de Risco</h2>
+<ul>
+<li>Imobilidade</li>
+<li>Idade avançada</li>
+<li>Desnutrição</li>
+<li>Doenças crônicas</li>
+</ul>
+</section>
+
+<section>
+<h2>Prevenção</h2>
+<ul>
+<li>Mudança de decúbito a cada 2 horas</li>
+<li>Avaliação com Escala de Braden</li>
+<li>Hidratação da pele</li>
+<li>Superfícies especiais de suporte</li>
+</ul>
+</section>
+
+</body>
+</html>
