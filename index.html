@@ -69,10 +69,10 @@ nav a:hover {
 }
 
 main {
-    max-width: 1000px;
-    margin: 40px auto;
+    max-width: 1100px;
+    margin: 60px auto;
     background-color: white;
-    padding: 40px;
+    padding: 20px;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
@@ -106,12 +106,20 @@ footer {
     margin-top: 40px;
     font-size: 14px;
 }
-.card {
-    background-color: #f9fbff;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    .card {
+    background: white;
+    padding: 30px;
+    margin-bottom: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+}
+
+
 
 
 
@@ -144,7 +152,14 @@ footer {
     ou pressão associada ao cisalhamento.
     </p>
 
-    <img src="lesao.png" alt="Ilustração educativa sobre lesão por pressão" width="500">
+    <img src="lesao.png" alt="Ilustração educativa sobre lesão por pressão" >
+    img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin-top: 20px;
+    display: block;
+}
 </section>
 
 <section id="classificacao" class="card">
@@ -171,6 +186,7 @@ footer {
 
 </body>
 </html>
+
 
 
 
