@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avaliação - Lesão por Pressão</title>
+
+  <!-- pode manter seu css global, mas vamos isolar tudo nesta página -->
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* =========================
+       ISOLAMENTO: só AVALIAÇÃO
+       ========================= */
+    body.avaliacao {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #eef2f6;
+      color: #1a1a1a;
+    }
+
+    body.avaliacao header {
+      background: linear-gradient(90deg, #0b3d91, #0f5bd3);
+      color: #fff;
+      text-align: center;
+      padding: 40px 16px 24px;
+    }
+    body.avaliacao header h1 {
+      margin: 0;
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    body.avaliacao header p {
+      margin: 10px 0 0;
+      font-size: 14px;
+      opacity: 0.95;
+    }
+
+    body.avaliacao .topnav {
+      background: #082c63;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    }
+    body.avaliacao .topnav a {
+      color: #fff !important;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+    body.avaliacao .topnav a:hover {
+      background: rgba(255,255,255,0.12);
+    }
+
+    body.avaliacao main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 18px 14px 44px;
+    }
+
+    body.avaliacao .card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 18px 16px;
+      margin: 14px 0;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+
+    body.avaliacao .card h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      font-weight: 900;
+      color: #0c1b3a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    body.avaliacao .bar {
+      width: 4px;
+      height: 22px;
+      background: #0b3d91;
+      border-radius: 10px;
+      display: inline-block;
+      flex: 0 0 auto;
+    }
+
+    body.avaliacao .muted {
+      margin: 0 0 12px;
+      color: #444;
+      line-height: 1.6;
+      font-size: 14.5px;
+    }
+
+    /* Form */
+    body.avaliacao .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 8px;
+    }
+    @media (max-width: 780px) {
+      body.avaliacao .form-grid { grid-template-columns: 1fr; }
+      body.avaliacao header h1 { font-size: 26px; }
+    }
+
+    body.avaliacao label {
+      display: block;
+      font-weight: 700;
+      margin: 8px 0 6px;
+      color: #122;
+      font-size: 14px;
+    }
+
+    body.avaliacao input,
+    body.avaliacao select,
+    body.avaliacao textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.14);
+      outline: none;
+      font-size: 14.5px;
+      background: #fff;
+    }
+    body.avaliacao textarea {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+    body.avaliacao input:focus,
+    body.avaliacao select:focus,
+    body.avaliacao textarea:focus {
+      border-color: #0f5bd3;
+      box-shadow: 0 0 0 4px rgba(15,91,211,0.12);
+    }
+
+    /* Stars */
+    body.avaliacao .stars-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    body.avaliacao .stars {
+      display: inline-flex;
+      gap: 6px;
+      user-select: none;
+    }
+    body.avaliacao .star {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      border: 1px solid rgba(0,0,0,0.10);
+      background: #f6f7fb;
+      transition: transform .12s ease, background .12s ease;
+      font-size: 18px;
+    }
+    body.avaliacao .star:hover {
+      transform: translateY(-1px);
+      background: #eef3ff;
+    }
+    body.avaliacao .star.active {
+      background: #ffe8a3;
+      border-color: rgba(0,0,0,0.15);
+    }
+    body.avaliacao .score {
+      font-weight: 800;
+      color: #0b3d91;
+      font-size: 14px;
+    }
+
+    /* Button */
+    body.avaliacao .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    body.avaliacao button {
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 14px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    body.avaliacao .btn-primary {
+      background: #0f5bd3;
+      color: #fff;
+    }
+    body.avaliacao .btn-primary:hover { filter: brightness(0.95); }
+    body.avaliacao .btn-ghost {
+      background: #eef2f6;
+      color: #0c1b3a;
+      border: 1px solid rgba(0,0,0,0.10);
+    }
+    body.avaliacao .btn-ghost:hover { background: #e6edf7; }
+
+    /* Preview / result */
+    body.avaliacao .result {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      background: #f7fbff;
+      border: 1px solid rgba(15,91,211,0.16);
+      display: none;
+      line-height: 1.6;
+      font-size: 14.5px;
+    }
+
+    footer.avaliacao-footer {
+      text-align: center;
+      padding: 18px 12px;
+      font-size: 13px;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+
+<body class="avaliacao">
+
+  <header>
+    <h1>Avaliação do Site e do Nosso Produto</h1>
+    <p>Deixe seu feedback para melhorar o projeto</p>
+  </header>
+
+  <nav class="topnav">
+    <a href="index.html">Início</a>
+    <a href="nosso-produto.html">Nosso Produto</a>
+    <a href="tratamento.html">Tratamento</a>
+    <a href="impacto-economico.html">Impacto Econômico</a>
+    <a href="guia-simples.html">Guia Simples</a>
+    <a href="avaliacao.html">Avaliação</a>
+  </nav>
+
+  <main>
+
+    <section class="card">
+      <h2><span class="bar"></span>Como você avalia?</h2>
+      <p class="muted">
+        Selecione um tipo de avaliação, dê a nota em estrelas e escreva um comentário.
+        (Obs.: nesta versão, o “enviar” apenas mostra um resumo na tela. Se quiser, depois eu te passo como salvar em Google Forms.)
+      </p>
+
+      <form id="formAvaliacao" novalidate>
+        <div class="form-grid">
+          <div>
+            <label for="nome">Seu nome (opcional)</label>
+            <input id="nome" name="nome" type="text" placeholder="Ex.: Maria" />
+
+            <label for="perfil">Você é:</label>
+            <select id="perfil" name="perfil">
+              <option value="Leigo(a)">Leigo(a) / Familiar</option>
+              <option value="Estudante">Estudante</option>
+              <option value="Profissional">Profissional de saúde</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="alvo">O que você está avaliando?</label>
+            <select id="alvo" name="alvo" required>
+              <option value="Site (geral)">Site (geral)</option>
+              <option value="Nosso Produto">Nosso Produto</option>
+              <option value="Tratamento">Página Tratamento</option>
+              <option value="Guia Simples">Guia Simples</option>
+              <option value="Impacto Econômico">Impacto Econômico</option>
+            </select>
+
+            <label>Nota (1 a 5):</label>
+            <div class="stars-wrap">
+              <div class="stars" id="stars" aria-label="Avaliação por estrelas">
+                <div class="star" data-v="1" title="1 estrela">★</div>
+                <div class="star" data-v="2" title="2 estrelas">★</div>
+                <div class="star" data-v="3" title="3 estrelas">★</div>
+                <div class="star" data-v="4" title="4 estrelas">★</div>
+                <div class="star" data-v="5" title="5 estrelas">★</div>
+              </div>
+              <span class="score" id="scoreText">Selecione uma nota</span>
+            </div>
+
+            <!-- valor real -->
+            <input type="hidden" id="nota" name="nota" value="0" />
+          </div>
+        </div>
+
+        <label for="comentario">Comentário (o que gostou / o que melhorar)</label>
+        <textarea id="comentario" name="comentario" placeholder="Ex.: O site é fácil de entender, mas eu gostaria de mais imagens no Guia Simples..."></textarea>
+
+        <div class="actions">
+          <button class="btn-primary" type="submit">Enviar avaliação</button>
+          <button class="btn-ghost" type="button" id="btnLimpar">Limpar</button>
+        </div>
+
+        <div class="result" id="resultado"></div>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="avaliacao-footer">© 2026 - Projeto Integrador</footer>
+
+  <script>
+    (function () {
+      const stars = Array.from(document.querySelectorAll('#stars .star'));
+      const notaInput = document.getElementById('nota');
+      const scoreText = document.getElementById('scoreText');
+      const form = document.getElementById('formAvaliacao');
+      const resultado = document.getElementById('resultado');
+      const btnLimpar = document.getElementById('btnLimpar');
+
+      function setRating(v) {
+        notaInput.value = String(v);
+        stars.forEach(s => {
+          const sv = Number(s.dataset.v);
+          s.classList.toggle('active', sv <= v);
+        });
+        scoreText.textContent = v ? `${v} / 5` : 'Selecione uma nota';
+      }
+
+      stars.forEach(s => {
+        s.addEventListener('click', () => setRating(Number(s.dataset.v)));
+      });
+
+      btnLimpar.addEventListener('click', () => {
+        form.reset();
+        setRating(0);
+        resultado.style.display = 'none';
+        resultado.textContent = '';
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const nome = document.getElementById('nome').value.trim();
+        const perfil = document.getElementById('perfil').value;
+        const alvo = document.getElementById('alvo').value;
+        const nota = Number(notaInput.value || 0);
+        const comentario = document.getElementById('comentario').value.trim();
+
+        if (!nota) {
+          alert('Por favor, selecione uma nota em estrelas (1 a 5).');
+          return;
+        }
+
+        // Resultado (sem backend)
+        const quem = nome ? `${nome} (${perfil})` : `Anônimo(a) (${perfil})`;
+
+        resultado.innerHTML = `
+          <strong>✅ Avaliação registrada (prévia):</strong><br>
+          <strong>Quem:</strong> ${quem}<br>
+          <strong>Item avaliado:</strong> ${alvo}<br>
+          <strong>Nota:</strong> ${nota} / 5<br>
+          <strong>Comentário:</strong> ${comentario ? comentario : '<em>sem comentário</em>'}
+          <br><br>
+          <em>Se você quiser salvar de verdade, posso integrar com Google Forms.</em>
+        `;
+        resultado.style.display = 'block';
+
+        // opcional: limpar após enviar
+        // form.reset(); setRating(0);
+      });
+
+      // Inicial
+      setRating(0);
+    })();
+  </script>
+</body>
+</html>
