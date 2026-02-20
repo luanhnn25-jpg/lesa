@@ -1,7 +1,9 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background-color: #f4f6f9;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-color: #f4f6f9;
+
+  padding-top: 80px; /* ✅ espaço para o menu fixo não cobrir o título */
 }
 
 header {
@@ -9,23 +11,50 @@ header {
     color: white;
     padding: 40px;
     text-align: center;
+nav{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+
+  background: rgba(10, 35, 90, 0.92);
+  backdrop-filter: blur(8px);
+
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+
+  padding: 12px 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
 }
 
-nav {
-    background-color: #082c63;
-    padding: 15px;
-    text-align: center;
+nav a{
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  white-space: nowrap;
 }
 
-nav a {
-    color: white;
-    text-decoration: none;
-    margin: 0 20px;
-    font-weight: 500;
+nav a:hover{
+  background: rgba(255,255,255,0.12);
 }
 
-nav a:hover {
-    color: #4da6ff;
+/* ✅ No celular: o menu vira “deslizável” e não quebra */
+@media (max-width: 768px){
+  body{ padding-top: 92px; }
+
+  nav{
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  nav a{ font-size: 14px; }
 }
 
 main {
