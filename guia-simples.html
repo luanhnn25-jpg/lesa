@@ -1,152 +1,201 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Guia Simples - Lesão por Pressão</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guia Simples - Lesão por Pressão</title>
 
-<style>
+  <!-- mantém seu CSS geral -->
+  <link rel="stylesheet" href="style.css" />
 
-/* =========================
-   ESTILO EXCLUSIVO DO GUIA
-   ========================= */
+  <!-- CSS isolado: só afeta o guia -->
+  <style>
+    body.guia{
+      margin:0;
+      background:#eef2f6;
+      font-family: Arial, sans-serif;
+      color:#1a1a1a;
+    }
 
-body{
-  background: #f4f6f9;
-}
+    /* Cabeçalho azul igual ao seu padrão */
+    body.guia header{
+      background: linear-gradient(90deg, #0b3d91, #0f5bd3);
+      color:#fff;
+      text-align:center;
+      padding: 42px 16px 28px;
+    }
+    body.guia header h1{
+      margin:0;
+      font-size: 44px;
+      letter-spacing: -0.5px;
+      font-weight: 800;
+    }
+    body.guia header p{
+      margin: 10px 0 0;
+      font-size: 18px;
+      opacity: 0.95;
+    }
 
-.container{
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 20px;
-}
+    /* Menu azul escuro (não fica “link solto”) */
+    body.guia nav{
+      background:#082c63;
+      position: sticky; /* fica bonito ao rolar */
+      top:0;
+      z-index: 999;
+      display:flex;
+      justify-content:center;
+      gap: 26px;
+      padding: 12px 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+    }
+    body.guia nav a{
+      color:#fff !important;
+      text-decoration:none;
+      font-weight:700;
+      font-size:16px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      transition: .2s ease;
+    }
+    body.guia nav a:hover{
+      background: rgba(255,255,255,0.12);
+    }
 
-.card{
-  background: rgba(255,255,255,0.85);
-  border-radius: 20px;
-  padding: 22px;
-  margin-bottom: 25px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-  border: 1px solid rgba(0,0,0,0.05);
-}
+    /* Área do conteúdo */
+    body.guia main{
+      max-width: 1050px;
+      margin: 26px auto;
+      padding: 0 16px 40px;
+    }
 
-.card h2{
-  font-size: 28px;
-  margin-bottom: 12px;
-  color: #111;
-}
+    /* Cards estilo “print bom”: cinza claro + sombra suave */
+    body.guia .card{
+      background: #f3f5f7;
+      border-radius: 22px;
+      padding: 24px 26px;
+      margin: 18px 0;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
 
-.card p, .card li{
-  font-size: 18px;
-  line-height: 1.6;
-  color: #222;
-}
+    body.guia .card h2{
+      margin: 0 0 10px;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
 
-.card ul{
-  padding-left: 22px;
-  margin-top: 10px;
-}
+    body.guia .card p,
+    body.guia .card li{
+      font-size: 18px;
+      line-height: 1.65;
+      color:#2b2b2b;
+    }
 
-/* Blocos lado a lado */
-.grid-duplo{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
+    body.guia ul{
+      margin: 10px 0 0;
+      padding-left: 22px;
+    }
 
-/* Destaque amarelo */
-.destaque{
-  border-left: 8px solid #f0b400;
-  background: #fffdf6;
-}
+    /* Blocos finais lado a lado (igual ao seu print bom) */
+    body.guia .grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 10px;
+    }
 
-/* RESPONSIVO */
-@media(max-width:768px){
-  .grid-duplo{
-    grid-template-columns: 1fr;
-  }
+    /* Card “Importante” com faixa amarela */
+    body.guia .importante{
+      background: #fff6e0;
+      border-left: 10px solid #f0b400;
+    }
 
-  .card h2{
-    font-size: 22px;
-  }
+    body.guia footer{
+      text-align:center;
+      color:#333;
+      padding: 22px 12px;
+      font-size: 14px;
+      opacity: 0.85;
+    }
 
-  .card p, .card li{
-    font-size: 16px;
-  }
-}
-
-</style>
+    /* Mobile: mantém tudo bonito e legível */
+    @media (max-width: 768px){
+      body.guia header h1{ font-size: 32px; }
+      body.guia header p{ font-size: 16px; }
+      body.guia .card h2{ font-size: 24px; }
+      body.guia .card p,
+      body.guia .card li{ font-size: 16px; }
+      body.guia .grid2{ grid-template-columns: 1fr; }
+      body.guia nav{ gap: 10px; flex-wrap: wrap; }
+    }
+  </style>
 </head>
 
-<body>
+<body class="guia">
 
-<header>
-  <h1>Lesão por Pressão</h1>
-  <p>Guia simples para quem cuida</p>
-</header>
+  <header>
+    <h1>Lesão por Pressão</h1>
+    <p>Guia simples para quem cuida</p>
+  </header>
 
-<nav>
-  <a href="index.html">Início</a>
-  <a href="tratamento.html">Página Técnica</a>
-</nav>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="tratamento.html">Página Técnica</a>
+  </nav>
 
-<main class="container">
-
-  <section class="card">
-    <h2>O que é essa ferida?</h2>
-    <p>
-      É uma ferida que aparece quando a pessoa fica muito tempo na mesma posição.
-      A pele fica pressionada contra o colchão ou cadeira e começa a machucar.
-    </p>
-  </section>
-
-  <section class="card">
-    <h2>Por que isso acontece?</h2>
-    <p>
-      Quando a pessoa não consegue se mexer sozinha, o peso do corpo pressiona
-      sempre o mesmo local da pele. Isso pode causar a lesão.
-    </p>
-  </section>
-
-  <section class="card">
-    <h2>O que fazer em casa?</h2>
-    <ul>
-      <li>Mudar a posição da pessoa a cada 2 horas.</li>
-      <li>Manter a pele limpa e seca.</li>
-      <li>Evitar que a pele fique úmida.</li>
-      <li>Não massagear a parte vermelha.</li>
-      <li>Seguir orientação do profissional de saúde.</li>
-    </ul>
-  </section>
-
-  <section class="grid-duplo">
+  <main>
 
     <section class="card">
-      <h2>Quando procurar ajuda?</h2>
-      <ul>
-        <li>Se a ferida aumentar.</li>
-        <li>Se sair pus ou cheiro forte.</li>
-        <li>Se a pessoa tiver febre.</li>
-        <li>Se houver muita dor.</li>
-      </ul>
-    </section>
-
-    <section class="card destaque">
-      <h2>Importante</h2>
+      <h2>O que é essa ferida?</h2>
       <p>
-        Este guia ajuda, mas não substitui avaliação médica ou de enfermagem.
-        Sempre procure orientação profissional.
+        É uma ferida que aparece quando a pessoa fica muito tempo na mesma posição.
+        A pele fica pressionada contra o colchão ou cadeira e começa a machucar.
       </p>
     </section>
 
-  </section>
+    <section class="card">
+      <h2>Por que isso acontece?</h2>
+      <p>
+        Quando a pessoa não consegue se mexer sozinha, o peso do corpo pressiona sempre o mesmo local da pele.
+        Isso pode causar a lesão.
+      </p>
+    </section>
 
-</main>
+    <section class="card">
+      <h2>O que fazer em casa?</h2>
+      <ul>
+        <li>Mudar a posição da pessoa a cada 2 horas.</li>
+        <li>Manter a pele limpa e seca.</li>
+        <li>Evitar que a pele fique úmida.</li>
+        <li>Não massagear a parte vermelha.</li>
+        <li>Seguir orientação do profissional de saúde.</li>
+      </ul>
+    </section>
 
-<footer>
-  © 2026 - Projeto Integrador
-</footer>
+    <section class="grid2">
+      <section class="card">
+        <h2>Quando procurar ajuda?</h2>
+        <ul>
+          <li>Se a ferida aumentar.</li>
+          <li>Se sair pus ou cheiro forte.</li>
+          <li>Se a pessoa tiver febre.</li>
+          <li>Se houver muita dor.</li>
+        </ul>
+      </section>
+
+      <section class="card importante">
+        <h2>Importante</h2>
+        <p>
+          Este guia ajuda, mas não substitui avaliação médica ou de enfermagem.
+          Sempre procure orientação profissional.
+        </p>
+      </section>
+    </section>
+
+  </main>
+
+  <footer>© 2026 - Projeto Integrador</footer>
 
 </body>
 </html>
