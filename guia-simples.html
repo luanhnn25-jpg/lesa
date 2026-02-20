@@ -1,81 +1,151 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Guia Simples - Lesão por Pressão</title>
 <link rel="stylesheet" href="style.css">
+
+<style>
+
+/* =========================
+   ESTILO EXCLUSIVO DO GUIA
+   ========================= */
+
+body{
+  background: #f4f6f9;
+}
+
+.container{
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.card{
+  background: rgba(255,255,255,0.85);
+  border-radius: 20px;
+  padding: 22px;
+  margin-bottom: 25px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.card h2{
+  font-size: 28px;
+  margin-bottom: 12px;
+  color: #111;
+}
+
+.card p, .card li{
+  font-size: 18px;
+  line-height: 1.6;
+  color: #222;
+}
+
+.card ul{
+  padding-left: 22px;
+  margin-top: 10px;
+}
+
+/* Blocos lado a lado */
+.grid-duplo{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Destaque amarelo */
+.destaque{
+  border-left: 8px solid #f0b400;
+  background: #fffdf6;
+}
+
+/* RESPONSIVO */
+@media(max-width:768px){
+  .grid-duplo{
+    grid-template-columns: 1fr;
+  }
+
+  .card h2{
+    font-size: 22px;
+  }
+
+  .card p, .card li{
+    font-size: 16px;
+  }
+}
+
+</style>
 </head>
 
 <body>
 
 <header>
-    <h1>Lesão por Pressão</h1>
-    <p>Guia simples para quem cuida</p>
+  <h1>Lesão por Pressão</h1>
+  <p>Guia simples para quem cuida</p>
 </header>
 
 <nav>
-    <a href="index.html">Início</a>
-    <a href="tratamento.html">Página Técnica</a>
+  <a href="index.html">Início</a>
+  <a href="tratamento.html">Página Técnica</a>
 </nav>
 
-<main>
+<main class="container">
 
-<section class="card">
+  <section class="card">
     <h2>O que é essa ferida?</h2>
     <p>
-        É uma ferida que aparece quando a pessoa fica muito tempo
-        na mesma posição. A pele fica pressionada contra o colchão
-        ou cadeira e começa a machucar.
+      É uma ferida que aparece quando a pessoa fica muito tempo na mesma posição.
+      A pele fica pressionada contra o colchão ou cadeira e começa a machucar.
     </p>
-</section>
+  </section>
 
-<section class="card">
+  <section class="card">
     <h2>Por que isso acontece?</h2>
     <p>
-        Quando a pessoa não consegue se mexer sozinha,
-        o peso do corpo pressiona sempre o mesmo local da pele.
-        Isso pode causar a lesão.
+      Quando a pessoa não consegue se mexer sozinha, o peso do corpo pressiona
+      sempre o mesmo local da pele. Isso pode causar a lesão.
     </p>
-</section>
+  </section>
 
-<section class="card">
+  <section class="card">
     <h2>O que fazer em casa?</h2>
     <ul>
-        <li>Mudar a posição da pessoa a cada 2 horas.</li>
-        <li>Manter a pele limpa e seca.</li>
-        <li>Evitar que a pele fique úmida.</li>
-        <li>Não massagear a parte vermelha.</li>
-        <li>Seguir orientação do profissional de saúde.</li>
+      <li>Mudar a posição da pessoa a cada 2 horas.</li>
+      <li>Manter a pele limpa e seca.</li>
+      <li>Evitar que a pele fique úmida.</li>
+      <li>Não massagear a parte vermelha.</li>
+      <li>Seguir orientação do profissional de saúde.</li>
     </ul>
-</section>
+  </section>
 
-<div class="grid">
+  <section class="grid-duplo">
 
-<section class="card">
-    <h2>Quando procurar ajuda?</h2>
-    <ul>
+    <section class="card">
+      <h2>Quando procurar ajuda?</h2>
+      <ul>
         <li>Se a ferida aumentar.</li>
         <li>Se sair pus ou cheiro forte.</li>
         <li>Se a pessoa tiver febre.</li>
         <li>Se houver muita dor.</li>
-    </ul>
-</section>
+      </ul>
+    </section>
 
-<section class="card destaque">
-    <h2>Importante</h2>
-    <p>
+    <section class="card destaque">
+      <h2>Importante</h2>
+      <p>
         Este guia ajuda, mas não substitui avaliação médica ou de enfermagem.
         Sempre procure orientação profissional.
-    </p>
-</section>
+      </p>
+    </section>
 
-</div>
+  </section>
 
 </main>
 
 <footer>
-    © 2026 - Projeto Educativo em Enfermagem
+  © 2026 - Projeto Educativo em Enfermagem
 </footer>
 
 </body>
