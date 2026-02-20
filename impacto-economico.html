@@ -1,314 +1,404 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Impacto Econômico - Lesão por Pressão</title>
 
-  <!-- Seu CSS principal do site -->
+  <!-- Mantém seu CSS geral, mas será “anulado” aqui com seletores mais fortes -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Chart.js (CDN confiável) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
   <style>
-    /* ===== Layout geral desta página ===== */
-    .container { max-width: 1100px; margin: 0 auto; padding: 16px; }
-    .small { font-size: 14px; line-height: 1.6; color: #444; }
-    .muted { color: #666; }
-
-    /* Dá “respiro” entre os cards (se no seu style.css não tiver) */
-    .card { margin-bottom: 18px; }
-
-    /* ===== TABELA RESPONSIVA ===== */
-    .tableWrap{
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom: 10px; /* espaço para a barrinha de rolagem */
-    }
-    .tableWrap table{ min-width: 820px; }
-
-    /* ===== TABELA MAIS LEGÍVEL ===== */
-    .tabela-custo{
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
+    /* =========================
+       ISOLAMENTO (só IMPACTO)
+       ========================= */
+    body.impacto{
+      margin:0;
+      background:#eef2f6;
+      font-family: Arial, sans-serif;
+      color:#1a1a1a;
     }
 
-    .tabela-custo th{
-      text-align: left;
-      padding: 14px 12px;
-      font-weight: 700;
-      background: #173b73;
-      color: #fff;
-      font-size: 14px;
-      letter-spacing: 0.2px;
+    body.impacto header{
+      background: linear-gradient(90deg, #0b3d91, #0f5bd3);
+      color:#fff;
+      text-align:center;
+      padding: 44px 16px 28px;
+    }
+    body.impacto header h1{
+      margin:0;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      line-height: 1.15;
+    }
+    body.impacto header p{
+      margin: 10px 0 0;
+      font-size: 15px;
+      opacity: 0.95;
+    }
+
+    /* Menu do site */
+    body.impacto .topnav{
+      background:#082c63;
+      position: sticky;
+      top:0;
+      z-index: 999;
+      display:flex;
+      justify-content:center;
+      gap: 16px;
+      padding: 10px 10px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+      flex-wrap: wrap;
+    }
+    body.impacto .topnav a{
+      color:#fff !important;
+      text-decoration:none;
+      font-weight:700;
+      font-size:15px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      transition: .2s ease;
       white-space: nowrap;
     }
+    body.impacto .topnav a:hover{
+      background: rgba(255,255,255,0.12);
+    }
 
-    .tabela-custo td{
-      vertical-align: top;
-      padding: 14px 12px;
-      border-bottom: 1px solid #e7edf6;
+    body.impacto main{
+      max-width: 1100px;
+      margin: 18px auto;
+      padding: 0 16px 46px;
+    }
+
+    body.impacto .section-title{
+      font-size: 24px;
+      font-weight: 800;
+      margin: 18px 0 12px;
+      letter-spacing: -0.2px;
+      color:#0c1b3a;
+    }
+
+    body.impacto .card{
+      background: #f3f5f7;
+      border-radius: 20px;
+      padding: 20px 22px;
+      margin: 14px 0;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    body.impacto .muted{
+      color:#3d3d3d;
+      opacity: 0.9;
       font-size: 14px;
-      line-height: 1.45;
+      line-height: 1.6;
+      margin-top: 6px;
     }
 
-    .tabela-custo tr:nth-child(even) td{
-      background: #f7faff;
+    /* Tabela responsiva */
+    body.impacto .table-wrap{
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 16px;
+      margin-top: 10px;
     }
-
-    .tabela-custo td:nth-child(1){ width: 30%; font-weight: 600; }
-    .tabela-custo td:nth-child(2){ width: 18%; color: #334; }
-    .tabela-custo td:nth-child(3){ width: 16%; font-weight: 800; white-space: nowrap; }
-    .tabela-custo td:nth-child(4){ width: 36%; color: #333; }
-
-    @media (max-width: 768px){
-      .tabela-custo th, .tabela-custo td{
-        padding: 12px 10px;
-        font-size: 13px;
-      }
-      .tabela-custo td:nth-child(4){
-        min-width: 280px;
-      }
+    body.impacto table{
+      width:100%;
+      min-width: 920px;
+      border-collapse: collapse;
+      background:#fff;
+      border-radius: 16px;
+      overflow: hidden;
     }
+    body.impacto th, body.impacto td{
+      padding: 12px 12px;
+      border-bottom: 1px solid #ececec;
+      vertical-align: top;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    body.impacto th{
+      background:#0b3d91;
+      color:#fff;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    body.impacto tr:last-child td{ border-bottom: none; }
 
-    /* ===== GRÁFICO ESTÁVEL (NÃO PULA) ===== */
-    .chartWrap{
+    body.impacto td strong{ color:#0b3d91; }
+
+    /* Gráfico responsivo (sem “pulo” e sem branco gigante) */
+    body.impacto .chart-box{
+      background:#fff;
+      border-radius: 16px;
+      padding: 14px 14px 8px;
+      border: 1px solid rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    body.impacto .chart-wrap{
       position: relative;
       width: 100%;
-      height: 380px;      /* altura fixa */
-      max-height: 380px;
-      margin-top: 18px;
-    }
-    @media (max-width: 768px){
-      .chartWrap{
-        height: 320px;
-        max-height: 320px;
-      }
-    }
-    .chartWrap canvas{
-      width: 100% !important;
-      height: 100% !important;
-      display: block;
+      height: 360px;
     }
 
-    /* ===== Grid de comparação (desktop 2 colunas / mobile 1 coluna) ===== */
-    .grid2{
+    /* Bloco 2 colunas: prevenção x tratamento */
+    body.impacto .two-cols{
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 18px;
+      gap: 14px;
+      margin-top: 10px;
     }
-    @media (max-width: 900px){
-      .grid2{ grid-template-columns: 1fr; }
+    body.impacto .mini{
+      background:#fff;
+      border-radius: 16px;
+      padding: 14px 16px;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    body.impacto .mini h3{
+      margin:0 0 8px;
+      font-size: 16px;
+      font-weight: 800;
+      color:#0c1b3a;
+    }
+    body.impacto ul{
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+    body.impacto li{
+      font-size: 14px;
+      line-height: 1.55;
+      color:#2b2b2b;
     }
 
-    /* Referências */
-    .refs { font-size: 13px; line-height: 1.55; }
-    .refs a { word-break: break-word; }
+    body.impacto footer{
+      text-align:center;
+      color:#333;
+      padding: 22px 12px;
+      font-size: 14px;
+      opacity: 0.85;
+    }
+
+    @media (max-width: 900px){
+      body.impacto header h1{ font-size: 26px; }
+      body.impacto header p{ font-size: 14px; }
+      body.impacto .chart-wrap{ height: 320px; }
+      body.impacto .two-cols{ grid-template-columns: 1fr; }
+      body.impacto .section-title{ font-size: 20px; }
+    }
   </style>
 </head>
 
-<body>
+<body class="impacto">
 
-<header>
-  <h1>Impacto Econômico Hospitalar</h1>
-  <p>Custos estimados associados à Lesão por Pressão (LPP)</p>
-</header>
+  <header>
+    <h1>Impacto Econômico Hospitalar</h1>
+    <p>Custos estimados associados à Lesão por Pressão (LPP)</p>
+  </header>
 
-<nav>
-  <a href="index.html">Início</a>
-  <a href="tratamento.html">Página Técnica</a>
-  <a href="guia-simples.html">Guia Simples</a>
-  <a href="impacto-economico.html">Impacto Econômico</a>
-  <a href="nosso-produto.html">Nosso Produto</a>
-</nav>
+  <nav class="topnav">
+    <a href="index.html">Início</a>
+    <a href="tratamento.html">Página Técnica</a>
+    <a href="guia-simples.html">Guia Simples</a>
+    <a href="impacto-economico.html">Impacto Econômico</a>
+    <a href="nosso-produto.html">Nosso Produto</a>
+  </nav>
 
-<main class="container">
+  <main>
 
-  <section class="card">
-    <h2>Dados de custo </h2>
-    <p class="small muted">
-     
-    </p>
-
-    <div class="tableWrap">
-      <table class="tabela-custo">
-        <tr>
-          <th>Indicador</th>
-          <th>Unidade</th>
-          <th>Valor</th>
-          <th>Descrição</th>
-        </tr>
-
-        <tr>
-          <td>Custos diretos de curativos (todos estágios)</td>
-          <td>Por procedimento</td>
-          <td>R$ 16,41 a R$ 260,18</td>
-          <td>Materiais + mão de obra diretamente no procedimento.</td>
-        </tr>
-
-        <tr>
-          <td>Custo total de tratamento (hospitalar)</td>
-          <td>Por paciente / 6 meses</td>
-          <td>R$ 1.886,00</td>
-          <td>Média por paciente ao longo de 6 meses (inclui materiais e alguns profissionais).</td>
-        </tr>
-
-        <tr>
-          <td>LPP estágios avançados (III–IV)</td>
-          <td>Total / 104 curativos</td>
-          <td>R$ 6.828,27</td>
-          <td>Materiais consumidos (tempo médio de internação: 92 dias).</td>
-        </tr>
-
-        <tr>
-          <td>LPP estágios avançados (III–IV)</td>
-          <td>Média diária</td>
-          <td>R$ 74,22 por dia</td>
-          <td>Estimativa média diária reportada no contexto.</td>
-        </tr>
-
-        <tr>
-          <td>Caso de alta complexidade (exemplo)</td>
-          <td>Total / 189 dias</td>
-          <td>R$ 111.254,85</td>
-          <td>Inclui internação prolongada, profissionais e materiais.</td>
-        </tr>
-
-        <tr>
-          <td>Caso de alta complexidade (exemplo)</td>
-          <td>Média diária</td>
-          <td>R$ 588,65 por dia</td>
-          <td>Média diária estimada no estudo de caso.</td>
-        </tr>
-      </table>
-    </div>
-  </section>
-
-  <section class="card">
-    <h2>Comparação visual (gráfico)</h2>
-    <p class="small">
-      O gráfico compara os principais valores apresentados. Como as unidades diferem (procedimento vs dia vs 6 meses vs total),
-      a leitura deve focar na <strong>amplitude do impacto financeiro</strong>.
-    </p>
-
-    <div class="chartWrap">
-      <canvas id="graficoCusto"></canvas>
-    </div>
-  </section>
-
-  <section class="card">
-    <h2>Interpretação didática: prevenção × tratamento</h2>
-    <div class="grid2">
-      <div>
-        <h3 style="margin-top:0;">Prevenção (reduz risco e custo indireto)</h3>
-        <ul>
-          <li>Avaliação de risco e inspeção diária da pele</li>
-          <li>Reposicionamento e redução de fricção/cisalhamento</li>
-          <li>Controle de umidade e barreira cutânea</li>
-          <li>Superfícies de redistribuição de pressão quando indicadas</li>
-        </ul>
+    <div class="card">
+      <div class="section-title">Dados de custo</div>
+      <div class="muted">
+        Observação metodológica: os números abaixo vêm de fontes distintas e representam dimensões diferentes
+        (por procedimento, por período, por dia e total de caso). Use para comparação didática e discussão crítica.
       </div>
-      <div>
-        <h3 style="margin-top:0;">Tratamento (tende a elevar custo)</h3>
-        <ul>
-          <li>Curativos seriados (custos por procedimento)</li>
-          <li>Internação prolongada em estágios avançados</li>
-          <li>Maior consumo de materiais e assistência profissional</li>
-          <li>Casos complexos podem atingir valores muito elevados</li>
-        </ul>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Indicador</th>
+              <th>Unidade</th>
+              <th>Valor</th>
+              <th>Descrição</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Custos diretos de curativos (todos estágios)</strong></td>
+              <td>Por procedimento</td>
+              <td><strong>R$ 16,41 a R$ 260,18</strong></td>
+              <td>Materiais + mão de obra diretamente no procedimento.</td>
+            </tr>
+            <tr>
+              <td><strong>Custo total de tratamento (hospitalar)</strong></td>
+              <td>Por paciente / 6 meses</td>
+              <td><strong>R$ 1.886,00</strong></td>
+              <td>Média por paciente ao longo de 6 meses (inclui materiais e alguns profissionais).</td>
+            </tr>
+            <tr>
+              <td><strong>LPP estágios avançados (III–IV)</strong></td>
+              <td>Total / 104 curativos</td>
+              <td><strong>R$ 6.828,27</strong></td>
+              <td>Materiais consumidos (tempo médio de internação: 92 dias).</td>
+            </tr>
+            <tr>
+              <td><strong>LPP estágios avançados (III–IV)</strong></td>
+              <td>Média diária</td>
+              <td><strong>R$ 74,22 por dia</strong></td>
+              <td>Estimativa média diária reportada no contexto.</td>
+            </tr>
+            <tr>
+              <td><strong>Caso de alta complexidade (exemplo)</strong></td>
+              <td>Total / 189 dias</td>
+              <td><strong>R$ 111.254,85</strong></td>
+              <td>Inclui internação prolongada, profissionais e materiais.</td>
+            </tr>
+            <tr>
+              <td><strong>Caso de alta complexidade (exemplo)</strong></td>
+              <td>Média diária</td>
+              <td><strong>R$ 588,65 por dia</strong></td>
+              <td>Média diária estimada no estudo de caso.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-  </section>
 
-  <section class="card">
-    <h2>Referências</h2>
-    <div class="refs">
-      <div>• PubMed: https://pubmed.ncbi.nlm.nih.gov/27384210/</div>
-      <div>• Revista Enfermagem Atual: https://revistaenfermagematual.com.br/index.php/revista/article/view/93</div>
-      <div>• UFMA: https://monografias.ufma.br/jspui/handle/123456789/5950</div>
-      <div>• Anais SOBEST: https://anais.sobest.com.br/cpe/article/view/1007</div>
+    <div class="card">
+      <div class="section-title">Comparação visual (gráfico)</div>
+      <div class="muted">
+        O gráfico compara os principais valores apresentados. Como as unidades diferem
+        (procedimento vs dia vs 6 meses vs total), a leitura deve focar na amplitude do impacto financeiro.
+      </div>
+
+      <div class="chart-box" style="margin-top:12px;">
+        <div class="chart-wrap">
+          <canvas id="graficoCusto"></canvas>
+        </div>
+      </div>
     </div>
-  </section>
 
-</main>
+    <div class="card">
+      <div class="section-title">Interpretação didática: prevenção × tratamento</div>
 
-<script>
-  // Dados (do seu arquivo)
-  const dados = {
-    curativoMin: 16.41,
-    curativoMax: 260.18,
-    seisMeses: 1886.00,
-    avancadoDia: 74.22,
-    complexoDia: 588.65,
-    complexoTotal: 111254.85
-  };
+      <div class="two-cols">
+        <div class="mini">
+          <h3>Prevenção (reduz risco e custo indireto)</h3>
+          <ul>
+            <li>Avaliação de risco e inspeção diária da pele</li>
+            <li>Reposicionamento e redução de fricção/cisalhamento</li>
+            <li>Controle de umidade e barreira cutânea</li>
+            <li>Superfícies de redistribuição de pressão quando indicadas</li>
+          </ul>
+        </div>
 
-  const canvas = document.getElementById('graficoCusto');
+        <div class="mini">
+          <h3>Tratamento (tende a elevar custo)</h3>
+          <ul>
+            <li>Curativos seriados (custos por procedimento)</li>
+            <li>Internação prolongada em estágios avançados</li>
+            <li>Maior consumo de materiais e assistência profissional</li>
+            <li>Casos complexos podem atingir valores muito elevados</li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-  // Evita bugs caso a página recarregue e tente criar outro gráfico
-  if (window.graficoLPP) window.graficoLPP.destroy();
+    <div class="card">
+      <div class="section-title">Referências</div>
+      <div class="muted">
+        Mantenha aqui as referências que você já colocou no seu arquivo (PubMed, etc.).
+        Se quiser, eu organizo em formato ABNT depois.
+      </div>
+    </div>
 
-  window.graficoLPP = new Chart(canvas, {
-    type: 'bar',
-    data: {
-      labels: [
-        'Curativo (mín) por procedimento',
-        'Curativo (máx) por procedimento',
-        'Tratamento (média) 6 meses/paciente',
-        'Estágio avançado (média) por dia',
-        'Caso complexo (média) por dia',
-        'Caso complexo (total)'
-      ],
-      datasets: [{
-        label: 'Custo (R$)',
-        data: [
-          dados.curativoMin,
-          dados.curativoMax,
-          dados.seisMeses,
-          dados.avancadoDia,
-          dados.complexoDia,
-          dados.complexoTotal
-        ]
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
+  </main>
 
-      // ESSENCIAL para não “pular”
-      animation: false,
-      resizeDelay: 350,
+  <footer>© 2026 - Projeto Educativo em Enfermagem</footer>
 
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: (ctx) => {
-              const v = ctx.parsed.y ?? 0;
-              return 'R$ ' + v.toLocaleString('pt-BR', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-              });
+  <script>
+    // Dados (mantidos exatamente do seu conteúdo)
+    const dados = {
+      curativoMin: 16.41,
+      curativoMax: 260.18,
+      seisMeses: 1886.00,
+      avancadoDia: 74.22,
+      complexoDia: 588.65,
+      complexoTotal: 111254.85
+    };
+
+    // Labels (iguais aos que você usou)
+    const labels = [
+      'Curativo (mín) por procedimento',
+      'Curativo (máx) por procedimento',
+      'Tratamento (média) 6 meses / paciente',
+      'Estágio avançado (média) por dia',
+      'Caso complexo (média) por dia',
+      'Caso complexo (total)'
+    ];
+
+    const valores = [
+      dados.curativoMin,
+      dados.curativoMax,
+      dados.seisMeses,
+      dados.avancadoDia,
+      dados.complexoDia,
+      dados.complexoTotal
+    ];
+
+    const ctx = document.getElementById('graficoCusto');
+
+    // Evita erro quando Chart.js não carregar por algum motivo
+    if (window.Chart && ctx) {
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Custo estimado (R$)',
+            data: valores
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false, // IMPORTANTÍSSIMO para não “pular”
+          animation: false,           // evita ficar indo para baixo e voltando
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const v = context.parsed.y ?? 0;
+                  return 'R$ ' + Number(v).toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  });
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: (value) => 'R$ ' + Number(value).toLocaleString('pt-BR')
+              }
             }
           }
         }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            callback: (value) => 'R$ ' + Number(value).toLocaleString('pt-BR')
-          }
-        }
+      });
+    } else {
+      // Se não carregar, mostra aviso simples sem quebrar a página
+      const box = document.querySelector('.chart-box');
+      if (box) {
+        box.innerHTML = '<p style="margin:0; padding:12px; font-weight:700;">Gráfico indisponível (Chart.js não carregou). Verifique sua conexão ou tente novamente.</p>';
       }
     }
-  });
-</script>
+  </script>
 
 </body>
 </html>
