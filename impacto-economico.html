@@ -42,11 +42,16 @@
     .ref { font-size: 13px; color: #555; line-height: 1.55; }
     .ref a { word-break: break-word; }
   </style>
-  .chartBox{
-  height: 360px;
+ .chartBox{
+  position: relative;
+  width: 100%;
+  height: 360px;         /* trava a altura */
+  max-height: 360px;
+  overflow: hidden;
 }
+
 @media (max-width: 768px){
-  .chartBox{ height: 320px; }
+  .chartBox{ height: 320px; max-height: 320px; }
 }
 </head>
 
@@ -129,7 +134,16 @@
   </section>
 
   <section class="card">
-    <h2>Comparação visual (gráfico)</h2>
+   <section class="card">
+  <h2>Comparação visual (gráfico)</h2>
+
+  <p>Texto explicativo...</p>
+
+  <div class="chartBox">
+    <canvas id="graficoCusto"></canvas>
+  </div>
+
+</section>
     <p class="small">
       Para facilitar a compreensão, o gráfico abaixo compara valores de diferentes dimensões de custo:
       <span class="badge">curativo por procedimento (mín–máx)</span>,
@@ -226,21 +240,14 @@
       }]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      layout: { padding: { top: 10, right: 10, bottom: 0, left: 10 } },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              const v = context.parsed.y ?? 0;
-              return 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            }
-          }
-        }
-      },
-      scales: {
+  responsive: true,
+  maintainAspectRatio: false,
+  animation: false,
+  resizeDelay: 200,
+  layout: { padding: { top: 10, right: 10, bottom: 0, left: 10 } },
+  plugins: { ... },
+  scales: { ... }
+}
         y: {
           beginAtZero: true,
           ticks: {
@@ -255,7 +262,7 @@
 
   // Ajuste de altura do gráfico para ficar bom no celular
   // (seu style.css pode não ter altura definida para canvas)
-  ctx.style.height = '360px';
+  //ctx.style.height = '360px';
 </script>
 
 </body>
