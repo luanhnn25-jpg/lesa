@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Impacto Econômico - Lesão por Pressão</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<header>
+    <h1>Impacto Econômico Hospitalar</h1>
+    <p>Comparação entre custo de prevenção e tratamento</p>
+</header>
+
+<nav>
+    <a href="index.html">Início</a>
+    <a href="tratamento.html">Tratamento</a>
+    <a href="guia-simples.html">Guia Simples</a>
+    <a href="impacto-economico.html">Impacto Econômico</a>
+</nav>
+
+<main>
+
+<section class="card">
+    <h2>Custo estimado de tratamento (1 paciente)</h2>
+
+    <table class="tabela-custo">
+        <tr>
+            <th>Estágio</th>
+            <th>Custo médio estimado (R$)</th>
+        </tr>
+        <tr>
+            <td>Estágio 1</td>
+            <td>3.000</td>
+        </tr>
+        <tr>
+            <td>Estágio 2</td>
+            <td>10.000</td>
+        </tr>
+        <tr>
+            <td>Estágio 3</td>
+            <td>25.000</td>
+        </tr>
+        <tr>
+            <td>Estágio 4</td>
+            <td>70.000</td>
+        </tr>
+    </table>
+
+    <p style="margin-top:20px;">
+    Em estágios avançados, o custo hospitalar pode ultrapassar R$ 70.000 por paciente,
+    considerando tempo de internação prolongado, antibióticos, curativos especializados e intervenções cirúrgicas.
+    </p>
+</section>
+
+<section class="card">
+    <h2>Comparação: Prevenção vs Tratamento</h2>
+
+    <p>
+    Programas de prevenção incluem avaliação de risco, mudança de decúbito,
+    uso de superfícies especiais e capacitação da equipe.
+    O custo médio preventivo por paciente é estimado em aproximadamente R$ 1.500 a R$ 3.000.
+    </p>
+
+    <canvas id="graficoCusto"></canvas>
+
+</section>
+
+<section class="card">
+    <h2>Interpretação</h2>
+    <p>
+    Observa-se diferença significativa entre o custo preventivo e o tratamento
+    de lesões avançadas. A implementação de protocolos institucionais reduz
+    complicações clínicas e impacto financeiro hospitalar.
+    </p>
+</section>
+
+</main>
+
+<script>
+const ctx = document.getElementById('graficoCusto');
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Prevenção', 'Estágio 2', 'Estágio 3', 'Estágio 4'],
+        datasets: [{
+            label: 'Custo estimado (R$)',
+            data: [2500, 10000, 25000, 70000],
+            backgroundColor: [
+                '#4CAF50',
+                '#FFC107',
+                '#FF9800',
+                '#F44336'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+
+</body>
+</html>
