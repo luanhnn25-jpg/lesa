@@ -1,32 +1,171 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Nosso Produto</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nosso Produto - Lesão por Pressão</title>
+
+  <!-- Mantém seu CSS geral, mas esta página fica isolada -->
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* =========================
+       ISOLAMENTO (só NOSSO PRODUTO)
+       ========================= */
+    body.produto{
+      margin:0;
+      background:#eef2f6;
+      font-family: Arial, sans-serif;
+      color:#1a1a1a;
+      min-height: 100vh;
+    }
+
+    body.produto header{
+      background: linear-gradient(90deg, #0b3d91, #0f5bd3);
+      color:#fff;
+      text-align:center;
+      padding: 54px 16px 30px;
+    }
+    body.produto header h1{
+      margin:0;
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      line-height: 1.15;
+    }
+    body.produto header p{
+      margin: 10px 0 0;
+      font-size: 14px;
+      opacity: 0.95;
+    }
+
+    /* Menu */
+    body.produto .topnav{
+      background:#082c63;
+      position: sticky;
+      top:0;
+      z-index: 999;
+      display:flex;
+      justify-content:center;
+      gap: 16px;
+      padding: 10px 10px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+      flex-wrap: wrap;
+    }
+    body.produto .topnav a{
+      color:#fff !important;
+      text-decoration:none;
+      font-weight:700;
+      font-size:15px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      transition: .2s ease;
+      white-space: nowrap;
+    }
+    body.produto .topnav a:hover{
+      background: rgba(255,255,255,0.12);
+    }
+
+    body.produto main{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 26px 16px 50px;
+    }
+
+    /* Card central */
+    body.produto .hero{
+      background: #f3f5f7;
+      border-radius: 22px;
+      padding: 28px 18px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.10);
+      border: 1px solid rgba(0,0,0,0.06);
+
+      display:flex;
+      flex-direction: column;
+      align-items:center;
+      text-align:center;
+      gap: 18px;
+    }
+
+    body.produto .hero h2{
+      margin:0;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.2px;
+      color:#0c1b3a;
+    }
+
+    body.produto .hero .sub{
+      margin-top: -8px;
+      font-size: 14px;
+      opacity: 0.85;
+      max-width: 720px;
+      line-height: 1.6;
+    }
+
+    /* Gato no centro */
+    body.produto .cat-wrap{
+      width: min(380px, 92vw);
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 14px;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+    }
+
+    body.produto .cat-wrap img{
+      width: 100%;
+      height: auto;
+      display:block;
+      border-radius: 14px;
+    }
+
+    body.produto footer{
+      text-align:center;
+      color:#333;
+      padding: 22px 12px;
+      font-size: 14px;
+      opacity: 0.85;
+    }
+
+    @media (max-width: 700px){
+      body.produto header h1{ font-size: 28px; }
+      body.produto .hero h2{ font-size: 22px; }
+      body.produto .hero{ padding: 22px 14px; }
+    }
+  </style>
 </head>
 
-<body>
+<body class="produto">
 
-<header>
+  <header>
     <h1>Nosso Produto</h1>
-</header>
+    <p>Em desenvolvimento</p>
+  </header>
 
-<nav>
+  <nav class="topnav">
     <a href="index.html">Início</a>
     <a href="tratamento.html">Tratamento</a>
     <a href="guia-simples.html">Guia Simples</a>
     <a href="impacto-economico.html">Impacto Econômico</a>
     <a href="nosso-produto.html">Nosso Produto</a>
-</nav>
+  </nav>
 
-<main class="produto">
+  <main>
+    <section class="hero">
+      <h2>Nossos melhores profissionais estão trabalhando agora nele</h2>
+      <div class="sub">
+        Em breve teremos novidades aqui. Enquanto isso, aproveite os conteúdos educativos do site.
+      </div>
 
-    <h2>Nossos melhores profissionais estão trabalhando nele</h2>
+      <!-- TROQUE o nome do arquivo abaixo pelo nome real do seu gif -->
+      <div class="cat-wrap">
+        <img src="gato.gif" alt="Gato em GIF" />
+      </div>
+    </section>
+  </main>
 
-    <img src="gato.gif" alt="Gato fofo animado" class="gato-centro">
-
-</main>
+  <footer>© 2026 - Projeto Educativo em Enfermagem</footer>
 
 </body>
 </html>
