@@ -41,3 +41,12 @@ main {
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
+.tabela thead th {
+    background-color: #0b3d91;
+    color: white;
+    font-weight: 600;
+}
+
+.tabela tbody tr:nth-child(even) {
+    background-color: #f2f6fb;
+}
