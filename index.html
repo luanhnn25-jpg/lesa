@@ -5,32 +5,37 @@
 <title>Lesão por Pressão - Projeto Integrador</title>
 
 <style>
-nav {
-    background-color: #082c63;
-    padding: 15px 0;
-    position: fixed;
-    top: 0; /* abaixo do header */
-    width: 100%;
-    z-index: 1000;
+nav{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+
+  background: rgba(10, 35, 90, 0.92);
+  backdrop-filter: blur(8px);
+
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+
+  padding: 12px 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
 }
 
-
-nav a {
-    color: white;
-    text-decoration: none;
-    margin: 0 20px;
-    font-weight: 500;
-    font-size: 16px;
-    transition: color 0.3s ease, border-bottom 0.3s ease;
+nav a{
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  white-space: nowrap;
 }
 
-
-nav a:hover {
-    color: #4da6ff;
-    border-bottom: 2px solid #4da6ff;
-    padding-bottom: 3px;
-}
-
+nav a:hover{
+  background: rgba(255,255,255,0.12);
 }
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
@@ -218,6 +223,7 @@ footer {
 
 </body>
 </html>
+
 
 
 
