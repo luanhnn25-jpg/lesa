@@ -1,117 +1,253 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <link rel="stylesheet" href="grafico.css">
-<meta charset="UTF-8">
-<title>Impacto Econômico - Lesão por Pressão</title>
-<link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Impacto Econômico - Lesão por Pressão</title>
+
+  <!-- Seu CSS principal -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Chart.js (gráfico) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- CSS extra só desta página (para ficar bom no celular) -->
+  <style>
+    .tableWrap { overflow-x: auto; }
+    .tableWrap table { min-width: 720px; }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      background: #eef4ff;
+      color: #1b3c73;
+      font-weight: 600;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .grid2 { grid-template-columns: 1fr; }
+      .tableWrap table { min-width: 640px; }
+    }
+
+    canvas { margin-top: 18px; }
+    .small { font-size: 14px; color: #444; line-height: 1.6; }
+    .ref { font-size: 13px; color: #555; line-height: 1.55; }
+    .ref a { word-break: break-word; }
+  </style>
 </head>
 
 <body>
 
 <header>
-    <h1>Impacto Econômico Hospitalar</h1>
-    <p>Comparação entre custo de prevenção e tratamento</p>
+  <h1>Impacto Econômico Hospitalar</h1>
+  <p>Custos estimados relacionados ao tratamento de Lesão por Pressão (LPP)</p>
 </header>
 
 <nav>
-    <a href="index.html">Início</a>
-    <a href="tratamento.html">Tratamento</a>
-    <a href="guia-simples.html">Guia Simples</a>
-    <a href="impacto-economico.html">Impacto Econômico</a>
+  <a href="index.html">Início</a>
+  <a href="tratamento.html">Página Técnica</a>
+  <a href="guia-simples.html">Guia Simples</a>
+  <a href="impacto-economico.html">Impacto Econômico</a>
+  <a href="nosso-produto.html">Nosso Produto</a>
 </nav>
 
 <main>
 
-<section class="card">
-    <h2>Custo estimado de tratamento (1 paciente)</h2>
-
-    <table class="tabela-custo">
-        <tr>
-            <th>Estágio</th>
-            <th>Custo médio estimado (R$)</th>
-        </tr>
-        <tr>
-            <td>Estágio 1</td>
-            <td>nao sei</td>
-        </tr>
-        <tr>
-            <td>Estágio 2</td>
-            <td>naosei</td>
-        </tr>
-        <tr>
-            <td>Estágio 3</td>
-            <td>naosei</td>
-        </tr>
-        <tr>
-            <td>Estágio 4</td>
-            <td>naosei</td>
-        </tr>
-    </table>
-
-    <p style="margin-top:20px;">
-    Em estágios avançados, o custo hospitalar pode ultrapassar R$ NAOOSEI por paciente,
-    considerando tempo de internação prolongado, antibióticos, curativos especializados e intervenções cirúrgicas.
-    </p>
-</section>
-
-<section class="card">
-    <h2>Comparação: Prevenção vs Tratamento</h2>
-
-    <p>
-    Programas de prevenção incluem avaliação de risco, mudança de decúbito,
-    uso de superfícies especiais e capacitação da equipe.
-    O custo médio preventivo por paciente é estimado em aproximadamente R$ naoosei a R$ slaaa.
+  <section class="card">
+    <h2>Resumo dos custos (dados do seu arquivo)</h2>
+    <p class="small">
+      Os valores abaixo são apresentados como <strong>estimativas</strong> e variam conforme protocolos, frequência de trocas,
+      tipo de cobertura, tempo de internação e complexidade clínica. :contentReference[oaicite:1]{index=1}
     </p>
 
-a
+    <div class="tableWrap">
+      <table class="tabela-custo">
+        <tr>
+          <th>Categoria</th>
+          <th>Medida</th>
+          <th>Valor</th>
+          <th>Observação</th>
+        </tr>
 
-</section>
+        <tr>
+          <td><strong>Custos diretos de curativos (todos os estágios)</strong></td>
+          <td>Por procedimento de curativo</td>
+          <td><strong>R$ 16,41 a R$ 260,18</strong></td>
+          <td>Inclui materiais + mão de obra diretamente no procedimento. :contentReference[oaicite:2]{index=2}</td>
+        </tr>
 
-<section class="card">
-    <h2>Interpretação</h2>
-    <p>
-    Observa-se diferença significativa entre o custo preventivo e o tratamento
-    de lesões avançadas. A implementação de protocolos institucionais reduz
-    complicações clínicas e impacto financeiro hospitalar.
+        <tr>
+          <td><strong>Custo total de tratamento (hospitalar)</strong></td>
+          <td>Por paciente em 6 meses</td>
+          <td><strong>R$ 1.886,00</strong></td>
+          <td>Média ao longo de 6 meses (inclui materiais e alguns profissionais). :contentReference[oaicite:3]{index=3}</td>
+        </tr>
+
+        <tr>
+          <td><strong>LPP estágios avançados (III e IV)</strong></td>
+          <td>Materiais consumidos / 104 curativos</td>
+          <td><strong>R$ 6.828,27</strong></td>
+          <td>Hospital público (São Luís–MA); tempo médio de internação 92 dias. :contentReference[oaicite:4]{index=4}</td>
+        </tr>
+
+        <tr>
+          <td><strong>LPP estágios avançados (III e IV)</strong></td>
+          <td>Média diária estimada</td>
+          <td><strong>R$ 74,22 por dia</strong></td>
+          <td>Estimativa média diária reportada no mesmo estudo. :contentReference[oaicite:5]{index=5}</td>
+        </tr>
+
+        <tr>
+          <td><strong>Exemplo de caso clínico complexo</strong></td>
+          <td>Total / 189 dias</td>
+          <td><strong>R$ 111.254,85</strong></td>
+          <td>Paciente com comorbidades graves; cenário de alta complexidade. :contentReference[oaicite:6]{index=6}</td>
+        </tr>
+
+        <tr>
+          <td><strong>Exemplo de caso clínico complexo</strong></td>
+          <td>Média diária</td>
+          <td><strong>R$ 588,65 por dia</strong></td>
+          <td>Valor médio diário calculado no estudo de caso. :contentReference[oaicite:7]{index=7}</td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Comparação visual (gráfico)</h2>
+    <p class="small">
+      Para facilitar a compreensão, o gráfico abaixo compara valores de diferentes dimensões de custo:
+      <span class="badge">curativo por procedimento (mín–máx)</span>,
+      <span class="badge">média por paciente em 6 meses</span>,
+      <span class="badge">médias diárias em cenários avançados/complexos</span> e
+      <span class="badge">total do caso complexo</span>. :contentReference[oaicite:8]{index=8}
     </p>
-</section>
+
+    <canvas id="graficoCusto"></canvas>
+
+    <p class="small">
+      <strong>Nota:</strong> são métricas diferentes (por procedimento, por dia, por 6 meses e total do caso). O objetivo é
+      demonstrar amplitude e potencial impacto financeiro de LPP em cenários reais. :contentReference[oaicite:9]{index=9}
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Prevenção vs tratamento (comparação didática)</h2>
+    <div class="grid2">
+      <div>
+        <h3 style="margin-top:0;">Prevenção (estratégias)</h3>
+        <ul>
+          <li>Avaliação de risco e inspeção sistemática da pele</li>
+          <li>Reposicionamento e redução de fricção/cisalhamento</li>
+          <li>Superfícies de redistribuição de pressão quando indicadas</li>
+          <li>Controle de umidade e cuidado com pele perilesional</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="margin-top:0;">Tratamento (tende a aumentar custo)</h3>
+        <ul>
+          <li>Curativos seriados (custos diretos por procedimento)</li>
+          <li>Internação prolongada em estágios avançados</li>
+          <li>Maior consumo de materiais e assistência profissional</li>
+          <li>Casos complexos podem atingir custos muito elevados</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="small">
+      No seu material, há evidência de grande variação entre custo por procedimento (R$ 16,41–R$ 260,18) e cenários de internação prolongada
+      (ex.: R$ 74,22/dia em estágio avançado) e casos de alta complexidade (R$ 111.254,85 no total). :contentReference[oaicite:10]{index=10}
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Referências (conforme seu arquivo)</h2>
+    <p class="ref">
+      • PubMed (custos diretos de curativos): https://pubmed.ncbi.nlm.nih.gov/27384210/ :contentReference[oaicite:11]{index=11}<br>
+      • Revista Enfermagem Atual (média R$ 1.886,00 em 6 meses): https://revistaenfermagematual.com.br/index.php/revista/article/view/93 :contentReference[oaicite:12]{index=12}<br>
+      • UFMA (São Luís–MA; materiais 104 curativos; média diária): https://monografias.ufma.br/jspui/handle/123456789/5950 :contentReference[oaicite:13]{index=13}<br>
+      • Anais SOBEST (caso complexo; 189 dias): https://anais.sobest.com.br/cpe/article/view/1007 :contentReference[oaicite:14]{index=14}
+    </p>
+  </section>
 
 </main>
 
 <script>
-const ctx = document.getElementById('graficoCusto');
+  // Dados do seu arquivo (ver tabela)
+  const dados = {
+    curativoMin: 16.41,
+    curativoMax: 260.18,
+    seisMeses: 1886.00,
+    avancadoDia: 74.22,
+    complexoDia: 588.65,
+    complexoTotal: 111254.85
+  };
 
-new Chart(ctx, {
+  const ctx = document.getElementById('graficoCusto');
+
+  new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ['Prevenção', 'Estágio 2', 'Estágio 3', 'Estágio 4'],
-        datasets: [{
-            label: 'Custo estimado (R$)',
-            data: [2500, 10000, 25000, 70000],
-            backgroundColor: [
-                '#4CAF50',
-                '#FFC107',
-                '#FF9800',
-                '#F44336'
-            ]
-        }]
+      labels: [
+        'Curativo (mín) por procedimento',
+        'Curativo (máx) por procedimento',
+        'Tratamento (média) 6 meses / paciente',
+        'Estágio avançado (média) por dia',
+        'Caso complexo (média) por dia',
+        'Caso complexo (total)'
+      ],
+      datasets: [{
+        label: 'Custo estimado (R$)',
+        data: [
+          dados.curativoMin,
+          dados.curativoMax,
+          dados.seisMeses,
+          dados.avancadoDia,
+          dados.complexoDia,
+          dados.complexoTotal
+        ]
+      }]
     },
     options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                display: false
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: { padding: { top: 10, right: 10, bottom: 0, left: 10 } },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const v = context.parsed.y ?? 0;
+              return 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
-        },
-        scales: {
-            y: {
-                beginAtZero: true
-            }
+          }
         }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return 'R$ ' + Number(value).toLocaleString('pt-BR');
+            }
+          }
+        }
+      }
     }
-});
+  });
+
+  // Ajuste de altura do gráfico para ficar bom no celular
+  // (seu style.css pode não ter altura definida para canvas)
+  ctx.style.height = '360px';
 </script>
 
 </body>
