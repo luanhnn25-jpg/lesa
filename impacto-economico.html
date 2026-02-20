@@ -42,16 +42,25 @@
     .ref { font-size: 13px; color: #555; line-height: 1.55; }
     .ref a { word-break: break-word; }
   </style>
- .chartBox{
+.chartWrap{
   position: relative;
   width: 100%;
-  height: 360px;         /* trava a altura */
-  max-height: 360px;
-  overflow: hidden;
+  height: 380px;      /* altura fixa = sem “pulo” */
+  max-height: 380px;
 }
 
 @media (max-width: 768px){
-  .chartBox{ height: 320px; max-height: 320px; }
+  .chartWrap{
+    height: 320px;
+    max-height: 320px;
+  }
+}
+
+/* garante que o canvas ocupe a caixa inteira */
+.chartWrap canvas{
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
 }
 </head>
 
@@ -152,7 +161,7 @@
       <span class="badge">total do caso complexo</span>. :contentReference[oaicite:8]{index=8}
     </p>
 
-    <div class="chartBox">
+    <div class="chartWrap">
   <canvas id="graficoCusto"></canvas>
 </div>
 
@@ -204,7 +213,6 @@
 </main>
 
 <script>
-  // Dados do seu arquivo (ver tabela)
   const dados = {
     curativoMin: 16.41,
     curativoMax: 260.18,
@@ -214,21 +222,26 @@
     complexoTotal: 111254.85
   };
 
-  const ctx = document.getElementById('graficoCusto');
+  const canvas = document.getElementById('graficoCusto');
 
-  new Chart(ctx, {
+  // Se existir gráfico antigo, destrói (evita bugs)
+  if (window.meuGrafico) {
+    window.meuGrafico.destroy();
+  }
+
+  window.meuGrafico = new Chart(canvas, {
     type: 'bar',
     data: {
       labels: [
         'Curativo (mín) por procedimento',
         'Curativo (máx) por procedimento',
-        'Tratamento (média) 6 meses / paciente',
+        'Tratamento (média) 6 meses/paciente',
         'Estágio avançado (média) por dia',
         'Caso complexo (média) por dia',
         'Caso complexo (total)'
       ],
       datasets: [{
-        label: 'Custo estimado (R$)',
+        label: 'Custo (R$)',
         data: [
           dados.curativoMin,
           dados.curativoMax,
@@ -240,30 +253,34 @@
       }]
     },
     options: {
-  responsive: true,
-  maintainAspectRatio: false,
-  animation: false,
-  resizeDelay: 200,
-  layout: { padding: { top: 10, right: 10, bottom: 0, left: 10 } },
-  plugins: { ... },
-  scales: { ... }
-}
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: false,
+      resizeDelay: 300,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => {
+              const v = ctx.parsed.y ?? 0;
+              return 'R$ ' + v.toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              });
+            }
+          }
+        }
+      },
+      scales: {
         y: {
           beginAtZero: true,
           ticks: {
-            callback: function(value) {
-              return 'R$ ' + Number(value).toLocaleString('pt-BR');
-            }
+            callback: (value) => 'R$ ' + Number(value).toLocaleString('pt-BR')
           }
         }
       }
     }
   });
-
-  // Ajuste de altura do gráfico para ficar bom no celular
-  // (seu style.css pode não ter altura definida para canvas)
-  //ctx.style.height = '360px';
 </script>
-
 </body>
 </html>
