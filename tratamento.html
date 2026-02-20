@@ -1,200 +1,382 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Tratamento - Lesão por Pressão</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tratamento - Lesão por Pressão</title>
+
+  <!-- Mantém seu CSS geral, mas vamos sobrepor TUDO com CSS isolado abaixo -->
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* =========================
+       ISOLAMENTO (só tratamento)
+       ========================= */
+    body.tratamento{
+      margin:0;
+      background:#eef2f6;
+      font-family: Arial, sans-serif;
+      color:#1a1a1a;
+    }
+
+    body.tratamento header{
+      background: linear-gradient(90deg, #0b3d91, #0f5bd3);
+      color:#fff;
+      text-align:center;
+      padding: 42px 16px 28px;
+    }
+    body.tratamento header h1{
+      margin:0;
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      line-height: 1.15;
+    }
+    body.tratamento header p{
+      margin: 10px 0 0;
+      font-size: 16px;
+      opacity: 0.95;
+    }
+
+    /* Menu principal (páginas) */
+    body.tratamento .topnav{
+      background:#082c63;
+      position: sticky;
+      top:0;
+      z-index: 999;
+      display:flex;
+      justify-content:center;
+      gap: 18px;
+      padding: 10px 10px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+      flex-wrap: wrap;
+    }
+    body.tratamento .topnav a{
+      color:#fff !important;
+      text-decoration:none;
+      font-weight:700;
+      font-size:15px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      transition: .2s ease;
+      white-space: nowrap;
+    }
+    body.tratamento .topnav a:hover{
+      background: rgba(255,255,255,0.12);
+    }
+
+    /* Menu de seções (âncoras internas) */
+    body.tratamento .subnav{
+      background: #0b3d91;
+      position: sticky;
+      top: 54px; /* fica abaixo do topnav */
+      z-index: 998;
+      display:flex;
+      justify-content:center;
+      gap: 10px;
+      padding: 10px 10px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+    body.tratamento .subnav a{
+      color:#fff !important;
+      text-decoration:none;
+      font-weight:700;
+      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      transition: .2s ease;
+    }
+    body.tratamento .subnav a:hover{
+      background: rgba(255,255,255,0.18);
+    }
+
+    body.tratamento main{
+      max-width: 1100px;
+      margin: 18px auto;
+      padding: 0 16px 46px;
+    }
+
+    body.tratamento .card{
+      background: #f3f5f7;
+      border-radius: 20px;
+      padding: 22px 24px;
+      margin: 16px 0;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    body.tratamento .card h2{
+      margin: 0 0 10px;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+    }
+
+    body.tratamento .card p,
+    body.tratamento .card li{
+      font-size: 16px;
+      line-height: 1.65;
+      color:#2b2b2b;
+    }
+
+    body.tratamento ul{
+      margin: 10px 0 0;
+      padding-left: 20px;
+    }
+
+    /* Destaque de “Meta didática”/alerta */
+    body.tratamento .note{
+      background: #fff6e0;
+      border-left: 8px solid #f0b400;
+      padding: 14px 14px;
+      border-radius: 14px;
+      margin-top: 12px;
+    }
+
+    /* Tabela responsiva */
+    body.tratamento .table-wrap{
+      margin-top: 14px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      background: transparent;
+      border-radius: 14px;
+    }
+    body.tratamento table{
+      width: 100%;
+      min-width: 820px; /* garante layout bom no desktop; no celular vira scroll */
+      border-collapse: collapse;
+      background:#fff;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    body.tratamento th, body.tratamento td{
+      border-bottom: 1px solid #e7e7e7;
+      padding: 12px 12px;
+      vertical-align: top;
+      font-size: 14px;
+      line-height: 1.5;
+      color:#2b2b2b;
+    }
+    body.tratamento th{
+      background: #0b3d91;
+      color:#fff;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    body.tratamento tr:last-child td{
+      border-bottom: none;
+    }
+
+    body.tratamento .refs{
+      font-size: 13px;
+      opacity: 0.85;
+      margin-top: 10px;
+    }
+
+    body.tratamento footer{
+      text-align:center;
+      color:#333;
+      padding: 22px 12px;
+      font-size: 14px;
+      opacity: 0.85;
+    }
+
+    /* Mobile: melhora tipografia e espaços */
+    @media (max-width: 768px){
+      body.tratamento header h1{ font-size: 26px; }
+      body.tratamento header p{ font-size: 14px; }
+      body.tratamento .subnav{ top: 52px; }
+      body.tratamento .card{ padding: 18px 18px; }
+      body.tratamento .card h2{ font-size: 20px; }
+      body.tratamento .card p,
+      body.tratamento .card li{ font-size: 15px; }
+    }
+  </style>
 </head>
 
-<body>
+<body class="tratamento">
 
-<header>
-    <h1>Lesão por Pressão</h1>
-    <p>Conteúdo educativo em enfermagem</p>
-</header>
+  <header>
+    <h1>Tratamento da Lesão por Pressão (LP)</h1>
+    <p>Guia para estudantes</p>
+  </header>
 
-<nav>
-  <a href="guia-simples.html">Guia Simples</a>
-  <a href="index.html">Início</a>
-  <a href="classificacao.html">Classificação</a>
-  <a href="prevencao.html">Prevenção</a>
-  <a href="avaliacao.html">Avaliação</a>
-  <a href="tratamento.html">Tratamento</a>
-</nav>
+  <!-- Menu entre páginas -->
+  <nav class="topnav">
+    <a href="index.html">Início</a>
+    <a href="guia-simples.html">Guia Simples</a>
+    <a href="tratamento.html">Tratamento</a>
+    <a href="impacto-economico.html">Impacto Econômico</a>
+  </nav>
 
-<main>
+  <!-- Menu interno (âncoras) -->
+  <nav class="subnav">
+    <a href="#avaliacao">1) Avaliação</a>
+    <a href="#alivio">2) Alívio de pressão</a>
+    <a href="#limpeza">3) Limpeza</a>
+    <a href="#curativos">4) Curativos</a>
+    <a href="#desbridamento">5) Desbridamento</a>
+    <a href="#infeccao">6) Infecção/dor</a>
+    <a href="#fatores">7) Fatores sistêmicos</a>
+  </nav>
 
-<section class="card">
-  <h2>Tratamento da Lesão por Pressão (LP) — Guia para estudantes</h2>
-  <p>
-    O tratamento da LP é baseado em quatro eixos: <strong>alívio de pressão</strong>,
-    <strong>manejo da ferida</strong>, <strong>controle de fatores sistêmicos</strong> e
-    <strong>prevenção de complicações</strong>. A enfermagem tem papel central na avaliação,
-    escolha/monitoramento de coberturas e reavaliação contínua.
-  </p>
-</section>
+  <main>
 
-<section class="card">
-  <h3>1) Avaliação inicial (o que você deve checar)</h3>
-  <ul>
-    <li><strong>Estágio/condição:</strong> estágio, lesão não classificável, lesão tissular profunda.</li>
-    <li><strong>Tecido do leito:</strong> granulação, epitelização, esfacelo, necrose.</li>
-    <li><strong>Exsudato:</strong> quantidade, aspecto, odor (e maceração de bordas).</li>
-    <li><strong>Pele perilesional:</strong> hiperemia, maceração, ressecamento, dermatite associada à umidade.</li>
-    <li><strong>Dor:</strong> intensidade (escala), fatores desencadeantes, analgesia antes da troca.</li>
-    <li><strong>Sinais de infecção:</strong> aumento de dor, calor, rubor, exsudato purulento, febre, piora clínica.</li>
-    <li><strong>Mensuração:</strong> comprimento × largura × profundidade e presença de túneis/cavidades.</li>
-  </ul>
-</section>
+    <section class="card" id="intro">
+      <p>
+        O tratamento da LP é baseado em quatro eixos: <b>alívio de pressão</b>, <b>manejo da ferida</b>,
+        <b>controle de fatores sistêmicos</b> e <b>prevenção de complicações</b>.
+        A enfermagem tem papel central na avaliação, escolha/monitoramento de coberturas e reavaliação contínua.
+      </p>
+    </section>
 
-<section class="card">
-  <h3>2) Alívio de pressão (sempre prioritário)</h3>
-  <p>
-    Sem redistribuição de pressão, a cicatrização tende a falhar.
-  </p>
-  <ul>
-    <li>Reposicionamento programado (individualizar conforme risco e tolerância).</li>
-    <li>Superfícies de suporte (colchão/almofada de redistribuição de pressão).</li>
-    <li>Redução de fricção e cisalhamento (técnica de mobilização, lençol de transferência).</li>
-    <li>Proteção de proeminências ósseas (calcanhar, sacro, trocânter etc.).</li>
-  </ul>
-</section>
+    <section class="card" id="avaliacao">
+      <h2>1) Avaliação inicial (o que você deve checar)</h2>
+      <ul>
+        <li><b>Estágio/condição:</b> estágio, lesão não classificável, lesão tissular profunda.</li>
+        <li><b>Tecido do leito:</b> granulação, epitelização, esfacelo, necrose.</li>
+        <li><b>Exsudato:</b> quantidade, aspecto, odor (e maceração de bordas).</li>
+        <li><b>Pele perilesional:</b> hiperemia, maceração, ressecamento, dermatite associada à umidade.</li>
+        <li><b>Dor:</b> intensidade (escala), fatores desencadeantes, analgesia antes da troca.</li>
+        <li><b>Sinais de infecção:</b> aumento de dor, calor, rubor, exsudato purulento, febre, piora clínica.</li>
+        <li><b>Mensuração:</b> comprimento × largura × profundidade e presença de túneis/cavidades.</li>
+      </ul>
+    </section>
 
-<section class="card">
-  <h3>3) Limpeza e preparo do leito da ferida</h3>
-  <ul>
-    <li><strong>Limpeza:</strong> preferir solução apropriada conforme protocolo do serviço; evitar trauma ao leito.</li>
-    <li><strong>Controle de umidade:</strong> manter ambiente úmido controlado (evitar ressecamento e maceração).</li>
-    <li><strong>Proteção da pele ao redor:</strong> barreira protetora quando houver umidade/exsudato.</li>
-  </ul>
-  <p><strong>Meta didática:</strong> reduzir biocarga, remover detritos, proteger bordas e favorecer granulação/epitelização.</p>
-</section>
+    <section class="card" id="alivio">
+      <h2>2) Alívio de pressão (sempre prioritário)</h2>
+      <p>Sem redistribuição de pressão, a cicatrização tende a falhar.</p>
+      <ul>
+        <li>Reposicionamento programado (individualizar conforme risco e tolerância).</li>
+        <li>Superfícies de suporte (colchão/almofada de redistribuição de pressão).</li>
+        <li>Redução de fricção e cisalhamento (técnica de mobilização, lençol de transferência).</li>
+        <li>Proteção de proeminências ósseas (calcâneo, sacro, trocânter etc.).</li>
+      </ul>
+    </section>
 
-<section class="card">
-  <h3>4) Seleção de curativos (raciocínio rápido)</h3>
-  <p>
-    A escolha depende principalmente de <strong>exsudato</strong>, <strong>tecido</strong> e <strong>profundidade</strong>.
-  </p>
-    <section class="card" id="tabela-curativos">
-  <h3>Tabela didática: escolha de cobertura (raciocínio rápido)</h3>
-  <p>
-    Para estudo: a seleção é guiada por <strong>tecido</strong>, <strong>exsudato</strong>, <strong>profundidade</strong> e <strong>risco de maceração</strong>.
-    Sempre seguir o protocolo institucional e reavaliar a resposta clínica.
-  </p>
+    <section class="card" id="limpeza">
+      <h2>3) Limpeza e preparo do leito da ferida</h2>
+      <ul>
+        <li><b>Limpeza:</b> preferir solução apropriada conforme protocolo do serviço; evitar trauma ao leito.</li>
+        <li><b>Controle de umidade:</b> manter ambiente úmido controlado (evitar ressecamento e maceração).</li>
+        <li><b>Proteção da pele ao redor:</b> barreira protetora quando houver umidade/exsudato.</li>
+      </ul>
 
-  <div class="tableWrap">
-    <table class="tabela">
-      <thead>
-        <tr>
-          <th>Achado principal</th>
-          <th>Objetivo do cuidado</th>
-          <th>Estratégia de cobertura (descrição geral)</th>
-          <th>Ponto de atenção</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Pouco exsudato / ferida superficial</td>
-          <td>Manter umidade controlada + proteger</td>
-          <td>Coberturas protetoras que mantenham ambiente úmido</td>
-          <td>Evitar ressecamento e trauma na troca</td>
-        </tr>
-        <tr>
-          <td>Exsudato moderado</td>
-          <td>Absorver sem macerar bordas</td>
-          <td>Coberturas com capacidade de absorção moderada</td>
-          <td>Proteger pele perilesional</td>
-        </tr>
-        <tr>
-          <td>Exsudato alto / risco de vazamento</td>
-          <td>Controle de umidade + prevenção de maceração</td>
-          <td>Coberturas mais absorventes + barreira perilesional</td>
-          <td>Trocas mais frequentes podem ser necessárias</td>
-        </tr>
-        <tr>
-          <td>Ferida cavitária/túneis</td>
-          <td>Preencher “sem compactar” + controlar exsudato</td>
-          <td>Preenchimento apropriado à cavidade, sem pressão</td>
-          <td>Não “tamponar” com força (risco de isquemia)</td>
-        </tr>
-        <tr>
-          <td>Tecido desvitalizado (esfacelo/necrose)</td>
-          <td>Preparar leito + remover tecido inviável</td>
-          <td>Conduta de desbridamento conforme avaliação e protocolo</td>
-          <td>Avaliar perfusão, dor e sinais de infecção</td>
-        </tr>
-        <tr>
-          <td>Sinais sugestivos de infecção</td>
-          <td>Reduzir biocarga + segurança do paciente</td>
-          <td>Reavaliar limpeza, condutas e acionar equipe conforme protocolo</td>
-          <td>Observar sinais sistêmicos e piora clínica</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+      <div class="note">
+        <b>Meta didática:</b> reduzir biocarga, remover detritos, proteger bordas e favorecer granulação/epitelização.
+      </div>
+    </section>
 
-  <p class="nota">
-    Referências para estudo: diretriz internacional EPUAP/NPIAP/PPPIA (2019) Nota Técnica Anvisa nº 05/2023 .
-  </p>
-</section>
+    <section class="card" id="curativos">
+      <h2>4) Seleção de curativos (raciocínio rápido)</h2>
+      <p>A escolha depende principalmente de <b>exsudato</b>, <b>tecido</b> e <b>profundidade</b>.</p>
 
-  <ul>
-    <li><strong>Pouco exsudato / ferida superficial:</strong> coberturas que mantenham umidade e protejam contra fricção.</li>
-    <li><strong>Moderado a alto exsudato:</strong> coberturas absorventes e proteção perilesional para evitar maceração.</li>
-    <li><strong>Feridas cavitárias:</strong> preencher sem compactar (evitar “tamponar” com pressão).</li>
-    <li><strong>Suspeita de biofilme/colonização crítica:</strong> reavaliar limpeza, frequência de troca e condutas conforme protocolo.</li>
-  </ul>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Achado principal</th>
+              <th>Objetivo do cuidado</th>
+              <th>Estratégia de cobertura (descrição geral)</th>
+              <th>Ponto de atenção</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pouco exsudato / ferida superficial</td>
+              <td>Manter umidade controlada + proteger</td>
+              <td>Coberturas protetoras que mantenham ambiente úmido</td>
+              <td>Evitar ressecamento e trauma na troca</td>
+            </tr>
+            <tr>
+              <td>Exsudato moderado</td>
+              <td>Absorver sem macerar bordas</td>
+              <td>Coberturas com capacidade de absorção moderada</td>
+              <td>Proteger pele perilesional</td>
+            </tr>
+            <tr>
+              <td>Exsudato alto / risco de vazamento</td>
+              <td>Controle de umidade + prevenção de maceração</td>
+              <td>Coberturas mais absorventes + barreira perilesional</td>
+              <td>Trocas mais frequentes podem ser necessárias</td>
+            </tr>
+            <tr>
+              <td>Ferida cavitária/túneis</td>
+              <td>Preencher “sem compactar” + controlar exsudato</td>
+              <td>Preenchimento apropriado à cavidade, sem pressão</td>
+              <td>Não “tamponar” com força (risco de isquemia)</td>
+            </tr>
+            <tr>
+              <td>Tecido desvitalizado (esfacelo/necrose)</td>
+              <td>Preparar leito + remover tecido inviável</td>
+              <td>Conduta de desbridamento conforme avaliação e protocolo</td>
+              <td>Avaliar perfusão, dor e sinais de infecção</td>
+            </tr>
+            <tr>
+              <td>Sinais sugestivos de infecção</td>
+              <td>Reduzir biocarga + segurança do paciente</td>
+              <td>Reavaliar limpeza, condutas e acionar equipe conforme protocolo</td>
+              <td>Observar sinais sistêmicos e piora clínica</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-  <p><strong>Checklist do estudante:</strong> a cobertura controla exsudato? protege borda? reduz dor? respeita profundidade? permite intervalo de troca seguro?</p>
-</section>
+      <p class="refs">
+        Referências para estudo: diretriz internacional EPUAP/NPIAP/PPPIA (2019) e Nota Técnica Anvisa nº 05/2023.
+      </p>
 
-<section class="card">
-  <h3>5) Desbridamento (quando considerar)</h3>
-  <ul>
-    <li>Indicado quando há tecido desvitalizado (esfacelo/necrose) e não há contraindicação.</li>
-    <li>Tipos: autolítico, enzimático, mecânico, conservador e cirúrgico (conforme avaliação e protocolo local).</li>
-    <li><strong>Atenção:</strong> necrose seca estável em calcanhar pode ter conduta específica conforme avaliação vascular e protocolo do serviço.</li>
-  </ul>
-</section>
+      <ul>
+        <li><b>Pouco exsudato/ferida superficial:</b> manter umidade e proteger contra fricção.</li>
+        <li><b>Moderado a alto exsudato:</b> absorver e proteger perilesional para evitar maceração.</li>
+        <li><b>Feridas cavitárias:</b> preencher sem compactar (evitar “tamponar” com pressão).</li>
+        <li><b>Suspeita de biofilme/colonização crítica:</b> reavaliar limpeza, frequência de troca e condutas conforme protocolo.</li>
+      </ul>
 
-<section class="card">
-  <h3>6) Infecção, dor e segurança</h3>
-  <ul>
-    <li><strong>Dor:</strong> planejar analgesia antes da troca; técnicas menos traumáticas.</li>
-    <li><strong>Infecção:</strong> reconhecer sinais locais/sistêmicos e comunicar a equipe para conduta.</li>
-    <li><strong>Segurança:</strong> higienização de mãos, técnica limpa/estéril conforme protocolo, descarte correto.</li>
-  </ul>
-</section>
+      <p><b>Checklist do estudante:</b> a cobertura controla exsudato? protege borda? reduz dor? respeita profundidade? permite intervalo de troca seguro?</p>
+    </section>
 
-<section class="card">
-  <h3>7) Fatores sistêmicos que mudam o prognóstico</h3>
-  <ul>
-    <li><strong>Nutrição:</strong> risco nutricional compromete cicatrização (avaliar e encaminhar).</li>
-    <li><strong>Perfusão/oxigenação:</strong> vasculopatias e hipoxemia reduzem reparo tecidual.</li>
-    <li><strong>Glicemia:</strong> descontrole glicêmico aumenta risco de infecção e retarda cicatrização.</li>
-    <li><strong>Mobilidade e adesão:</strong> reabilitação e educação do paciente/cuidador.</li>
-  </ul>
-</section>
+    <section class="card" id="desbridamento">
+      <h2>5) Desbridamento (quando considerar)</h2>
+      <ul>
+        <li>Indicado quando há tecido desvitalizado (esfacelo/necrose) e não há contraindicação.</li>
+        <li>Tipos: autolítico, enzimático, mecânico, conservador e cirúrgico (conforme avaliação e protocolo local).</li>
+        <li><b>Atenção:</b> necrose seca estável em calcâneo pode ter conduta específica conforme avaliação vascular e protocolo do serviço.</li>
+      </ul>
+    </section>
 
-<section class="card">
-  <h3>Quando solicitar avaliação multiprofissional / encaminhar</h3>
-  <ul>
-    <li>LP estágio 3/4, cavitária extensa, piora rápida ou dor desproporcional.</li>
-    <li>Sinais sistêmicos de infecção ou suspeita de osteomielite.</li>
-    <li>Falha terapêutica apesar de alívio de pressão e manejo adequado.</li>
-    <li>Necrose extensa, odor forte persistente, exsudato purulento.</li>
-  </ul>
-</section>
+    <section class="card" id="infeccao">
+      <h2>6) Infecção, dor e segurança</h2>
+      <ul>
+        <li><b>Dor:</b> planejar analgesia antes da troca; técnicas menos traumáticas.</li>
+        <li><b>Infecção:</b> reconhecer sinais locais/sistêmicos e comunicar a equipe para conduta.</li>
+        <li><b>Segurança:</b> higienização de mãos, técnica limpa/estéril conforme protocolo, descarte correto.</li>
+      </ul>
+    </section>
 
-</main>
+    <section class="card" id="fatores">
+      <h2>7) Fatores sistêmicos que mudam o prognóstico</h2>
+      <ul>
+        <li><b>Nutrição:</b> risco nutricional compromete cicatrização (avaliar e encaminhar).</li>
+        <li><b>Perfusão/oxigenação:</b> vasculopatias e hipóxia reduzem reparo tecidual.</li>
+        <li><b>Glicemia:</b> descontrole glicêmico aumenta risco de infecção e retarda cicatrização.</li>
+        <li><b>Mobilidade e adesão:</b> reabilitação e educação do paciente/cuidador.</li>
+      </ul>
+
+      <h3 style="margin:14px 0 8px; font-size:18px; font-weight:800;">Quando solicitar avaliação multiprofissional / encaminhar</h3>
+      <ul>
+        <li>LP estágio 3/4, cavitária extensa, piora rápida ou dor desproporcional.</li>
+        <li>Sinais sistêmicos de infecção ou suspeita de osteomielite.</li>
+        <li>Falha terapêutica apesar de alívio de pressão e manejo adequado.</li>
+        <li>Necrose extensa, odor forte persistente, exsudato purulento.</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer>© 2026 - Projeto Integrador</footer>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
