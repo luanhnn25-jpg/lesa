@@ -1,159 +1,169 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Lesão por Pressão - Projeto Integrador</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesão por Pressão - Projeto Integrador</title>
 
-<style>
-nav{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 9999;
+  <!-- Pode manter seu css global -->
+  <link rel="stylesheet" href="style.css" />
 
-  background: rgba(10, 35, 90, 0.92);
-  backdrop-filter: blur(8px);
+  <style>
+    /* =========================
+       ISOLAMENTO: só INDEX
+       ========================= */
+    body.index {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #eef2f6;
+      color: #1a1a1a;
+    }
 
-  display: flex;
-  gap: 14px;
-  justify-content: center;
-  align-items: center;
+    /* Header */
+    body.index header {
+      background: linear-gradient(90deg, #0b3d91, #0f5bd3);
+      color: #fff;
+      text-align: center;
+      padding: 42px 16px 26px;
+    }
+    body.index header h1 {
+      margin: 0;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      line-height: 1.15;
+    }
+    body.index header p {
+      margin: 10px 0 0;
+      font-size: 14px;
+      opacity: 0.95;
+    }
 
-  padding: 12px 10px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
-}
+    /* Menu (responsivo) */
+    body.index .topnav {
+      background: #082c63;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap; /* ESSENCIAL p/ celular */
+      box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    }
+    body.index .topnav a {
+      color: #fff !important;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      white-space: nowrap;
+      transition: .2s ease;
+    }
+    body.index .topnav a:hover {
+      background: rgba(255,255,255,0.12);
+    }
 
-nav a{
-  color: #fff;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 15px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  white-space: nowrap;
-}
+    /* Conteúdo */
+    body.index main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 18px 14px 44px;
+    }
 
-nav a:hover{
-  background: rgba(255,255,255,0.12);
-}
-body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background-color: #eef3f9;
-    margin: 0;
-    color: #333;
-}
+    body.index .card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 18px 16px;
+      margin: 14px 0;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
 
-header {
-    background: linear-gradient(90deg, #0b3d91, #0f5bd3);
-    color: white;
-    padding: 40px 20px;
-    text-align: center;
-}
+    body.index .card h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      font-weight: 900;
+      color: #0c1b3a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-header h1 {
-    margin: 0;
-    font-size: 32px;
-}
+    /* Barrinha azul do lado do título */
+    body.index .bar {
+      width: 4px;
+      height: 22px;
+      background: #0b3d91;
+      border-radius: 10px;
+      display: inline-block;
+      flex: 0 0 auto;
+    }
 
-header p {
-    margin-top: 10px;
-    font-size: 16px;
-    opacity: 0.9;
-}
+    body.index p {
+      margin: 0;
+      line-height: 1.65;
+      color: #2a2a2a;
+      font-size: 14.5px;
+    }
 
-nav {
-    background-color: #082c63;
-    padding: 12px;
-    text-align: center;
-}
+    body.index ul {
+      margin: 10px 0 0 18px;
+      padding: 0;
+    }
+    body.index li {
+      margin: 6px 0;
+      line-height: 1.5;
+      font-size: 14.5px;
+    }
 
-nav a {
-    color: white;
-    text-decoration: none;
-    margin: 0 25px;
-    font-weight: 600;
-    font-size: 15px;
-}
+    /* Imagem central */
+    body.index .img-wrap {
+      display: flex;
+      justify-content: center;
+      padding-top: 10px;
+    }
+    body.index .img-wrap img {
+      width: min(820px, 95%);
+      height: auto;
+      border-radius: 16px;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    }
 
-nav a:hover {
-    opacity: 0.7;
-}
+    /* Grid (2 colunas no PC, 1 no celular) */
+    body.index .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
 
-main {
-    max-width: 1100px;
-    margin: 60px auto;
-    background-color: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-}
+    @media (max-width: 780px) {
+      body.index header h1 { font-size: 28px; }
+      body.index .grid2 { grid-template-columns: 1fr; }
+      body.index .card { padding: 16px 14px; }
+      body.index .card h2 { font-size: 18px; }
+    }
 
-section {
-    margin-bottom: 50px;
-}
-
-h2 {
-    color: #0b3d91;
-    border-left: 5px solid #0f5bd3;
-    padding-left: 10px;
-}
-
-p {
-    line-height: 1.6;
-    font-size: 16px;
-}
-
-img {
-    display: block;
-    margin: 30px auto;
-    max-width: 100%;
-    border-radius: 8px;
-}
-
-footer {
-    background-color: #e4ebf5;
-    text-align: center;
-    padding: 20px;
-    margin-top: 40px;
-    font-size: 14px;
-}
-    .card {
-    background: white;
-    padding: 30px;
-    margin-bottom: 30px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
-}
-
-
-
-
-
-
-
-
-</style>
-    <head>
-<meta charset="UTF-8">
-<title>Lesão por Pressão</title>
-<link rel="stylesheet" href="style.css">
+    footer.index-footer {
+      text-align: center;
+      padding: 18px 12px;
+      font-size: 13px;
+      opacity: 0.8;
+    }
+  </style>
 </head>
 
-<body>
+<body class="index">
 
-<header>
+  <header>
     <h1>Lesão por Pressão</h1>
     <p>Projeto Integrador</p>
-</header>
-<nav>
-    <a href="index.html">Início</a>
-    <a href="nosso-produto.html">Nosso Produto</a>
+  </header>
+
+  <nav class="topnav">
     <a href="tratamento.html">Tratamento</a>
     <a href="impacto-economico.html">Impacto Econômico</a>
     <a href="guia-simples.html">Guia Simples</a>
@@ -161,86 +171,53 @@ footer {
     <a href="#conceito">Conceito</a>
     <a href="#classificacao">Classificação</a>
     <a href="#prevencao">Prevenção</a>
-</nav>
+  </nav>
 
+  <main>
 
-<main>
     <section id="fatores" class="card">
-    <h2>Fatores de Risco</h2>
-    <ul>
+      <h2><span class="bar"></span>Fatores de Risco</h2>
+      <ul>
         <li>Imobilidade prolongada</li>
         <li>Desnutrição e desidratação</li>
         <li>Incontinência urinária e fecal</li>
         <li>Idade avançada</li>
         <li>Doenças crônicas (diabetes, insuficiência vascular)</li>
         <li>Redução da sensibilidade</li>
-    </ul>
-</section>
+      </ul>
+    </section>
 
+    <section id="conceito" class="card">
+      <h2><span class="bar"></span>Conceito</h2>
+      <p>
+        Lesão por pressão é um dano localizado na pele e/ou tecido subjacente, geralmente sobre proeminência óssea,
+        resultante de pressão prolongada ou pressão associada ao cisalhamento.
+      </p>
 
-<section id="conceito" class="card">
-    <h2>Conceito</h2>
-    <p>
-    Lesão por pressão é um dano localizado na pele e/ou tecido subjacente, 
-    geralmente sobre uma proeminência óssea, resultante de pressão prolongada 
-    ou pressão associada ao cisalhamento.
-    </p>
+      <div class="img-wrap">
+        <img src="lesao.png" alt="Ilustração educativa sobre lesão por pressão" />
+      </div>
+    </section>
 
-    <img src="lesao.png" alt="Ilustração educativa sobre lesão por pressão"
-    img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 12px;
-    margin-top: 20px;
-    display: block;
-}
-</section>
+    <div class="grid2">
+      <section id="classificacao" class="card">
+        <h2><span class="bar"></span>Classificação</h2>
+        <p>
+          As lesões por pressão são classificadas em estágios conforme profundidade e comprometimento tecidual.
+        </p>
+      </section>
 
-<section id="classificacao" class="card">
-    <h2>Classificação</h2>
-    <p>
-    As lesões por pressão são classificadas em estágios conforme a profundidade 
-    e comprometimento tecidual.
-    </p>
-</section>
+      <section id="prevencao" class="card">
+        <h2><span class="bar"></span>Prevenção</h2>
+        <p>
+          Envolve avaliação de risco, mudança de decúbito, uso de superfícies de suporte e cuidados adequados com a pele.
+        </p>
+      </section>
+    </div>
 
-<section id="prevencao" class="card">
-    <h2>Prevenção</h2>
-    <p>
-    A prevenção envolve avaliação de risco, mudança de decúbito, uso de superfícies 
-    de suporte e cuidados adequados com a pele.
-    </p>
-</section>
+  </main>
 
-</main>
-
-<footer>
-    © 2026 - Projeto Integrador
-</footer>
+  <footer class="index-footer">© 2026 - Projeto Integrador</footer>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
