@@ -42,6 +42,12 @@
     .ref { font-size: 13px; color: #555; line-height: 1.55; }
     .ref a { word-break: break-word; }
   </style>
+  .chartBox{
+  height: 360px;
+}
+@media (max-width: 768px){
+  .chartBox{ height: 320px; }
+}
 </head>
 
 <body>
@@ -132,7 +138,9 @@
       <span class="badge">total do caso complexo</span>. :contentReference[oaicite:8]{index=8}
     </p>
 
-    <canvas id="graficoCusto"></canvas>
+    <div class="chartBox">
+  <canvas id="graficoCusto"></canvas>
+</div>
 
     <p class="small">
       <strong>Nota:</strong> são métricas diferentes (por procedimento, por dia, por 6 meses e total do caso). O objetivo é
