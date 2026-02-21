@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Seleção de Produtos — Lesão por Pressão (LPP)</title>
+
+  <style>
+    :root{
+      --lpp-blue-900:#0b3d91;
+      --lpp-blue-800:#0a2f73;
+      --lpp-bg:#f4f6f9;
+      --lpp-card:#ffffff;
+      --lpp-text:#0f172a;
+      --lpp-muted:#475569;
+      --lpp-border:rgba(15,23,42,.12);
+      --lpp-shadow:0 10px 25px rgba(2,6,23,.08);
+      --lpp-radius:18px;
+      --lpp-accent:#2563eb;
+      --lpp-ok:#16a34a;
+      --lpp-warn:#f59e0b;
+      --lpp-bad:#dc2626;
+    }
+
+    html,body{height:100%}
+    body{
+      margin:0 !important;
+      background:var(--lpp-bg) !important;
+      color:var(--lpp-text) !important;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif !important;
+      line-height:1.55 !important;
+    }
+
+    /* HEADER */
+    .lpp-header{
+      background: linear-gradient(180deg, var(--lpp-blue-900), var(--lpp-blue-800));
+      color:#fff;
+      text-align:center;
+      padding:28px 16px 18px;
+    }
+    .lpp-header h1{
+      margin:0;
+      font-size:clamp(22px, 4vw, 38px);
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .lpp-header p{
+      margin:8px 0 0;
+      opacity:.9;
+      font-size:14px;
+    }
+
+    /* NAV (rolagem horizontal no celular) */
+    .lpp-nav{
+      position:sticky;
+      top:0;
+      z-index:50;
+      background:#0a2f73;
+      border-bottom:1px solid rgba(255,255,255,.12);
+    }
+    .lpp-nav-inner{
+      max-width:1100px;
+      margin:0 auto;
+      padding:10px 10px 12px;
+    }
+    .lpp-menu{
+      display:flex;
+      gap:10px;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:thin;
+      padding-bottom:6px;
+    }
+    .lpp-menu::-webkit-scrollbar{height:6px}
+    .lpp-menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25);border-radius:999px}
+
+    .lpp-menu a{
+      flex:0 0 auto;
+      white-space:nowrap;
+      color:#fff !important;
+      text-decoration:none !important;
+      font-weight:700;
+      font-size:14px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.10);
+    }
+    .lpp-menu a:hover{background:rgba(255,255,255,.16)}
+    .lpp-menu a[aria-current="page"]{
+      background:rgba(255,255,255,.22);
+      border-color:rgba(255,255,255,.28);
+    }
+
+    /* MAIN */
+    .lpp-main{
+      max-width:1100px;
+      margin:0 auto;
+      padding:18px 12px 40px;
+    }
+    .lpp-card{
+      background:var(--lpp-card);
+      border:1px solid var(--lpp-border);
+      box-shadow:var(--lpp-shadow);
+      border-radius:var(--lpp-radius);
+      padding:18px 16px;
+      margin:14px 0;
+    }
+
+    .lpp-title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin:0 0 10px;
+      font-size:clamp(18px, 3.2vw, 22px);
+      font-weight:900;
+    }
+    .lpp-bar{
+      width:6px;
+      height:22px;
+      border-radius:999px;
+      background:var(--lpp-accent);
+      flex:0 0 auto;
+    }
+
+    .lpp-lead{
+      margin:0;
+      color:var(--lpp-muted);
+      font-size:15px;
+    }
+
+    .lpp-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:14px;
+    }
+    @media (max-width:900px){
+      .lpp-grid{grid-template-columns:1fr}
+    }
+
+    /* TABELA RESPONSIVA */
+    .lpp-table-wrap{
+      width:100%;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      border-radius:14px;
+      border:1px solid var(--lpp-border);
+      background:#fff;
+    }
+    .lpp-table{
+      width:100%;
+      min-width:1000px;
+      border-collapse:separate;
+      border-spacing:0;
+      font-size:14px;
+    }
+    .lpp-table th, .lpp-table td{
+      padding:12px 12px;
+      border-bottom:1px solid rgba(15,23,42,.08);
+      vertical-align:top;
+    }
+    .lpp-table th{
+      position:sticky;
+      top:0;
+      z-index:2;
+      background:#0b3d91;
+      color:#fff;
+      text-align:left;
+      font-size:13px;
+      letter-spacing:.2px;
+    }
+    .lpp-table tr:nth-child(even) td{background:#fbfdff}
+
+    .lpp-tag{
+      display:inline-block;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid var(--lpp-border);
+      background:#f8fafc;
+      font-size:12px;
+      font-weight:800;
+      margin:4px 6px 0 0;
+    }
+    .lpp-tag.ok{border-color:rgba(22,163,74,.25);background:rgba(22,163,74,.10);color:var(--lpp-ok)}
+    .lpp-tag.warn{border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.12);color:#92400e}
+    .lpp-tag.bad{border-color:rgba(220,38,38,.25);background:rgba(220,38,38,.10);color:var(--lpp-bad)}
+    .lpp-tag.info{border-color:rgba(37,99,235,.25);background:rgba(37,99,235,.10);color:var(--lpp-accent)}
+
+    .lpp-note{
+      margin:10px 0 0;
+      font-size:13px;
+      color:var(--lpp-muted);
+    }
+
+    .lpp-callout{
+      border:1px solid var(--lpp-border);
+      border-radius:14px;
+      padding:14px 14px;
+      background:#fff;
+    }
+    .lpp-callout h3{
+      margin:0 0 8px;
+      font-size:16px;
+      font-weight:900;
+    }
+    .lpp-callout ul{
+      margin:0 0 0 18px;
+      color:var(--lpp-muted);
+    }
+    .lpp-callout li{margin:6px 0}
+
+    .lpp-footer{
+      text-align:center;
+      color:var(--lpp-muted);
+      font-size:12px;
+      margin-top:18px;
+      padding-top:8px;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="lpp-header">
+    <h1>Seleção de Produtos (LPP)</h1>
+    <p>Tabela comparativa para estudo: produto × exsudato × estágio × objetivo</p>
+  </header>
+
+  <nav class="lpp-nav" aria-label="Navegação principal">
+    <div class="lpp-nav-inner">
+      <div class="lpp-menu">
+        <a href="index.html">Início</a>
+        <a href="nosso-produto.html">Nosso Produto</a>
+        <a href="tratamento.html">Tratamento</a>
+        <a href="selecao-produtos.html" aria-current="page">Seleção de Produtos</a>
+        <a href="impacto-economico.html">Impacto Econômico</a>
+        <a href="guia-simples.html">Guia Simples</a>
+        <a href="avaliacao.html">Avaliação</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="lpp-main">
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>Como usar esta tabela</h2>
+      <div class="lpp-grid">
+        <p class="lpp-lead">
+          Esta tabela é um <b>resumo didático</b>. Na prática, a escolha da cobertura é guiada principalmente por:
+          <b>quantidade de exsudato</b>, <b>tipo de tecido</b> (granulação/esfacelo/necrose), <b>profundidade/cavidade</b>,
+          risco de <b>macerar</b> a pele ao redor e <b>sinais de infecção</b>.
+        </p>
+
+        <div class="lpp-callout">
+          <h3>No celular</h3>
+          <ul>
+            <li>Deslize a tabela para o lado (rolagem horizontal).</li>
+            <li>Use “estágio” como referência, mas priorize exsudato/tecido.</li>
+            <li>Reavalie com frequência e siga protocolo do serviço.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="lpp-note"><b>Atenção:</b> conteúdo educativo. A conduta clínica deve seguir avaliação profissional e prescrição.</p>
+    </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>Tabela comparativa (produto × exsudato × estágio)</h2>
+
+      <div class="lpp-table-wrap" role="region" aria-label="Tabela comparativa de produtos para LPP" tabindex="0">
+        <table class="lpp-table">
+          <thead>
+            <tr>
+              <th>Produto (categoria)</th>
+              <th>Exsudato indicado</th>
+              <th>Estágio LPP (uso típico)</th>
+              <th>Para que serve (objetivo)</th>
+              <th>Pontos de atenção</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><b>Filme transparente</b> (poliuretano)<br>
+                <span class="lpp-tag info">proteção</span><span class="lpp-tag ok">barreira</span>
+              </td>
+              <td><span class="lpp-tag ok">sem</span><span class="lpp-tag ok">baixo</span></td>
+              <td><span class="lpp-tag info">Estágio 1</span><span class="lpp-tag info">prevenção</span></td>
+              <td>Protege contra fricção/cisalhamento e permite inspeção visual.</td>
+              <td>Evitar se exsudato moderado/alto ou pele muito frágil/macerada.</td>
+            </tr>
+
+            <tr>
+              <td><b>Hidrocoloide</b><br>
+                <span class="lpp-tag ok">autólise</span><span class="lpp-tag info">oclusivo</span>
+              </td>
+              <td><span class="lpp-tag ok">baixo</span><span class="lpp-tag warn">moderado</span></td>
+              <td><span class="lpp-tag info">Estágio 2</span><span class="lpp-tag info">III superficial</span></td>
+              <td>Ambiente úmido controlado; pode apoiar desbridamento autolítico em feridas superficiais.</td>
+              <td>Evitar se suspeita de infecção não controlada; atenção à maceração em exsudato alto.</td>
+            </tr>
+
+            <tr>
+              <td><b>Espuma de poliuretano</b> (com/sem borda)<br>
+                <span class="lpp-tag ok">absorção</span><span class="lpp-tag ok">conforto</span>
+              </td>
+              <td><span class="lpp-tag warn">moderado</span><span class="lpp-tag warn">alto</span></td>
+              <td><span class="lpp-tag info">II</span><span class="lpp-tag info">III</span><span class="lpp-tag info">IV</span></td>
+              <td>Absorver exsudato, reduzir maceração e proteger contra trauma na troca.</td>
+              <td>Troca conforme saturação; escolher tamanho adequado; pode exigir cobertura secundária.</td>
+            </tr>
+
+            <tr>
+              <td><b>Alginato</b> (cálcio) / <b>Hidrofibra</b><br>
+                <span class="lpp-tag warn">alto exsudato</span><span class="lpp-tag info">cavitária</span>
+              </td>
+              <td><span class="lpp-tag warn">moderado</span><span class="lpp-tag warn">alto</span></td>
+              <td><span class="lpp-tag info">III</span><span class="lpp-tag info">IV</span><span class="lpp-tag info">cavidades</span></td>
+              <td>Alta absorção; ajuda a controlar exsudato; pode preencher cavidades sem compactar.</td>
+              <td>Precisa cobertura secundária; evitar em ferida seca; não “tamponar” com força.</td>
+            </tr>
+
+            <tr>
+              <td><b>Hidrogel</b><br>
+                <span class="lpp-tag info">hidratação</span><span class="lpp-tag ok">autólise</span>
+              </td>
+              <td><span class="lpp-tag ok">sem</span><span class="lpp-tag ok">baixo</span></td>
+              <td><span class="lpp-tag info">III/IV</span><span class="lpp-tag info">leito ressecado</span></td>
+              <td>Doar umidade ao leito ressecado e apoiar desbridamento autolítico quando indicado.</td>
+              <td>Se exsudato alto, pode macerar; necrose seca estável pode ter conduta específica.</td>
+            </tr>
+
+            <tr>
+              <td><b>Carvão ativado</b> (± prata)<br>
+                <span class="lpp-tag warn">odor</span><span class="lpp-tag info">biofilme</span>
+              </td>
+              <td><span class="lpp-tag ok">baixo</span><span class="lpp-tag warn">moderado</span></td>
+              <td><span class="lpp-tag info">III/IV</span><span class="lpp-tag info">odor</span></td>
+              <td>Controle de odor e suporte no manejo do exsudato (varia conforme produto).</td>
+              <td>Não substitui controle de foco; reavaliar necessidade e tempo de uso.</td>
+            </tr>
+
+            <tr>
+              <td><b>Coberturas antimicrobianas</b> (prata/iodo etc.)<br>
+                <span class="lpp-tag bad">suspeita de infecção</span>
+              </td>
+              <td><span class="lpp-tag info">depende</span><span class="lpp-tag warn">moderado–alto</span></td>
+              <td><span class="lpp-tag info">II–IV</span><span class="lpp-tag bad">quando indicado</span></td>
+              <td>Reduzir carga microbiana local quando há risco/colonização crítica, conforme avaliação.</td>
+              <td>Preferir uso por tempo limitado e reavaliação; seguir protocolo do serviço.</td>
+            </tr>
+
+            <tr>
+              <td><b>Barreira cutânea</b> (creme/filme)<br>
+                <span class="lpp-tag ok">pele</span><span class="lpp-tag ok">umidade</span>
+              </td>
+              <td><span class="lpp-tag info">perilesional</span></td>
+              <td><span class="lpp-tag info">todos</span><span class="lpp-tag info">prevenção</span></td>
+              <td>Proteger pele ao redor contra maceração, dermatite por umidade e adesivos.</td>
+              <td>Aplicar camada fina; evitar prejudicar aderência quando necessário.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="lpp-note">
+        <b>Resumo:</b> “estágio” ajuda a entender profundidade, mas a escolha é guiada principalmente por
+        <b>exsudato + tecido + profundidade + infecção + dor</b>.
+      </p>
+    </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>Referências (bases e diretrizes)</h2>
+      <ul style="margin:10px 0 0 18px; color:var(--lpp-muted);">
+        <li><b>EPUAP/NPIAP/PPPIA.</b> Prevention and Treatment of Pressure Ulcers/Injuries: Clinical Practice Guideline (2019).</li>
+        <li><b>NPIAP.</b> Materiais educacionais sobre Pressure Injury (terminologia, prevenção, cuidado por estágio).</li>
+        <li><b>Wounds International.</b> Guias educacionais sobre manejo de exsudato e seleção de coberturas.</li>
+        <li><b>OMS/WHO.</b> Boas práticas de segurança do paciente e prevenção de infecções (higiene das mãos e cuidado seguro).</li>
+      </ul>
+      <p class="lpp-note">Conteúdo educativo. A conduta clínica deve seguir avaliação profissional e protocolos do serviço.</p>
+    </section>
+
+    <div class="lpp-footer">© 2026 - Projeto Integrador</div>
+  </main>
+</body>
+</html>
