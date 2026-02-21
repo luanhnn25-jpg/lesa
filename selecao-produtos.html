@@ -20,6 +20,7 @@
       --lpp-ok:#16a34a;
       --lpp-warn:#f59e0b;
       --lpp-bad:#dc2626;
+      --lpp-chip:#eef2ff;
     }
 
     html,body{height:100%}
@@ -31,7 +32,6 @@
       line-height:1.55 !important;
     }
 
-    /* HEADER */
     .lpp-header{
       background: linear-gradient(180deg, var(--lpp-blue-900), var(--lpp-blue-800));
       color:#fff;
@@ -50,7 +50,6 @@
       font-size:14px;
     }
 
-    /* NAV (rolagem horizontal no celular) */
     .lpp-nav{
       position:sticky;
       top:0;
@@ -73,7 +72,6 @@
     }
     .lpp-menu::-webkit-scrollbar{height:6px}
     .lpp-menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25);border-radius:999px}
-
     .lpp-menu a{
       flex:0 0 auto;
       white-space:nowrap;
@@ -92,7 +90,6 @@
       border-color:rgba(255,255,255,.28);
     }
 
-    /* MAIN */
     .lpp-main{
       max-width:1100px;
       margin:0 auto;
@@ -122,7 +119,6 @@
       background:var(--lpp-accent);
       flex:0 0 auto;
     }
-
     .lpp-lead{
       margin:0;
       color:var(--lpp-muted);
@@ -138,7 +134,6 @@
       .lpp-grid{grid-template-columns:1fr}
     }
 
-    /* TABELA RESPONSIVA */
     .lpp-table-wrap{
       width:100%;
       overflow-x:auto;
@@ -149,7 +144,7 @@
     }
     .lpp-table{
       width:100%;
-      min-width:1000px;
+      min-width:1100px;
       border-collapse:separate;
       border-spacing:0;
       font-size:14px;
@@ -209,6 +204,38 @@
     }
     .lpp-callout li{margin:6px 0}
 
+    .lpp-sections{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+    @media (max-width:900px){
+      .lpp-sections{grid-template-columns:1fr}
+    }
+
+    .lpp-item h4{
+      margin:0 0 6px;
+      font-size:15px;
+      font-weight:900;
+    }
+    .lpp-item p{
+      margin:0;
+      color:var(--lpp-muted);
+      font-size:14px;
+    }
+
+    .lpp-chip{
+      display:inline-block;
+      background:var(--lpp-chip);
+      border:1px solid rgba(37,99,235,.18);
+      color:#1e40af;
+      font-weight:800;
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      margin:8px 8px 0 0;
+    }
+
     .lpp-footer{
       text-align:center;
       color:var(--lpp-muted);
@@ -222,7 +249,7 @@
 <body>
   <header class="lpp-header">
     <h1>Seleção de Produtos (LPP)</h1>
-    <p>Tabela comparativa para estudo: produto × exsudato × estágio × objetivo</p>
+    <p>Material de estudo: limpeza, coberturas, desbridamento, proteção e suporte</p>
   </header>
 
   <nav class="lpp-nav" aria-label="Navegação principal">
@@ -240,25 +267,25 @@
   </nav>
 
   <main class="lpp-main">
+
     <section class="lpp-card">
-      <h2 class="lpp-title"><span class="lpp-bar"></span>Como usar esta tabela</h2>
+      <h2 class="lpp-title"><span class="lpp-bar"></span>Como usar este material</h2>
       <div class="lpp-grid">
         <p class="lpp-lead">
-          Esta tabela é um <b>resumo didático</b>. Na prática, a escolha da cobertura é guiada principalmente por:
-          <b>quantidade de exsudato</b>, <b>tipo de tecido</b> (granulação/esfacelo/necrose), <b>profundidade/cavidade</b>,
-          risco de <b>macerar</b> a pele ao redor e <b>sinais de infecção</b>.
+          A escolha do cuidado local em LPP deve ser orientada por: <b>exsudato</b>, <b>tecido do leito</b>,
+          <b>profundidade/cavidade</b>, risco de <b>macerar</b> pele perilesional e sinais de <b>infecção</b>.
+          O <b>estágio</b> ajuda a caracterizar profundidade, mas não decide sozinho o produto.
         </p>
-
         <div class="lpp-callout">
-          <h3>No celular</h3>
+          <h3>Dica rápida</h3>
           <ul>
-            <li>Deslize a tabela para o lado (rolagem horizontal).</li>
-            <li>Use “estágio” como referência, mas priorize exsudato/tecido.</li>
-            <li>Reavalie com frequência e siga protocolo do serviço.</li>
+            <li>No celular, deslize a tabela para o lado (rolagem horizontal).</li>
+            <li>Reavalie a resposta do curativo e a pele ao redor em cada troca.</li>
+            <li>Siga protocolo institucional e prescrição quando houver.</li>
           </ul>
         </div>
       </div>
-      <p class="lpp-note"><b>Atenção:</b> conteúdo educativo. A conduta clínica deve seguir avaliação profissional e prescrição.</p>
+      <p class="lpp-note"><b>Atenção:</b> conteúdo educativo. Condutas clínicas devem seguir avaliação profissional e protocolos do serviço.</p>
     </section>
 
     <section class="lpp-card">
@@ -284,37 +311,17 @@
               <td><span class="lpp-tag ok">sem</span><span class="lpp-tag ok">baixo</span></td>
               <td><span class="lpp-tag info">Estágio 1</span><span class="lpp-tag info">prevenção</span></td>
               <td>Protege contra fricção/cisalhamento e permite inspeção visual.</td>
-              <td>Evitar se exsudato moderado/alto ou pele muito frágil/macerada.</td>
+              <td>Evitar se exsudato moderado/alto ou pele muito macerada.</td>
             </tr>
 
             <tr>
               <td><b>Hidrocoloide</b><br>
-                <span class="lpp-tag ok">autólise</span><span class="lpp-tag info">oclusivo</span>
+                <span class="lpp-tag ok">ambiente úmido</span><span class="lpp-tag info">oclusivo</span>
               </td>
               <td><span class="lpp-tag ok">baixo</span><span class="lpp-tag warn">moderado</span></td>
-              <td><span class="lpp-tag info">Estágio 2</span><span class="lpp-tag info">III superficial</span></td>
-              <td>Ambiente úmido controlado; pode apoiar desbridamento autolítico em feridas superficiais.</td>
-              <td>Evitar se suspeita de infecção não controlada; atenção à maceração em exsudato alto.</td>
-            </tr>
-
-            <tr>
-              <td><b>Espuma de poliuretano</b> (com/sem borda)<br>
-                <span class="lpp-tag ok">absorção</span><span class="lpp-tag ok">conforto</span>
-              </td>
-              <td><span class="lpp-tag warn">moderado</span><span class="lpp-tag warn">alto</span></td>
-              <td><span class="lpp-tag info">II</span><span class="lpp-tag info">III</span><span class="lpp-tag info">IV</span></td>
-              <td>Absorver exsudato, reduzir maceração e proteger contra trauma na troca.</td>
-              <td>Troca conforme saturação; escolher tamanho adequado; pode exigir cobertura secundária.</td>
-            </tr>
-
-            <tr>
-              <td><b>Alginato</b> (cálcio) / <b>Hidrofibra</b><br>
-                <span class="lpp-tag warn">alto exsudato</span><span class="lpp-tag info">cavitária</span>
-              </td>
-              <td><span class="lpp-tag warn">moderado</span><span class="lpp-tag warn">alto</span></td>
-              <td><span class="lpp-tag info">III</span><span class="lpp-tag info">IV</span><span class="lpp-tag info">cavidades</span></td>
-              <td>Alta absorção; ajuda a controlar exsudato; pode preencher cavidades sem compactar.</td>
-              <td>Precisa cobertura secundária; evitar em ferida seca; não “tamponar” com força.</td>
+              <td><span class="lpp-tag info">I–II</span></td>
+              <td>Mantém umidade controlada; pode apoiar autólise em feridas superficiais.</td>
+              <td>Evitar em exsudato alto e suspeita de infecção não controlada; risco de maceração.</td>
             </tr>
 
             <tr>
@@ -322,29 +329,59 @@
                 <span class="lpp-tag info">hidratação</span><span class="lpp-tag ok">autólise</span>
               </td>
               <td><span class="lpp-tag ok">sem</span><span class="lpp-tag ok">baixo</span></td>
-              <td><span class="lpp-tag info">III/IV</span><span class="lpp-tag info">leito ressecado</span></td>
-              <td>Doar umidade ao leito ressecado e apoiar desbridamento autolítico quando indicado.</td>
+              <td><span class="lpp-tag info">III–IV</span><span class="lpp-tag info">ferida seca/necrose</span></td>
+              <td>Doa umidade ao leito seco e favorece desbridamento autolítico quando indicado.</td>
               <td>Se exsudato alto, pode macerar; necrose seca estável pode ter conduta específica.</td>
             </tr>
 
             <tr>
-              <td><b>Carvão ativado</b> (± prata)<br>
-                <span class="lpp-tag warn">odor</span><span class="lpp-tag info">biofilme</span>
+              <td><b>Alginato de cálcio</b><br>
+                <span class="lpp-tag warn">alto exsudato</span><span class="lpp-tag info">cavitária</span>
               </td>
-              <td><span class="lpp-tag ok">baixo</span><span class="lpp-tag warn">moderado</span></td>
-              <td><span class="lpp-tag info">III/IV</span><span class="lpp-tag info">odor</span></td>
-              <td>Controle de odor e suporte no manejo do exsudato (varia conforme produto).</td>
-              <td>Não substitui controle de foco; reavaliar necessidade e tempo de uso.</td>
+              <td><span class="lpp-tag warn">moderado</span><span class="lpp-tag warn">alto</span></td>
+              <td><span class="lpp-tag info">III–IV</span></td>
+              <td>Alta absorção; ajuda a controlar exsudato; pode preencher cavidades sem compactar.</td>
+              <td>Precisa cobertura secundária; evitar em ferida seca; não “tamponar” com força.</td>
             </tr>
 
             <tr>
-              <td><b>Coberturas antimicrobianas</b> (prata/iodo etc.)<br>
+              <td><b>Espuma de poliuretano</b> (com/sem borda)<br>
+                <span class="lpp-tag ok">absorção</span><span class="lpp-tag ok">conforto</span>
+              </td>
+              <td><span class="lpp-tag ok">leve</span><span class="lpp-tag warn">moderado</span></td>
+              <td><span class="lpp-tag info">II–IV</span></td>
+              <td>Absorver exsudato e reduzir maceração; proteção contra trauma na troca.</td>
+              <td>Troca conforme saturação; avaliar integridade da pele perilesional.</td>
+            </tr>
+
+            <tr>
+              <td><b>Carvão ativado com prata</b><br>
+                <span class="lpp-tag warn">odor</span><span class="lpp-tag bad">colonização crítica</span>
+              </td>
+              <td><span class="lpp-tag ok">baixo</span><span class="lpp-tag warn">moderado</span></td>
+              <td><span class="lpp-tag info">III–IV</span><span class="lpp-tag bad">quando indicado</span></td>
+              <td>Controle de odor e suporte antimicrobiano conforme produto/protocolo.</td>
+              <td>Reavaliar periodicamente; não substitui controle de foco e avaliação clínica.</td>
+            </tr>
+
+            <tr>
+              <td><b>Hidrofibra</b><br>
+                <span class="lpp-tag warn">gelifica</span><span class="lpp-tag warn">absorção</span>
+              </td>
+              <td><span class="lpp-tag warn">moderado</span><span class="lpp-tag warn">alto</span></td>
+              <td><span class="lpp-tag info">III–IV</span><span class="lpp-tag info">cavidades</span></td>
+              <td>Forma gel ao contato com secreção, favorecendo manejo do exsudato.</td>
+              <td>Precisa cobertura secundária; evitar em ferida muito seca.</td>
+            </tr>
+
+            <tr>
+              <td><b>Coberturas antimicrobianas</b> (prata/PHMB/iodo etc.)<br>
                 <span class="lpp-tag bad">suspeita de infecção</span>
               </td>
               <td><span class="lpp-tag info">depende</span><span class="lpp-tag warn">moderado–alto</span></td>
-              <td><span class="lpp-tag info">II–IV</span><span class="lpp-tag bad">quando indicado</span></td>
-              <td>Reduzir carga microbiana local quando há risco/colonização crítica, conforme avaliação.</td>
-              <td>Preferir uso por tempo limitado e reavaliação; seguir protocolo do serviço.</td>
+              <td><span class="lpp-tag info">II–IV</span><span class="lpp-tag bad">uso criterioso</span></td>
+              <td>Reduzir carga microbiana local quando indicado por avaliação (colonização crítica/infecção).</td>
+              <td>Uso deve ser reavaliado; seguir protocolo e tempo limitado quando recomendado.</td>
             </tr>
 
             <tr>
@@ -361,20 +398,153 @@
       </div>
 
       <p class="lpp-note">
-        <b>Resumo:</b> “estágio” ajuda a entender profundidade, mas a escolha é guiada principalmente por
-        <b>exsudato + tecido + profundidade + infecção + dor</b>.
+        <b>Nota didática:</b> o “melhor” produto depende do contexto. Reavaliação frequente e redistribuição de pressão são determinantes.
       </p>
     </section>
 
+    <!-- NOVAS SEÇÕES (1 a 7) -->
     <section class="lpp-card">
-      <h2 class="lpp-title"><span class="lpp-bar"></span>Referências (bases e diretrizes)</h2>
+      <h2 class="lpp-title"><span class="lpp-bar"></span>1) Soluções para limpeza do leito</h2>
+      <p class="lpp-lead">
+        Indicadas na etapa inicial do curativo. <b>Objetivo:</b> reduzir biocarga, remover detritos e preservar tecido viável.
+      </p>
+      <div style="margin-top:10px">
+        <span class="lpp-chip">Solução fisiológica 0,9% (SF 0,9%)</span>
+        <span class="lpp-chip">Soluções com polihexanida (PHMB)</span>
+        <span class="lpp-chip">Ringer Lactato</span>
+        <span class="lpp-chip">Irrigação sob pressão controlada (quando indicado)</span>
+      </div>
+      <p class="lpp-note">A escolha da solução e técnica deve considerar protocolo do serviço e tolerância do paciente.</p>
+    </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>2) Coberturas primárias (atuam diretamente no leito)</h2>
+
+      <div class="lpp-sections">
+        <div class="lpp-item">
+          <h4>Hidrocoloide</h4>
+          <p>Indicado com maior frequência em <b>LPP estágio I e II</b>; mantém <b>ambiente úmido controlado</b>.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Hidrogel</h4>
+          <p>Indicado para feridas <b>secas</b> ou com <b>necrose</b>; favorece <b>desbridamento autolítico</b> quando indicado.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Alginato de cálcio</h4>
+          <p>Para <b>exsudato moderado a alto</b>; alta capacidade de absorção.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Espuma de poliuretano</h4>
+          <p>Exsudato <b>leve a moderado</b>; conforto e absorção.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Carvão ativado com prata</h4>
+          <p>Controle de <b>odor</b>; pode ser usado em suspeita de <b>colonização crítica/infecção</b> conforme protocolo.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Hidrofibra</h4>
+          <p>Exsudato <b>moderado a alto</b>; forma <b>gel</b> ao contato com secreção.</p>
+        </div>
+      </div>
+
+      <p class="lpp-note"><b>Dica:</b> em exsudato alto, priorize materiais absorventes e proteção perilesional para reduzir maceração.</p>
+    </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>3) Coberturas com ação antimicrobiana</h2>
+      <p class="lpp-lead">
+        Indicadas quando há <b>suspeita de infecção local</b> ou <b>colonização crítica</b>, conforme avaliação e protocolo.
+        <b>Uso criterioso</b> e com reavaliação periódica.
+      </p>
+      <div style="margin-top:10px">
+        <span class="lpp-chip">Prata iônica</span>
+        <span class="lpp-chip">PHMB</span>
+        <span class="lpp-chip">Iodo cadexômero</span>
+        <span class="lpp-chip">Mel medicinal (protocolos específicos)</span>
+      </div>
+      <p class="lpp-note">Se houver piora clínica, sinais sistêmicos ou suspeita de osteomielite, encaminhar para avaliação multiprofissional.</p>
+    </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>4) Produtos para desbridamento</h2>
+      <p class="lpp-lead">Quando há <b>tecido desvitalizado</b> (esfacelo/necrose), a técnica depende do caso, local e protocolo.</p>
+      <div class="lpp-sections" style="margin-top:10px">
+        <div class="lpp-item">
+          <h4>Enzimático (colagenase)</h4>
+          <p>Auxilia remoção de tecido desvitalizado quando indicado.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Autolítico (hidrogel)</h4>
+          <p>Favorece autólise, especialmente em leito ressecado, conforme indicação clínica.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Mecânico</h4>
+          <p>Uso seletivo e cuidadoso para evitar trauma ao tecido viável.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Cirúrgico (ambiente hospitalar)</h4>
+          <p>Reservado para casos indicados e executado por equipe habilitada.</p>
+        </div>
+      </div>
+      <p class="lpp-note">Atenção: necrose seca estável (ex.: calcâneo) pode ter conduta específica — seguir avaliação vascular/protocolo.</p>
+    </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>5) Proteção da pele perilesional</h2>
+      <p class="lpp-lead">Essencial para reduzir <b>maceração</b>, <b>dermatite por umidade</b> e trauma por adesivos.</p>
+      <div style="margin-top:10px">
+        <span class="lpp-chip">Cremes barreira (óxido de zinco)</span>
+        <span class="lpp-chip">Películas protetoras sem álcool</span>
+        <span class="lpp-chip">Ácidos graxos essenciais (AGE)</span>
+        <span class="lpp-chip">Espumas de proteção para proeminências ósseas</span>
+      </div>
+    </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>6) Dispositivos para alívio de pressão</h2>
+      <p class="lpp-lead">
+        Fundamentais na prevenção e tratamento: <b>sem redistribuição de pressão, a cicatrização tende a falhar</b>.
+      </p>
+      <div style="margin-top:10px">
+        <span class="lpp-chip">Colchão pneumático alternado</span>
+        <span class="lpp-chip">Colchão viscoelástico</span>
+        <span class="lpp-chip">Almofadas de redistribuição de pressão</span>
+        <span class="lpp-chip">Coxins posicionadores</span>
+      </div>
+      <p class="lpp-note">Associar reposicionamento programado, redução de fricção/cisalhamento e proteção de proeminências ósseas.</p>
+    </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>7) Suporte sistêmico (tratamento não é só tópico)</h2>
+      <p class="lpp-lead">O prognóstico depende de fatores sistêmicos e do cuidado global.</p>
+      <div class="lpp-sections" style="margin-top:10px">
+        <div class="lpp-item">
+          <h4>Avaliação nutricional</h4>
+          <p>Proteína, zinco, vitamina C (conforme avaliação) e plano alimentar individualizado.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Controle glicêmico</h4>
+          <p>Hiperglicemia aumenta risco de infecção e retarda reparo tecidual.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Manejo da dor</h4>
+          <p>Planejar analgesia antes da troca e usar técnicas menos traumáticas.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Controle de umidade/incontinência</h4>
+          <p>Reduz dermatite associada à umidade e protege pele perilesional.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>Referências</h2>
       <ul style="margin:10px 0 0 18px; color:var(--lpp-muted);">
-        <li><b>EPUAP/NPIAP/PPPIA.</b> Prevention and Treatment of Pressure Ulcers/Injuries: Clinical Practice Guideline (2019).</li>
-        <li><b>NPIAP.</b> Materiais educacionais sobre Pressure Injury (terminologia, prevenção, cuidado por estágio).</li>
-        <li><b>Wounds International.</b> Guias educacionais sobre manejo de exsudato e seleção de coberturas.</li>
-        <li><b>OMS/WHO.</b> Boas práticas de segurança do paciente e prevenção de infecções (higiene das mãos e cuidado seguro).</li>
+        <li><b>EPUAP/NPIAP/PPPIA.</b> <i>Prevention and Treatment of Pressure Ulcers/Injuries: Clinical Practice Guideline</i>. 2019.</li>
+        <li><b>ANVISA.</b> Notas técnicas e materiais orientadores relacionados à prevenção e manejo de lesões por pressão (Brasil).</li>
+        <li><b>Wound Healing Society.</b> Diretrizes para tratamento de úlceras por pressão (atualizações em periódicos da sociedade).</li>
       </ul>
-      <p class="lpp-note">Conteúdo educativo. A conduta clínica deve seguir avaliação profissional e protocolos do serviço.</p>
+      <p class="lpp-note">Material educativo. Conduta clínica deve seguir avaliação profissional, prescrição e protocolo institucional.</p>
     </section>
 
     <div class="lpp-footer">© 2026 - Projeto Integrador</div>
