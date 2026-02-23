@@ -9,21 +9,34 @@
     :root{
       --lpp-blue-1:#0b3d91;
       --lpp-blue-2:#0a2f73;
+      --lpp-blue-3:#0b5bd3;
       --lpp-bg:#eef2f7;
       --lpp-card:#ffffff;
       --lpp-text:#0f172a;
       --lpp-muted:#475569;
-      --lpp-shadow: 0 12px 30px rgba(2, 6, 23, .08);
+
+      --lpp-shadow: 0 12px 30px rgba(2, 6, 23, .10);
+      --lpp-shadow-2: 0 18px 45px rgba(2, 6, 23, .14);
+      --lpp-shadow-soft: 0 10px 24px rgba(2, 6, 23, .08);
+
       --lpp-radius: 18px;
       --lpp-max: 980px;
+
+      --lpp-ring: 0 0 0 4px rgba(56, 130, 246, .18);
+      --lpp-border: rgba(15, 23, 42, .08);
+      --lpp-glow: 0 0 0 1px rgba(255,255,255,.35) inset;
     }
 
     *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:var(--lpp-text);
-      background:var(--lpp-bg);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.15), transparent 55%),
+        radial-gradient(900px 500px at 90% 10%, rgba(11,61,145,.14), transparent 55%),
+        var(--lpp-bg);
     }
 
     /* HEADER */
@@ -32,15 +45,28 @@
       color:#fff;
       padding: 28px 16px 18px;
       text-align:center;
+      position: relative;
+      overflow:hidden;
+    }
+    .lpp-header::after{
+      content:"";
+      position:absolute;
+      inset:-40px -120px auto -120px;
+      height: 160px;
+      background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.22), transparent 60%);
+      transform: rotate(-2deg);
+      pointer-events:none;
     }
     .lpp-header h1{
       margin:0;
       font-size: clamp(26px, 4vw, 38px);
       font-weight: 800;
+      letter-spacing: .2px;
+      text-shadow: 0 8px 24px rgba(2,6,23,.18);
     }
     .lpp-header p{
       margin:8px 0 0;
-      opacity:.9;
+      opacity:.92;
       font-size: 14px;
     }
 
@@ -50,12 +76,14 @@
       position: sticky;
       top: 0;
       z-index: 50;
-      box-shadow: 0 10px 20px rgba(2,6,23,.08);
+      box-shadow: 0 12px 24px rgba(2,6,23,.12);
+      border-bottom: 1px solid rgba(255,255,255,.08);
     }
     .lpp-nav-inner{
       max-width: var(--lpp-max);
       margin: 0 auto;
       padding: 10px 12px;
+      position: relative;
     }
 
     /* MENU (DESKTOP padrão) */
@@ -71,15 +99,26 @@
       text-decoration:none;
       padding: 10px 12px;
       border-radius: 12px;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 14px;
       line-height: 1;
       white-space: nowrap;
+      transition: transform .15s ease, background .15s ease, box-shadow .15s ease, opacity .15s ease;
+      outline: none;
     }
-    .lpp-menu a:hover{ background: rgba(255,255,255,.12); }
+    .lpp-menu a:hover{
+      background: rgba(255,255,255,.14);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(2,6,23,.18);
+    }
+    .lpp-menu a:focus-visible{
+      box-shadow: var(--lpp-ring);
+      background: rgba(255,255,255,.14);
+    }
     .lpp-menu a[aria-current="page"]{
       background: rgba(255,255,255,.18);
       outline: 1px solid rgba(255,255,255,.16);
+      box-shadow: 0 10px 18px rgba(2,6,23,.20);
     }
 
     /* CONTEÚDO */
@@ -88,41 +127,70 @@
       margin: 22px auto 60px;
       padding: 0 14px;
     }
+
+    /* cartões mais “vivos” */
     .lpp-card{
-      background: var(--lpp-card);
+      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
       border-radius: var(--lpp-radius);
       box-shadow: var(--lpp-shadow);
-      padding: 18px 18px;
+      padding: 18px;
       margin: 16px 0;
+      border: 1px solid var(--lpp-border);
+      position: relative;
+      overflow:hidden;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+      will-change: transform;
     }
+    .lpp-card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(600px 220px at 20% 0%, rgba(11,91,211,.10), transparent 55%);
+      opacity: 0;
+      transition: opacity .18s ease;
+      pointer-events:none;
+    }
+    .lpp-card:hover{
+      transform: translateY(-3px);
+      box-shadow: var(--lpp-shadow-2);
+      border-color: rgba(11,91,211,.22);
+    }
+    .lpp-card:hover::before{ opacity: 1; }
+    .lpp-card:focus-within{
+      box-shadow: var(--lpp-shadow-2), var(--lpp-ring);
+      border-color: rgba(11,91,211,.30);
+    }
+
     .lpp-title{
       display:flex;
       align-items:center;
       gap: 10px;
       margin:0 0 10px;
       font-size: 20px;
-      font-weight: 800;
+      font-weight: 900;
       color: #0b2b63;
+      letter-spacing: .2px;
     }
     .lpp-title::before{
       content:"";
       width: 4px;
       height: 22px;
       border-radius: 999px;
-      background: #0b5bd3;
+      background: var(--lpp-blue-3);
       display:inline-block;
+      box-shadow: 0 10px 18px rgba(11,91,211,.25);
     }
     .lpp-text{
       margin:0;
       color: var(--lpp-muted);
-      line-height: 1.55;
+      line-height: 1.6;
       font-size: 15px;
     }
     .lpp-list{
       margin: 10px 0 0;
       padding-left: 18px;
       color: var(--lpp-muted);
-      line-height: 1.55;
+      line-height: 1.6;
       font-size: 15px;
     }
     .lpp-list li{ margin: 6px 0; }
@@ -134,11 +202,45 @@
       overflow:hidden;
       background:#f8fafc;
       border: 1px solid #e5e7eb;
+      box-shadow: var(--lpp-shadow-soft);
+      transition: transform .18s ease, box-shadow .18s ease;
     }
     .lpp-figure img{
       width:100%;
       height:auto;
       display:block;
+      transform: scale(1.001);
+      transition: transform .25s ease;
+    }
+    .lpp-card:hover .lpp-figure{
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(2, 6, 23, .12);
+    }
+    .lpp-card:hover .lpp-figure img{
+      transform: scale(1.03);
+    }
+
+    /* chips/botões */
+    .lpp-pill{
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: #edf4ff;
+      border: 1px solid #d8e7ff;
+      color:#0b2b63;
+      font-weight:900;
+      font-size: 13px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
+      box-shadow: 0 10px 18px rgba(2,6,23,.06);
+    }
+    .lpp-pill:hover{
+      background:#e7f0ff;
+      transform: translateY(-1px);
+      box-shadow: 0 16px 28px rgba(2,6,23,.10);
+    }
+    .lpp-pill:active{
+      transform: translateY(0px);
     }
 
     /* BUSCA */
@@ -157,23 +259,12 @@
       outline: none;
       font-size: 15px;
       background: #fff;
+      transition: box-shadow .14s ease, border-color .14s ease;
     }
     .lpp-search input:focus{
       border-color:#9cc3ff;
-      box-shadow: 0 0 0 4px rgba(56, 130, 246, .16);
+      box-shadow: var(--lpp-ring);
     }
-    .lpp-pill{
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: #edf4ff;
-      border: 1px solid #d8e7ff;
-      color:#0b2b63;
-      font-weight:800;
-      font-size: 13px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .lpp-pill:hover{ background:#e7f0ff; }
 
     /* FAQ */
     .lpp-faq{
@@ -187,10 +278,18 @@
       border-radius: 14px;
       padding: 10px 12px;
       background: #fff;
+      box-shadow: 0 12px 22px rgba(2,6,23,.06);
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+      overflow:hidden;
+    }
+    details.lpp-qa:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 18px 34px rgba(2,6,23,.10);
+      border-color: rgba(11,91,211,.18);
     }
     details.lpp-qa summary{
       cursor:pointer;
-      font-weight: 800;
+      font-weight: 900;
       color: #0b2b63;
       list-style:none;
       display:flex;
@@ -198,19 +297,23 @@
       justify-content:space-between;
       gap: 10px;
       font-size: 15px;
+      outline:none;
     }
     details.lpp-qa summary::-webkit-details-marker{ display:none; }
     details.lpp-qa summary::after{
       content:"▾";
-      opacity:.7;
+      opacity:.75;
       font-size: 16px;
+      transition: transform .16s ease;
     }
-    details.lpp-qa[open] summary::after{ content:"▴"; }
+    details.lpp-qa[open] summary::after{
+      content:"▴";
+    }
 
     .lpp-answer{
       margin: 10px 0 0;
       color: var(--lpp-muted);
-      line-height: 1.55;
+      line-height: 1.6;
       font-size: 14.5px;
     }
 
@@ -223,6 +326,8 @@
       border: 1px solid #e5eaf3;
       background: #fff;
       margin: 10px 0;
+      box-shadow: 0 14px 26px rgba(2,6,23,.07);
+      animation: fadeUp .18s ease both;
     }
     .lpp-result h3{
       margin:0 0 6px;
@@ -232,7 +337,7 @@
     .lpp-result p{
       margin:0;
       color: var(--lpp-muted);
-      line-height: 1.45;
+      line-height: 1.5;
       font-size: 14px;
     }
     mark{
@@ -249,28 +354,36 @@
       padding: 18px 10px 30px;
     }
 
-    /* ✅ MOBILE: menu com rolagem horizontal */
+    /* animação leve */
+    @keyframes fadeUp{
+      from{ opacity:0; transform: translateY(6px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    /* ✅ MOBILE: menu com rolagem horizontal + snap + gradiente */
     @media (max-width: 720px){
       .lpp-menu{
-        flex-wrap: nowrap;           /* não quebra linha */
-        justify-content:flex-start;  /* alinha à esquerda */
-        overflow-x: auto;            /* rolagem horizontal */
+        flex-wrap: nowrap;
+        justify-content:flex-start;
+        overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         gap: 8px;
         padding: 4px 2px;
-        scrollbar-width: none;       /* Firefox */
+        scrollbar-width: none;
+
+        /* melhorias */
+        scroll-snap-type: x mandatory;
       }
-      .lpp-menu::-webkit-scrollbar{ display:none; } /* Chrome/Safari */
+      .lpp-menu::-webkit-scrollbar{ display:none; }
 
       .lpp-menu a{
-        flex: 0 0 auto;              /* impede esticar */
+        flex: 0 0 auto;
         padding: 10px 12px;
+
+        /* snap item */
+        scroll-snap-align: start;
       }
 
-      /* dica visual (degradê leve nas laterais) */
-      .lpp-nav-inner{
-        position: relative;
-      }
       .lpp-nav-inner::before,
       .lpp-nav-inner::after{
         content:"";
@@ -288,6 +401,19 @@
         right:0;
         background: linear-gradient(270deg, rgba(10,47,115,1), rgba(10,47,115,0));
       }
+    }
+
+    /* microajustes para telas bem pequenas */
+    @media (max-width: 480px){
+      .lpp-card{ padding: 16px; }
+      .lpp-title{ font-size: 18px; }
+      .lpp-text, .lpp-list{ font-size: 15px; }
+    }
+
+    /* acessibilidade: reduz movimento */
+    @media (prefers-reduced-motion: reduce){
+      html{ scroll-behavior:auto; }
+      *{ transition:none !important; animation:none !important; }
     }
   </style>
 </head>
@@ -308,13 +434,27 @@
         <a href="impacto-economico.html">Impacto Econômico</a>
         <a href="guia-simples.html">Guia Simples</a>
         <a href="selecao-produtos.html">Seleção de Produtos</a>
-        <a href="avaliacao.html">avaliação</a>
+        <a href="avaliacao.html">Avaliação</a>
       </div>
     </div>
   </nav>
 
   <main class="lpp-main">
 
+    <!-- ✅ TROCA DE LUGAR: CONCEITO + IMAGEM VEM PRIMEIRO -->
+    <section class="lpp-card" id="conceito">
+      <h2 class="lpp-title">Conceito</h2>
+      <p class="lpp-text">
+        Lesão por pressão é um dano localizado na pele e/ou no tecido subjacente, geralmente sobre
+        uma proeminência óssea, resultante de pressão prolongada ou pressão associada ao cisalhamento.
+      </p>
+
+      <div class="lpp-figure">
+        <img src="lesao.png" alt="Exemplo ilustrativo de lesão por pressão em proeminência óssea" />
+      </div>
+    </section>
+
+    <!-- ✅ FATORES DE RISCO VAI PARA BAIXO -->
     <section class="lpp-card" id="fatores">
       <h2 class="lpp-title">Fatores de Risco</h2>
       <ul class="lpp-list">
@@ -325,19 +465,6 @@
         <li>Doenças crônicas (ex.: diabetes, insuficiência vascular)</li>
         <li>Redução da sensibilidade</li>
       </ul>
-    </section>
-
-    <section class="lpp-card" id="conceito">
-      <h2 class="lpp-title">Conceito</h2>
-      <p class="lpp-text">
-        Lesão por pressão é um dano localizado na pele e/ou no tecido subjacente, geralmente sobre
-        uma proeminência óssea, resultante de pressão prolongada ou pressão associada ao cisalhamento.
-      </p>
-
-      <!-- Troque pelo caminho real da sua imagem -->
-      <div class="lpp-figure">
-        <img src="lesao.png" alt="..." />
-      </div>
     </section>
 
     <section class="lpp-card" id="classificacao">
@@ -411,87 +538,88 @@
             deve ser orientada por profissional.
           </div>
         </details>
+
         <details class="lpp-qa" data-tags="estágio classificação grau 1 2 3 4">
-  <summary>6) Quais são os estágios (graus) da lesão por pressão?</summary>
-  <div class="lpp-answer">
-    Em geral: Estágio 1 (pele íntegra com eritema que não embranquece), Estágio 2 (perda parcial da pele),
-    Estágio 3 (perda total da pele com exposição de gordura), Estágio 4 (exposição de músculo/tendão/osso).
-    Há ainda lesão tissular profunda e lesão não classificável.
-  </div>
-</details>
+          <summary>6) Quais são os estágios (graus) da lesão por pressão?</summary>
+          <div class="lpp-answer">
+            Em geral: Estágio 1 (pele íntegra com eritema que não embranquece), Estágio 2 (perda parcial da pele),
+            Estágio 3 (perda total da pele com exposição de gordura), Estágio 4 (exposição de músculo/tendão/osso).
+            Há ainda lesão tissular profunda e lesão não classificável.
+          </div>
+        </details>
 
-<details class="lpp-qa" data-tags="calcanhar sacro trocânter cotovelo occipital local comum">
-  <summary>7) Quais locais do corpo têm mais risco de lesão por pressão?</summary>
-  <div class="lpp-answer">
-    Principalmente sobre proeminências ósseas: sacro/cóccix, calcâneos, trocânteres (quadril),
-    maléolos (tornozelo), cotovelos e occipital (parte de trás da cabeça), dependendo da posição.
-  </div>
-</details>
+        <details class="lpp-qa" data-tags="calcanhar sacro trocânter cotovelo occipital local comum">
+          <summary>7) Quais locais do corpo têm mais risco de lesão por pressão?</summary>
+          <div class="lpp-answer">
+            Principalmente sobre proeminências ósseas: sacro/cóccix, calcâneos, trocânteres (quadril),
+            maléolos (tornozelo), cotovelos e occipital (parte de trás da cabeça), dependendo da posição.
+          </div>
+        </details>
 
-<details class="lpp-qa" data-tags="colchão caixa de ovo pneumático superfície suporte">
-  <summary>8) Colchão “caixa de ovo” evita lesão por pressão?</summary>
-  <div class="lpp-answer">
-    Pode ajudar no conforto e na distribuição de pressão, mas não substitui reposicionamento, inspeção da pele,
-    controle de umidade e avaliação de risco. Para pacientes de alto risco, podem ser indicadas superfícies de suporte
-    específicas (ex.: colchão pneumático), conforme protocolo e avaliação profissional.
-  </div>
-</details>
+        <details class="lpp-qa" data-tags="colchão caixa de ovo pneumático superfície suporte">
+          <summary>8) Colchão “caixa de ovo” evita lesão por pressão?</summary>
+          <div class="lpp-answer">
+            Pode ajudar no conforto e na distribuição de pressão, mas não substitui reposicionamento, inspeção da pele,
+            controle de umidade e avaliação de risco. Para pacientes de alto risco, podem ser indicadas superfícies de suporte
+            específicas (ex.: colchão pneumático), conforme protocolo e avaliação profissional.
+          </div>
+        </details>
 
-<details class="lpp-qa" data-tags="massagem vermelhidão esfregar risco">
-  <summary>9) Posso massagear a pele avermelhada para “ativar a circulação”?</summary>
-  <div class="lpp-answer">
-    Não é recomendado massagear áreas vermelhas sobre proeminências ósseas, pois pode aumentar o dano tecidual.
-    O mais importante é aliviar pressão, proteger a pele e procurar orientação profissional.
-  </div>
-</details>
+        <details class="lpp-qa" data-tags="massagem vermelhidão esfregar risco">
+          <summary>9) Posso massagear a pele avermelhada para “ativar a circulação”?</summary>
+          <div class="lpp-answer">
+            Não é recomendado massagear áreas vermelhas sobre proeminências ósseas, pois pode aumentar o dano tecidual.
+            O mais importante é aliviar pressão, proteger a pele e procurar orientação profissional.
+          </div>
+        </details>
 
-<details class="lpp-qa" data-tags="umidade maceração barreira creme zinco">
-  <summary>10) Qual creme ajuda quando há risco de maceração (pele “esbranquiçada” e úmida)?</summary>
-  <div class="lpp-answer">
-    Em muitos casos, usa-se barreira protetora (ex.: produtos com óxido de zinco ou barreiras poliméricas),
-    mas a escolha depende do quadro e do protocolo do serviço. O essencial é reduzir umidade e evitar fricção.
-  </div>
-</details>
+        <details class="lpp-qa" data-tags="umidade maceração barreira creme zinco">
+          <summary>10) Qual creme ajuda quando há risco de maceração (pele “esbranquiçada” e úmida)?</summary>
+          <div class="lpp-answer">
+            Em muitos casos, usa-se barreira protetora (ex.: produtos com óxido de zinco ou barreiras poliméricas),
+            mas a escolha depende do quadro e do protocolo do serviço. O essencial é reduzir umidade e evitar fricção.
+          </div>
+        </details>
 
-<details class="lpp-qa" data-tags="sinais infecção pus febre odor calor">
-  <summary>11) Quais sinais podem indicar infecção na ferida?</summary>
-  <div class="lpp-answer">
-    Aumento de dor, calor, vermelhidão ao redor, piora do exsudato (pus), odor forte, febre,
-    aumento do tamanho da lesão ou piora do estado geral. Diante desses sinais, procure avaliação profissional.
-  </div>
-</details>
+        <details class="lpp-qa" data-tags="sinais infecção pus febre odor calor">
+          <summary>11) Quais sinais podem indicar infecção na ferida?</summary>
+          <div class="lpp-answer">
+            Aumento de dor, calor, vermelhidão ao redor, piora do exsudato (pus), odor forte, febre,
+            aumento do tamanho da lesão ou piora do estado geral. Diante desses sinais, procure avaliação profissional.
+          </div>
+        </details>
 
-<details class="lpp-qa" data-tags="limpeza soro fisiológico sabonete água">
-  <summary>12) Como fazer higiene/limpeza da pele e da região em risco?</summary>
-  <div class="lpp-answer">
-    Preferir higiene suave, com água e sabonete neutro (quando indicado), enxágue e secagem sem esfregar.
-    Evitar fricção intensa. Para feridas, a conduta de limpeza deve seguir protocolo e orientação profissional.
-  </div>
-</details>
+        <details class="lpp-qa" data-tags="limpeza soro fisiológico sabonete água">
+          <summary>12) Como fazer higiene/limpeza da pele e da região em risco?</summary>
+          <div class="lpp-answer">
+            Preferir higiene suave, com água e sabonete neutro (quando indicado), enxágue e secagem sem esfregar.
+            Evitar fricção intensa. Para feridas, a conduta de limpeza deve seguir protocolo e orientação profissional.
+          </div>
+        </details>
 
-<details class="lpp-qa" data-tags="nutrição proteína água cicatrização">
-  <summary>13) Alimentação influencia na prevenção e cicatrização?</summary>
-  <div class="lpp-answer">
-    Sim. Estado nutricional adequado (proteínas, calorias, vitaminas/minerais) e hidratação ajudam na integridade da pele
-    e na cicatrização. Em pacientes de risco, pode ser necessária avaliação nutricional.
-  </div>
-</details>
+        <details class="lpp-qa" data-tags="nutrição proteína água cicatrização">
+          <summary>13) Alimentação influencia na prevenção e cicatrização?</summary>
+          <div class="lpp-answer">
+            Sim. Estado nutricional adequado (proteínas, calorias, vitaminas/minerais) e hidratação ajudam na integridade da pele
+            e na cicatrização. Em pacientes de risco, pode ser necessária avaliação nutricional.
+          </div>
+        </details>
 
-<details class="lpp-qa" data-tags="fricção cisalhamento arrastar lençol transferência">
-  <summary>14) O que é fricção e cisalhamento e por que pioram a lesão?</summary>
-  <div class="lpp-answer">
-    Fricção é o atrito na pele (ex.: arrastar no lençol). Cisalhamento ocorre quando a pele “fica” e o corpo desliza,
-    lesionando tecidos mais profundos. Reduz-se com técnicas corretas de mobilização e suporte.
-  </div>
-</details>
+        <details class="lpp-qa" data-tags="fricção cisalhamento arrastar lençol transferência">
+          <summary>14) O que é fricção e cisalhamento e por que pioram a lesão?</summary>
+          <div class="lpp-answer">
+            Fricção é o atrito na pele (ex.: arrastar no lençol). Cisalhamento ocorre quando a pele “fica” e o corpo desliza,
+            lesionando tecidos mais profundos. Reduz-se com técnicas corretas de mobilização e suporte.
+          </div>
+        </details>
 
-<details class="lpp-qa" data-tags="curativo troca frequência exsudato">
-  <summary>15) Com que frequência trocar o curativo?</summary>
-  <div class="lpp-answer">
-    Depende do tipo de cobertura, volume de exsudato, estágio da lesão e protocolo. Trocas muito frequentes podem traumatizar,
-    e trocas muito espaçadas podem aumentar risco de maceração/infecção. Deve ser definido por profissional.
-  </div>
-</details>
+        <details class="lpp-qa" data-tags="curativo troca frequência exsudato">
+          <summary>15) Com que frequência trocar o curativo?</summary>
+          <div class="lpp-answer">
+            Depende do tipo de cobertura, volume de exsudato, estágio da lesão e protocolo. Trocas muito frequentes podem traumatizar,
+            e trocas muito espaçadas podem aumentar risco de maceração/infecção. Deve ser definido por profissional.
+          </div>
+        </details>
 
       </div>
     </section>
@@ -558,7 +686,8 @@
         `;
       }).join('');
 
-      matched.forEach(d => d.open = true);
+      /* ✅ Melhor: abre só os 3 primeiros resultados */
+      matched.forEach((d, i) => d.open = i < 3);
     }
 
     input?.addEventListener('input', (e) => doSearch(e.target.value));
@@ -571,16 +700,32 @@
         input.focus();
       });
     });
+
+    /* ✅ Interação suave nos cards (efeito tilt leve) sem quebrar mobile */
+    const cards = Array.from(document.querySelectorAll('.lpp-card'));
+    const canHover = window.matchMedia('(hover:hover)').matches;
+
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+    if(canHover){
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width;
+          const y = (e.clientY - r.top) / r.height;
+
+          const rx = clamp((0.5 - y) * 6, -6, 6);
+          const ry = clamp((x - 0.5) * 6, -6, 6);
+
+          card.style.transform = `translateY(-3px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+        });
+      });
+    }
   </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
