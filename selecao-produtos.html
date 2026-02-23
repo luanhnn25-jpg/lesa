@@ -1,412 +1,552 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nosso Produto - Lesão por Pressão</title>
-
-  <link rel="stylesheet" href="style.css" />
+<html lang="pt-br"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Seleção de Produtos — Lesão por Pressão (LPP)</title>
 
   <style>
-    /* =========================
-       RESET (mata faixa branca)
-       ========================= */
-    html, body{
-      margin:0 !important;
-      padding:0 !important;
+    :root{
+      --lpp-blue-900:#0b3d91;
+      --lpp-blue-800:#0a2f73;
+      --lpp-bg:#f4f6f9;
+      --lpp-card:#ffffff;
+      --lpp-text:#0f172a;
+      --lpp-muted:#475569;
+      --lpp-border:rgba(15,23,42,.12);
+      --lpp-shadow:0 10px 25px rgba(2,6,23,.08);
+      --lpp-radius:18px;
+      --lpp-accent:#2563eb;
+      --lpp-ok:#16a34a;
+      --lpp-warn:#f59e0b;
+      --lpp-bad:#dc2626;
+      --lpp-chip:#eef2ff;
     }
 
-    /* =========================
-       ISOLAMENTO (só NOSSO PRODUTO)
-       ========================= */
-    body.produto{
+    html,body{height:100%}
+    body{
       margin:0 !important;
-      padding:0 !important;
-      min-height: 100vh;
-      overflow-x:hidden;
-
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:#0f172a;
-
-      background:
-        radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.16), transparent 55%),
-        radial-gradient(900px 520px at 90% 10%, rgba(11,61,145,.14), transparent 55%),
-        radial-gradient(900px 520px at 50% 110%, rgba(240,180,0,.08), transparent 55%),
-        #eef2f6;
-
-      --p-blue-1:#0b3d91;
-      --p-blue-2:#0f5bd3;
-      --p-blue-3:#0b5bd3;
-      --p-navy:#082c63;
-
-      --p-radius: 22px;
-
-      --p-shadow: 0 12px 30px rgba(2,6,23,.10);
-      --p-shadow-2: 0 22px 60px rgba(2,6,23,.16);
-      --p-soft: 0 10px 24px rgba(2,6,23,.08);
-
-      --p-border: rgba(15,23,42,.10);
-
-      /* glow mais forte (site “vivo”) */
-      --p-glow: 0 0 0 4px rgba(56,130,246,.18),
-                0 24px 70px rgba(15,91,211,.22);
-
-      --p-grad: linear-gradient(135deg, rgba(15,91,211,.55), rgba(11,61,145,.20), rgba(240,180,0,.22));
+      background:var(--lpp-bg) !important;
+      color:var(--lpp-text) !important;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif !important;
+      line-height:1.55 !important;
     }
 
-    body.produto *{ box-sizing:border-box; }
-    body.produto a{ -webkit-tap-highlight-color: transparent; }
-
-    /* =========================
-       HEADER
-       ========================= */
-    body.produto header{
-      margin:0 !important;
-      background: linear-gradient(90deg, var(--p-blue-1), var(--p-blue-2));
+    .lpp-header{
+      background: linear-gradient(180deg, var(--lpp-blue-900), var(--lpp-blue-800));
       color:#fff;
       text-align:center;
-      padding: 54px 16px 30px;
-      box-shadow: 0 18px 42px rgba(2,6,23,.18);
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      position: relative;
-      overflow:hidden;
+      padding:28px 16px 18px;
     }
-
-    body.produto header::after{
-      content:"";
-      position:absolute;
-      inset:-120px -120px auto -120px;
-      height: 220px;
-      background: radial-gradient(circle at 50% 65%, rgba(255,255,255,.14), transparent 62%);
-      pointer-events:none;
-    }
-
-    body.produto header h1{
+    .lpp-header h1{
       margin:0;
-      font-size: clamp(26px, 4vw, 38px);
-      font-weight: 950;
-      letter-spacing: -0.4px;
-      line-height: 1.15;
-      text-shadow: 0 10px 24px rgba(2,6,23,.18);
-      position: relative;
+      font-size:clamp(22px, 4vw, 38px);
+      font-weight:900;
+      letter-spacing:.2px;
     }
-    body.produto header p{
-      margin: 10px 0 0;
-      font-size: 14px;
-      opacity: 0.95;
-      position: relative;
-    }
-
-    /* =========================
-       MENU
-       ========================= */
-    body.produto .topnav{
-      background: var(--p-navy);
-      position: sticky;
-      top:0;
-      z-index: 999;
-      display:flex;
-      justify-content:center;
-      gap: 14px;
-      padding: 10px 12px;
-      box-shadow: 0 12px 24px rgba(2,6,23,.12);
-      flex-wrap: wrap;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-    }
-    body.produto .topnav a{
-      color:#fff !important;
-      text-decoration:none;
-      font-weight: 900;
+    .lpp-header p{
+      margin:8px 0 0;
+      opacity:.9;
       font-size:14px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
-      white-space: nowrap;
-      outline:none;
-    }
-    body.produto .topnav a:hover{
-      background: rgba(255,255,255,0.14);
-      transform: translateY(-1px);
-      box-shadow: 0 12px 24px rgba(2,6,23,.18);
-    }
-    body.produto .topnav a:focus-visible{
-      background: rgba(255,255,255,0.14);
-      box-shadow: var(--p-glow);
     }
 
-    /* =========================
-       MAIN
-       ========================= */
-    body.produto main{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 26px 16px 60px;
+    .lpp-nav{
+      position:sticky;
+      top:0;
+      z-index:50;
+      background:#0a2f73;
+      border-bottom:1px solid rgba(255,255,255,.12);
     }
-
-    /* =========================
-       HERO (card central vivo)
-       ========================= */
-    body.produto .hero{
-      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
-      border-radius: var(--p-radius);
-      padding: 28px 18px;
-      box-shadow: var(--p-shadow);
-      border: 1px solid var(--p-border);
-
+    .lpp-nav-inner{
+      max-width:1100px;
+      margin:0 auto;
+      padding:10px 10px 12px;
+    }
+    .lpp-menu{
       display:flex;
-      flex-direction: column;
+      gap:10px;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:thin;
+      padding-bottom:6px;
+    }
+    .lpp-menu::-webkit-scrollbar{height:6px}
+    .lpp-menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25);border-radius:999px}
+    .lpp-menu a{
+      flex:0 0 auto;
+      white-space:nowrap;
+      color:#fff !important;
+      text-decoration:none !important;
+      font-weight:700;
+      font-size:14px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.10);
+    }
+    .lpp-menu a:hover{background:rgba(255,255,255,.16)}
+    .lpp-menu a[aria-current="page"]{
+      background:rgba(255,255,255,.22);
+      border-color:rgba(255,255,255,.28);
+    }
+
+    .lpp-main{
+      max-width:1100px;
+      margin:0 auto;
+      padding:18px 12px 40px;
+    }
+    .lpp-card{
+      background:var(--lpp-card);
+      border:1px solid var(--lpp-border);
+      box-shadow:var(--lpp-shadow);
+      border-radius:var(--lpp-radius);
+      padding:18px 16px;
+      margin:14px 0;
+    }
+
+    .lpp-title{
+      display:flex;
       align-items:center;
-      text-align:center;
-      gap: 18px;
-
-      position: relative;
-      overflow:hidden;
-
-      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-      will-change: transform;
-
-      /* animação de entrada */
-      animation: pFadeUp .28s ease both;
+      gap:10px;
+      margin:0 0 10px;
+      font-size:clamp(18px, 3.2vw, 22px);
+      font-weight:900;
     }
-
-    @keyframes pFadeUp{
-      from{ opacity:0; transform: translateY(10px); }
-      to{ opacity:1; transform: translateY(0); }
+    .lpp-bar{
+      width:6px;
+      height:22px;
+      border-radius:999px;
+      background:var(--lpp-accent);
+      flex:0 0 auto;
     }
-
-    body.produto .hero::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      padding:1px;
-      border-radius: inherit;
-      background: var(--p-grad);
-      -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity:.55;
-      pointer-events:none;
-    }
-
-    /* brilho interno no hover */
-    body.produto .hero::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(700px 260px at 20% 0%, rgba(11,91,211,.14), transparent 55%),
-        radial-gradient(520px 240px at 90% 20%, rgba(240,180,0,.12), transparent 60%);
-      opacity: 0;
-      transition: opacity .18s ease;
-      pointer-events:none;
-    }
-
-    /* GLOW REAL no hover */
-    body.produto .hero:hover{
-      transform: translateY(-4px);
-      box-shadow: var(--p-shadow-2), var(--p-glow);
-      border-color: rgba(11,91,211,.22);
-    }
-    body.produto .hero:hover::before{ opacity: 1; }
-    body.produto .hero:focus-within{
-      box-shadow: var(--p-shadow-2), var(--p-glow);
-      border-color: rgba(11,91,211,.30);
-    }
-
-    body.produto .hero h2{
+    .lpp-lead{
       margin:0;
-      font-size: clamp(20px, 3.2vw, 28px);
-      font-weight: 950;
-      letter-spacing: -0.2px;
-      color:#0b2b63;
-      position: relative;
+      color:var(--lpp-muted);
+      font-size:15px;
     }
 
-    body.produto .hero .sub{
-      margin-top: -8px;
-      font-size: 14px;
-      color:#475569;
-      opacity: 0.95;
-      max-width: 720px;
-      line-height: 1.6;
-      position: relative;
+    .lpp-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:14px;
+    }
+    @media (max-width:900px){
+      .lpp-grid{grid-template-columns:1fr}
     }
 
-    /* =========================
-       GIF (mais vivo)
-       ========================= */
-    body.produto .cat-wrap{
-      width: min(380px, 92vw);
-      background: #ffffff;
-      border-radius: 18px;
-      padding: 14px;
-      border: 1px solid rgba(15,23,42,.10);
-      box-shadow: var(--p-soft);
-      position: relative;
-      overflow:hidden;
-      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    .lpp-table-wrap{
+      width:100%;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      border-radius:14px;
+      border:1px solid var(--lpp-border);
+      background:#fff;
     }
-    body.produto .cat-wrap::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background: radial-gradient(420px 220px at 20% 10%, rgba(11,91,211,.10), transparent 60%);
-      opacity:0;
-      transition: opacity .18s ease;
-      pointer-events:none;
+    .lpp-table{
+      width:100%;
+      min-width:1100px;
+      border-collapse:separate;
+      border-spacing:0;
+      font-size:14px;
     }
-    body.produto .hero:hover .cat-wrap{
-      transform: translateY(-2px);
-      box-shadow: 0 22px 44px rgba(2,6,23,.12);
-      border-color: rgba(11,91,211,.18);
+    .lpp-table th, .lpp-table td{
+      padding:12px 12px;
+      border-bottom:1px solid rgba(15,23,42,.08);
+      vertical-align:top;
     }
-    body.produto .hero:hover .cat-wrap::before{ opacity:1; }
+    .lpp-table th{
+      position:sticky;
+      top:0;
+      z-index:2;
+      background:#0b3d91;
+      color:#fff;
+      text-align:left;
+      font-size:13px;
+      letter-spacing:.2px;
+    }
+    .lpp-table tr:nth-child(even) td{background:#fbfdff}
 
-    body.produto .cat-wrap img{
-      width: 100%;
-      height: auto;
-      display:block;
-      border-radius: 14px;
-      transform: scale(1);
-      transition: transform .22s ease, filter .22s ease;
-      filter: saturate(1.02) contrast(1.02);
+    .lpp-tag{
+      display:inline-block;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid var(--lpp-border);
+      background:#f8fafc;
+      font-size:12px;
+      font-weight:800;
+      margin:4px 6px 0 0;
     }
-    body.produto .hero:hover .cat-wrap img{
-      transform: scale(1.03);
-      filter: saturate(1.06) contrast(1.05);
-    }
+    .lpp-tag.ok{border-color:rgba(22,163,74,.25);background:rgba(22,163,74,.10);color:var(--lpp-ok)}
+    .lpp-tag.warn{border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.12);color:#92400e}
+    .lpp-tag.bad{border-color:rgba(220,38,38,.25);background:rgba(220,38,38,.10);color:var(--lpp-bad)}
+    .lpp-tag.info{border-color:rgba(37,99,235,.25);background:rgba(37,99,235,.10);color:var(--lpp-accent)}
 
-    /* =========================
-       BOTÃO “TOPO”
-       ========================= */
-    body.produto .toTop{
-      position: fixed;
-      right: 14px;
-      bottom: 14px;
-      z-index: 1000;
-      border: 0;
-      border-radius: 999px;
-      padding: 12px 14px;
-      font-weight: 950;
-      cursor: pointer;
-
-      background: linear-gradient(90deg, var(--p-blue-1), var(--p-blue-2));
-      color: #fff;
-
-      box-shadow: 0 16px 40px rgba(2,6,23,.18);
-      transform: translateY(20px);
-      opacity: 0;
-      pointer-events: none;
-      transition: transform .18s ease, opacity .18s ease, box-shadow .18s ease;
-    }
-    body.produto .toTop.show{
-      transform: translateY(0);
-      opacity: 1;
-      pointer-events: auto;
-    }
-    body.produto .toTop:hover{
-      box-shadow: 0 22px 60px rgba(15,91,211,.22);
-      transform: translateY(-2px);
-    }
-    body.produto .toTop:focus-visible{
-      outline: none;
-      box-shadow: var(--p-glow);
+    .lpp-note{
+      margin:10px 0 0;
+      font-size:13px;
+      color:var(--lpp-muted);
     }
 
-    /* =========================
-       FOOTER
-       ========================= */
-    body.produto footer{
+    .lpp-callout{
+      border:1px solid var(--lpp-border);
+      border-radius:14px;
+      padding:14px 14px;
+      background:#fff;
+    }
+    .lpp-callout h3{
+      margin:0 0 8px;
+      font-size:16px;
+      font-weight:900;
+    }
+    .lpp-callout ul{
+      margin:0 0 0 18px;
+      color:var(--lpp-muted);
+    }
+    .lpp-callout li{margin:6px 0}
+
+    .lpp-sections{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+    @media (max-width:900px){
+      .lpp-sections{grid-template-columns:1fr}
+    }
+
+    .lpp-item h4{
+      margin:0 0 6px;
+      font-size:15px;
+      font-weight:900;
+    }
+    .lpp-item p{
+      margin:0;
+      color:var(--lpp-muted);
+      font-size:14px;
+    }
+
+    .lpp-chip{
+      display:inline-block;
+      background:var(--lpp-chip);
+      border:1px solid rgba(37,99,235,.18);
+      color:#1e40af;
+      font-weight:800;
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      margin:8px 8px 0 0;
+    }
+
+    .lpp-footer{
       text-align:center;
-      color:#475569;
-      padding: 22px 12px;
-      font-size: 13px;
-      opacity: 0.95;
-    }
-
-    /* MOBILE: menu com rolagem horizontal */
-    @media (max-width: 820px){
-      body.produto .topnav{
-        justify-content:flex-start;
-        flex-wrap: nowrap;
-        overflow-x:auto;
-        scrollbar-width:none;
-        -webkit-overflow-scrolling: touch;
-        scroll-snap-type: x mandatory;
-      }
-      body.produto .topnav::-webkit-scrollbar{ display:none; }
-      body.produto .topnav a{
-        flex: 0 0 auto;
-        scroll-snap-align: start;
-      }
-    }
-
-    @media (max-width: 700px){
-      body.produto header h1{ font-size: 28px; }
-      body.produto .hero{ padding: 22px 14px; }
-    }
-
-    @media (prefers-reduced-motion: reduce){
-      body.produto *{ transition:none !important; }
-      body.produto .hero{ animation:none !important; }
+      color:var(--lpp-muted);
+      font-size:12px;
+      margin-top:18px;
+      padding-top:8px;
     }
   </style>
 </head>
 
-<body class="produto">
-
-  <header>
-    <h1>Nosso Produto</h1>
-    <p>Em desenvolvimento</p>
+<body>
+  <header class="lpp-header">
+    <h1>Seleção de Produtos (LPP)</h1>
+    <p>Material de estudo: limpeza, coberturas, desbridamento, proteção e suporte</p>
   </header>
 
-  <nav class="topnav">
-    <a href="index.html">Início</a>
-    <a href="tratamento.html">Tratamento</a>
-    <a href="guia-simples.html">Guia Simples</a>
-    <a href="impacto-economico.html">Impacto Econômico</a>
-    <a href="nosso-produto.html" aria-current="page">Nosso Produto</a>
-    <a href="selecao-produtos.html">Seleção de Produtos</a>
-    <a href="avaliacao.html">avaliação</a>
+  <nav class="lpp-nav" aria-label="Navegação principal">
+    <div class="lpp-nav-inner">
+      <div class="lpp-menu">
+        <a href="index.html">Início</a>
+        <a href="nosso-produto.html">Nosso Produto</a>
+        <a href="tratamento.html">Tratamento</a>
+        <a href="selecao-produtos.html" aria-current="page">Seleção de Produtos</a>
+        <a href="impacto-economico.html">Impacto Econômico</a>
+        <a href="guia-simples.html">Guia Simples</a>
+        <a href="avaliacao.html">Avaliação</a>
+      </div>
+    </div>
   </nav>
 
-  <main>
-    <section class="hero" tabindex="0">
-      <h2>Nossos melhores profissionais estão trabalhando agora nele</h2>
-      <div class="sub">
-        Em breve teremos novidades aqui. Enquanto isso, aproveite os conteúdos educativos do site.
+  <main class="lpp-main">
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>Como usar este material</h2>
+      <div class="lpp-grid">
+        <p class="lpp-lead">
+          A escolha do cuidado local em LPP deve ser orientada por: <b>exsudato</b>, <b>tecido do leito</b>,
+          <b>profundidade/cavidade</b>, risco de <b>macerar</b> pele perilesional e sinais de <b>infecção</b>.
+          O <b>estágio</b> ajuda a caracterizar profundidade, mas não decide sozinho o produto.
+        </p>
+        <div class="lpp-callout">
+          <h3>Dica rápida</h3>
+          <ul>
+            <li>No celular, deslize a tabela para o lado (rolagem horizontal).</li>
+            <li>Reavalie a resposta do curativo e a pele ao redor em cada troca.</li>
+            <li>Siga protocolo institucional e prescrição quando houver.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="lpp-note"><b>Atenção:</b> conteúdo educativo. Condutas clínicas devem seguir avaliação profissional e protocolos do serviço.</p>
+    </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>Tabela comparativa (produto × exsudato × estágio)</h2>
+
+      <div class="lpp-table-wrap" role="region" aria-label="Tabela comparativa de produtos para LPP" tabindex="0">
+        <table class="lpp-table">
+          <thead>
+            <tr>
+              <th>Produto (categoria)</th>
+              <th>Exsudato indicado</th>
+              <th>Estágio LPP (uso típico)</th>
+              <th>Para que serve (objetivo)</th>
+              <th>Pontos de atenção</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><b>Filme transparente</b> (poliuretano)<br>
+                <span class="lpp-tag info">proteção</span><span class="lpp-tag ok">barreira</span>
+              </td>
+              <td><span class="lpp-tag ok">sem</span><span class="lpp-tag ok">baixo</span></td>
+              <td><span class="lpp-tag info">Estágio 1</span><span class="lpp-tag info">prevenção</span></td>
+              <td>Protege contra fricção/cisalhamento e permite inspeção visual.</td>
+              <td>Evitar se exsudato moderado/alto ou pele muito macerada.</td>
+            </tr>
+
+            <tr>
+              <td><b>Hidrocoloide</b><br>
+                <span class="lpp-tag ok">ambiente úmido</span><span class="lpp-tag info">oclusivo</span>
+              </td>
+              <td><span class="lpp-tag ok">baixo</span><span class="lpp-tag warn">moderado</span></td>
+              <td><span class="lpp-tag info">I–II</span></td>
+              <td>Mantém umidade controlada; pode apoiar autólise em feridas superficiais.</td>
+              <td>Evitar em exsudato alto e suspeita de infecção não controlada; risco de maceração.</td>
+            </tr>
+
+            <tr>
+              <td><b>Hidrogel</b><br>
+                <span class="lpp-tag info">hidratação</span><span class="lpp-tag ok">autólise</span>
+              </td>
+              <td><span class="lpp-tag ok">sem</span><span class="lpp-tag ok">baixo</span></td>
+              <td><span class="lpp-tag info">III–IV</span><span class="lpp-tag info">ferida seca/necrose</span></td>
+              <td>Doa umidade ao leito seco e favorece desbridamento autolítico quando indicado.</td>
+              <td>Se exsudato alto, pode macerar; necrose seca estável pode ter conduta específica.</td>
+            </tr>
+
+            <tr>
+              <td><b>Alginato de cálcio</b><br>
+                <span class="lpp-tag warn">alto exsudato</span><span class="lpp-tag info">cavitária</span>
+              </td>
+              <td><span class="lpp-tag warn">moderado</span><span class="lpp-tag warn">alto</span></td>
+              <td><span class="lpp-tag info">III–IV</span></td>
+              <td>Alta absorção; ajuda a controlar exsudato; pode preencher cavidades sem compactar.</td>
+              <td>Precisa cobertura secundária; evitar em ferida seca; não “tamponar” com força.</td>
+            </tr>
+
+            <tr>
+              <td><b>Espuma de poliuretano</b> (com/sem borda)<br>
+                <span class="lpp-tag ok">absorção</span><span class="lpp-tag ok">conforto</span>
+              </td>
+              <td><span class="lpp-tag ok">leve</span><span class="lpp-tag warn">moderado</span></td>
+              <td><span class="lpp-tag info">II–IV</span></td>
+              <td>Absorver exsudato e reduzir maceração; proteção contra trauma na troca.</td>
+              <td>Troca conforme saturação; avaliar integridade da pele perilesional.</td>
+            </tr>
+
+            <tr>
+              <td><b>Carvão ativado com prata</b><br>
+                <span class="lpp-tag warn">odor</span><span class="lpp-tag bad">colonização crítica</span>
+              </td>
+              <td><span class="lpp-tag ok">baixo</span><span class="lpp-tag warn">moderado</span></td>
+              <td><span class="lpp-tag info">III–IV</span><span class="lpp-tag bad">quando indicado</span></td>
+              <td>Controle de odor e suporte antimicrobiano conforme produto/protocolo.</td>
+              <td>Reavaliar periodicamente; não substitui controle de foco e avaliação clínica.</td>
+            </tr>
+
+            <tr>
+              <td><b>Hidrofibra</b><br>
+                <span class="lpp-tag warn">gelifica</span><span class="lpp-tag warn">absorção</span>
+              </td>
+              <td><span class="lpp-tag warn">moderado</span><span class="lpp-tag warn">alto</span></td>
+              <td><span class="lpp-tag info">III–IV</span><span class="lpp-tag info">cavidades</span></td>
+              <td>Forma gel ao contato com secreção, favorecendo manejo do exsudato.</td>
+              <td>Precisa cobertura secundária; evitar em ferida muito seca.</td>
+            </tr>
+
+            <tr>
+              <td><b>Coberturas antimicrobianas</b> (prata/PHMB/iodo etc.)<br>
+                <span class="lpp-tag bad">suspeita de infecção</span>
+              </td>
+              <td><span class="lpp-tag info">depende</span><span class="lpp-tag warn">moderado–alto</span></td>
+              <td><span class="lpp-tag info">II–IV</span><span class="lpp-tag bad">uso criterioso</span></td>
+              <td>Reduzir carga microbiana local quando indicado por avaliação (colonização crítica/infecção).</td>
+              <td>Uso deve ser reavaliado; seguir protocolo e tempo limitado quando recomendado.</td>
+            </tr>
+
+            <tr>
+              <td><b>Barreira cutânea</b> (creme/filme)<br>
+                <span class="lpp-tag ok">pele</span><span class="lpp-tag ok">umidade</span>
+              </td>
+              <td><span class="lpp-tag info">perilesional</span></td>
+              <td><span class="lpp-tag info">todos</span><span class="lpp-tag info">prevenção</span></td>
+              <td>Proteger pele ao redor contra maceração, dermatite por umidade e adesivos.</td>
+              <td>Aplicar camada fina; evitar prejudicar aderência quando necessário.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <div class="cat-wrap">
-        <img src="gato.gif" alt="Gato em GIF" />
+      <p class="lpp-note">
+        <b>Nota didática:</b> o “melhor” produto depende do contexto. Reavaliação frequente e redistribuição de pressão são determinantes.
+      </p>
+    </section>
+
+    <!-- NOVAS SEÇÕES (1 a 7) -->
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>1) Soluções para limpeza do leito</h2>
+      <p class="lpp-lead">
+        Indicadas na etapa inicial do curativo. <b>Objetivo:</b> reduzir biocarga, remover detritos e preservar tecido viável.
+      </p>
+      <div style="margin-top:10px">
+        <span class="lpp-chip">Solução fisiológica 0,9% (SF 0,9%)</span>
+        <span class="lpp-chip">Soluções com polihexanida (PHMB)</span>
+        <span class="lpp-chip">Ringer Lactato</span>
+        <span class="lpp-chip">Irrigação sob pressão controlada (quando indicado)</span>
+      </div>
+      <p class="lpp-note">A escolha da solução e técnica deve considerar protocolo do serviço e tolerância do paciente.</p>
+    </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>2) Coberturas primárias (atuam diretamente no leito)</h2>
+
+      <div class="lpp-sections">
+        <div class="lpp-item">
+          <h4>Hidrocoloide</h4>
+          <p>Indicado com maior frequência em <b>LPP estágio I e II</b>; mantém <b>ambiente úmido controlado</b>.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Hidrogel</h4>
+          <p>Indicado para feridas <b>secas</b> ou com <b>necrose</b>; favorece <b>desbridamento autolítico</b> quando indicado.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Alginato de cálcio</h4>
+          <p>Para <b>exsudato moderado a alto</b>; alta capacidade de absorção.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Espuma de poliuretano</h4>
+          <p>Exsudato <b>leve a moderado</b>; conforto e absorção.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Carvão ativado com prata</h4>
+          <p>Controle de <b>odor</b>; pode ser usado em suspeita de <b>colonização crítica/infecção</b> conforme protocolo.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Hidrofibra</h4>
+          <p>Exsudato <b>moderado a alto</b>; forma <b>gel</b> ao contato com secreção.</p>
+        </div>
+      </div>
+
+      <p class="lpp-note"><b>Dica:</b> em exsudato alto, priorize materiais absorventes e proteção perilesional para reduzir maceração.</p>
+    </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>3) Coberturas com ação antimicrobiana</h2>
+      <p class="lpp-lead">
+        Indicadas quando há <b>suspeita de infecção local</b> ou <b>colonização crítica</b>, conforme avaliação e protocolo.
+        <b>Uso criterioso</b> e com reavaliação periódica.
+      </p>
+      <div style="margin-top:10px">
+        <span class="lpp-chip">Prata iônica</span>
+        <span class="lpp-chip">PHMB</span>
+        <span class="lpp-chip">Iodo cadexômero</span>
+        <span class="lpp-chip">Mel medicinal (protocolos específicos)</span>
+      </div>
+      <p class="lpp-note">Se houver piora clínica, sinais sistêmicos ou suspeita de osteomielite, encaminhar para avaliação multiprofissional.</p>
+    </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>4) Produtos para desbridamento</h2>
+      <p class="lpp-lead">Quando há <b>tecido desvitalizado</b> (esfacelo/necrose), a técnica depende do caso, local e protocolo.</p>
+      <div class="lpp-sections" style="margin-top:10px">
+        <div class="lpp-item">
+          <h4>Enzimático (colagenase)</h4>
+          <p>Auxilia remoção de tecido desvitalizado quando indicado.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Autolítico (hidrogel)</h4>
+          <p>Favorece autólise, especialmente em leito ressecado, conforme indicação clínica.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Mecânico</h4>
+          <p>Uso seletivo e cuidadoso para evitar trauma ao tecido viável.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Cirúrgico (ambiente hospitalar)</h4>
+          <p>Reservado para casos indicados e executado por equipe habilitada.</p>
+        </div>
+      </div>
+      <p class="lpp-note">Atenção: necrose seca estável (ex.: calcâneo) pode ter conduta específica — seguir avaliação vascular/protocolo.</p>
+    </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>5) Proteção da pele perilesional</h2>
+      <p class="lpp-lead">Essencial para reduzir <b>maceração</b>, <b>dermatite por umidade</b> e trauma por adesivos.</p>
+      <div style="margin-top:10px">
+        <span class="lpp-chip">Cremes barreira (óxido de zinco)</span>
+        <span class="lpp-chip">Películas protetoras sem álcool</span>
+        <span class="lpp-chip">Ácidos graxos essenciais (AGE)</span>
+        <span class="lpp-chip">Espumas de proteção para proeminências ósseas</span>
       </div>
     </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>6) Dispositivos para alívio de pressão</h2>
+      <p class="lpp-lead">
+        Fundamentais na prevenção e tratamento: <b>sem redistribuição de pressão, a cicatrização tende a falhar</b>.
+      </p>
+      <div style="margin-top:10px">
+        <span class="lpp-chip">Colchão pneumático alternado</span>
+        <span class="lpp-chip">Colchão viscoelástico</span>
+        <span class="lpp-chip">Almofadas de redistribuição de pressão</span>
+        <span class="lpp-chip">Coxins posicionadores</span>
+      </div>
+      <p class="lpp-note">Associar reposicionamento programado, redução de fricção/cisalhamento e proteção de proeminências ósseas.</p>
+    </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>7) Suporte sistêmico (tratamento não é só tópico)</h2>
+      <p class="lpp-lead">O prognóstico depende de fatores sistêmicos e do cuidado global.</p>
+      <div class="lpp-sections" style="margin-top:10px">
+        <div class="lpp-item">
+          <h4>Avaliação nutricional</h4>
+          <p>Proteína, zinco, vitamina C (conforme avaliação) e plano alimentar individualizado.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Controle glicêmico</h4>
+          <p>Hiperglicemia aumenta risco de infecção e retarda reparo tecidual.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Manejo da dor</h4>
+          <p>Planejar analgesia antes da troca e usar técnicas menos traumáticas.</p>
+        </div>
+        <div class="lpp-item">
+          <h4>Controle de umidade/incontinência</h4>
+          <p>Reduz dermatite associada à umidade e protege pele perilesional.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="lpp-card">
+      <h2 class="lpp-title"><span class="lpp-bar"></span>Referências</h2>
+      <ul style="margin:10px 0 0 18px; color:var(--lpp-muted);">
+        <li><b>EPUAP/NPIAP/PPPIA.</b> <i>Prevention and Treatment of Pressure Ulcers/Injuries: Clinical Practice Guideline</i>. 2019.</li>
+        <li><b>ANVISA.</b> Notas técnicas e materiais orientadores relacionados à prevenção e manejo de lesões por pressão (Brasil).</li>
+        <li><b>Wound Healing Society.</b> Diretrizes para tratamento de úlceras por pressão (atualizações em periódicos da sociedade).</li>
+      </ul>
+      <p class="lpp-note">Material educativo. Conduta clínica deve seguir avaliação profissional, prescrição e protocolo institucional.</p>
+    </section>
+
+    <div class="lpp-footer">© 2026 - Projeto Integrador</div>
   </main>
 
-  <footer>© 2026 - Projeto Integrador</footer>
 
-  <button class="toTop" id="toTop" type="button" aria-label="Voltar ao topo">↑ Topo</button>
-
-  <script>
-    // Botão voltar ao topo (aparece ao rolar)
-    (function(){
-      const btn = document.getElementById('toTop');
-      if(!btn) return;
-
-      function onScroll(){
-        if(window.scrollY > 260) btn.classList.add('show');
-        else btn.classList.remove('show');
-      }
-      window.addEventListener('scroll', onScroll, { passive:true });
-      onScroll();
-
-      btn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    })();
-  </script>
-
-</body>
-</html>
+</body></html>
