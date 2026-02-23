@@ -10,11 +10,11 @@
 
   <style>
     /* =========================
-       CORREÇÃO DEFINITIVA DA FAIXA BRANCA (RESET)
+       RESET (tira a faixa branca)
        ========================= */
     html, body{
-      margin: 0 !important;
-      padding: 0 !important;
+      margin:0 !important;
+      padding:0 !important;
     }
 
     /* =========================
@@ -23,12 +23,16 @@
     body.impacto{
       margin:0 !important;
       padding:0 !important;
+      overflow-x:hidden;
+
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:#0f172a;
 
+      /* fundo com vida */
       background:
-        radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.14), transparent 55%),
-        radial-gradient(900px 500px at 90% 10%, rgba(11,61,145,.12), transparent 55%),
+        radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.16), transparent 55%),
+        radial-gradient(900px 520px at 90% 10%, rgba(11,61,145,.14), transparent 55%),
+        radial-gradient(900px 520px at 50% 110%, rgba(240,180,0,.08), transparent 55%),
         #eef2f6;
 
       --i-blue-1:#0b3d91;
@@ -38,54 +42,67 @@
 
       --i-card:#ffffff;
       --i-muted:#475569;
-      --i-border: rgba(15,23,42,.10);
 
       --i-radius: 20px;
+
       --i-shadow: 0 12px 30px rgba(2,6,23,.10);
-      --i-shadow-2: 0 18px 45px rgba(2,6,23,.14);
+      --i-shadow-2: 0 22px 60px rgba(2,6,23,.16);
       --i-soft: 0 10px 24px rgba(2,6,23,.08);
-      --i-ring: 0 0 0 4px rgba(56,130,246,.18);
+
+      --i-glow: 0 0 0 4px rgba(56,130,246,.16), 0 18px 42px rgba(15,91,211,.18);
+      --i-border: rgba(15,23,42,.10);
+
+      /* borda gradiente “premium” */
+      --i-grad: linear-gradient(135deg, rgba(15,91,211,.55), rgba(11,61,145,.20), rgba(240,180,0,.22));
     }
 
     body.impacto *{ box-sizing:border-box; }
+    body.impacto a{ -webkit-tap-highlight-color: transparent; }
 
-    /* HEADER */
+    /* =========================
+       HEADER
+       ========================= */
     body.impacto header{
-      display:block;
       margin:0 !important;
       background: linear-gradient(90deg, var(--i-blue-1), var(--i-blue-2));
       color:#fff;
       text-align:center;
-      padding: 44px 16px 28px;
+      padding: 48px 16px 28px;
+      box-shadow: 0 18px 42px rgba(2,6,23,.18);
+      border-bottom: 1px solid rgba(255,255,255,.10);
       position: relative;
       overflow:hidden;
-      box-shadow: 0 14px 28px rgba(2,6,23,.18);
-      border-bottom: 1px solid rgba(255,255,255,.10);
     }
+
+    /* brilho interno (não vira “faixa”) */
     body.impacto header::after{
       content:"";
       position:absolute;
-      inset:-40px -120px auto -120px;
-      height: 160px;
-      background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.22), transparent 60%);
-      transform: rotate(-2deg);
+      inset:-120px -120px auto -120px;
+      height: 220px;
+      background: radial-gradient(circle at 50% 65%, rgba(255,255,255,.14), transparent 62%);
       pointer-events:none;
     }
+
     body.impacto header h1{
       margin:0;
-      font-size: clamp(24px, 3.6vw, 36px);
+      font-size: clamp(24px, 3.6vw, 34px);
       font-weight: 950;
       letter-spacing: -0.4px;
       line-height: 1.15;
       text-shadow: 0 10px 24px rgba(2,6,23,.18);
+      position: relative;
     }
     body.impacto header p{
       margin: 10px 0 0;
       font-size: 15px;
       opacity: 0.95;
+      position: relative;
     }
 
-    /* MENU */
+    /* =========================
+       MENU
+       ========================= */
     body.impacto .topnav{
       background: var(--i-navy);
       position: sticky;
@@ -93,14 +110,14 @@
       z-index: 999;
       display:flex;
       justify-content:center;
-      gap: 12px;
+      gap: 14px;
       padding: 10px 12px;
       box-shadow: 0 12px 24px rgba(2,6,23,.12);
-      border-bottom: 1px solid rgba(255,255,255,.08);
       flex-wrap: wrap;
+      border-bottom: 1px solid rgba(255,255,255,.08);
     }
     body.impacto .topnav a{
-      color:#eaf2ff !important;
+      color:#fff !important;
       text-decoration:none;
       font-weight:900;
       font-size:14px;
@@ -113,29 +130,30 @@
     body.impacto .topnav a:hover{
       background: rgba(255,255,255,0.14);
       transform: translateY(-1px);
-      box-shadow: 0 10px 18px rgba(2,6,23,.18);
+      box-shadow: 0 12px 24px rgba(2,6,23,.18);
     }
     body.impacto .topnav a:focus-visible{
       background: rgba(255,255,255,0.14);
-      box-shadow: var(--i-ring);
+      box-shadow: var(--i-glow);
     }
     body.impacto .topnav a[aria-current="page"]{
       background: rgba(255,255,255,0.18);
       outline: 1px solid rgba(255,255,255,0.16);
     }
 
-    /* MAIN */
+    /* =========================
+       MAIN
+       ========================= */
     body.impacto main{
       max-width: 1100px;
       margin: 18px auto;
-      padding: 0 16px 56px;
+      padding: 0 16px 46px;
     }
 
-    /* TÍTULOS */
     body.impacto .section-title{
       font-size: 22px;
       font-weight: 950;
-      margin: 0 0 12px;
+      margin: 18px 0 12px;
       letter-spacing: -0.2px;
       color:#0b2b63;
       display:flex;
@@ -144,15 +162,16 @@
     }
     body.impacto .section-title::before{
       content:"";
-      width: 4px;
-      height: 22px;
-      border-radius: 999px;
+      width:4px;
+      height:22px;
+      border-radius:999px;
       background: var(--i-blue-3);
       box-shadow: 0 10px 18px rgba(11,91,211,.25);
-      display:inline-block;
     }
 
-    /* CARDS */
+    /* =========================
+       CARDS (mais vivos)
+       ========================= */
     body.impacto .card{
       background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
       border-radius: var(--i-radius);
@@ -165,30 +184,58 @@
       transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
       will-change: transform;
     }
+
+    /* borda gradiente “premium” */
+    body.impacto .card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      padding:1px;
+      border-radius: inherit;
+      background: var(--i-grad);
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity:.55;
+      pointer-events:none;
+    }
+
+    /* brilho interno no hover */
     body.impacto .card::before{
       content:"";
       position:absolute;
       inset:-2px;
-      background: radial-gradient(700px 260px at 20% 0%, rgba(11,91,211,.10), transparent 55%);
+      background:
+        radial-gradient(700px 260px at 20% 0%, rgba(11,91,211,.12), transparent 55%),
+        radial-gradient(520px 240px at 90% 20%, rgba(240,180,0,.10), transparent 60%);
       opacity: 0;
       transition: opacity .18s ease;
       pointer-events:none;
     }
+
     body.impacto .card:hover{
-      transform: translateY(-3px);
+      transform: translateY(-4px);
       box-shadow: var(--i-shadow-2);
       border-color: rgba(11,91,211,.22);
     }
     body.impacto .card:hover::before{ opacity: 1; }
+    body.impacto .card:focus-within{
+      box-shadow: var(--i-shadow-2), var(--i-glow);
+      border-color: rgba(11,91,211,.30);
+    }
 
     body.impacto .muted{
       color: var(--i-muted);
       font-size: 14px;
-      line-height: 1.65;
+      line-height: 1.6;
       margin-top: 6px;
     }
 
-    /* TABELA */
+    /* =========================
+       TABELA
+       ========================= */
     body.impacto .table-wrap{
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
@@ -220,9 +267,11 @@
       font-size: 14px;
     }
     body.impacto tr:last-child td{ border-bottom: none; }
-    body.impacto td strong{ color:#0b2b63; }
+    body.impacto td strong{ color:#0b3d91; }
 
-    /* GRÁFICO */
+    /* =========================
+       GRÁFICO
+       ========================= */
     body.impacto .chart-box{
       background:#fff;
       border-radius: 16px;
@@ -237,7 +286,9 @@
       height: 360px;
     }
 
-    /* 2 colunas */
+    /* =========================
+       PREVENÇÃO X TRATAMENTO
+       ========================= */
     body.impacto .two-cols{
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -251,11 +302,40 @@
       border: 1px solid rgba(15,23,42,.10);
       box-shadow: var(--i-soft);
       transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+      position: relative;
+      overflow:hidden;
+    }
+    body.impacto .mini::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(520px 220px at 20% 10%, rgba(11,91,211,.10), transparent 60%);
+      opacity:0;
+      transition: opacity .16s ease;
+      pointer-events:none;
     }
     body.impacto .mini:hover{
-      transform: translateY(-2px);
-      box-shadow: 0 18px 34px rgba(2,6,23,.10);
+      transform: translateY(-3px);
+      box-shadow: 0 22px 44px rgba(2,6,23,.12);
       border-color: rgba(11,91,211,.18);
+    }
+    body.impacto .mini:hover::before{ opacity:1; }
+
+    body.impacto .mini h3{
+      margin:0 0 8px;
+      font-size: 16px;
+      font-weight: 950;
+      color:#0b2b63;
+    }
+
+    body.impacto ul{
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+    body.impacto li{
+      font-size: 14px;
+      line-height: 1.55;
+      color:#243042;
     }
 
     /* FOOTER */
@@ -264,24 +344,10 @@
       color:#475569;
       padding: 22px 12px;
       font-size: 13px;
+      opacity: 0.95;
     }
 
     /* MOBILE */
-    @media (max-width: 820px){
-      body.impacto .topnav{
-        justify-content:flex-start;
-        flex-wrap: nowrap;
-        overflow-x:auto;
-        scrollbar-width:none;
-        -webkit-overflow-scrolling: touch;
-        scroll-snap-type: x mandatory;
-      }
-      body.impacto .topnav::-webkit-scrollbar{ display:none; }
-      body.impacto .topnav a{
-        flex: 0 0 auto;
-        scroll-snap-align: start;
-      }
-    }
     @media (max-width: 900px){
       body.impacto header h1{ font-size: 26px; }
       body.impacto header p{ font-size: 14px; }
@@ -289,8 +355,9 @@
       body.impacto .two-cols{ grid-template-columns: 1fr; }
       body.impacto .section-title{ font-size: 20px; }
     }
+
     @media (prefers-reduced-motion: reduce){
-      body.impacto *{ transition:none !important; animation:none !important; }
+      body.impacto *{ transition:none !important; }
     }
   </style>
 </head>
@@ -309,16 +376,193 @@
     <a href="impacto-economico.html" aria-current="page">Impacto Econômico</a>
     <a href="nosso-produto.html">Nosso Produto</a>
     <a href="selecao-produtos.html">Seleção de Produtos</a>
-    <a href="avaliacao.html">Avaliação</a>
+    <a href="avaliacao.html">avaliação</a>
   </nav>
 
   <main>
-    <!-- (conteúdo igual ao seu) -->
-    <!-- ... você pode manter exatamente o mesmo main e scripts daqui pra baixo -->
+
+    <div class="card">
+      <div class="section-title">Dados de custo</div>
+      <div class="muted"></div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Indicador</th>
+              <th>Unidade</th>
+              <th>Valor</th>
+              <th>Descrição</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Custos diretos de curativos (todos estágios)</strong></td>
+              <td>Por procedimento</td>
+              <td><strong>R$ 16,41 a R$ 260,18</strong></td>
+              <td>Materiais + mão de obra diretamente no procedimento.</td>
+            </tr>
+            <tr>
+              <td><strong>Custo total de tratamento (hospitalar)</strong></td>
+              <td>Por paciente / 6 meses</td>
+              <td><strong>R$ 1.886,00</strong></td>
+              <td>Média por paciente ao longo de 6 meses (inclui materiais e alguns profissionais).</td>
+            </tr>
+            <tr>
+              <td><strong>LPP estágios avançados (III–IV)</strong></td>
+              <td>Total / 104 curativos</td>
+              <td><strong>R$ 6.828,27</strong></td>
+              <td>Materiais consumidos (tempo médio de internação: 92 dias).</td>
+            </tr>
+            <tr>
+              <td><strong>LPP estágios avançados (III–IV)</strong></td>
+              <td>Média diária</td>
+              <td><strong>R$ 74,22 por dia</strong></td>
+              <td>Estimativa média diária reportada no contexto.</td>
+            </tr>
+            <tr>
+              <td><strong>Caso de alta complexidade (exemplo)</strong></td>
+              <td>Total / 189 dias</td>
+              <td><strong>R$ 111.254,85</strong></td>
+              <td>Inclui internação prolongada, profissionais e materiais.</td>
+            </tr>
+            <tr>
+              <td><strong>Caso de alta complexidade (exemplo)</strong></td>
+              <td>Média diária</td>
+              <td><strong>R$ 588,65 por dia</strong></td>
+              <td>Média diária estimada no estudo de caso.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Comparação visual (gráfico)</div>
+      <div class="muted">
+        O gráfico compara os principais valores apresentados. Como as unidades diferem
+        (procedimento vs dia vs 6 meses vs total), a leitura deve focar na amplitude do impacto financeiro.
+      </div>
+
+      <div class="chart-box" style="margin-top:12px;">
+        <div class="chart-wrap">
+          <canvas id="graficoCusto"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Interpretação didática: prevenção × tratamento</div>
+
+      <div class="two-cols">
+        <div class="mini">
+          <h3>Prevenção (reduz risco e custo indireto)</h3>
+          <ul>
+            <li>Avaliação de risco e inspeção diária da pele</li>
+            <li>Reposicionamento e redução de fricção/cisalhamento</li>
+            <li>Controle de umidade e barreira cutânea</li>
+            <li>Superfícies de redistribuição de pressão quando indicadas</li>
+          </ul>
+        </div>
+
+        <div class="mini">
+          <h3>Tratamento (tende a elevar custo)</h3>
+          <ul>
+            <li>Curativos seriados (custos por procedimento)</li>
+            <li>Internação prolongada em estágios avançados</li>
+            <li>Maior consumo de materiais e assistência profissional</li>
+            <li>Casos complexos podem atingir valores muito elevados</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Referências</div>
+      <div class="muted">PubMed</div>
+    </div>
+
   </main>
 
   <footer>© 2026 - Projeto Integrador</footer>
 
-  <!-- seus scripts (iguais) -->
+  <script>
+    const dados = {
+      curativoMin: 16.41,
+      curativoMax: 260.18,
+      seisMeses: 1886.00,
+      avancadoDia: 74.22,
+      complexoDia: 588.65,
+      complexoTotal: 111254.85
+    };
+
+    const labels = [
+      'Curativo (mín) por procedimento',
+      'Curativo (máx) por procedimento',
+      'Tratamento (média) 6 meses / paciente',
+      'Estágio avançado (média) por dia',
+      'Caso complexo (média) por dia',
+      'Caso complexo (total)'
+    ];
+
+    const valores = [
+      dados.curativoMin,
+      dados.curativoMax,
+      dados.seisMeses,
+      dados.avancadoDia,
+      dados.complexoDia,
+      dados.complexoTotal
+    ];
+
+    const ctx = document.getElementById('graficoCusto');
+
+    if (window.Chart && ctx) {
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Custo estimado (R$)',
+            data: valores,
+            borderWidth: 1,
+            borderRadius: 10
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const v = context.parsed.y ?? 0;
+                  return 'R$ ' + Number(v).toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  });
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: (value) => 'R$ ' + Number(value).toLocaleString('pt-BR')
+              }
+            }
+          }
+        }
+      });
+    } else {
+      const box = document.querySelector('.chart-box');
+      if (box) {
+        box.innerHTML = '<p style="margin:0; padding:12px; font-weight:900; color:#0b2b63;">Gráfico indisponível (Chart.js não carregou). Verifique sua conexão.</p>';
+      }
+    }
+  </script>
+
 </body>
 </html>
