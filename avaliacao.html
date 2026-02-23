@@ -7,142 +7,272 @@
 
 <style>
 /* =========================
-   ISOLAMENTO COMPLETO
+   ISOLAMENTO COMPLETO (sem sobrescrever outras páginas)
+   Tudo fica preso em: body.avaliacao ...
    ========================= */
 body.avaliacao{
-    margin:0;
-    font-family: Arial, sans-serif;
-    background:#eef2f6;
-    color:#1a1a1a;
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:#0f172a;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.14), transparent 55%),
+    radial-gradient(900px 500px at 90% 10%, rgba(11,61,145,.12), transparent 55%),
+    #eef2f6;
+}
+
+/* variáveis (só desta página) */
+body.avaliacao{
+  --a-blue-1:#0b3d91;
+  --a-blue-2:#0f5bd3;
+  --a-blue-3:#0b5bd3;
+  --a-navy:#082c63;
+  --a-card:#ffffff;
+  --a-muted:#475569;
+  --a-border: rgba(15, 23, 42, .10);
+  --a-radius: 18px;
+  --a-shadow: 0 12px 30px rgba(2,6,23,.10);
+  --a-shadow-2: 0 18px 45px rgba(2,6,23,.14);
+  --a-soft: 0 10px 24px rgba(2,6,23,.08);
+  --a-ring: 0 0 0 4px rgba(56,130,246,.18);
 }
 
 /* Header */
 body.avaliacao header{
-    background: linear-gradient(90deg, #0b3d91, #0f5bd3);
-    color:white;
-    text-align:center;
-    padding:40px 15px;
+  background: linear-gradient(90deg, var(--a-blue-1), var(--a-blue-2));
+  color:#fff;
+  text-align:center;
+  padding:40px 15px 26px;
+  position: relative;
+  overflow:hidden;
+  box-shadow: 0 14px 28px rgba(2,6,23,.18);
+  border-bottom: 1px solid rgba(255,255,255,.10);
 }
-
+body.avaliacao header::after{
+  content:"";
+  position:absolute;
+  inset:-40px -120px auto -120px;
+  height: 160px;
+  background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.22), transparent 60%);
+  transform: rotate(-2deg);
+  pointer-events:none;
+}
 body.avaliacao header h1{
-    margin:0;
-    font-size:28px;
-    font-weight:800;
+  margin:0;
+  font-size:clamp(22px, 3.4vw, 30px);
+  font-weight:900;
+  letter-spacing:.2px;
+  text-shadow: 0 10px 24px rgba(2,6,23,.18);
 }
-
 body.avaliacao header p{
-    margin-top:8px;
-    font-size:14px;
-    opacity:.9;
+  margin-top:8px;
+  font-size:14px;
+  opacity:.92;
 }
 
-/* Menu */
+/* Menu (igual seu site principal, com rolagem no mobile) */
 body.avaliacao nav{
-    background:#082c63;
-    padding:10px;
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    flex-wrap:wrap;
+  background: var(--a-navy);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: 10px 12px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  box-shadow: 0 12px 24px rgba(2,6,23,.12);
+  border-bottom: 1px solid rgba(255,255,255,.08);
 }
-
 body.avaliacao nav a{
-    color:white;
-    text-decoration:none;
-    font-weight:bold;
-    font-size:14px;
-    padding:8px 12px;
-    border-radius:10px;
+  color:#eaf2ff;
+  text-decoration:none;
+  font-weight:900;
+  font-size:14px;
+  padding:10px 12px;
+  border-radius:12px;
+  white-space: nowrap;
+  transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
+  outline: none;
 }
-
 body.avaliacao nav a:hover{
-    background:rgba(255,255,255,0.15);
+  background:rgba(255,255,255,0.14);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(2,6,23,.18);
+}
+body.avaliacao nav a:focus-visible{
+  box-shadow: var(--a-ring);
+  background:rgba(255,255,255,0.14);
 }
 
 /* Conteúdo */
 body.avaliacao main{
-    max-width:650px;
-    margin:30px auto;
-    padding:15px;
+  max-width:720px;
+  margin:24px auto 60px;
+  padding: 0 14px;
 }
 
+/* Card com mais “vida” */
 body.avaliacao .card{
-    background:white;
-    padding:25px;
-    border-radius:18px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.1);
+  background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
+  padding:22px;
+  border-radius: var(--a-radius);
+  box-shadow: var(--a-shadow);
+  border: 1px solid var(--a-border);
+  position: relative;
+  overflow:hidden;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  will-change: transform;
+}
+body.avaliacao .card::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background: radial-gradient(700px 260px at 20% 0%, rgba(11,91,211,.10), transparent 55%);
+  opacity: 0;
+  transition: opacity .18s ease;
+  pointer-events:none;
+}
+body.avaliacao .card:hover{
+  transform: translateY(-3px);
+  box-shadow: var(--a-shadow-2);
+  border-color: rgba(11,91,211,.22);
+}
+body.avaliacao .card:hover::before{ opacity: 1; }
+body.avaliacao .card:focus-within{
+  box-shadow: var(--a-shadow-2), var(--a-ring);
+  border-color: rgba(11,91,211,.30);
 }
 
+/* Texto */
 body.avaliacao label{
-    font-weight:bold;
-    display:block;
-    margin-top:18px;
+  font-weight:900;
+  display:block;
+  margin-top:16px;
+  color:#0b2b63;
 }
 
 /* Estrelas */
 body.avaliacao .estrelas{
-    display:flex;
-    gap:10px;
-    margin-top:10px;
-    flex-wrap:wrap;
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+  flex-wrap:wrap;
 }
-
 body.avaliacao .estrelas input{
-    display:none;
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
 }
-
 body.avaliacao .estrelas label{
-    font-size:26px;
-    cursor:pointer;
-    background:#f5f6fa;
-    padding:8px 12px;
-    border-radius:12px;
-    border:1px solid #ddd;
+  font-size:22px;
+  cursor:pointer;
+  background:#f6f8ff;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(15,23,42,.12);
+  box-shadow: var(--a-soft);
+  transition: transform .14s ease, box-shadow .14s ease, background .14s ease, border-color .14s ease;
+  user-select:none;
 }
-
+body.avaliacao .estrelas label:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 16px 28px rgba(2,6,23,.10);
+  border-color: rgba(11,91,211,.20);
+}
 body.avaliacao .estrelas input:checked + label{
-    background:#ffe8a3;
+  background:#ffe8a3;
+  border-color: rgba(148, 111, 0, .25);
+  box-shadow: 0 18px 34px rgba(2,6,23,.12);
 }
 
 /* Campo comentário */
 body.avaliacao textarea{
-    width:100%;
-    padding:12px;
-    border-radius:12px;
-    border:1px solid #ccc;
-    margin-top:8px;
-    min-height:120px;
-    resize:vertical;
+  width:100%;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid rgba(15,23,42,.16);
+  margin-top:8px;
+  min-height:120px;
+  resize:vertical;
+  font-size:15px;
+  outline:none;
+  transition: box-shadow .14s ease, border-color .14s ease, transform .14s ease;
+  background:#fff;
+}
+body.avaliacao textarea:focus{
+  border-color:#9cc3ff;
+  box-shadow: var(--a-ring);
 }
 
 /* Botão */
 body.avaliacao button{
-    margin-top:20px;
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:14px;
-    background:#0f5bd3;
-    color:white;
-    font-weight:900;
-    font-size:15px;
-    cursor:pointer;
+  margin-top:18px;
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background: linear-gradient(180deg, var(--a-blue-2), var(--a-blue-1));
+  color:white;
+  font-weight:1000;
+  font-size:15px;
+  cursor:pointer;
+  box-shadow: 0 16px 34px rgba(15,91,211,.22);
+  transition: transform .14s ease, box-shadow .14s ease, filter .14s ease;
 }
-
 body.avaliacao button:hover{
-    background:#0b3d91;
+  transform: translateY(-1px);
+  box-shadow: 0 20px 44px rgba(15,91,211,.28);
+  filter: brightness(1.02);
+}
+body.avaliacao button:active{
+  transform: translateY(0px);
 }
 
+/* Observação */
 body.avaliacao .obs{
-    font-size:12px;
-    margin-top:12px;
-    opacity:.8;
+  font-size:12px;
+  margin-top:12px;
+  color: var(--a-muted);
 }
 
-@media (max-width:700px){
-    body.avaliacao header h1{
-        font-size:22px;
-    }
+/* feedback visual de envio */
+body.avaliacao .toast{
+  margin-top:14px;
+  display:none;
+  padding:12px 12px;
+  border-radius:14px;
+  border:1px solid rgba(15,23,42,.10);
+  background: rgba(255,255,255,.8);
+  box-shadow: var(--a-soft);
+  color:#0b2b63;
+  line-height:1.4;
+}
+
+/* ✅ MOBILE: nav com rolagem horizontal + snap */
+@media (max-width: 720px){
+  body.avaliacao nav{
+    justify-content:flex-start;
+    flex-wrap: nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width:none;
+    scroll-snap-type: x mandatory;
+  }
+  body.avaliacao nav::-webkit-scrollbar{ display:none; }
+  body.avaliacao nav a{
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+}
+
+/* microajustes telas pequenas */
+@media (max-width: 480px){
+  body.avaliacao .card{ padding:18px; }
+}
+
+/* acessibilidade: reduz movimento */
+@media (prefers-reduced-motion: reduce){
+  *{ transition:none !important; animation:none !important; }
 }
 </style>
 </head>
@@ -150,61 +280,101 @@ body.avaliacao .obs{
 <body class="avaliacao">
 
 <header>
-    <h1>Avaliação do Site e do Produto</h1>
-    <p>Sua opinião é fundamental para melhoria contínua</p>
+  <h1>Avaliação do Site e do Produto</h1>
+  <p>Sua opinião é fundamental para melhoria contínua</p>
 </header>
 
 <nav>
-    <a href="index.html">Início</a>
-    <a href="nosso-produto.html">Nosso Produto</a>
-    <a href="tratamento.html">Tratamento</a>
-    <a href="impacto-economico.html">Impacto Econômico</a>
-    <a href="guia-simples.html">Guia Simples</a>
-    <a href="avaliacao.html">Avaliação</a>
+  <a href="index.html">Início</a>
+  <a href="nosso-produto.html">Nosso Produto</a>
+  <a href="tratamento.html">Tratamento</a>
+  <a href="impacto-economico.html">Impacto Econômico</a>
+  <a href="guia-simples.html">Guia Simples</a>
+  <a href="avaliacao.html" aria-current="page">Avaliação</a>
 </nav>
 
 <main>
-<div class="card">
+  <div class="card" id="cardAvaliacao">
 
-<form action="https://docs.google.com/forms/d/e/1FAIpQLSfXAKuJVOlM61B3tOnuUcdMldM70VHZzGrRpcMOQwswzu4rLg/formResponse"
+    <form id="formAvaliacao"
+      action="https://docs.google.com/forms/d/e/1FAIpQLSfXAKuJVOlM61B3tOnuUcdMldM70VHZzGrRpcMOQwswzu4rLg/formResponse"
       method="POST"
       target="_blank">
 
-<label>Como você avalia nosso site?</label>
+      <label>Como você avalia nosso site?</label>
 
-<div class="estrelas">
+      <div class="estrelas" aria-label="Avaliação por estrelas">
+        <input type="radio" id="s1" name="entry.1369984255" value="⭐" required>
+        <label for="s1" title="1 estrela" aria-label="1 estrela">⭐</label>
 
-<input type="radio" id="s1" name="entry.1369984255" value="⭐" required>
-<label for="s1">⭐</label>
+        <input type="radio" id="s2" name="entry.1369984255" value="⭐⭐">
+        <label for="s2" title="2 estrelas" aria-label="2 estrelas">⭐⭐</label>
 
-<input type="radio" id="s2" name="entry.1369984255" value="⭐⭐">
-<label for="s2">⭐⭐</label>
+        <input type="radio" id="s3" name="entry.1369984255" value="⭐⭐⭐">
+        <label for="s3" title="3 estrelas" aria-label="3 estrelas">⭐⭐⭐</label>
 
-<input type="radio" id="s3" name="entry.1369984255" value="⭐⭐⭐">
-<label for="s3">⭐⭐⭐</label>
+        <input type="radio" id="s4" name="entry.1369984255" value="⭐⭐⭐⭐">
+        <label for="s4" title="4 estrelas" aria-label="4 estrelas">⭐⭐⭐⭐</label>
 
-<input type="radio" id="s4" name="entry.1369984255" value="⭐⭐⭐⭐">
-<label for="s4">⭐⭐⭐⭐</label>
+        <input type="radio" id="s5" name="entry.1369984255" value="⭐⭐⭐⭐⭐">
+        <label for="s5" title="5 estrelas" aria-label="5 estrelas">⭐⭐⭐⭐⭐</label>
+      </div>
 
-<input type="radio" id="s5" name="entry.1369984255" value="⭐⭐⭐⭐⭐">
-<label for="s5">⭐⭐⭐⭐⭐</label>
+      <label>Comentário ou sugestão:</label>
+      <textarea name="entry.1896760324" placeholder="Escreva aqui sua opinião..."></textarea>
 
-</div>
+      <button type="submit">Enviar Avaliação</button>
 
-<label>Comentário ou sugestão:</label>
-<textarea name="entry.1896760324"
-placeholder="Escreva aqui sua opinião..."></textarea>
+      <div class="obs">
+        *As respostas serão salvas automaticamente no Google Forms vinculado ao projeto.
+      </div>
 
-<button type="submit">Enviar Avaliação</button>
+      <div class="toast" id="toast">
+        ✅ Obrigado! Sua avaliação será enviada em uma nova aba (Google Forms).
+      </div>
 
-<div class="obs">
-*As respostas serão salvas automaticamente no Google Forms vinculado ao projeto.
-</div>
+    </form>
 
-</form>
-
-</div>
+  </div>
 </main>
+
+<script>
+/* Interação extra sem quebrar mobile: tilt leve no card (somente se houver hover) */
+(function(){
+  const card = document.getElementById('cardAvaliacao');
+  const canHover = window.matchMedia('(hover:hover)').matches;
+
+  function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+  if(canHover && card){
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;
+      const y = (e.clientY - r.top) / r.height;
+
+      const rx = clamp((0.5 - y) * 5, -5, 5);
+      const ry = clamp((x - 0.5) * 5, -5, 5);
+
+      card.style.transform = `translateY(-3px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  }
+
+  /* Toast ao enviar (como abre em nova aba, só dá um feedback visual) */
+  const form = document.getElementById('formAvaliacao');
+  const toast = document.getElementById('toast');
+
+  if(form && toast){
+    form.addEventListener('submit', () => {
+      toast.style.display = 'block';
+      toast.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  }
+})();
+</script>
 
 </body>
 </html>
