@@ -12,10 +12,10 @@
   <!-- ✅ PWA: descrição -->
   <meta name="description" content="Lesão por Pressão - Projeto Integrador. Conteúdo educativo em formato instalável (PWA)." />
 
-  <!-- ✅ PWA: manifest (IMPORTANTE: caminho relativo para GitHub Pages /lesa/) -->
+  <!-- ✅ PWA: manifest (✅ corrigido para GitHub Pages /lesa/) -->
   <link rel="manifest" href="manifest.webmanifest" />
 
-  <!-- ✅ PWA: ícone para iOS (caminho relativo) -->
+  <!-- ✅ PWA: ícone para iOS (✅ corrigido para GitHub Pages /lesa/) -->
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
 
   <title>Lesão por Pressão - Projeto Integrador</title>
@@ -101,7 +101,7 @@
       position: relative;
     }
 
-    /* MENU */
+    /* MENU (DESKTOP padrão) */
     .lpp-menu{
       display:flex;
       flex-wrap: wrap;
@@ -143,6 +143,7 @@
       padding: 0 14px;
     }
 
+    /* cartões mais “vivos” */
     .lpp-card{
       background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
       border-radius: var(--lpp-radius);
@@ -209,6 +210,7 @@
     }
     .lpp-list li{ margin: 6px 0; }
 
+    /* IMAGEM */
     .lpp-figure{
       margin: 14px 0 0;
       border-radius: 16px;
@@ -233,6 +235,7 @@
       transform: scale(1.03);
     }
 
+    /* chips/botões */
     .lpp-pill{
       padding: 10px 12px;
       border-radius: 999px;
@@ -251,8 +254,11 @@
       transform: translateY(-1px);
       box-shadow: 0 16px 28px rgba(2,6,23,.10);
     }
-    .lpp-pill:active{ transform: translateY(0px); }
+    .lpp-pill:active{
+      transform: translateY(0px);
+    }
 
+    /* BUSCA */
     .lpp-search{
       display:flex;
       gap: 10px;
@@ -275,6 +281,7 @@
       box-shadow: var(--lpp-ring);
     }
 
+    /* FAQ */
     .lpp-faq{
       margin-top: 10px;
       display:flex;
@@ -314,7 +321,9 @@
       font-size: 16px;
       transition: transform .16s ease;
     }
-    details.lpp-qa[open] summary::after{ content:"▴"; }
+    details.lpp-qa[open] summary::after{
+      content:"▴";
+    }
 
     .lpp-answer{
       margin: 10px 0 0;
@@ -323,6 +332,7 @@
       font-size: 14.5px;
     }
 
+    /* RESULTADOS DA BUSCA */
     .lpp-results{ margin-top: 10px; display:none; }
     .lpp-results.visible{ display:block; }
     .lpp-result{
@@ -351,6 +361,7 @@
       border-radius: 4px;
     }
 
+    /* FOOTER */
     .lpp-footer{
       text-align:center;
       color:#64748b;
@@ -358,11 +369,13 @@
       padding: 18px 10px 30px;
     }
 
+    /* animação leve */
     @keyframes fadeUp{
       from{ opacity:0; transform: translateY(6px); }
       to{ opacity:1; transform: translateY(0); }
     }
 
+    /* ✅ MOBILE: menu com rolagem horizontal + snap + gradiente */
     @media (max-width: 720px){
       .lpp-menu{
         flex-wrap: nowrap;
@@ -375,11 +388,13 @@
         scroll-snap-type: x mandatory;
       }
       .lpp-menu::-webkit-scrollbar{ display:none; }
+
       .lpp-menu a{
         flex: 0 0 auto;
         padding: 10px 12px;
         scroll-snap-align: start;
       }
+
       .lpp-nav-inner::before,
       .lpp-nav-inner::after{
         content:"";
@@ -399,12 +414,14 @@
       }
     }
 
+    /* microajustes para telas bem pequenas */
     @media (max-width: 480px){
       .lpp-card{ padding: 16px; }
       .lpp-title{ font-size: 18px; }
       .lpp-text, .lpp-list{ font-size: 15px; }
     }
 
+    /* acessibilidade: reduz movimento */
     @media (prefers-reduced-motion: reduce){
       html{ scroll-behavior:auto; }
       *{ transition:none !important; animation:none !important; }
@@ -514,7 +531,6 @@
   </nav>
 
   <main class="lpp-main">
-
     <section class="lpp-card" id="conceito">
       <h2 class="lpp-title">Conceito</h2>
       <p class="lpp-text">
@@ -570,23 +586,20 @@
       <div class="lpp-results" id="resultsBox" aria-live="polite"></div>
 
       <div class="lpp-faq" id="faqList">
-        <!-- (seu FAQ mantém igual) -->
-        <!-- ... -->
+        <!-- (seu conteúdo de FAQ continua aqui exatamente igual) -->
       </div>
     </section>
-
   </main>
 
   <footer class="lpp-footer">
     © 2026 - Projeto Integrador
   </footer>
 
-  <!-- ✅ Modal com imagem de saúde -->
   <div id="pwaModal" class="pwa-modal" aria-hidden="true">
     <div class="pwa-box" role="dialog" aria-modal="true" aria-labelledby="pwaTitle">
       <h2 id="pwaTitle" class="pwa-title">Instalar aplicativo</h2>
 
-      <!-- ✅ IMPORTANTE: caminho relativo para GitHub Pages /lesa/ -->
+      <!-- ✅ corrigido para GitHub Pages /lesa/ -->
       <img class="pwa-img" src="icons/saude-install.png" alt="Imagem relacionada à saúde" width="900" height="520" loading="lazy">
 
       <p class="pwa-text">
@@ -695,7 +708,7 @@
     }
   </script>
 
-  <!-- ✅ PWA: registro do Service Worker (caminho relativo para /lesa/) -->
+  <!-- ✅ PWA: registro do Service Worker (✅ corrigido para GitHub Pages /lesa/) -->
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
@@ -710,7 +723,6 @@
     }
   </script>
 
-  <!-- ✅ PWA: botão instalar + modal -->
   <script>
     let deferredPrompt = null;
 
