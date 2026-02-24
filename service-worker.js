@@ -1,10 +1,16 @@
-const CACHE_NAME = "meusite-v1";
+const CACHE_NAME = "lpp-v1";
+
 const ASSETS = [
   "/",
   "/index.html",
-  "/styles.css",
-  "/script.js",
-  "/offline.html"
+  "/nosso-produto.html",
+  "/tratamento.html",
+  "/impacto-economico.html",
+  "/guia-simples.html",
+  "/selecao-produtos.html",
+  "/avaliacao.html",
+  "/offline.html",
+  "/lesao.png"
 ];
 
 self.addEventListener("install", (event) => {
@@ -22,6 +28,8 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
+
   event.respondWith(
     fetch(event.request)
       .then((res) => {
