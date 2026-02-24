@@ -430,6 +430,80 @@
       html{ scroll-behavior:auto; }
       *{ transition:none !important; animation:none !important; }
     }
+
+    /* =========================================================
+       ✅ PWA INSTALL (isolado, não interfere no .lpp-*)
+       ========================================================= */
+    .pwa-modal{
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, .55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 999999;
+    }
+    .pwa-modal.open{ display:flex; }
+
+    .pwa-box{
+      width: min(520px, 100%);
+      background: #ffffff;
+      border-radius: 18px;
+      border: 1px solid rgba(15, 23, 42, .10);
+      box-shadow: 0 20px 55px rgba(2,6,23,.28);
+      padding: 16px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      transform: none !important;
+    }
+
+    .pwa-title{
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-weight: 900;
+      color: #0b2b63;
+    }
+
+    .pwa-img{
+      width: 100%;
+      height: auto;
+      display:block;
+      border-radius: 14px;
+      border: 1px solid rgba(15, 23, 42, .10);
+      box-shadow: 0 12px 24px rgba(2,6,23,.12);
+      margin-bottom: 10px;
+    }
+
+    .pwa-text{
+      margin: 0 0 12px;
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: #475569;
+    }
+
+    .pwa-actions{
+      display:flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .pwa-btn{
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 14px;
+    }
+
+    .pwa-btn-primary{ background: #0b3d91; color:#fff; }
+    .pwa-btn-secondary{ background:#fff; border-color:#dbe3ef; color:#0f172a; }
+
+    .pwa-btn:focus-visible{
+      outline:none;
+      box-shadow: 0 0 0 4px rgba(56, 130, 246, .20);
+    }
   </style>
 </head>
 
@@ -438,6 +512,13 @@
   <header class="lpp-header">
     <h1>Lesão por Pressão</h1>
     <p>Projeto Integrador</p>
+
+    <!-- ✅ Botão de instalação (só aparece quando o Android/Chrome permitir) -->
+    <div style="margin-top:14px;">
+      <button id="pwaInstallBtn" class="lpp-pill" style="display:none;">
+        📲 Instalar aplicativo
+      </button>
+    </div>
   </header>
 
   <nav class="lpp-nav" aria-label="Navegação principal">
@@ -645,6 +726,25 @@
     © 2026 - Projeto Integrador
   </footer>
 
+  <!-- ✅ Modal com imagem de saúde (abre antes do prompt de instalação) -->
+  <div id="pwaModal" class="pwa-modal" aria-hidden="true">
+    <div class="pwa-box" role="dialog" aria-modal="true" aria-labelledby="pwaTitle">
+      <h2 id="pwaTitle" class="pwa-title">Instalar aplicativo</h2>
+
+      <!-- ✅ Coloque sua imagem aqui -->
+      <img class="pwa-img" src="/icons/saude-install.png" alt="Imagem relacionada à saúde" width="900" height="520" loading="lazy">
+
+      <p class="pwa-text">
+        Instale para acessar rapidamente o conteúdo na tela inicial do Android. O aplicativo atualiza automaticamente quando o site atualizar.
+      </p>
+
+      <div class="pwa-actions">
+        <button id="pwaCancel" class="pwa-btn pwa-btn-secondary">Agora não</button>
+        <button id="pwaConfirm" class="pwa-btn pwa-btn-primary">Instalar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const input = document.getElementById('searchInput');
     const resultsBox = document.getElementById('resultsBox');
@@ -701,7 +801,6 @@
         `;
       }).join('');
 
-      /* ✅ Melhor: abre só os 3 primeiros resultados */
       matched.forEach((d, i) => d.open = i < 3);
     }
 
@@ -716,7 +815,6 @@
       });
     });
 
-    /* ✅ Interação suave nos cards (efeito tilt leve) sem quebrar mobile */
     const cards = Array.from(document.querySelectorAll('.lpp-card'));
     const canHover = window.matchMedia('(hover:hover)').matches;
 
@@ -755,6 +853,54 @@
           });
       });
     }
+  </script>
+
+  <!-- ✅ PWA: botão instalar + modal (não interfere nos seus scripts) -->
+  <script>
+    let deferredPrompt = null;
+
+    const installBtn = document.getElementById("pwaInstallBtn");
+    const modal = document.getElementById("pwaModal");
+    const cancelBtn = document.getElementById("pwaCancel");
+    const confirmBtn = document.getElementById("pwaConfirm");
+
+    function openModal(){
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeModal(){
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+    }
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (installBtn) installBtn.style.display = "inline-block";
+    });
+
+    installBtn?.addEventListener("click", () => {
+      if (!deferredPrompt) return;
+      openModal();
+    });
+
+    cancelBtn?.addEventListener("click", closeModal);
+
+    confirmBtn?.addEventListener("click", async () => {
+      if (!deferredPrompt) return;
+      closeModal();
+      deferredPrompt.prompt();
+      try { await deferredPrompt.userChoice; }
+      finally {
+        deferredPrompt = null;
+        if (installBtn) installBtn.style.display = "none";
+      }
+    });
+
+    modal?.addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
+    });
   </script>
 
 </body>
