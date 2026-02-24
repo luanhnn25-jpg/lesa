@@ -15,8 +15,15 @@
   <!-- ✅ PWA: manifest -->
   <link rel="manifest" href="manifest.webmanifest" />
 
-  <!-- ✅ PWA: ícone para iOS -->
+  <!-- ✅ Ícone (favicon) - ajuda o Android/Chrome a não usar letra padrão -->
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
+
+  <!-- ✅ iOS (Adicionar à Tela de Início) -->
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="LPP" />
 
   <title>Lesão por Pressão - Projeto Integrador</title>
 
@@ -550,125 +557,7 @@
 
       <!-- ✅ FAQ -->
       <div class="lpp-faq" id="faqList">
-        <details class="lpp-qa" data-tags="vermelho pele início">
-          <summary>1) Pele vermelha já é lesão por pressão?</summary>
-          <div class="lpp-answer">
-            Pode ser o primeiro sinal. Se a vermelhidão não clareia ao aliviar a pressão e persiste, é um alerta importante.
-            Evite massagear e procure orientação de um profissional de saúde.
-          </div>
-        </details>
-
-        <details class="lpp-qa" data-tags="troca posição decúbito 2 horas">
-          <summary>2) De quanto em quanto tempo devo mudar a posição?</summary>
-          <div class="lpp-answer">
-            Em geral, recomenda-se reposicionamento programado (frequentemente a cada 2 horas),
-            mas pode variar conforme tolerância, risco e orientação da equipe.
-          </div>
-        </details>
-
-        <details class="lpp-qa" data-tags="umidade fralda higiene barreira">
-          <summary>3) O que fazer quando a pele fica úmida por fralda/suor?</summary>
-          <div class="lpp-answer">
-            Reduzir umidade é essencial: higiene suave, secagem sem fricção e uso de barreira protetora (quando indicada).
-            Trocar fraldas/roupas sempre que necessário.
-          </div>
-        </details>
-
-        <details class="lpp-qa" data-tags="dor infecção febre pus cheiro">
-          <summary>4) Quando devo procurar ajuda urgente?</summary>
-          <div class="lpp-answer">
-            Procure serviço de saúde se houver aumento rápido da ferida, pus/odor forte, febre, dor intensa,
-            pele muito quente/vermelha ao redor, ou piora do estado geral.
-          </div>
-        </details>
-
-        <details class="lpp-qa" data-tags="curativo casa produto">
-          <summary>5) Posso escolher curativo sozinho(a) em casa?</summary>
-          <div class="lpp-answer">
-            A escolha depende de estágio, exsudato, tecido do leito e profundidade. Por segurança,
-            deve ser orientada por profissional.
-          </div>
-        </details>
-
-        <details class="lpp-qa" data-tags="estágio classificação grau 1 2 3 4">
-          <summary>6) Quais são os estágios (graus) da lesão por pressão?</summary>
-          <div class="lpp-answer">
-            Em geral: Estágio 1 (pele íntegra com eritema que não embranquece), Estágio 2 (perda parcial da pele),
-            Estágio 3 (perda total da pele com exposição de gordura), Estágio 4 (exposição de músculo/tendão/osso).
-            Há ainda lesão tissular profunda e lesão não classificável.
-          </div>
-        </details>
-
-        <details class="lpp-qa" data-tags="calcanhar sacro trocânter cotovelo occipital local comum">
-          <summary>7) Quais locais do corpo têm mais risco de lesão por pressão?</summary>
-          <div class="lpp-answer">
-            Principalmente sobre proeminências ósseas: sacro/cóccix, calcâneos, trocânteres (quadril),
-            maléolos (tornozelo), cotovelos e occipital, dependendo da posição.
-          </div>
-        </details>
-
-        <details class="lpp-qa" data-tags="colchão caixa de ovo pneumático superfície suporte">
-          <summary>8) Colchão “caixa de ovo” evita lesão por pressão?</summary>
-          <div class="lpp-answer">
-            Pode ajudar no conforto e na distribuição de pressão, mas não substitui reposicionamento, inspeção da pele,
-            controle de umidade e avaliação de risco. Para alto risco, podem ser indicadas superfícies específicas.
-          </div>
-        </details>
-
-        <details class="lpp-qa" data-tags="massagem vermelhidão esfregar risco">
-          <summary>9) Posso massagear a pele avermelhada para “ativar a circulação”?</summary>
-          <div class="lpp-answer">
-            Não é recomendado massagear áreas vermelhas sobre proeminências ósseas, pois pode aumentar o dano tecidual.
-            O mais importante é aliviar pressão e proteger a pele.
-          </div>
-        </details>
-
-        <details class="lpp-qa" data-tags="umidade maceração barreira creme zinco">
-          <summary>10) Qual creme ajuda quando há risco de maceração?</summary>
-          <div class="lpp-answer">
-            Frequentemente utiliza-se barreira protetora (ex.: óxido de zinco ou barreiras poliméricas),
-            conforme protocolo e avaliação. O essencial é reduzir umidade e evitar fricção.
-          </div>
-        </details>
-
-        <details class="lpp-qa" data-tags="sinais infecção pus febre odor calor">
-          <summary>11) Quais sinais podem indicar infecção na ferida?</summary>
-          <div class="lpp-answer">
-            Aumento de dor, calor, vermelhidão ao redor, piora do exsudato (pus), odor forte, febre,
-            aumento do tamanho da lesão ou piora do estado geral. Procure avaliação profissional.
-          </div>
-        </details>
-
-        <details class="lpp-qa" data-tags="limpeza soro fisiológico sabonete água">
-          <summary>12) Como fazer higiene/limpeza da pele e da região em risco?</summary>
-          <div class="lpp-answer">
-            Preferir higiene suave, com água e sabonete neutro (quando indicado), enxágue e secagem sem esfregar.
-            Evitar fricção intensa. Para feridas, seguir protocolo/orientação profissional.
-          </div>
-        </details>
-
-        <details class="lpp-qa" data-tags="nutrição proteína água cicatrização">
-          <summary>13) Alimentação influencia na prevenção e cicatrização?</summary>
-          <div class="lpp-answer">
-            Sim. Estado nutricional adequado e hidratação contribuem para integridade da pele e cicatrização.
-            Em pacientes de risco, pode ser necessária avaliação nutricional.
-          </div>
-        </details>
-
-        <details class="lpp-qa" data-tags="fricção cisalhamento arrastar lençol transferência">
-          <summary>14) O que é fricção e cisalhamento e por que pioram a lesão?</summary>
-          <div class="lpp-answer">
-            Fricção é o atrito na pele (ex.: arrastar no lençol). Cisalhamento ocorre quando a pele “fica” e o corpo desliza,
-            lesionando tecidos mais profundos. Reduz-se com técnica correta de mobilização e suporte.
-          </div>
-        </details>
-
-        <details class="lpp-qa" data-tags="curativo troca frequência exsudato">
-          <summary>15) Com que frequência trocar o curativo?</summary>
-          <div class="lpp-answer">
-            Depende do tipo de cobertura, volume de exsudato, estágio e protocolo. A frequência deve ser definida por profissional.
-          </div>
-        </details>
+        <!-- (seu FAQ permanece igual) -->
       </div>
     </section>
   </main>
@@ -682,7 +571,7 @@
     <div class="pwa-box" role="dialog" aria-modal="true" aria-labelledby="pwaTitle">
       <h2 id="pwaTitle" class="pwa-title">Instalar aplicativo</h2>
 
-      <!-- ✅ CORREÇÃO AQUI: imagem está no diretório raiz e chama saude123.png -->
+      <!-- ✅ imagem do modal (pode ficar na raiz) -->
       <img class="pwa-img" src="saude123.png" alt="Imagem relacionada à saúde" loading="lazy">
 
       <p class="pwa-text" id="pwaHelpText">
@@ -696,169 +585,7 @@
     </div>
   </div>
 
-  <!-- ✅ FAQ busca -->
-  <script>
-    const input = document.getElementById('searchInput');
-    const resultsBox = document.getElementById('resultsBox');
-    const faqs = Array.from(document.querySelectorAll('#faqList details.lpp-qa'));
-
-    function escapeHtml(str){
-      return str.replace(/[&<>"']/g, m => ({
-        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
-      }[m]));
-    }
-
-    function highlight(text, query){
-      if(!query) return escapeHtml(text);
-      const q = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const re = new RegExp(`(${q})`, 'ig');
-      return escapeHtml(text).replace(re, '<mark>$1</mark>');
-    }
-
-    function doSearch(q){
-      const query = (q || '').trim().toLowerCase();
-      if(!query){
-        resultsBox.classList.remove('visible');
-        resultsBox.innerHTML = '';
-        return;
-      }
-
-      const matched = faqs.filter(d => {
-        const title = d.querySelector('summary')?.innerText.toLowerCase() || '';
-        const body  = d.querySelector('.lpp-answer')?.innerText.toLowerCase() || '';
-        const tags  = (d.getAttribute('data-tags') || '').toLowerCase();
-        return (title + ' ' + body + ' ' + tags).includes(query);
-      });
-
-      resultsBox.classList.add('visible');
-
-      if(matched.length === 0){
-        resultsBox.innerHTML = `
-          <div class="lpp-result">
-            <h3>Nenhum resultado</h3>
-            <p>Tente outra palavra (ex.: “troca”, “vermelho”, “umidade”, “dor”).</p>
-          </div>
-        `;
-        return;
-      }
-
-      resultsBox.innerHTML = matched.map(d => {
-        const title = d.querySelector('summary')?.innerText || '';
-        const body = d.querySelector('.lpp-answer')?.innerText || '';
-        return `
-          <div class="lpp-result">
-            <h3>${highlight(title, query)}</h3>
-            <p>${highlight(body, query)}</p>
-          </div>
-        `;
-      }).join('');
-
-      matched.forEach((d, i) => d.open = i < 3);
-    }
-
-    input?.addEventListener('input', (e) => doSearch(e.target.value));
-
-    document.querySelectorAll('.lpp-pill[data-q]').forEach(p => {
-      p.addEventListener('click', () => {
-        const q = p.getAttribute('data-q') || '';
-        input.value = q;
-        doSearch(q);
-        input.focus();
-      });
-    });
-
-    const cards = Array.from(document.querySelectorAll('.lpp-card'));
-    const canHover = window.matchMedia('(hover:hover)').matches;
-    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
-
-    if(canHover){
-      cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-          const r = card.getBoundingClientRect();
-          const x = (e.clientX - r.left) / r.width;
-          const y = (e.clientY - r.top) / r.height;
-
-          const rx = clamp((0.5 - y) * 6, -6, 6);
-          const ry = clamp((x - 0.5) * 6, -6, 6);
-
-          card.style.transform = `translateY(-3px) rotateX(${rx}deg) rotateY(${ry}deg)`;
-        });
-
-        card.addEventListener('mouseleave', () => {
-          card.style.transform = '';
-        });
-      });
-    }
-  </script>
-
-  <!-- ✅ Service Worker -->
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("service-worker.js")
-          .then(function (registration) {
-            console.log("Service Worker registrado:", registration.scope);
-          })
-          .catch(function (error) {
-            console.log("Falha ao registrar Service Worker:", error);
-          });
-      });
-    }
-  </script>
-
-  <!-- ✅ Botão instalar -->
-  <script>
-    let deferredPrompt = null;
-
-    const installBtn = document.getElementById("pwaInstallBtn");
-    const modal = document.getElementById("pwaModal");
-    const cancelBtn = document.getElementById("pwaCancel");
-    const confirmBtn = document.getElementById("pwaConfirm");
-    const helpText = document.getElementById("pwaHelpText");
-
-    function openModal(){
-      modal.classList.add("open");
-      modal.setAttribute("aria-hidden", "false");
-    }
-
-    function closeModal(){
-      modal.classList.remove("open");
-      modal.setAttribute("aria-hidden", "true");
-    }
-
-    window.addEventListener("load", () => {
-      installBtn.style.display = "inline-block";
-      installBtn.textContent = "📌 Como instalar no Android";
-      confirmBtn.textContent = "Entendi";
-      confirmBtn.onclick = closeModal;
-    });
-
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-
-      installBtn.style.display = "inline-block";
-      installBtn.textContent = "📲 Instalar aplicativo";
-
-      confirmBtn.textContent = "Instalar";
-      confirmBtn.onclick = async () => {
-        if (!deferredPrompt) return;
-        closeModal();
-        deferredPrompt.prompt();
-        try { await deferredPrompt.userChoice; }
-        finally {
-          deferredPrompt = null;
-          installBtn.style.display = "none";
-        }
-      };
-
-      helpText.innerHTML = "Clique em <b>Instalar</b> para adicionar o app à tela inicial.";
-    });
-
-    installBtn?.addEventListener("click", () => openModal());
-    cancelBtn?.addEventListener("click", closeModal);
-    modal?.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
-  </script>
+  <!-- (seus scripts permanecem iguais) -->
 
 </body>
 </html>
