@@ -12,10 +12,10 @@
   <!-- ✅ PWA: descrição -->
   <meta name="description" content="Lesão por Pressão - Projeto Integrador. Conteúdo educativo em formato instalável (PWA)." />
 
-  <!-- ✅ PWA: manifest (✅ corrigido para GitHub Pages /lesa/) -->
+  <!-- ✅ PWA: manifest (✅ correto para GitHub Pages /lesa/) -->
   <link rel="manifest" href="manifest.webmanifest" />
 
-  <!-- ✅ PWA: ícone para iOS (✅ corrigido para GitHub Pages /lesa/) -->
+  <!-- ✅ PWA: ícone para iOS -->
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
 
   <title>Lesão por Pressão - Projeto Integrador</title>
@@ -39,7 +39,6 @@
 
       --lpp-ring: 0 0 0 4px rgba(56, 130, 246, .18);
       --lpp-border: rgba(15, 23, 42, .08);
-      --lpp-glow: 0 0 0 1px rgba(255,255,255,.35) inset;
     }
 
     *{ box-sizing:border-box; }
@@ -101,7 +100,6 @@
       position: relative;
     }
 
-    /* MENU (DESKTOP padrão) */
     .lpp-menu{
       display:flex;
       flex-wrap: wrap;
@@ -136,14 +134,12 @@
       box-shadow: 0 10px 18px rgba(2,6,23,.20);
     }
 
-    /* CONTEÚDO */
     .lpp-main{
       max-width: var(--lpp-max);
       margin: 22px auto 60px;
       padding: 0 14px;
     }
 
-    /* cartões mais “vivos” */
     .lpp-card{
       background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
       border-radius: var(--lpp-radius);
@@ -156,24 +152,10 @@
       transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
       will-change: transform;
     }
-    .lpp-card::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background: radial-gradient(600px 220px at 20% 0%, rgba(11,91,211,.10), transparent 55%);
-      opacity: 0;
-      transition: opacity .18s ease;
-      pointer-events:none;
-    }
     .lpp-card:hover{
       transform: translateY(-3px);
       box-shadow: var(--lpp-shadow-2);
       border-color: rgba(11,91,211,.22);
-    }
-    .lpp-card:hover::before{ opacity: 1; }
-    .lpp-card:focus-within{
-      box-shadow: var(--lpp-shadow-2), var(--lpp-ring);
-      border-color: rgba(11,91,211,.30);
     }
 
     .lpp-title{
@@ -210,7 +192,6 @@
     }
     .lpp-list li{ margin: 6px 0; }
 
-    /* IMAGEM */
     .lpp-figure{
       margin: 14px 0 0;
       border-radius: 16px;
@@ -235,7 +216,6 @@
       transform: scale(1.03);
     }
 
-    /* chips/botões */
     .lpp-pill{
       padding: 10px 12px;
       border-radius: 999px;
@@ -254,11 +234,7 @@
       transform: translateY(-1px);
       box-shadow: 0 16px 28px rgba(2,6,23,.10);
     }
-    .lpp-pill:active{
-      transform: translateY(0px);
-    }
 
-    /* BUSCA */
     .lpp-search{
       display:flex;
       gap: 10px;
@@ -281,7 +257,6 @@
       box-shadow: var(--lpp-ring);
     }
 
-    /* FAQ */
     .lpp-faq{
       margin-top: 10px;
       display:flex;
@@ -321,9 +296,7 @@
       font-size: 16px;
       transition: transform .16s ease;
     }
-    details.lpp-qa[open] summary::after{
-      content:"▴";
-    }
+    details.lpp-qa[open] summary::after{ content:"▴"; }
 
     .lpp-answer{
       margin: 10px 0 0;
@@ -332,7 +305,6 @@
       font-size: 14.5px;
     }
 
-    /* RESULTADOS DA BUSCA */
     .lpp-results{ margin-top: 10px; display:none; }
     .lpp-results.visible{ display:block; }
     .lpp-result{
@@ -361,7 +333,6 @@
       border-radius: 4px;
     }
 
-    /* FOOTER */
     .lpp-footer{
       text-align:center;
       color:#64748b;
@@ -369,13 +340,11 @@
       padding: 18px 10px 30px;
     }
 
-    /* animação leve */
     @keyframes fadeUp{
       from{ opacity:0; transform: translateY(6px); }
       to{ opacity:1; transform: translateY(0); }
     }
 
-    /* ✅ MOBILE: menu com rolagem horizontal + snap + gradiente */
     @media (max-width: 720px){
       .lpp-menu{
         flex-wrap: nowrap;
@@ -388,13 +357,11 @@
         scroll-snap-type: x mandatory;
       }
       .lpp-menu::-webkit-scrollbar{ display:none; }
-
       .lpp-menu a{
         flex: 0 0 auto;
         padding: 10px 12px;
         scroll-snap-align: start;
       }
-
       .lpp-nav-inner::before,
       .lpp-nav-inner::after{
         content:"";
@@ -414,21 +381,19 @@
       }
     }
 
-    /* microajustes para telas bem pequenas */
     @media (max-width: 480px){
       .lpp-card{ padding: 16px; }
       .lpp-title{ font-size: 18px; }
       .lpp-text, .lpp-list{ font-size: 15px; }
     }
 
-    /* acessibilidade: reduz movimento */
     @media (prefers-reduced-motion: reduce){
       html{ scroll-behavior:auto; }
       *{ transition:none !important; animation:none !important; }
     }
 
     /* =========================================================
-       ✅ PWA INSTALL (isolado, não interfere no .lpp-*)
+       ✅ PWA MODAL (isolado)
        ========================================================= */
     .pwa-modal{
       position: fixed;
@@ -492,10 +457,8 @@
       font-weight: 900;
       font-size: 14px;
     }
-
     .pwa-btn-primary{ background: #0b3d91; color:#fff; }
     .pwa-btn-secondary{ background:#fff; border-color:#dbe3ef; color:#0f172a; }
-
     .pwa-btn:focus-visible{
       outline:none;
       box-shadow: 0 0 0 4px rgba(56, 130, 246, .20);
@@ -585,8 +548,129 @@
 
       <div class="lpp-results" id="resultsBox" aria-live="polite"></div>
 
+      <!-- ✅ FAQ RESTAURADO -->
       <div class="lpp-faq" id="faqList">
-        <!-- (seu conteúdo de FAQ continua aqui exatamente igual) -->
+
+        <details class="lpp-qa" data-tags="vermelho pele início">
+          <summary>1) Pele vermelha já é lesão por pressão?</summary>
+          <div class="lpp-answer">
+            Pode ser o primeiro sinal. Se a vermelhidão não clareia ao aliviar a pressão e persiste, é um alerta importante.
+            Evite massagear e procure orientação de um profissional de saúde.
+          </div>
+        </details>
+
+        <details class="lpp-qa" data-tags="troca posição decúbito 2 horas">
+          <summary>2) De quanto em quanto tempo devo mudar a posição?</summary>
+          <div class="lpp-answer">
+            Em geral, recomenda-se reposicionamento programado (frequentemente a cada 2 horas),
+            mas pode variar conforme tolerância, risco e orientação da equipe.
+          </div>
+        </details>
+
+        <details class="lpp-qa" data-tags="umidade fralda higiene barreira">
+          <summary>3) O que fazer quando a pele fica úmida por fralda/suor?</summary>
+          <div class="lpp-answer">
+            Reduzir umidade é essencial: higiene suave, secagem sem fricção e uso de barreira protetora (quando indicada).
+            Trocar fraldas/roupas sempre que necessário.
+          </div>
+        </details>
+
+        <details class="lpp-qa" data-tags="dor infecção febre pus cheiro">
+          <summary>4) Quando devo procurar ajuda urgente?</summary>
+          <div class="lpp-answer">
+            Procure serviço de saúde se houver aumento rápido da ferida, pus/odor forte, febre, dor intensa,
+            pele muito quente/vermelha ao redor, ou piora do estado geral.
+          </div>
+        </details>
+
+        <details class="lpp-qa" data-tags="curativo casa produto">
+          <summary>5) Posso escolher curativo sozinho(a) em casa?</summary>
+          <div class="lpp-answer">
+            A escolha depende de estágio, exsudato, tecido do leito e profundidade. Por segurança,
+            deve ser orientada por profissional.
+          </div>
+        </details>
+
+        <details class="lpp-qa" data-tags="estágio classificação grau 1 2 3 4">
+          <summary>6) Quais são os estágios (graus) da lesão por pressão?</summary>
+          <div class="lpp-answer">
+            Em geral: Estágio 1 (pele íntegra com eritema que não embranquece), Estágio 2 (perda parcial da pele),
+            Estágio 3 (perda total da pele com exposição de gordura), Estágio 4 (exposição de músculo/tendão/osso).
+            Há ainda lesão tissular profunda e lesão não classificável.
+          </div>
+        </details>
+
+        <details class="lpp-qa" data-tags="calcanhar sacro trocânter cotovelo occipital local comum">
+          <summary>7) Quais locais do corpo têm mais risco de lesão por pressão?</summary>
+          <div class="lpp-answer">
+            Principalmente sobre proeminências ósseas: sacro/cóccix, calcâneos, trocânteres (quadril),
+            maléolos (tornozelo), cotovelos e occipital, dependendo da posição.
+          </div>
+        </details>
+
+        <details class="lpp-qa" data-tags="colchão caixa de ovo pneumático superfície suporte">
+          <summary>8) Colchão “caixa de ovo” evita lesão por pressão?</summary>
+          <div class="lpp-answer">
+            Pode ajudar no conforto e na distribuição de pressão, mas não substitui reposicionamento, inspeção da pele,
+            controle de umidade e avaliação de risco. Para alto risco, podem ser indicadas superfícies específicas.
+          </div>
+        </details>
+
+        <details class="lpp-qa" data-tags="massagem vermelhidão esfregar risco">
+          <summary>9) Posso massagear a pele avermelhada para “ativar a circulação”?</summary>
+          <div class="lpp-answer">
+            Não é recomendado massagear áreas vermelhas sobre proeminências ósseas, pois pode aumentar o dano tecidual.
+            O mais importante é aliviar pressão e proteger a pele.
+          </div>
+        </details>
+
+        <details class="lpp-qa" data-tags="umidade maceração barreira creme zinco">
+          <summary>10) Qual creme ajuda quando há risco de maceração?</summary>
+          <div class="lpp-answer">
+            Frequentemente utiliza-se barreira protetora (ex.: óxido de zinco ou barreiras poliméricas),
+            conforme protocolo e avaliação. O essencial é reduzir umidade e evitar fricção.
+          </div>
+        </details>
+
+        <details class="lpp-qa" data-tags="sinais infecção pus febre odor calor">
+          <summary>11) Quais sinais podem indicar infecção na ferida?</summary>
+          <div class="lpp-answer">
+            Aumento de dor, calor, vermelhidão ao redor, piora do exsudato (pus), odor forte, febre,
+            aumento do tamanho da lesão ou piora do estado geral. Procure avaliação profissional.
+          </div>
+        </details>
+
+        <details class="lpp-qa" data-tags="limpeza soro fisiológico sabonete água">
+          <summary>12) Como fazer higiene/limpeza da pele e da região em risco?</summary>
+          <div class="lpp-answer">
+            Preferir higiene suave, com água e sabonete neutro (quando indicado), enxágue e secagem sem esfregar.
+            Evitar fricção intensa. Para feridas, seguir protocolo/orientação profissional.
+          </div>
+        </details>
+
+        <details class="lpp-qa" data-tags="nutrição proteína água cicatrização">
+          <summary>13) Alimentação influencia na prevenção e cicatrização?</summary>
+          <div class="lpp-answer">
+            Sim. Estado nutricional adequado e hidratação contribuem para integridade da pele e cicatrização.
+            Em pacientes de risco, pode ser necessária avaliação nutricional.
+          </div>
+        </details>
+
+        <details class="lpp-qa" data-tags="fricção cisalhamento arrastar lençol transferência">
+          <summary>14) O que é fricção e cisalhamento e por que pioram a lesão?</summary>
+          <div class="lpp-answer">
+            Fricção é o atrito na pele (ex.: arrastar no lençol). Cisalhamento ocorre quando a pele “fica” e o corpo desliza,
+            lesionando tecidos mais profundos. Reduz-se com técnica correta de mobilização e suporte.
+          </div>
+        </details>
+
+        <details class="lpp-qa" data-tags="curativo troca frequência exsudato">
+          <summary>15) Com que frequência trocar o curativo?</summary>
+          <div class="lpp-answer">
+            Depende do tipo de cobertura, volume de exsudato, estágio e protocolo. A frequência deve ser definida por profissional.
+          </div>
+        </details>
+
       </div>
     </section>
   </main>
@@ -595,24 +679,25 @@
     © 2026 - Projeto Integrador
   </footer>
 
+  <!-- ✅ Modal instalação -->
   <div id="pwaModal" class="pwa-modal" aria-hidden="true">
     <div class="pwa-box" role="dialog" aria-modal="true" aria-labelledby="pwaTitle">
       <h2 id="pwaTitle" class="pwa-title">Instalar aplicativo</h2>
 
-      <!-- ✅ corrigido para GitHub Pages /lesa/ -->
       <img class="pwa-img" src="icons/saude-install.png" alt="Imagem relacionada à saúde" width="900" height="520" loading="lazy">
 
-      <p class="pwa-text">
-        Instale para acessar rapidamente o conteúdo na tela inicial do Android. O aplicativo atualiza automaticamente quando o site atualizar.
+      <p class="pwa-text" id="pwaHelpText">
+        No Android (Chrome): abra este site → menu ⋮ → <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.
       </p>
 
       <div class="pwa-actions">
-        <button id="pwaCancel" class="pwa-btn pwa-btn-secondary">Agora não</button>
+        <button id="pwaCancel" class="pwa-btn pwa-btn-secondary">Fechar</button>
         <button id="pwaConfirm" class="pwa-btn pwa-btn-primary">Instalar</button>
       </div>
     </div>
   </div>
 
+  <!-- ✅ FAQ busca -->
   <script>
     const input = document.getElementById('searchInput');
     const resultsBox = document.getElementById('resultsBox');
@@ -674,7 +759,7 @@
 
     input?.addEventListener('input', (e) => doSearch(e.target.value));
 
-    document.querySelectorAll('.lpp-pill').forEach(p => {
+    document.querySelectorAll('.lpp-pill[data-q]').forEach(p => {
       p.addEventListener('click', () => {
         const q = p.getAttribute('data-q') || '';
         input.value = q;
@@ -685,7 +770,6 @@
 
     const cards = Array.from(document.querySelectorAll('.lpp-card'));
     const canHover = window.matchMedia('(hover:hover)').matches;
-
     function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
 
     if(canHover){
@@ -708,7 +792,7 @@
     }
   </script>
 
-  <!-- ✅ PWA: registro do Service Worker (✅ corrigido para GitHub Pages /lesa/) -->
+  <!-- ✅ Service Worker -->
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
@@ -723,6 +807,7 @@
     }
   </script>
 
+  <!-- ✅ Botão instalar: funciona no Chrome (prompt) e no Firefox vira “ajuda” -->
   <script>
     let deferredPrompt = null;
 
@@ -730,6 +815,7 @@
     const modal = document.getElementById("pwaModal");
     const cancelBtn = document.getElementById("pwaCancel");
     const confirmBtn = document.getElementById("pwaConfirm");
+    const helpText = document.getElementById("pwaHelpText");
 
     function openModal(){
       modal.classList.add("open");
@@ -741,33 +827,40 @@
       modal.setAttribute("aria-hidden", "true");
     }
 
+    // Firefox/desktop: mostra como "Como instalar"
+    window.addEventListener("load", () => {
+      installBtn.style.display = "inline-block";
+      installBtn.textContent = "📌 Como instalar no Android";
+      confirmBtn.textContent = "Entendi";
+      confirmBtn.onclick = closeModal;
+    });
+
+    // Chrome/Edge: habilita instalação real
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      if (installBtn) installBtn.style.display = "inline-block";
+
+      installBtn.style.display = "inline-block";
+      installBtn.textContent = "📲 Instalar aplicativo";
+
+      confirmBtn.textContent = "Instalar";
+      confirmBtn.onclick = async () => {
+        if (!deferredPrompt) return;
+        closeModal();
+        deferredPrompt.prompt();
+        try { await deferredPrompt.userChoice; }
+        finally {
+          deferredPrompt = null;
+          installBtn.style.display = "none";
+        }
+      };
+
+      helpText.innerHTML = "Clique em <b>Instalar</b> para adicionar o app à tela inicial.";
     });
 
-    installBtn?.addEventListener("click", () => {
-      if (!deferredPrompt) return;
-      openModal();
-    });
-
+    installBtn?.addEventListener("click", () => openModal());
     cancelBtn?.addEventListener("click", closeModal);
-
-    confirmBtn?.addEventListener("click", async () => {
-      if (!deferredPrompt) return;
-      closeModal();
-      deferredPrompt.prompt();
-      try { await deferredPrompt.userChoice; }
-      finally {
-        deferredPrompt = null;
-        if (installBtn) installBtn.style.display = "none";
-      }
-    });
-
-    modal?.addEventListener("click", (e) => {
-      if (e.target === modal) closeModal();
-    });
+    modal?.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
   </script>
 
 </body>
