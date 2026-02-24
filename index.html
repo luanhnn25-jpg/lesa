@@ -2,7 +2,22 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
+
+  <!-- ✅ PWA: viewport (já existia) -->
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- ✅ PWA: cor do tema (Android / barra superior) -->
+  <meta name="theme-color" content="#0b3d91" />
+
+  <!-- ✅ PWA: descrição (opcional, mas recomendado) -->
+  <meta name="description" content="Lesão por Pressão - Projeto Integrador. Conteúdo educativo em formato instalável (PWA)." />
+
+  <!-- ✅ PWA: manifest -->
+  <link rel="manifest" href="/manifest.webmanifest" />
+
+  <!-- ✅ PWA: ícone para iOS (opcional, recomendado) -->
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
   <title>Lesão por Pressão - Projeto Integrador</title>
 
   <style>
@@ -723,6 +738,21 @@
         card.addEventListener('mouseleave', () => {
           card.style.transform = '';
         });
+      });
+    }
+  </script>
+
+  <!-- ✅ PWA: registro do Service Worker (adicione em TODAS as páginas) -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/service-worker.js")
+          .then(function (registration) {
+            console.log("Service Worker registrado:", registration.scope);
+          })
+          .catch(function (error) {
+            console.log("Falha ao registrar Service Worker:", error);
+          });
       });
     }
   </script>
