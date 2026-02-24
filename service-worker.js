@@ -1,4 +1,4 @@
-const CACHE_NAME = "lpp-v3"; // troque a versão quando atualizar
+const CACHE_NAME = "lpp-v5"; // troque a versão quando atualizar
 
 // Cache mínimo garantido (caminhos relativos para GitHub Pages /lesa/)
 const CORE_ASSETS = [
@@ -18,10 +18,10 @@ const OPTIONAL_ASSETS = [
   "./avaliacao.html",
   "./lesao.png",
 
-  // ✅ ícones corretos (estão na raiz)
-  "./icone-192.png",
-  "./icone-512.png",
-  "./mascarável-512.png",
+  // ✅ ÍCONES CORRETOS (estão na raiz, sem acento)
+  "./icon-192.png",
+  "./icon-512.png",
+  "./maskable-512.png",
 
   // ✅ imagem do modal (raiz)
   "./saude123.png"
@@ -86,7 +86,7 @@ async function cacheFirst(request) {
     cache.put(request, fresh.clone());
     return fresh;
   } catch {
-    return cached; // se nem cached existir, retorna undefined (ok)
+    return cached;
   }
 }
 
