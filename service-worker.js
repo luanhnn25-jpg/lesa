@@ -17,9 +17,14 @@ const OPTIONAL_ASSETS = [
   "./selecao-produtos.html",
   "./avaliacao.html",
   "./lesao.png",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png",
-  "./icons/saude-install.png"
+
+  // ✅ ícones corretos (estão na raiz)
+  "./icone-192.png",
+  "./icone-512.png",
+  "./mascarável-512.png",
+
+  // ✅ imagem do modal (raiz)
+  "./saude123.png"
 ];
 
 self.addEventListener("install", (event) => {
