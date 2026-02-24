@@ -12,7 +12,7 @@
   <!-- ✅ PWA: descrição -->
   <meta name="description" content="Lesão por Pressão - Projeto Integrador. Conteúdo educativo em formato instalável (PWA)." />
 
-  <!-- ✅ PWA: manifest (✅ correto para GitHub Pages /lesa/) -->
+  <!-- ✅ PWA: manifest -->
   <link rel="manifest" href="manifest.webmanifest" />
 
   <!-- ✅ PWA: ícone para iOS -->
@@ -548,9 +548,8 @@
 
       <div class="lpp-results" id="resultsBox" aria-live="polite"></div>
 
-      <!-- ✅ FAQ RESTAURADO -->
+      <!-- ✅ FAQ -->
       <div class="lpp-faq" id="faqList">
-
         <details class="lpp-qa" data-tags="vermelho pele início">
           <summary>1) Pele vermelha já é lesão por pressão?</summary>
           <div class="lpp-answer">
@@ -670,7 +669,6 @@
             Depende do tipo de cobertura, volume de exsudato, estágio e protocolo. A frequência deve ser definida por profissional.
           </div>
         </details>
-
       </div>
     </section>
   </main>
@@ -684,7 +682,8 @@
     <div class="pwa-box" role="dialog" aria-modal="true" aria-labelledby="pwaTitle">
       <h2 id="pwaTitle" class="pwa-title">Instalar aplicativo</h2>
 
-      <img class="pwa-img" src="icons/saude-install.png" alt="Imagem relacionada à saúde" width="900" height="520" loading="lazy">
+      <!-- ✅ CORREÇÃO AQUI: imagem está no diretório raiz e chama saude123.png -->
+      <img class="pwa-img" src="saude123.png" alt="Imagem relacionada à saúde" loading="lazy">
 
       <p class="pwa-text" id="pwaHelpText">
         No Android (Chrome): abra este site → menu ⋮ → <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.
@@ -807,7 +806,7 @@
     }
   </script>
 
-  <!-- ✅ Botão instalar: funciona no Chrome (prompt) e no Firefox vira “ajuda” -->
+  <!-- ✅ Botão instalar -->
   <script>
     let deferredPrompt = null;
 
@@ -827,7 +826,6 @@
       modal.setAttribute("aria-hidden", "true");
     }
 
-    // Firefox/desktop: mostra como "Como instalar"
     window.addEventListener("load", () => {
       installBtn.style.display = "inline-block";
       installBtn.textContent = "📌 Como instalar no Android";
@@ -835,7 +833,6 @@
       confirmBtn.onclick = closeModal;
     });
 
-    // Chrome/Edge: habilita instalação real
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
       deferredPrompt = e;
