@@ -338,6 +338,36 @@
       color:#243042;
     }
 
+    /* =========================
+       REFERÊNCIAS (links bonitos)
+       ========================= */
+    body.impacto .refs{
+      margin: 10px 0 0;
+      padding-left: 18px;
+    }
+    body.impacto .refs li{
+      margin: 10px 0;
+    }
+    body.impacto .refs a{
+      color: var(--i-blue-2);
+      font-weight: 900;
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(15,91,211,.45);
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      border-radius: 8px;
+      padding: 0 2px;
+      outline: none;
+      word-break: break-word;
+    }
+    body.impacto .refs a:hover{
+      background: rgba(15,91,211,.08);
+      box-shadow: 0 10px 22px rgba(2,6,23,.08);
+    }
+    body.impacto .refs a:focus-visible{
+      box-shadow: var(--i-glow);
+      background: rgba(15,91,211,.10);
+    }
+
     /* FOOTER */
     body.impacto footer{
       text-align:center;
@@ -376,7 +406,7 @@
     <a href="impacto-economico.html" aria-current="page">Impacto Econômico</a>
     <a href="nosso-produto.html">Nosso Produto</a>
     <a href="selecao-produtos.html">Seleção de Produtos</a>
-    <a href="avaliacao.html">avaliação</a>
+    <a href="avaliacao.html">Avaliação</a>
   </nav>
 
   <main>
@@ -477,14 +507,57 @@
       </div>
     </div>
 
-    <div class="card">
+    <!-- ✅ REFERÊNCIAS (substitui seu card antigo) -->
+    <div class="card" id="referencias">
       <div class="section-title">Referências</div>
-      <div class="muted">PubMed</div>
+
+      <p class="muted" style="margin-top:0;">
+        <strong>Data/hora da consulta:</strong>
+        <span id="dataHoraConsulta">—</span>
+      </p>
+
+      <ol class="refs">
+        <li>
+          PubMed. Custos diretos de curativos (estágios I–IV).
+          <a href="https://pubmed.ncbi.nlm.nih.gov/27384210/" target="_blank" rel="noopener noreferrer">
+            https://pubmed.ncbi.nlm.nih.gov/27384210/
+          </a>
+        </li>
+        <li>
+          Revista Enfermagem Atual. Custo total de tratamento hospitalar de LPP (média em 6 meses).
+          <a href="https://revistaenfermagematual.com.br/index.php/revista/article/view/93?utm_source=chatgpt.com"
+             target="_blank" rel="noopener noreferrer">
+            https://revistaenfermagematual.com.br/index.php/revista/article/view/93
+          </a>
+        </li>
+        <li>
+          UFMA (Repositório). Estudo em hospital público: materiais consumidos em curativos de LPP.
+          <a href="https://monografias.ufma.br/jspui/handle/123456789/5950?utm_source=chatgpt.com"
+             target="_blank" rel="noopener noreferrer">
+            https://monografias.ufma.br/jspui/handle/123456789/5950
+          </a>
+        </li>
+        <li>
+          Anais SOBEST. Estimativa de caso complexo (LPP + comorbidades): custo total em internação prolongada.
+          <a href="https://anais.sobest.com.br/cpe/article/view/1007?utm_source=chatgpt.com"
+             target="_blank" rel="noopener noreferrer">
+            https://anais.sobest.com.br/cpe/article/view/1007
+          </a>
+        </li>
+      </ol>
+
+      <p class="muted" style="margin-bottom:0;">
+        Nota metodológica: valores podem variar por protocolo institucional, mix de materiais, tempo de internação,
+        gravidade clínica e contexto assistencial.
+      </p>
     </div>
 
   </main>
 
-  <footer>© 2026 - Projeto Integrador</footer>
+  <!-- ✅ FOOTER com carimbo também -->
+  <footer>
+    © 2026 - Projeto Integrador · <span id="dataHoraRodape">—</span>
+  </footer>
 
   <script>
     const dados = {
@@ -562,6 +635,30 @@
         box.innerHTML = '<p style="margin:0; padding:12px; font-weight:900; color:#0b2b63;">Gráfico indisponível (Chart.js não carregou). Verifique sua conexão.</p>';
       }
     }
+
+    // ✅ Carimbo automático (São Paulo)
+    (function () {
+      const alvo1 = document.getElementById("dataHoraConsulta");
+      const alvo2 = document.getElementById("dataHoraRodape");
+
+      const formatar = () => {
+        try {
+          const now = new Date();
+          const fmt = new Intl.DateTimeFormat("pt-BR", {
+            timeZone: "America/Sao_Paulo",
+            dateStyle: "short",
+            timeStyle: "short"
+          });
+          return fmt.format(now) + " (America/Sao_Paulo)";
+        } catch (e) {
+          return new Date().toLocaleString("pt-BR");
+        }
+      };
+
+      const texto = "Atualizado em " + formatar();
+      if (alvo1) alvo1.textContent = texto;
+      if (alvo2) alvo2.textContent = texto;
+    })();
   </script>
 
 </body>
