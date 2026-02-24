@@ -3,33 +3,38 @@ const CACHE_NAME = "lpp-v3"; // troque a versão quando atualizar
 // Cache mínimo garantido (caminhos relativos para GitHub Pages /lesa/)
 const CORE_ASSETS = [
   "./",
-  "index.html",
-  "offline.html",
-  "manifest.webmanifest"
+  "./index.html",
+  "./offline.html",
+  "./manifest.webmanifest"
 ];
 
 // Pré-cache “opcional” (não trava se algum arquivo estiver faltando)
 const OPTIONAL_ASSETS = [
-  "nosso-produto.html",
-  "tratamento.html",
-  "impacto-economico.html",
-  "guia-simples.html",
-  "selecao-produtos.html",
-  "avaliacao.html",
-  "lesao.png",
-  "icons/icon-192.png",
-  "icons/icon-512.png",
-  "icons/saude-install.png"
+  "./nosso-produto.html",
+  "./tratamento.html",
+  "./impacto-economico.html",
+  "./guia-simples.html",
+  "./selecao-produtos.html",
+  "./avaliacao.html",
+  "./lesao.png",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
+  "./icons/saude-install.png"
 ];
 
 self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
 
-    await cache.addAll(CORE_ASSETS);
+    // força recarregar do servidor (evita "instalar" arquivo antigo)
+    const coreRequests = CORE_ASSETS.map(
+      (url) => new Request(url, { cache: "reload" })
+    );
+
+    await cache.addAll(coreRequests);
 
     await Promise.allSettled(
-      OPTIONAL_ASSETS.map((url) => cache.add(url))
+      OPTIONAL_ASSETS.map((url) => cache.add(new Request(url, { cache: "reload" })))
     );
 
     self.skipWaiting();
@@ -52,6 +57,7 @@ function isImage(request) {
   return request.destination === "image";
 }
 
+// HTML: network-first (atualiza conteúdo), cai no cache/offline se falhar
 async function networkFirst(request) {
   const cache = await caches.open(CACHE_NAME);
   try {
@@ -60,10 +66,11 @@ async function networkFirst(request) {
     return fresh;
   } catch {
     const cached = await cache.match(request);
-    return cached || cache.match("offline.html");
+    return cached || cache.match("./offline.html");
   }
 }
 
+// Imagens: cache-first
 async function cacheFirst(request) {
   const cache = await caches.open(CACHE_NAME);
   const cached = await cache.match(request);
@@ -74,7 +81,7 @@ async function cacheFirst(request) {
     cache.put(request, fresh.clone());
     return fresh;
   } catch {
-    return cached;
+    return cached; // se nem cached existir, retorna undefined (ok)
   }
 }
 
@@ -84,16 +91,19 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
 
+  // HTML
   if (isHTML(event.request)) {
     event.respondWith(networkFirst(event.request));
     return;
   }
 
+  // Imagens
   if (isImage(event.request)) {
     event.respondWith(cacheFirst(event.request));
     return;
   }
 
+  // Outros: stale-while-revalidate
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
     const cached = await cache.match(event.request);
