@@ -496,6 +496,14 @@
         <a href="guia-simples.html">Guia Simples</a>
         <a href="selecao-produtos.html">Seleção de Produtos</a>
         <a href="avaliacao.html">Avaliação</a>
+
+        <!-- ✅ Acesso -->
+        <a id="navLogin" href="login.html?mode=login">Entrar</a>
+        <a id="navSignup" href="login.html?mode=signup">Criar conta</a>
+
+        <!-- ✅ Aparecem só quando logada -->
+        <a id="navPremium" href="premium.html" style="display:none;">Premium</a>
+        <a id="navLogout" href="#" style="display:none;">Sair</a>
       </div>
     </div>
   </nav>
@@ -867,6 +875,50 @@
     modal?.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
   </script>
 
+  <!-- ✅ MENU DINÂMICO (LOGIN / LOGOUT / PREMIUM) -->
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+    const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+    const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const navLogin = document.getElementById("navLogin");
+    const navSignup = document.getElementById("navSignup");
+    const navPremium = document.getElementById("navPremium");
+    const navLogout = document.getElementById("navLogout");
+
+    function showLoggedOut(){
+      navLogin.style.display = "";
+      navSignup.style.display = "";
+      navPremium.style.display = "none";
+      navLogout.style.display = "none";
+    }
+
+    function showLoggedIn(){
+      navLogin.style.display = "none";
+      navSignup.style.display = "none";
+      navPremium.style.display = "";
+      navLogout.style.display = "";
+    }
+
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) showLoggedIn();
+    else showLoggedOut();
+
+    supabase.auth.onAuthStateChange((_event, newSession) => {
+      if (newSession?.user) showLoggedIn();
+      else showLoggedOut();
+    });
+
+    navLogout.addEventListener("click", async (e) => {
+      e.preventDefault();
+      await supabase.auth.signOut();
+      window.location.href = SITE_BASE + "index.html";
+    });
+  </script>
+
 </body>
 </html>
-
