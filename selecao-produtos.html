@@ -247,9 +247,7 @@
       padding-top:8px;
     }
 
-    /* ===========================
-       ✅ Premium gate (paywall)
-       =========================== */
+    /* ✅ Premium gate */
     #premiumContent{ display:none; }
     #premiumGate{ display:none; }
 
@@ -317,7 +315,7 @@
       color:#92400e;
     }
 
-    /* Loader discreto */
+    /* Loader */
     #bootOverlay{
       position: fixed;
       inset: 0;
@@ -339,11 +337,28 @@
     }
     .bootBox b{font-weight:950; color:#0b2b63}
     .bootBox p{margin:8px 0 0; color:var(--lpp-muted); font-size:13.5px}
+
+    /* Debug opcional */
+    .debug-wrap{
+      max-width:1100px;
+      margin:12px auto 0;
+      padding:0 12px;
+    }
+    #debugBox{
+      display:none;
+      background:#fff;
+      border:1px solid rgba(15,23,42,.12);
+      border-radius:14px;
+      box-shadow:0 10px 25px rgba(2,6,23,.08);
+      padding:12px 12px;
+      font-size:12px;
+      color:#0f172a;
+      white-space:pre-wrap;
+    }
   </style>
 </head>
 
 <body>
-  <!-- ✅ Overlay inicial: evita “piscar” o conteúdo antes do check -->
   <div id="bootOverlay" aria-live="polite">
     <div class="bootBox">
       <b>Verificando seu acesso…</b>
@@ -358,7 +373,7 @@
 
   <nav class="lpp-nav" aria-label="Navegação principal">
     <div class="lpp-nav-inner">
-      <div class="lpp-menu">
+      <div class="lpp-menu" id="navLinks">
         <a href="index.html">Início</a>
         <a href="nosso-produto.html">Nosso Produto</a>
         <a href="tratamento.html">Tratamento</a>
@@ -370,7 +385,10 @@
     </div>
   </nav>
 
-  <!-- ✅ PAYWALL (aparece se não for premium / não estiver logada) -->
+  <div class="debug-wrap">
+    <div id="debugBox"></div>
+  </div>
+
   <section id="premiumGate" class="gate-wrap" aria-label="Acesso Premium">
     <div class="gate-card">
       <h2>Conteúdo Premium</h2>
@@ -381,8 +399,8 @@
       <span class="gate-badge">Acesso liberado automaticamente após pagamento</span>
 
       <div class="gate-actions">
-        <a class="gate-btn gate-primary" href="login.html?mode=login">Entrar</a>
-        <a class="gate-btn gate-secondary" href="login.html?mode=signup">Criar conta</a>
+        <a class="gate-btn gate-primary" id="linkLogin" href="login.html?mode=login">Entrar</a>
+        <a class="gate-btn gate-secondary" id="linkSignup" href="login.html?mode=signup">Criar conta</a>
         <button class="gate-btn gate-pay" id="btnPay" type="button">Assinar Premium (R$ 2,00)</button>
       </div>
 
@@ -390,7 +408,6 @@
     </div>
   </section>
 
-  <!-- ✅ CONTEÚDO PREMIUM (apenas premium=true) -->
   <main id="premiumContent" class="lpp-main">
 
     <section class="lpp-card">
@@ -527,7 +544,6 @@
       </p>
     </section>
 
-    <!-- NOVAS SEÇÕES (1 a 7) -->
     <section class="lpp-card">
       <h2 class="lpp-title"><span class="lpp-bar"></span>1) Soluções para limpeza do leito</h2>
       <p class="lpp-lead">
@@ -675,20 +691,19 @@
     <div class="lpp-footer">© 2026 - Projeto Integrador</div>
   </main>
 
-  <!-- ✅ Premium gate + pagamento (Supabase + Vercel) -->
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-    // ====== CONFIG ======
+    // ====== CONFIG SUPABASE ======
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
 
-    // GitHub Pages /lesa/
-    const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
+    // ✅ Base automático (funciona em github.io/lesa/ e também em vercel.app/)
+    const SITE_BASE = new URL("./", window.location.href).toString();
 
-    // ✅ Sua Vercel
+    // ✅ Endpoint do pagamento (Vercel)
     const VERCEL_BASE = "https://lesa-dusky.vercel.app/";
-    // =====================
+    // =============================
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -697,6 +712,38 @@
     const premiumGate = document.getElementById("premiumGate");
     const gateMsg = document.getElementById("gateMsg");
     const btnPay = document.getElementById("btnPay");
+
+    const linkLogin = document.getElementById("linkLogin");
+    const linkSignup = document.getElementById("linkSignup");
+    const navLinks = document.getElementById("navLinks");
+
+    // Debug opcional: abra com ?debug=1
+    const debugBox = document.getElementById("debugBox");
+    const DEBUG = new URLSearchParams(window.location.search).get("debug") === "1";
+    function debug(msg){
+      if (!DEBUG) return;
+      debugBox.style.display = "block";
+      debugBox.textContent += msg + "\n";
+    }
+
+    // ✅ Reescreve links para manter sempre o mesmo domínio/pasta
+    function fixLinks(){
+      // Menu
+      if (navLinks){
+        navLinks.querySelectorAll("a[href]").forEach(a => {
+          const href = a.getAttribute("href");
+          if (!href) return;
+          if (/^(https?:)?\/\//i.test(href)) return; // já é absoluto
+          if (href.startsWith("#")) return;
+          a.setAttribute("href", SITE_BASE + href.replace(/^\.\//, ""));
+        });
+      }
+
+      // Gate links
+      if (linkLogin) linkLogin.href = SITE_BASE + "login.html?mode=login";
+      if (linkSignup) linkSignup.href = SITE_BASE + "login.html?mode=signup";
+    }
+    fixLinks();
 
     function hideBoot(){ if (bootOverlay) bootOverlay.style.display = "none"; }
     function showGate(msg){
@@ -712,7 +759,11 @@
     }
 
     async function checkPremium() {
-      const { data: { session } } = await supabase.auth.getSession();
+      debug("SITE_BASE: " + SITE_BASE);
+      const { data: { session }, error: sessErr } = await supabase.auth.getSession();
+      debug("session error: " + (sessErr ? JSON.stringify(sessErr) : "none"));
+      debug("session user: " + (session?.user ? "OK" : "NULL"));
+      if (session?.user) debug("user.id: " + session.user.id);
 
       if (!session?.user) {
         showGate("Faça login para acessar este conteúdo Premium.");
@@ -725,8 +776,10 @@
         .eq("id", session.user.id)
         .single();
 
+      debug("profiles error: " + (error ? JSON.stringify(error) : "none"));
+      debug("profiles data: " + (profile ? JSON.stringify(profile) : "null"));
+
       if (error || !profile) {
-        console.error("Erro ao ler profiles:", error);
         showGate("Não foi possível validar seu acesso (perfil não encontrado ou RLS).");
         return { session, premium: false };
       }
@@ -760,6 +813,8 @@
         });
 
         const data = await resp.json();
+        debug("checkout response: " + JSON.stringify(data));
+
         if (data?.url) window.location.href = data.url;
         else {
           gateMsg.textContent = "Falha ao iniciar o pagamento. Verifique o endpoint na Vercel.";
@@ -767,15 +822,16 @@
         }
       } catch (e) {
         console.error(e);
+        debug("checkout error: " + String(e));
         gateMsg.textContent = "Erro de rede ao iniciar o pagamento.";
         alert("Erro de rede ao iniciar o pagamento.");
       }
     });
 
-    // Se voltar do checkout com ?paid=1, tenta revalidar
     async function maybeRecheckAfterPay() {
       const params = new URLSearchParams(window.location.search);
       const paid = params.get("paid");
+
       if (paid === "1") {
         gateMsg.textContent = "Pagamento identificado. Atualizando acesso…";
         for (let i = 0; i < 6; i++) {
