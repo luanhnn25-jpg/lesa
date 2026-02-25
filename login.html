@@ -19,8 +19,7 @@
 
   <script>
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
-    const SUPABASE_ANON_KEY = "COLE_AQUI_SUA_PUBLISHABLE_KEY";
-
+    const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const msg = (t) => document.getElementById("msg").textContent = t;
@@ -44,7 +43,7 @@
       const { error } = await supabase.auth.signUp({ email, password });
       if (error) return msg("Erro: " + error.message);
 
-      msg("Conta criada! Agora faça login.");
+      msg("Conta criada! Se pedir confirmação no email, confirme e depois faça login.");
     };
   </script>
 </body>
