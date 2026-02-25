@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Premium</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="font-family: system-ui; max-width: 520px; margin: 40px auto; padding: 16px;">
+  <h2>Acesso Premium</h2>
+  <p id="status">Verificando seu acesso...</p>
+
+  <div id="payBox" style="display:none; border:1px solid #ddd; padding:16px; border-radius:12px;">
+    <p>Para liberar a aba <b>Seleção de Produtos</b>, realize o pagamento de <b>R$ 2,00</b>.</p>
+    <button id="btnPay" style="padding:12px;width:100%;">Pagar R$ 2</button>
+    <p style="font-size: 12px; opacity:.7; margin-top:10px;">
+      (Ainda vamos conectar o Mercado Pago no próximo passo.)
+    </p>
+  </div>
+
+  <button id="btnLogout" style="margin-top:16px;padding:10px;width:100%;">Sair</button>
+
+  <script>
+    const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const statusEl = document.getElementById("status");
+    const payBox = document.getElementById("payBox");
+
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        window.location.href = "./login.html";
+        return;
+      }
+
+      const userId = session.user.id;
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("premium")
+        .eq("id", userId)
+        .single();
+
+      if (error) {
+        statusEl.textContent = "Erro ao verificar premium: " + error.message;
+        return;
+      }
+
+      if (data?.premium) {
+        statusEl.textContent = "Você já tem acesso premium ✅";
+        window.location.href = "./selecao-produtos.html";
+        return;
+      }
+
+      statusEl.textContent = "Você ainda não tem premium.";
+      payBox.style.display = "block";
+
+      document.getElementById("btnPay").onclick = () => {
+        alert("Próximo passo: conectar Mercado Pago via /api/create-checkout e webhook.");
+      };
+    })();
+
+    document.getElementById("btnLogout").onclick = async () => {
+      await supabase.auth.signOut();
+      window.location.href = "./index.html";
+    };
+  </script>
+</body>
+</html>
