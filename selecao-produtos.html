@@ -247,7 +247,9 @@
       padding-top:8px;
     }
 
-    /* ✅ Premium gate */
+    /* ===========================
+       ✅ Premium gate (paywall)
+       =========================== */
     #premiumContent{ display:none; }
     #premiumGate{ display:none; }
 
@@ -315,7 +317,7 @@
       color:#92400e;
     }
 
-    /* Loader */
+    /* Loader discreto */
     #bootOverlay{
       position: fixed;
       inset: 0;
@@ -337,28 +339,11 @@
     }
     .bootBox b{font-weight:950; color:#0b2b63}
     .bootBox p{margin:8px 0 0; color:var(--lpp-muted); font-size:13.5px}
-
-    /* Debug opcional */
-    .debug-wrap{
-      max-width:1100px;
-      margin:12px auto 0;
-      padding:0 12px;
-    }
-    #debugBox{
-      display:none;
-      background:#fff;
-      border:1px solid rgba(15,23,42,.12);
-      border-radius:14px;
-      box-shadow:0 10px 25px rgba(2,6,23,.08);
-      padding:12px 12px;
-      font-size:12px;
-      color:#0f172a;
-      white-space:pre-wrap;
-    }
   </style>
 </head>
 
 <body>
+  <!-- ✅ Overlay inicial -->
   <div id="bootOverlay" aria-live="polite">
     <div class="bootBox">
       <b>Verificando seu acesso…</b>
@@ -373,7 +358,7 @@
 
   <nav class="lpp-nav" aria-label="Navegação principal">
     <div class="lpp-nav-inner">
-      <div class="lpp-menu" id="navLinks">
+      <div class="lpp-menu">
         <a href="index.html">Início</a>
         <a href="nosso-produto.html">Nosso Produto</a>
         <a href="tratamento.html">Tratamento</a>
@@ -385,10 +370,7 @@
     </div>
   </nav>
 
-  <div class="debug-wrap">
-    <div id="debugBox"></div>
-  </div>
-
+  <!-- ✅ PAYWALL -->
   <section id="premiumGate" class="gate-wrap" aria-label="Acesso Premium">
     <div class="gate-card">
       <h2>Conteúdo Premium</h2>
@@ -399,8 +381,8 @@
       <span class="gate-badge">Acesso liberado automaticamente após pagamento</span>
 
       <div class="gate-actions">
-        <a class="gate-btn gate-primary" id="linkLogin" href="login.html?mode=login">Entrar</a>
-        <a class="gate-btn gate-secondary" id="linkSignup" href="login.html?mode=signup">Criar conta</a>
+        <a class="gate-btn gate-primary" href="login.html?mode=login">Entrar</a>
+        <a class="gate-btn gate-secondary" href="login.html?mode=signup">Criar conta</a>
         <button class="gate-btn gate-pay" id="btnPay" type="button">Assinar Premium (R$ 2,00)</button>
       </div>
 
@@ -408,6 +390,7 @@
     </div>
   </section>
 
+  <!-- ✅ CONTEÚDO PREMIUM -->
   <main id="premiumContent" class="lpp-main">
 
     <section class="lpp-card">
@@ -691,21 +674,17 @@
     <div class="lpp-footer">© 2026 - Projeto Integrador</div>
   </main>
 
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+  <!-- ✅ Supabase (UMD) — evita “tela branca” por module -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    // ====== CONFIG SUPABASE ======
+  <script>
+    // ====== CONFIG ======
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
 
-    // ✅ Base automático (funciona em github.io/lesa/ e também em vercel.app/)
-    const SITE_BASE = new URL("./", window.location.href).toString();
-
-    // ✅ Endpoint do pagamento (Vercel)
-    const VERCEL_BASE = "https://lesa-dusky.vercel.app/";
-    // =============================
-
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // ✅ Sua Vercel (API pagamento)
+    const VERCEL_BASE = "https://lesa-dusky.vercel.app";
+    // =====================
 
     const bootOverlay = document.getElementById("bootOverlay");
     const premiumContent = document.getElementById("premiumContent");
@@ -713,57 +692,37 @@
     const gateMsg = document.getElementById("gateMsg");
     const btnPay = document.getElementById("btnPay");
 
-    const linkLogin = document.getElementById("linkLogin");
-    const linkSignup = document.getElementById("linkSignup");
-    const navLinks = document.getElementById("navLinks");
-
-    // Debug opcional: abra com ?debug=1
-    const debugBox = document.getElementById("debugBox");
-    const DEBUG = new URLSearchParams(window.location.search).get("debug") === "1";
-    function debug(msg){
-      if (!DEBUG) return;
-      debugBox.style.display = "block";
-      debugBox.textContent += msg + "\n";
-    }
-
-    // ✅ Reescreve links para manter sempre o mesmo domínio/pasta
-    function fixLinks(){
-      // Menu
-      if (navLinks){
-        navLinks.querySelectorAll("a[href]").forEach(a => {
-          const href = a.getAttribute("href");
-          if (!href) return;
-          if (/^(https?:)?\/\//i.test(href)) return; // já é absoluto
-          if (href.startsWith("#")) return;
-          a.setAttribute("href", SITE_BASE + href.replace(/^\.\//, ""));
-        });
-      }
-
-      // Gate links
-      if (linkLogin) linkLogin.href = SITE_BASE + "login.html?mode=login";
-      if (linkSignup) linkSignup.href = SITE_BASE + "login.html?mode=signup";
-    }
-    fixLinks();
-
     function hideBoot(){ if (bootOverlay) bootOverlay.style.display = "none"; }
+
     function showGate(msg){
       premiumContent.style.display = "none";
-      premiumGate.style.display = "";
+      premiumGate.style.display = "block";
       gateMsg.textContent = msg || "";
-      hideBoot();
-    }
-    function showPremium(){
-      premiumGate.style.display = "none";
-      premiumContent.style.display = "";
-      hideBoot();
     }
 
-    async function checkPremium() {
-      debug("SITE_BASE: " + SITE_BASE);
+    function showPremium(){
+      premiumGate.style.display = "none";
+      premiumContent.style.display = "block";
+      gateMsg.textContent = "";
+    }
+
+    function safeErrorMessage(err){
+      const msg = (err && (err.message || err.toString())) ? (err.message || err.toString()) : "Erro desconhecido.";
+      return "Falha ao verificar acesso.\n\nDetalhe: " + msg + "\n\nDica: limpe o cache do navegador / PWA e recarregue.";
+    }
+
+    // ✅ timeout de segurança: nunca deixa overlay preso
+    const bootFailsafe = setTimeout(() => {
+      hideBoot();
+      showGate("Não foi possível finalizar a verificação a tempo. Recarregue a página.");
+    }, 7000);
+
+    // Supabase client
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function checkPremium(){
       const { data: { session }, error: sessErr } = await supabase.auth.getSession();
-      debug("session error: " + (sessErr ? JSON.stringify(sessErr) : "none"));
-      debug("session user: " + (session?.user ? "OK" : "NULL"));
-      if (session?.user) debug("user.id: " + session.user.id);
+      if (sessErr) throw sessErr;
 
       if (!session?.user) {
         showGate("Faça login para acessar este conteúdo Premium.");
@@ -776,15 +735,9 @@
         .eq("id", session.user.id)
         .single();
 
-      debug("profiles error: " + (error ? JSON.stringify(error) : "none"));
-      debug("profiles data: " + (profile ? JSON.stringify(profile) : "null"));
+      if (error) throw error;
 
-      if (error || !profile) {
-        showGate("Não foi possível validar seu acesso (perfil não encontrado ou RLS).");
-        return { session, premium: false };
-      }
-
-      if (profile.premium) {
+      if (profile?.premium === true) {
         showPremium();
         return { session, premium: true };
       }
@@ -793,17 +746,45 @@
       return { session, premium: false };
     }
 
-    btnPay?.addEventListener("click", async () => {
-      gateMsg.textContent = "Iniciando pagamento…";
+    async function boot(){
+      try{
+        const params = new URLSearchParams(window.location.search);
+        const paid = params.get("paid");
 
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        window.location.href = SITE_BASE + "login.html?mode=login";
-        return;
+        if (paid === "1") {
+          gateMsg.textContent = "Pagamento identificado. Atualizando acesso…";
+          // tenta algumas vezes (webhook pode demorar)
+          for (let i=0; i<6; i++){
+            const res = await checkPremium();
+            if (res.premium) break;
+            await new Promise(r => setTimeout(r, 1200));
+          }
+          if (premiumContent.style.display !== "block") {
+            gateMsg.textContent = "Se o pagamento foi aprovado, aguarde 1–2 minutos e recarregue a página.";
+          }
+        } else {
+          await checkPremium();
+        }
+      } catch(e){
+        console.error("BOOT ERROR:", e);
+        showGate(safeErrorMessage(e));
+      } finally {
+        clearTimeout(bootFailsafe);
+        hideBoot();
       }
+    }
 
-      try {
-        const resp = await fetch(VERCEL_BASE + "api/create-checkout-session", {
+    btnPay?.addEventListener("click", async () => {
+      try{
+        gateMsg.textContent = "Iniciando pagamento…";
+
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          window.location.href = "login.html?mode=login";
+          return;
+        }
+
+        const resp = await fetch(VERCEL_BASE + "/api/create-checkout-session", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -812,41 +793,28 @@
           }),
         });
 
-        const data = await resp.json();
-        debug("checkout response: " + JSON.stringify(data));
+        let data = null;
+        try { data = await resp.json(); } catch {}
 
-        if (data?.url) window.location.href = data.url;
-        else {
-          gateMsg.textContent = "Falha ao iniciar o pagamento. Verifique o endpoint na Vercel.";
-          alert("Não foi possível iniciar o pagamento.");
+        if (!resp.ok) {
+          const detail = (data && (data.error || data.message)) ? (data.error || data.message) : ("HTTP " + resp.status);
+          gateMsg.textContent = "Falha ao iniciar o pagamento.\n" + detail;
+          return;
         }
-      } catch (e) {
-        console.error(e);
-        debug("checkout error: " + String(e));
-        gateMsg.textContent = "Erro de rede ao iniciar o pagamento.";
-        alert("Erro de rede ao iniciar o pagamento.");
+
+        if (data?.url) {
+          window.location.href = data.url;
+          return;
+        }
+
+        gateMsg.textContent = "Falha ao iniciar o pagamento: resposta sem URL.";
+      } catch(e){
+        console.error("PAY ERROR:", e);
+        gateMsg.textContent = "Erro de rede ao iniciar o pagamento.\n" + (e?.message || e);
       }
     });
 
-    async function maybeRecheckAfterPay() {
-      const params = new URLSearchParams(window.location.search);
-      const paid = params.get("paid");
-
-      if (paid === "1") {
-        gateMsg.textContent = "Pagamento identificado. Atualizando acesso…";
-        for (let i = 0; i < 6; i++) {
-          const res = await checkPremium();
-          if (res.premium) return;
-          await new Promise(r => setTimeout(r, 1200));
-        }
-        gateMsg.textContent = "Se o pagamento foi aprovado, aguarde alguns instantes e recarregue a página.";
-      } else {
-        await checkPremium();
-      }
-    }
-
-    maybeRecheckAfterPay();
+    boot();
   </script>
-
 </body>
 </html>
