@@ -4,12 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Premium • LPP</title>
+
   <style>
     :root{
       --bg1:#0b3d91; --bg2:#0a2f73; --card:#fff; --text:#0f172a; --muted:#475569;
       --border:rgba(15,23,42,.12); --shadow:0 18px 40px rgba(2,6,23,.14);
       --radius:18px; --primary:#2563eb; --ok:#16a34a; --bad:#dc2626; --warn:#f59e0b;
       --focus:rgba(37,99,235,.22);
+      --chip:#eef2ff;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -19,7 +21,7 @@
       display:flex; align-items:center; justify-content:center; padding:18px;
     }
     .card{
-      width:min(560px, 100%); background:var(--card); border:1px solid var(--border);
+      width:min(640px, 100%); background:var(--card); border:1px solid var(--border);
       border-radius:var(--radius); box-shadow:var(--shadow); padding:18px 16px;
     }
     h1{margin:0 0 6px; font-size:20px; font-weight:950}
@@ -28,6 +30,7 @@
       display:inline-block; padding:6px 10px; border-radius:999px;
       border:1px solid var(--border); background:#f8fafc; font-weight:900; font-size:12px; color:var(--muted);
     }
+
     .msg{
       margin-top:12px; padding:10px 12px; border-radius:14px; border:1px solid var(--border);
       background:#fff; white-space:pre-wrap;
@@ -35,28 +38,112 @@
     .msg.ok{border-color:rgba(22,163,74,.30); background:rgba(22,163,74,.08); color:#14532d}
     .msg.bad{border-color:rgba(220,38,38,.30); background:rgba(220,38,38,.08); color:#7f1d1d}
     .msg.warn{border-color:rgba(245,158,11,.35); background:rgba(245,158,11,.10); color:#7c2d12}
+
     .row{display:flex; gap:10px; margin-top:12px; flex-wrap:wrap}
     .btn{
       flex:1 1 180px; padding:12px 12px; border-radius:14px; cursor:pointer; font-weight:950;
-      border:1px solid rgba(37,99,235,.28); background:linear-gradient(180deg,#2563eb,#1d4ed8); color:#fff;
+      border:1px solid rgba(37,99,235,.28);
+      background:linear-gradient(180deg,#2563eb,#1d4ed8);
+      color:#fff;
     }
     .btn.secondary{background:#fff; color:#1d4ed8}
+    .btn.ghost{background:transparent; color:#0f172a; border:1px solid var(--border)}
+
     .small{font-size:12px; color:var(--muted)}
     code{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace}
+
+    .pay{
+      margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+    }
+    .pay h2{
+      margin:0 0 6px;
+      font-size:16px;
+      font-weight:950;
+    }
+    .price{
+      font-size:28px;
+      font-weight:1000;
+      margin:2px 0 8px;
+      color:#0b3d91;
+      letter-spacing:.2px;
+    }
+    .chip{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      background:var(--chip);
+      border:1px solid rgba(37,99,235,.18);
+      color:#1e40af;
+      font-weight:900;
+      font-size:12px;
+      margin:6px 6px 0 0;
+    }
+    textarea{
+      width:100%;
+      margin-top:10px;
+      min-height:92px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      padding:10px 10px;
+      resize:none;
+      outline:none;
+      background:#fff;
+      font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:13px;
+      color:#0f172a;
+    }
+    textarea:focus{box-shadow:0 0 0 4px var(--focus)}
+    .hint{margin-top:8px; font-size:13px; color:var(--muted)}
+    .hide{display:none !important;}
   </style>
 </head>
 
 <body>
   <main class="card">
     <span class="pill">Área Premium</span>
-    <h1>Verificando seu acesso…</h1>
-    <p>Se ficar preso aqui, a caixa abaixo vai mostrar o motivo.</p>
+    <h1 id="title">Verificando seu acesso…</h1>
+    <p id="subtitle">Se ficar preso aqui, a caixa abaixo vai mostrar o motivo.</p>
 
     <div id="msg" class="msg warn">Iniciando…</div>
 
+    <!-- 💠 Bloco de pagamento (aparece quando NÃO for premium) -->
+    <section id="payBox" class="pay hide" aria-label="Pagamento Pix Premium">
+      <h2>Pagamento via Pix</h2>
+      <div class="price">R$ 2,00</div>
+      <div>
+        <span class="chip">Pix apenas</span>
+        <span class="chip">Acesso Premium</span>
+      </div>
+
+      <p class="hint">
+        1) Copie o Pix “copia e cola” abaixo e pague no seu app bancário.<br>
+        2) Depois clique em <b>“Já paguei (verificar)”</b>.
+      </p>
+
+      <!-- ✅ TROQUE AQUI pelo seu Pix real (chave ou payload copia e cola) -->
+      <textarea id="pixPayload" readonly>
+28d39758-0fe0-47f1-9c7c-9cb6e032c5cf
+Referência: PREMIUM-LPP
+Valor: 2,00
+      </textarea>
+
+      <div class="row">
+        <button id="btnCopyPix" class="btn" type="button">Copiar Pix (copia e cola)</button>
+        <button id="btnPaid" class="btn secondary" type="button">Já paguei (verificar)</button>
+      </div>
+
+      <p class="hint">
+        Observação: se a liberação for manual, pode levar alguns minutos até seu perfil ser marcado como <code>premium=true</code>.
+      </p>
+    </section>
+
     <div class="row">
-      <button id="btnRetry" class="btn secondary" type="button">Tentar novamente</button>
-      <button id="btnLogout" class="btn secondary" type="button">Sair</button>
+      <button id="btnRetry" class="btn ghost" type="button">Tentar novamente</button>
+      <button id="btnLogout" class="btn ghost" type="button">Sair</button>
     </div>
 
     <p class="small" id="diag"></p>
@@ -68,20 +155,34 @@
       const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
       const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+      // ✅ Base do seu GitHub Pages
       const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
-      const msgEl = document.getElementById("msg");
+
+      const msgEl  = document.getElementById("msg");
       const diagEl = document.getElementById("diag");
+      const payBox = document.getElementById("payBox");
+      const titleEl = document.getElementById("title");
+      const subtitleEl = document.getElementById("subtitle");
 
       const setMsg = (text, type="warn") => {
         msgEl.className = "msg " + type;
         msgEl.textContent = text;
       };
 
+      const showPay = (show) => {
+        payBox.classList.toggle("hide", !show);
+      };
+
       async function checkPremium(){
+        showPay(false);
+        titleEl.textContent = "Verificando seu acesso…";
+        subtitleEl.textContent = "Se ficar preso aqui, a caixa abaixo vai mostrar o motivo.";
+
         setMsg("1/3) Lendo sessão do usuário…", "warn");
 
         // getUser é mais confiável que getSession em páginas estáticas
         const { data: userRes, error: userErr } = await supabase.auth.getUser();
+
         if (userErr) {
           setMsg("Erro ao ler usuário:\n" + userErr.message + "\n\nVoltando para login…", "bad");
           setTimeout(() => window.location.replace(SITE_BASE + "login.html"), 1200);
@@ -121,13 +222,29 @@
           return;
         }
 
+        // Não premium => mostra pagamento
+        titleEl.textContent = "Acesso Premium (R$ 2,00 via Pix)";
+        subtitleEl.textContent = "Pague no Pix e depois verifique para liberar a página Seleção de Produtos.";
         setMsg(
-          "Você ainda NÃO tem Premium.\n\nPróximo passo: configurar o pagamento para marcar premium=true no profiles.\n\nPor enquanto, você será mantido aqui.",
+          "Você ainda NÃO tem Premium.\n\nPague R$ 2,00 via Pix e clique em “Já paguei (verificar)”.",
           "warn"
         );
+        showPay(true);
+      }
+
+      async function copyPix(){
+        const val = document.getElementById("pixPayload").value.trim();
+        try{
+          await navigator.clipboard.writeText(val);
+          setMsg("Pix copiado ✅\nAgora cole no app do banco e pague R$ 2,00.\nDepois clique em “Já paguei (verificar)”.", "ok");
+        }catch{
+          setMsg("Não foi possível copiar automaticamente.\nSelecione o texto do Pix e copie manualmente.", "warn");
+        }
       }
 
       document.getElementById("btnRetry").addEventListener("click", checkPremium);
+      document.getElementById("btnPaid").addEventListener("click", checkPremium);
+      document.getElementById("btnCopyPix").addEventListener("click", copyPix);
 
       document.getElementById("btnLogout").addEventListener("click", async () => {
         await supabase.auth.signOut();
