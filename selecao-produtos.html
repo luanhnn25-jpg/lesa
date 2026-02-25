@@ -1,6 +1,8 @@
-<html lang="pt-br"><head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Seleção de Produtos — Lesão por Pressão (LPP)</title>
 
   <style>
@@ -19,6 +21,8 @@
       --lpp-warn:#f59e0b;
       --lpp-bad:#dc2626;
       --lpp-chip:#eef2ff;
+
+      --lpp-focus: 0 0 0 4px rgba(37,99,235,.18);
     }
 
     html,body{height:100%}
@@ -81,8 +85,10 @@
       border-radius:999px;
       border:1px solid rgba(255,255,255,.14);
       background:rgba(255,255,255,.10);
+      outline:none;
     }
     .lpp-menu a:hover{background:rgba(255,255,255,.16)}
+    .lpp-menu a:focus-visible{box-shadow: var(--lpp-focus);}
     .lpp-menu a[aria-current="page"]{
       background:rgba(255,255,255,.22);
       border-color:rgba(255,255,255,.28);
@@ -241,32 +247,111 @@
       margin-top:18px;
       padding-top:8px;
     }
+
+    /* ===========================
+       ✅ Premium gate (paywall)
+       =========================== */
+    #premiumContent{ display:none; }
+    #premiumGate{ display:none; }
+
+    .gate-wrap{
+      max-width:1100px;
+      margin: 0 auto;
+      padding: 18px 12px 40px;
+    }
+    .gate-card{
+      background: #fff;
+      border: 1px solid var(--lpp-border);
+      border-radius: var(--lpp-radius);
+      box-shadow: var(--lpp-shadow);
+      padding: 18px 16px;
+    }
+    .gate-card h2{
+      margin: 0 0 8px;
+      font-size: 20px;
+      font-weight: 950;
+      color: #0b2b63;
+    }
+    .gate-card p{
+      margin: 0 0 12px;
+      color: var(--lpp-muted);
+      line-height: 1.6;
+      font-size: 14.5px;
+    }
+    .gate-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top: 8px;
+    }
+    .gate-btn{
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-weight: 900;
+      font-size: 14px;
+      border: 1px solid transparent;
+      cursor:pointer;
+      text-decoration:none;
+      display:inline-block;
+      outline:none;
+    }
+    .gate-btn:focus-visible{ box-shadow: var(--lpp-focus); }
+    .gate-primary{ background:#0b3d91; color:#fff; }
+    .gate-secondary{ background:#fff; color:#0b3d91; border-color: rgba(11,61,145,.25); }
+    .gate-pay{ background: var(--lpp-ok); color:#fff; }
+    .gate-msg{
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--lpp-muted);
+      white-space: pre-wrap;
+    }
+    .gate-badge{
+      display:inline-block;
+      margin-top: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 12px;
+      border:1px solid rgba(245,158,11,.25);
+      background: rgba(245,158,11,.12);
+      color:#92400e;
+    }
+
+    /* Loader discreto */
+    #bootOverlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(244,246,249,.88);
+      backdrop-filter: blur(2px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index: 9999;
+    }
+    .bootBox{
+      background:#fff;
+      border:1px solid var(--lpp-border);
+      border-radius: 16px;
+      box-shadow: var(--lpp-shadow);
+      padding: 14px 14px;
+      width: min(520px, 92vw);
+      text-align:center;
+    }
+    .bootBox b{font-weight:950; color:#0b2b63}
+    .bootBox p{margin:8px 0 0; color:var(--lpp-muted); font-size:13.5px}
   </style>
 </head>
 
 <body>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  <!-- ✅ Overlay inicial: evita “piscar” o conteúdo antes do check -->
+  <div id="bootOverlay" aria-live="polite">
+    <div class="bootBox">
+      <b>Verificando seu acesso…</b>
+      <p>Autenticação e status Premium via Supabase.</p>
+    </div>
+  </div>
 
-  (async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { window.location.href = "./login.html"; return; }
-
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("premium")
-      .eq("id", session.user.id)
-      .single();
-
-    if (error || !data?.premium) {
-      window.location.href = "./premium.html";
-      return;
-    }
-  })();
-</script>
   <header class="lpp-header">
     <h1>Seleção de Produtos (LPP)</h1>
     <p>Material de estudo: limpeza, coberturas, desbridamento, proteção e suporte</p>
@@ -286,7 +371,28 @@
     </div>
   </nav>
 
-  <main class="lpp-main">
+  <!-- ✅ PAYWALL (aparece se não for premium / não estiver logada) -->
+  <section id="premiumGate" class="gate-wrap" aria-label="Acesso Premium">
+    <div class="gate-card">
+      <h2>Conteúdo Premium</h2>
+      <p>
+        A página <b>Seleção de Produtos</b> é exclusiva para usuários <b>Premium</b>.
+        Para liberar o acesso, faça login e assine por <b>R$ 2,00</b>.
+      </p>
+      <span class="gate-badge">Acesso liberado automaticamente após pagamento</span>
+
+      <div class="gate-actions">
+        <a class="gate-btn gate-primary" id="btnGoLogin" href="login.html?mode=login">Entrar</a>
+        <a class="gate-btn gate-secondary" id="btnGoSignup" href="login.html?mode=signup">Criar conta</a>
+        <button class="gate-btn gate-pay" id="btnPay" type="button">Assinar Premium (R$ 2,00)</button>
+      </div>
+
+      <div class="gate-msg" id="gateMsg"></div>
+    </div>
+  </section>
+
+  <!-- ✅ CONTEÚDO PREMIUM (apenas premium=true) -->
+  <main id="premiumContent" class="lpp-main">
 
     <section class="lpp-card">
       <h2 class="lpp-title"><span class="lpp-bar"></span>Como usar este material</h2>
@@ -570,5 +676,125 @@
     <div class="lpp-footer">© 2026 - Projeto Integrador</div>
   </main>
 
+  <!-- ✅ Premium gate + pagamento (Supabase + Vercel) -->
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-</body></html>
+    // ====== CONFIG (mantive seus dados) ======
+    const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+
+    // ✅ GitHub Pages base do seu site
+    const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
+
+    // ✅ TROQUE para o seu domínio da Vercel (onde estão seus endpoints /api)
+    const VERCEL_BASE = "https://SEU-PROJETO.vercel.app/";
+    // ========================================
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const bootOverlay = document.getElementById("bootOverlay");
+    const premiumContent = document.getElementById("premiumContent");
+    const premiumGate = document.getElementById("premiumGate");
+    const gateMsg = document.getElementById("gateMsg");
+    const btnPay = document.getElementById("btnPay");
+
+    function hideBoot(){ if (bootOverlay) bootOverlay.style.display = "none"; }
+    function showGate(msg){
+      if (premiumContent) premiumContent.style.display = "none";
+      if (premiumGate) premiumGate.style.display = "";
+      if (gateMsg) gateMsg.textContent = msg || "";
+      hideBoot();
+    }
+    function showPremium(){
+      if (premiumGate) premiumGate.style.display = "none";
+      if (premiumContent) premiumContent.style.display = "";
+      hideBoot();
+    }
+
+    async function checkPremium() {
+      const { data: { session } } = await supabase.auth.getSession();
+
+      // Não logou → mostra paywall com botão de login/cadastro
+      if (!session?.user) {
+        showGate("Faça login para acessar este conteúdo Premium.");
+        return { session: null, premium: false };
+      }
+
+      const { data: profile, error } = await supabase
+        .from("profiles")
+        .select("premium")
+        .eq("id", session.user.id)
+        .single();
+
+      if (error || !profile) {
+        console.error("Erro ao ler profiles:", error);
+        showGate("Não foi possível validar seu acesso (perfil não encontrado ou bloqueio de RLS).");
+        return { session, premium: false };
+      }
+
+      if (profile.premium) {
+        showPremium();
+        return { session, premium: true };
+      }
+
+      // Logado, mas não premium
+      showGate("Você está logada, mas ainda não é Premium. Assine por R$ 2,00 para desbloquear.");
+      return { session, premium: false };
+    }
+
+    // Botão de pagamento
+    btnPay?.addEventListener("click", async () => {
+      gateMsg.textContent = "Iniciando pagamento…";
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        window.location.href = SITE_BASE + "login.html?mode=login";
+        return;
+      }
+
+      try {
+        const resp = await fetch(VERCEL_BASE + "api/create-checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: session.user.id,
+            email: session.user.email
+          }),
+        });
+
+        const data = await resp.json();
+        if (data?.url) window.location.href = data.url;
+        else {
+          gateMsg.textContent = "Falha ao iniciar o pagamento. Verifique seu endpoint na Vercel.";
+          alert("Não foi possível iniciar o pagamento.");
+        }
+      } catch (e) {
+        console.error(e);
+        gateMsg.textContent = "Erro de rede ao iniciar o pagamento.";
+        alert("Erro de rede ao iniciar o pagamento.");
+      }
+    });
+
+    // Se voltar do checkout com ?paid=1, tenta revalidar (webhook pode levar alguns segundos)
+    async function maybeRecheckAfterPay() {
+      const params = new URLSearchParams(window.location.search);
+      const paid = params.get("paid");
+      if (paid === "1") {
+        if (gateMsg) gateMsg.textContent = "Pagamento identificado. Atualizando acesso…";
+        // tenta algumas vezes (sem prometer background — é no carregamento da página)
+        for (let i = 0; i < 6; i++) {
+          const res = await checkPremium();
+          if (res.premium) return;
+          await new Promise(r => setTimeout(r, 1200));
+        }
+        if (gateMsg) gateMsg.textContent = "Se o pagamento foi aprovado, aguarde alguns instantes e recarregue a página.";
+      } else {
+        await checkPremium();
+      }
+    }
+
+    maybeRecheckAfterPay();
+  </script>
+</body>
+</html>
