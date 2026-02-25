@@ -3,52 +3,456 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Login</title>
+  <title>Entrar • LPP</title>
+
+  <style>
+    :root{
+      --bg1:#0b3d91;
+      --bg2:#0a2f73;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+      --border:rgba(15,23,42,.12);
+      --shadow:0 18px 40px rgba(2,6,23,.14);
+      --radius:18px;
+      --primary:#2563eb;
+      --primary2:#1d4ed8;
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --bad:#dc2626;
+      --field:#f8fafc;
+      --focus:rgba(37,99,235,.22);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1000px 500px at 20% 10%, rgba(255,255,255,.15), transparent 60%),
+        radial-gradient(900px 500px at 80% 20%, rgba(255,255,255,.12), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:22px 14px;
+    }
+
+    .wrap{
+      width:min(980px, 100%);
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:16px;
+      align-items:stretch;
+    }
+    @media (max-width: 900px){
+      .wrap{grid-template-columns:1fr}
+    }
+
+    .hero{
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:var(--radius);
+      padding:22px;
+      background:rgba(255,255,255,.10);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 55px rgba(0,0,0,.18);
+      color:#fff;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:-80px -120px auto auto;
+      width:360px;
+      height:360px;
+      background: radial-gradient(circle at 30% 30%, rgba(37,99,235,.55), transparent 60%);
+      transform: rotate(15deg);
+      pointer-events:none;
+      opacity:.9;
+    }
+    .brand{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin-bottom:16px;
+    }
+    .logo{
+      width:44px;
+      height:44px;
+      border-radius:14px;
+      background:rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.20);
+      display:grid;
+      place-items:center;
+      font-weight:900;
+      letter-spacing:.5px;
+    }
+    .brand h1{
+      font-size:18px;
+      margin:0;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .brand p{
+      margin:2px 0 0;
+      font-size:12px;
+      opacity:.92;
+    }
+    .hero h2{
+      margin:10px 0 8px;
+      font-size:clamp(22px, 3.2vw, 30px);
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+    .hero .sub{
+      margin:0;
+      opacity:.92;
+      line-height:1.5;
+      max-width:52ch;
+      font-size:14px;
+    }
+    .bullets{
+      margin:16px 0 0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+    .bullets li{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      padding:10px 12px;
+      border-radius:14px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background:rgba(255,255,255,.85);
+      margin-top:6px;
+      flex:0 0 auto;
+    }
+    .bullets b{font-weight:900}
+    .bullets span{opacity:.92;font-size:13px;line-height:1.45}
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      padding:18px 16px;
+    }
+
+    .card h3{
+      margin:0 0 6px;
+      font-size:18px;
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+    .card .hint{
+      margin:0 0 14px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .tabs{
+      display:flex;
+      gap:8px;
+      margin:10px 0 14px;
+    }
+    .tab{
+      flex:1;
+      border:1px solid var(--border);
+      background: #fff;
+      padding:10px 12px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:900;
+      font-size:13px;
+      color:var(--muted);
+    }
+    .tab[aria-selected="true"]{
+      border-color: rgba(37,99,235,.35);
+      background: rgba(37,99,235,.08);
+      color: var(--primary2);
+    }
+
+    label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin:10px 0 6px;
+      font-weight:800;
+    }
+    .field{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:var(--field);
+      outline:none;
+      font-size:14px;
+      transition: box-shadow .15s, border-color .15s;
+    }
+    .field:focus{
+      border-color: rgba(37,99,235,.45);
+      box-shadow: 0 0 0 5px var(--focus);
+      background:#fff;
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      margin-top:10px;
+    }
+    .small{
+      font-size:12px;
+      color:var(--muted);
+      margin:0;
+    }
+    .link{
+      border:none;
+      background:none;
+      padding:0;
+      cursor:pointer;
+      color:var(--primary2);
+      font-weight:900;
+      font-size:12px;
+      text-decoration:underline;
+    }
+
+    .btn{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(37,99,235,.35);
+      background: linear-gradient(180deg, var(--primary), var(--primary2));
+      color:#fff;
+      font-weight:950;
+      letter-spacing:.2px;
+      cursor:pointer;
+      margin-top:12px;
+      transition: transform .05s ease, filter .15s ease;
+    }
+    .btn:hover{filter:brightness(1.03)}
+    .btn:active{transform:translateY(1px)}
+    .btn.secondary{
+      background:#fff;
+      color:var(--primary2);
+      border-color: rgba(37,99,235,.25);
+      box-shadow:none;
+    }
+
+    .msg{
+      margin:12px 0 0;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#fff;
+      color:var(--muted);
+      font-size:13px;
+      white-space:pre-wrap;
+      display:none;
+    }
+    .msg.show{display:block}
+    .msg.ok{border-color:rgba(22,163,74,.30); background:rgba(22,163,74,.08); color:#14532d}
+    .msg.warn{border-color:rgba(245,158,11,.35); background:rgba(245,158,11,.10); color:#7c2d12}
+    .msg.bad{border-color:rgba(220,38,38,.30); background:rgba(220,38,38,.08); color:#7f1d1d}
+
+    .footer{
+      margin-top:14px;
+      font-size:12px;
+      color:var(--muted);
+      text-align:center;
+    }
+  </style>
 </head>
 
-<body style="font-family: system-ui; max-width: 420px; margin: 40px auto; padding: 16px;">
-  <h2>Entrar</h2>
+<body>
+  <div class="wrap">
+    <!-- Lado esquerdo -->
+    <section class="hero" aria-label="Informações do projeto">
+      <div class="brand">
+        <div class="logo">LPP</div>
+        <div>
+          <h1>Lesão por Pressão</h1>
+          <p>Área restrita (conta necessária)</p>
+        </div>
+      </div>
 
-  <input id="email" type="email" placeholder="Email" style="width:100%;padding:12px;margin:8px 0;">
-  <input id="password" type="password" placeholder="Senha (mín. 6)" style="width:100%;padding:12px;margin:8px 0;">
+      <h2>Acesso do aluno/usuário</h2>
+      <p class="sub">
+        Entre com sua conta para acessar recursos premium (ex.: seleção de produtos).
+        Caso seja seu primeiro acesso, crie sua conta e confirme o e-mail.
+      </p>
 
-  <button id="btnLogin" type="button" style="width:100%;padding:12px;margin-top:8px; cursor:pointer;">Login</button>
-  <button id="btnSignup" type="button" style="width:100%;padding:12px;margin-top:8px; cursor:pointer;">Criar conta</button>
+      <ul class="bullets">
+        <li><span class="dot"></span><span><b>Autenticação segura</b> via Supabase</span></li>
+        <li><span class="dot"></span><span><b>Recuperação de senha</b> por e-mail</span></li>
+        <li><span class="dot"></span><span><b>Compatível com celular</b> e desktop</span></li>
+      </ul>
+    </section>
 
-  <p id="msg" style="margin-top:12px; white-space:pre-wrap;"></p>
+    <!-- Lado direito -->
+    <main class="card" aria-label="Login e cadastro">
+      <h3>Entrar</h3>
+      <p class="hint">Use o mesmo e-mail e senha cadastrados. Se você ainda não tem conta, clique em “Criar conta”.</p>
+
+      <div class="tabs" role="tablist" aria-label="Alternar modo">
+        <button class="tab" id="tabLogin" role="tab" aria-selected="true" type="button">Login</button>
+        <button class="tab" id="tabSignup" role="tab" aria-selected="false" type="button">Criar conta</button>
+      </div>
+
+      <label for="email">Email</label>
+      <input id="email" class="field" type="email" placeholder="seuemail@exemplo.com" autocomplete="email" />
+
+      <label for="password">Senha</label>
+      <input id="password" class="field" type="password" placeholder="mín. 6 caracteres" autocomplete="current-password" />
+
+      <div class="row">
+        <p class="small" id="modeHint">Modo: Login</p>
+        <button class="link" id="btnForgot" type="button">Esqueci minha senha</button>
+      </div>
+
+      <button class="btn" id="btnPrimary" type="button">Entrar</button>
+      <button class="btn secondary" id="btnGoHome" type="button">Voltar ao site</button>
+
+      <div class="msg" id="msg" role="status" aria-live="polite"></div>
+
+      <div class="footer">© 2026 • Projeto Integrador</div>
+    </main>
+  </div>
 
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
+    // ====== CONFIG ======
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+
+    // GitHub Pages (repo) - caminho correto do seu site:
+    const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
+    const EMAIL_REDIRECT_TO = SITE_BASE + "login.html";
+    const AFTER_LOGIN_REDIRECT = SITE_BASE + "premium.html"; // ajuste se necessário
+    // =====================
+
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const setMsg = (t) => (document.getElementById("msg").textContent = t);
+    const el = (id) => document.getElementById(id);
+    const msgBox = el("msg");
 
-    document.getElementById("btnLogin").addEventListener("click", async () => {
-      setMsg("Entrando...");
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
+    function setMsg(text, type="warn"){
+      msgBox.textContent = text;
+      msgBox.className = "msg show " + (type || "warn");
+    }
+    function clearMsg(){
+      msgBox.textContent = "";
+      msgBox.className = "msg";
+    }
 
+    let mode = "login"; // "login" | "signup"
+
+    const tabLogin = el("tabLogin");
+    const tabSignup = el("tabSignup");
+    const btnPrimary = el("btnPrimary");
+    const modeHint = el("modeHint");
+    const btnForgot = el("btnForgot");
+
+    function setMode(next){
+      mode = next;
+      clearMsg();
+
+      const isLogin = mode === "login";
+      tabLogin.setAttribute("aria-selected", String(isLogin));
+      tabSignup.setAttribute("aria-selected", String(!isLogin));
+
+      el("password").setAttribute("autocomplete", isLogin ? "current-password" : "new-password");
+
+      modeHint.textContent = "Modo: " + (isLogin ? "Login" : "Criar conta");
+      btnPrimary.textContent = isLogin ? "Entrar" : "Criar conta";
+    }
+
+    tabLogin.addEventListener("click", () => setMode("login"));
+    tabSignup.addEventListener("click", () => setMode("signup"));
+
+    el("btnGoHome").addEventListener("click", () => {
+      window.location.href = SITE_BASE + "index.html";
+    });
+
+    async function handleLogin(email, password){
+      setMsg("Entrando...", "warn");
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) return setMsg("Erro no login:\n" + error.message);
+      if (error) return setMsg("Erro no login:\n" + error.message, "bad");
 
-      window.location.href = "./premium.html";
+      setMsg("Login realizado. Redirecionando…", "ok");
+      window.location.href = AFTER_LOGIN_REDIRECT;
+    }
+
+    async function handleSignup(email, password){
+      setMsg("Criando conta...", "warn");
+
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          // ✅ garante que o email de confirmação volta para /lesa/
+          emailRedirectTo: EMAIL_REDIRECT_TO
+        }
+      });
+
+      if (error) return setMsg("Erro ao criar conta:\n" + error.message, "bad");
+
+      setMsg(
+        "Conta criada!\n\n1) Verifique seu email (e spam).\n2) Clique no link de confirmação.\n3) Depois volte e faça login.",
+        "ok"
+      );
+    }
+
+    btnPrimary.addEventListener("click", async () => {
+      clearMsg();
+      const email = el("email").value.trim();
+      const password = el("password").value;
+
+      if (!email) return setMsg("Informe um email válido.", "bad");
+      if (!password || password.length < 6) return setMsg("A senha deve ter pelo menos 6 caracteres.", "bad");
+
+      if (mode === "login") return handleLogin(email, password);
+      return handleSignup(email, password);
     });
 
-    document.getElementById("btnSignup").addEventListener("click", async () => {
-      setMsg("Criando conta...");
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
+    btnForgot.addEventListener("click", async () => {
+      clearMsg();
+      const email = el("email").value.trim();
+      if (!email) return setMsg("Digite seu email primeiro para receber o link de recuperação.", "bad");
 
-      const { error } = await supabase.auth.signUp({ email, password });
-      if (error) return setMsg("Erro ao criar conta:\n" + error.message);
+      setMsg("Enviando link de recuperação...", "warn");
 
-      setMsg("Conta criada! Se pedir confirmação no email, confirme e depois faça login.");
+      // ✅ Envia email de recuperação e redireciona de volta para /lesa/
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: EMAIL_REDIRECT_TO
+      });
+
+      if (error) return setMsg("Erro ao enviar recuperação:\n" + error.message, "bad");
+
+      setMsg(
+        "Pronto! Enviamos um link de recuperação para seu email.\n\nAbra o email e siga as instruções.",
+        "ok"
+      );
     });
 
-    setMsg("Pronto. Preencha email e senha.");
+    // Se você quiser, pode detectar sessão existente e pular direto:
+    // const { data } = await supabase.auth.getSession();
+    // if (data.session) window.location.href = AFTER_LOGIN_REDIRECT;
+
+    setMode("login");
+    setMsg("Pronto. Preencha email e senha.", "warn");
   </script>
 </body>
 </html>
