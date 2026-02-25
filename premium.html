@@ -3,69 +3,139 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Premium</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <title>Premium • LPP</title>
+  <style>
+    :root{
+      --bg1:#0b3d91; --bg2:#0a2f73; --card:#fff; --text:#0f172a; --muted:#475569;
+      --border:rgba(15,23,42,.12); --shadow:0 18px 40px rgba(2,6,23,.14);
+      --radius:18px; --primary:#2563eb; --ok:#16a34a; --bad:#dc2626; --warn:#f59e0b;
+      --focus:rgba(37,99,235,.22);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--text);
+      background: linear-gradient(180deg, var(--bg1), var(--bg2));
+      display:flex; align-items:center; justify-content:center; padding:18px;
+    }
+    .card{
+      width:min(560px, 100%); background:var(--card); border:1px solid var(--border);
+      border-radius:var(--radius); box-shadow:var(--shadow); padding:18px 16px;
+    }
+    h1{margin:0 0 6px; font-size:20px; font-weight:950}
+    p{margin:8px 0; color:var(--muted); line-height:1.5}
+    .pill{
+      display:inline-block; padding:6px 10px; border-radius:999px;
+      border:1px solid var(--border); background:#f8fafc; font-weight:900; font-size:12px; color:var(--muted);
+    }
+    .msg{
+      margin-top:12px; padding:10px 12px; border-radius:14px; border:1px solid var(--border);
+      background:#fff; white-space:pre-wrap;
+    }
+    .msg.ok{border-color:rgba(22,163,74,.30); background:rgba(22,163,74,.08); color:#14532d}
+    .msg.bad{border-color:rgba(220,38,38,.30); background:rgba(220,38,38,.08); color:#7f1d1d}
+    .msg.warn{border-color:rgba(245,158,11,.35); background:rgba(245,158,11,.10); color:#7c2d12}
+    .row{display:flex; gap:10px; margin-top:12px; flex-wrap:wrap}
+    .btn{
+      flex:1 1 180px; padding:12px 12px; border-radius:14px; cursor:pointer; font-weight:950;
+      border:1px solid rgba(37,99,235,.28); background:linear-gradient(180deg,#2563eb,#1d4ed8); color:#fff;
+    }
+    .btn.secondary{background:#fff; color:#1d4ed8}
+    .small{font-size:12px; color:var(--muted)}
+    code{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace}
+  </style>
 </head>
-<body style="font-family: system-ui; max-width: 520px; margin: 40px auto; padding: 16px;">
-  <h2>Acesso Premium</h2>
-  <p id="status">Verificando seu acesso...</p>
 
-  <div id="payBox" style="display:none; border:1px solid #ddd; padding:16px; border-radius:12px;">
-    <p>Para liberar a aba <b>Seleção de Produtos</b>, realize o pagamento de <b>R$ 2,00</b>.</p>
-    <button id="btnPay" style="padding:12px;width:100%;">Pagar R$ 2</button>
-    <p style="font-size: 12px; opacity:.7; margin-top:10px;">
-      (Ainda vamos conectar o Mercado Pago no próximo passo.)
-    </p>
-  </div>
+<body>
+  <main class="card">
+    <span class="pill">Área Premium</span>
+    <h1>Verificando seu acesso…</h1>
+    <p>Se ficar preso aqui, a caixa abaixo vai mostrar o motivo.</p>
 
-  <button id="btnLogout" style="margin-top:16px;padding:10px;width:100%;">Sair</button>
+    <div id="msg" class="msg warn">Iniciando…</div>
 
-  <script>
-    const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    <div class="row">
+      <button id="btnRetry" class="btn secondary" type="button">Tentar novamente</button>
+      <button id="btnLogout" class="btn secondary" type="button">Sair</button>
+    </div>
 
-    const statusEl = document.getElementById("status");
-    const payBox = document.getElementById("payBox");
+    <p class="small" id="diag"></p>
 
-    (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        window.location.href = "./login.html";
-        return;
-      }
+    <script type="module">
+      import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-      const userId = session.user.id;
+      const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
+      const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("premium")
-        .eq("id", userId)
-        .single();
+      const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
+      const msgEl = document.getElementById("msg");
+      const diagEl = document.getElementById("diag");
 
-      if (error) {
-        statusEl.textContent = "Erro ao verificar premium: " + error.message;
-        return;
-      }
-
-      if (data?.premium) {
-        statusEl.textContent = "Você já tem acesso premium ✅";
-        window.location.href = "./selecao-produtos.html";
-        return;
-      }
-
-      statusEl.textContent = "Você ainda não tem premium.";
-      payBox.style.display = "block";
-
-      document.getElementById("btnPay").onclick = () => {
-        alert("Próximo passo: conectar Mercado Pago via /api/create-checkout e webhook.");
+      const setMsg = (text, type="warn") => {
+        msgEl.className = "msg " + type;
+        msgEl.textContent = text;
       };
-    })();
 
-    document.getElementById("btnLogout").onclick = async () => {
-      await supabase.auth.signOut();
-      window.location.href = "./index.html";
-    };
-  </script>
+      async function checkPremium(){
+        setMsg("1/3) Lendo sessão do usuário…", "warn");
+
+        // getUser é mais confiável que getSession em páginas estáticas
+        const { data: userRes, error: userErr } = await supabase.auth.getUser();
+        if (userErr) {
+          setMsg("Erro ao ler usuário:\n" + userErr.message + "\n\nVoltando para login…", "bad");
+          setTimeout(() => window.location.replace(SITE_BASE + "login.html"), 1200);
+          return;
+        }
+        if (!userRes?.user) {
+          setMsg("Sem sessão ativa.\nIndo para login…", "bad");
+          setTimeout(() => window.location.replace(SITE_BASE + "login.html"), 800);
+          return;
+        }
+
+        const uid = userRes.user.id;
+        diagEl.innerHTML = "UID: <code>" + uid + "</code>";
+
+        setMsg("2/3) Consultando seu status premium…", "warn");
+
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("premium")
+          .eq("id", uid)
+          .single();
+
+        if (error) {
+          setMsg(
+            "Erro ao consultar a tabela profiles:\n" + error.message +
+            "\n\nProváveis causas:\n- RLS/policy não criada\n- Não existe linha do seu usuário em profiles\n- Cache antigo carregando código antigo",
+            "bad"
+          );
+          return;
+        }
+
+        setMsg("3/3) Resultado recebido.", "warn");
+
+        if (data?.premium) {
+          setMsg("Premium ✅ Redirecionando para Seleção de Produtos…", "ok");
+          window.location.replace(SITE_BASE + "selecao-produtos.html");
+          return;
+        }
+
+        setMsg(
+          "Você ainda NÃO tem Premium.\n\nPróximo passo: configurar o pagamento para marcar premium=true no profiles.\n\nPor enquanto, você será mantido aqui.",
+          "warn"
+        );
+      }
+
+      document.getElementById("btnRetry").addEventListener("click", checkPremium);
+
+      document.getElementById("btnLogout").addEventListener("click", async () => {
+        await supabase.auth.signOut();
+        window.location.replace(SITE_BASE + "index.html");
+      });
+
+      checkPremium();
+    </script>
+  </main>
 </body>
 </html>
