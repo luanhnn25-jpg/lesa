@@ -1,4 +1,4 @@
-const CACHE_NAME = "lpp-v6"; // troque a versão quando atualizar
+const CACHE_NAME = "lpp-v7"; // troque a versão quando atualizar
 
 // Cache mínimo garantido (caminhos relativos para GitHub Pages /lesa/)
 const CORE_ASSETS = [
