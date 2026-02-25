@@ -1,6 +1,5 @@
 <!doctype html>
-<html lang="pt-br">
-<head>
+<html lang="pt-br"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Seleção de Produtos — Lesão por Pressão (LPP)</title>
@@ -32,8 +31,24 @@
       line-height:1.55 !important;
     }
 
-    /* ✅ BLOQUEIO VISUAL: evita “flash” antes de validar Premium */
+    /* ✅ enquanto valida premium, o main fica escondido */
     body[data-locked="1"] main{ display:none; }
+
+    /* ✅ tela de carregamento/erro (pra não ficar “branco”) */
+    #lockScreen{
+      max-width:1100px;
+      margin:18px auto;
+      padding:16px 12px;
+    }
+    .lock-card{
+      background:#fff;
+      border:1px solid var(--lpp-border);
+      border-radius:var(--lpp-radius);
+      box-shadow:var(--lpp-shadow);
+      padding:16px;
+    }
+    .lock-title{font-weight:900; margin:0 0 8px}
+    .lock-text{color:var(--lpp-muted); margin:0; white-space:pre-wrap}
 
     .lpp-header{
       background: linear-gradient(180deg, var(--lpp-blue-900), var(--lpp-blue-800));
@@ -250,33 +265,75 @@
 </head>
 
 <body data-locked="1">
-  <!-- ✅ Supabase + checagem premium (sem flash) -->
+
+  <!-- Supabase (não usa module: mais compatível) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    document.body.setAttribute("data-locked","1");
+
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    function setLockMsg(txt){
+      const el = document.getElementById("lockMsg");
+      if (el) el.textContent = txt;
+    }
 
     (async () => {
       try {
-        const { data: { session }, error: sessErr } = await supabase.auth.getSession();
-        if (sessErr || !session) { window.location.replace("./login.html"); return; }
-
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("premium")
-          .eq("id", session.user.id)
-          .single();
-
-        if (error || !data?.premium) {
-          window.location.replace("./premium.html");
+        if (!window.supabase) {
+          setLockMsg("Falha ao carregar a biblioteca do Supabase.\nVerifique internet/cache e recarregue a página.");
           return;
         }
 
-        // ✅ liberado
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        setLockMsg("1/3) Lendo usuário logado…");
+        const { data: userRes, error: userErr } = await supabase.auth.getUser();
+
+        if (userErr) {
+          setLockMsg("Erro ao ler usuário:\n" + userErr.message + "\n\nIndo para login…");
+          setTimeout(() => window.location.replace("./login.html"), 1200);
+          return;
+        }
+        if (!userRes?.user) {
+          setLockMsg("Sem sessão ativa.\n\nIndo para login…");
+          setTimeout(() => window.location.replace("./login.html"), 800);
+          return;
+        }
+
+        const uid = userRes.user.id;
+
+        setLockMsg("2/3) Consultando status premium…");
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("premium")
+          .eq("id", uid)
+          .single();
+
+        if (error) {
+          setLockMsg(
+            "Erro ao consultar 'profiles':\n" + error.message +
+            "\n\nCausas comuns:\n- Não existe linha do seu usuário em profiles\n- RLS/policy bloqueando SELECT\n- Cache antigo do GitHub Pages"
+          );
+          return;
+        }
+
+        setLockMsg("3/3) Resultado recebido…");
+
+        if (!data?.premium) {
+          setLockMsg("Você não tem Premium.\n\nRedirecionando para pagamento…");
+          setTimeout(() => window.location.replace("./premium.html"), 800);
+          return;
+        }
+
+        // ✅ premium: libera conteúdo
         document.body.removeAttribute("data-locked");
+        const lock = document.getElementById("lockScreen");
+        if (lock) lock.style.display = "none";
+
       } catch (e) {
-        window.location.replace("./login.html");
+        setLockMsg("Falha inesperada:\n" + (e?.message || String(e)));
       }
     })();
   </script>
@@ -299,6 +356,14 @@
       </div>
     </div>
   </nav>
+
+  <!-- ✅ tela de carregamento/erro -->
+  <section id="lockScreen">
+    <div class="lock-card">
+      <p class="lock-title">Carregando acesso Premium…</p>
+      <p id="lockMsg" class="lock-text">Iniciando verificação…</p>
+    </div>
+  </section>
 
   <main class="lpp-main">
 
@@ -436,7 +501,6 @@
       </p>
     </section>
 
-    <!-- NOVAS SEÇÕES (1 a 7) -->
     <section class="lpp-card">
       <h2 class="lpp-title"><span class="lpp-bar"></span>1) Soluções para limpeza do leito</h2>
       <p class="lpp-lead">
@@ -583,5 +647,4 @@
 
     <div class="lpp-footer">© 2026 - Projeto Integrador</div>
   </main>
-</body>
-</html>
+</body></html>
