@@ -4,47 +4,51 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Login</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
 <body style="font-family: system-ui; max-width: 420px; margin: 40px auto; padding: 16px;">
   <h2>Entrar</h2>
 
   <input id="email" type="email" placeholder="Email" style="width:100%;padding:12px;margin:8px 0;">
-  <input id="password" type="password" placeholder="Senha" style="width:100%;padding:12px;margin:8px 0;">
+  <input id="password" type="password" placeholder="Senha (mín. 6)" style="width:100%;padding:12px;margin:8px 0;">
 
-  <button id="btnLogin" style="width:100%;padding:12px;margin-top:8px;">Login</button>
-  <button id="btnSignup" style="width:100%;padding:12px;margin-top:8px;">Criar conta</button>
+  <button id="btnLogin" type="button" style="width:100%;padding:12px;margin-top:8px; cursor:pointer;">Login</button>
+  <button id="btnSignup" type="button" style="width:100%;padding:12px;margin-top:8px; cursor:pointer;">Criar conta</button>
 
-  <p id="msg" style="margin-top:12px;"></p>
+  <p id="msg" style="margin-top:12px; white-space:pre-wrap;"></p>
 
-  <script>
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const msg = (t) => document.getElementById("msg").textContent = t;
+    const setMsg = (t) => (document.getElementById("msg").textContent = t);
 
-    document.getElementById("btnLogin").onclick = async () => {
-      msg("Entrando...");
+    document.getElementById("btnLogin").addEventListener("click", async () => {
+      setMsg("Entrando...");
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
 
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) return msg("Erro: " + error.message);
+      if (error) return setMsg("Erro no login:\n" + error.message);
 
       window.location.href = "./premium.html";
-    };
+    });
 
-    document.getElementById("btnSignup").onclick = async () => {
-      msg("Criando conta...");
+    document.getElementById("btnSignup").addEventListener("click", async () => {
+      setMsg("Criando conta...");
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
 
       const { error } = await supabase.auth.signUp({ email, password });
-      if (error) return msg("Erro: " + error.message);
+      if (error) return setMsg("Erro ao criar conta:\n" + error.message);
 
-      msg("Conta criada! Se pedir confirmação no email, confirme e depois faça login.");
-    };
+      setMsg("Conta criada! Se pedir confirmação no email, confirme e depois faça login.");
+    });
+
+    setMsg("Pronto. Preencha email e senha.");
   </script>
 </body>
 </html>
