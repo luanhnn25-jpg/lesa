@@ -1,4 +1,6 @@
-<html lang="pt-br"><head>
+<!doctype html>
+<html lang="pt-br">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Seleção de Produtos — Lesão por Pressão (LPP)</title>
@@ -29,6 +31,9 @@
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif !important;
       line-height:1.55 !important;
     }
+
+    /* ✅ BLOQUEIO VISUAL: evita “flash” antes de validar Premium */
+    body[data-locked="1"] main{ display:none; }
 
     .lpp-header{
       background: linear-gradient(180deg, var(--lpp-blue-900), var(--lpp-blue-800));
@@ -244,29 +249,38 @@
   </style>
 </head>
 
-<body>
+<body data-locked="1">
+  <!-- ✅ Supabase + checagem premium (sem flash) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  <script>
+    const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  (async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { window.location.href = "./login.html"; return; }
+    (async () => {
+      try {
+        const { data: { session }, error: sessErr } = await supabase.auth.getSession();
+        if (sessErr || !session) { window.location.replace("./login.html"); return; }
 
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("premium")
-      .eq("id", session.user.id)
-      .single();
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("premium")
+          .eq("id", session.user.id)
+          .single();
 
-    if (error || !data?.premium) {
-      window.location.href = "./premium.html";
-      return;
-    }
-  })();
-</script>
+        if (error || !data?.premium) {
+          window.location.replace("./premium.html");
+          return;
+        }
+
+        // ✅ liberado
+        document.body.removeAttribute("data-locked");
+      } catch (e) {
+        window.location.replace("./login.html");
+      }
+    })();
+  </script>
+
   <header class="lpp-header">
     <h1>Seleção de Produtos (LPP)</h1>
     <p>Material de estudo: limpeza, coberturas, desbridamento, proteção e suporte</p>
@@ -569,6 +583,5 @@
 
     <div class="lpp-footer">© 2026 - Projeto Integrador</div>
   </main>
-
-
-</body></html>
+</body>
+</html>
