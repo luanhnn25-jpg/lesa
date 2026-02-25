@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Seleção de Produtos — Lesão por Pressão (LPP)</title>
 
   <style>
@@ -21,7 +21,6 @@
       --lpp-warn:#f59e0b;
       --lpp-bad:#dc2626;
       --lpp-chip:#eef2ff;
-
       --lpp-focus: 0 0 0 4px rgba(37,99,235,.18);
     }
 
@@ -382,8 +381,8 @@
       <span class="gate-badge">Acesso liberado automaticamente após pagamento</span>
 
       <div class="gate-actions">
-        <a class="gate-btn gate-primary" id="btnGoLogin" href="login.html?mode=login">Entrar</a>
-        <a class="gate-btn gate-secondary" id="btnGoSignup" href="login.html?mode=signup">Criar conta</a>
+        <a class="gate-btn gate-primary" href="login.html?mode=login">Entrar</a>
+        <a class="gate-btn gate-secondary" href="login.html?mode=signup">Criar conta</a>
         <button class="gate-btn gate-pay" id="btnPay" type="button">Assinar Premium (R$ 2,00)</button>
       </div>
 
@@ -680,16 +679,16 @@
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-    // ====== CONFIG (mantive seus dados) ======
+    // ====== CONFIG ======
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
 
-    // ✅ GitHub Pages base do seu site
+    // GitHub Pages /lesa/
     const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
 
-    // ✅ TROQUE para o seu domínio da Vercel (onde estão seus endpoints /api)
-    const VERCEL_BASE = "https://SEU-PROJETO.vercel.app/";
-    // ========================================
+    // ✅ Sua Vercel
+    const VERCEL_BASE = "https://lesa-dusky.vercel.app/";
+    // =====================
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -701,21 +700,20 @@
 
     function hideBoot(){ if (bootOverlay) bootOverlay.style.display = "none"; }
     function showGate(msg){
-      if (premiumContent) premiumContent.style.display = "none";
-      if (premiumGate) premiumGate.style.display = "";
-      if (gateMsg) gateMsg.textContent = msg || "";
+      premiumContent.style.display = "none";
+      premiumGate.style.display = "";
+      gateMsg.textContent = msg || "";
       hideBoot();
     }
     function showPremium(){
-      if (premiumGate) premiumGate.style.display = "none";
-      if (premiumContent) premiumContent.style.display = "";
+      premiumGate.style.display = "none";
+      premiumContent.style.display = "";
       hideBoot();
     }
 
     async function checkPremium() {
       const { data: { session } } = await supabase.auth.getSession();
 
-      // Não logou → mostra paywall com botão de login/cadastro
       if (!session?.user) {
         showGate("Faça login para acessar este conteúdo Premium.");
         return { session: null, premium: false };
@@ -729,7 +727,7 @@
 
       if (error || !profile) {
         console.error("Erro ao ler profiles:", error);
-        showGate("Não foi possível validar seu acesso (perfil não encontrado ou bloqueio de RLS).");
+        showGate("Não foi possível validar seu acesso (perfil não encontrado ou RLS).");
         return { session, premium: false };
       }
 
@@ -738,12 +736,10 @@
         return { session, premium: true };
       }
 
-      // Logado, mas não premium
       showGate("Você está logada, mas ainda não é Premium. Assine por R$ 2,00 para desbloquear.");
       return { session, premium: false };
     }
 
-    // Botão de pagamento
     btnPay?.addEventListener("click", async () => {
       gateMsg.textContent = "Iniciando pagamento…";
 
@@ -766,7 +762,7 @@
         const data = await resp.json();
         if (data?.url) window.location.href = data.url;
         else {
-          gateMsg.textContent = "Falha ao iniciar o pagamento. Verifique seu endpoint na Vercel.";
+          gateMsg.textContent = "Falha ao iniciar o pagamento. Verifique o endpoint na Vercel.";
           alert("Não foi possível iniciar o pagamento.");
         }
       } catch (e) {
@@ -776,19 +772,18 @@
       }
     });
 
-    // Se voltar do checkout com ?paid=1, tenta revalidar (webhook pode levar alguns segundos)
+    // Se voltar do checkout com ?paid=1, tenta revalidar
     async function maybeRecheckAfterPay() {
       const params = new URLSearchParams(window.location.search);
       const paid = params.get("paid");
       if (paid === "1") {
-        if (gateMsg) gateMsg.textContent = "Pagamento identificado. Atualizando acesso…";
-        // tenta algumas vezes (sem prometer background — é no carregamento da página)
+        gateMsg.textContent = "Pagamento identificado. Atualizando acesso…";
         for (let i = 0; i < 6; i++) {
           const res = await checkPremium();
           if (res.premium) return;
           await new Promise(r => setTimeout(r, 1200));
         }
-        if (gateMsg) gateMsg.textContent = "Se o pagamento foi aprovado, aguarde alguns instantes e recarregue a página.";
+        gateMsg.textContent = "Se o pagamento foi aprovado, aguarde alguns instantes e recarregue a página.";
       } else {
         await checkPremium();
       }
@@ -796,5 +791,6 @@
 
     maybeRecheckAfterPay();
   </script>
+
 </body>
 </html>
