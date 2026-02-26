@@ -3,29 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b3d91" />
   <title>Entrar • LPP</title>
 
   <style>
     :root{
-      --bg1:#0b3d91;
-      --bg2:#0a2f73;
-      --card:#ffffff;
-      --text:#0f172a;
-      --muted:#475569;
-      --border:rgba(15,23,42,.12);
-      --shadow:0 18px 40px rgba(2,6,23,.14);
-      --shadow2:0 26px 70px rgba(2,6,23,.22);
+      --bg1:#0b3d91; --bg2:#0a2f73;
+      --card:#ffffff; --text:#0f172a; --muted:#475569;
+      --border:rgba(15,23,42,.10);
+      --shadow:0 18px 45px rgba(2,6,23,.14);
+      --shadow2:0 22px 60px rgba(2,6,23,.20);
       --radius:18px;
-      --primary:#2563eb;
-      --primary2:#1d4ed8;
-      --ok:#16a34a;
-      --warn:#f59e0b;
-      --bad:#dc2626;
+      --primary:#2563eb; --primary2:#1d4ed8;
+      --ok:#16a34a; --warn:#f59e0b; --bad:#dc2626;
+      --ring:0 0 0 4px rgba(56,130,246,.18);
       --field:#f8fafc;
-      --focus:rgba(37,99,235,.22);
       --chip:#eef2ff;
-      --wa:#16a34a;
-      --wa2:#15803d;
     }
 
     *{box-sizing:border-box}
@@ -35,472 +28,260 @@
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--text);
       background:
-        radial-gradient(1000px 520px at 20% 10%, rgba(255,255,255,.16), transparent 60%),
-        radial-gradient(900px 520px at 80% 20%, rgba(255,255,255,.12), transparent 60%),
+        radial-gradient(1000px 520px at 15% 8%, rgba(255,255,255,.16), transparent 60%),
+        radial-gradient(900px 520px at 85% 18%, rgba(255,255,255,.12), transparent 60%),
         linear-gradient(180deg, var(--bg1), var(--bg2));
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:22px 14px;
+      padding:18px 14px;
     }
 
     .wrap{
-      width:min(1040px, 100%);
+      width:min(1050px, 100%);
       display:grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap:16px;
+      grid-template-columns: 1.1fr .9fr;
+      gap:14px;
       align-items:stretch;
     }
     @media (max-width: 920px){
       .wrap{grid-template-columns:1fr}
     }
 
-    /* LEFT / HERO */
     .hero{
       border:1px solid rgba(255,255,255,.18);
-      border-radius:calc(var(--radius) + 2px);
-      padding:22px;
-      background:rgba(255,255,255,.10);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 18px 65px rgba(0,0,0,.18);
+      border-radius:var(--radius);
+      background: rgba(255,255,255,.10);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow2);
       color:#fff;
+      padding:18px;
       position:relative;
       overflow:hidden;
-      min-height: 360px;
     }
     .hero::after{
       content:"";
       position:absolute;
-      inset:-80px -120px auto auto;
-      width:380px;
-      height:380px;
-      background: radial-gradient(circle at 30% 30%, rgba(37,99,235,.60), transparent 60%);
-      transform: rotate(15deg);
+      right:-120px; top:-120px;
+      width:360px; height:360px;
+      background: radial-gradient(circle at 30% 30%, rgba(37,99,235,.55), transparent 60%);
+      transform: rotate(18deg);
+      opacity:.9;
       pointer-events:none;
-      opacity:.92;
     }
+
     .brand{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      margin-bottom:16px;
-      position:relative;
-      z-index:1;
+      display:flex; gap:10px; align-items:center;
+      margin-bottom:10px;
     }
     .logo{
-      width:44px;
-      height:44px;
+      width:44px; height:44px;
       border-radius:14px;
-      background:rgba(255,255,255,.18);
-      border:1px solid rgba(255,255,255,.20);
-      display:grid;
-      place-items:center;
-      font-weight:950;
+      display:grid; place-items:center;
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.20);
+      font-weight:1000;
       letter-spacing:.5px;
       box-shadow: 0 14px 26px rgba(0,0,0,.18);
     }
-    .brand h1{
-      font-size:18px;
-      margin:0;
-      font-weight:950;
-      letter-spacing:.2px;
-    }
-    .brand p{
-      margin:2px 0 0;
-      font-size:12px;
-      opacity:.92;
-    }
+    .brand h1{margin:0; font-size:16px; font-weight:1000}
+    .brand p{margin:2px 0 0; font-size:12px; opacity:.92}
+
     .hero h2{
       margin:10px 0 8px;
-      font-size:clamp(22px, 3.2vw, 30px);
-      font-weight:1000;
+      font-size: clamp(20px, 3.2vw, 28px);
+      font-weight:1100;
       letter-spacing:.2px;
-      position:relative;
-      z-index:1;
     }
-    .hero .sub{
+    .sub{
       margin:0;
       opacity:.92;
-      line-height:1.5;
-      max-width:56ch;
-      font-size:14px;
-      position:relative;
-      z-index:1;
+      line-height:1.55;
+      font-size: 13.5px;
+      max-width: 60ch;
     }
-    .bullets{
-      margin:16px 0 0;
-      padding:0;
-      list-style:none;
-      display:grid;
-      gap:10px;
-      position:relative;
-      z-index:1;
-    }
-    .bullets li{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.16);
-      padding:10px 12px;
-      border-radius:14px;
-      box-shadow: 0 16px 34px rgba(0,0,0,.16);
-    }
-    .dot{
-      width:10px;height:10px;border-radius:999px;
-      background:rgba(255,255,255,.88);
-      margin-top:6px;
-      flex:0 0 auto;
-    }
-    .bullets b{font-weight:950}
-    .bullets span{opacity:.92;font-size:13px;line-height:1.45}
 
-    /* RIGHT / CARD */
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
-      border:1px solid var(--border);
-      border-radius:calc(var(--radius) + 2px);
-      box-shadow: var(--shadow2);
-      padding:18px 16px;
-      position:relative;
-      overflow:hidden;
+    .pay{
+      margin-top:12px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: 0 12px 22px rgba(0,0,0,.16);
     }
-    .card::before{
-      content:"";
-      position:absolute;
-      inset:-80px -120px auto auto;
-      width:320px;
-      height:320px;
-      background: radial-gradient(circle at 30% 30%, rgba(37,99,235,.22), transparent 62%);
-      pointer-events:none;
-      transform: rotate(12deg);
+    .pay h3{margin:0 0 6px; font-size:14px; font-weight:1000}
+    .price{font-size:26px; font-weight:1200; margin:2px 0 8px}
+    .chips{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px}
+    .chip{
+      display:inline-block;
+      padding: 7px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.18);
+      color:#fff;
+      font-weight:950;
+      font-size:12px;
+    }
+    textarea{
+      width:100%;
+      min-height:68px;
+      resize:none;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.12);
+      color:#fff;
+      padding:10px;
+      outline:none;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:13px;
+    }
+    textarea:focus{ box-shadow: 0 0 0 4px rgba(255,255,255,.14); }
+
+    .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    .btn{
+      flex:1 1 180px;
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:1100;
+      border:1px solid rgba(37,99,235,.28);
+      background: linear-gradient(180deg, var(--primary), var(--primary2));
+      color:#fff;
+      transition: transform .06s ease, filter .15s ease, opacity .15s ease;
+    }
+    .btn:hover{ filter:brightness(1.03); }
+    .btn:active{ transform: translateY(1px); }
+    .btn.secondary{
+      background: rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.22);
+    }
+    .btn:disabled{opacity:.55; cursor:not-allowed; filter:none; transform:none}
+
+    .card{
+      background: linear-gradient(180deg, #fff, #fbfdff);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:16px;
     }
 
     .card h3{
       margin:0 0 6px;
       font-size:18px;
-      font-weight:1000;
-      letter-spacing:.2px;
-      position:relative;
-      z-index:1;
-    }
-    .card .hint{
-      margin:0 0 12px;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.45;
-      position:relative;
-      z-index:1;
-    }
-
-    /* PREMIUM BOX (before login) */
-    .premiumBox{
-      border:1px solid rgba(37,99,235,.18);
-      border-radius:16px;
-      padding:12px;
-      background:
-        radial-gradient(380px 180px at 20% 10%, rgba(37,99,235,.10), transparent 60%),
-        linear-gradient(180deg, #ffffff, #f7faff);
-      margin: 6px 0 14px;
-      box-shadow: 0 16px 34px rgba(2,6,23,.08);
-      position:relative;
-      z-index:1;
-    }
-    .premiumTop{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      margin-bottom:8px;
-    }
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid rgba(37,99,235,.20);
-      background:rgba(37,99,235,.10);
-      color:#1e40af;
-      font-weight:950;
-      font-size:12px;
-      white-space:nowrap;
-    }
-    .badge .spark{
-      width:8px;height:8px;border-radius:999px;background:#2563eb;
-      box-shadow: 0 0 0 6px rgba(37,99,235,.14);
-    }
-    .price{
       font-weight:1100;
-      font-size:22px;
-      color:#0b3d91;
-      letter-spacing:.2px;
-      white-space:nowrap;
+      color:#0b2b63;
     }
-    .premiumSteps{
-      margin:0;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.5;
-    }
-    .chips{ margin-top:8px; }
-    .chip{
-      display:inline-block;
-      padding:6px 10px;
-      border-radius:999px;
-      background:var(--chip);
-      border:1px solid rgba(37,99,235,.18);
-      color:#1e40af;
-      font-weight:950;
-      font-size:12px;
-      margin:0 6px 6px 0;
-    }
-    textarea{
-      width:100%;
-      margin-top:10px;
-      min-height:74px;
-      border-radius:14px;
-      border:1px solid rgba(15,23,42,.14);
-      padding:10px 10px;
-      resize:none;
-      outline:none;
-      background:#fff;
-      font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size:13px;
-      color:#0f172a;
-      box-shadow: 0 12px 22px rgba(2,6,23,.06);
-    }
-    textarea:focus{box-shadow:0 0 0 4px var(--focus)}
+    .hint{margin:0 0 10px; color:var(--muted); font-size:13px; line-height:1.45}
 
-    .pixRow{
-      display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;
-    }
-    .btnX{
-      flex: 1 1 180px;
-      padding:12px 12px;
-      border-radius:14px;
-      cursor:pointer;
-      font-weight:1000;
-      border:1px solid rgba(37,99,235,.28);
-      background:linear-gradient(180deg,#2563eb,#1d4ed8);
-      color:#fff;
-      transition: transform .06s ease, filter .15s ease, box-shadow .15s ease;
-      box-shadow: 0 14px 26px rgba(2,6,23,.10);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-    }
-    .btnX:hover{filter:brightness(1.03); box-shadow: 0 18px 36px rgba(2,6,23,.14)}
-    .btnX:active{transform:translateY(1px)}
-    .btnX.secondary{
-      background:#fff; color:#1d4ed8;
-      border-color: rgba(37,99,235,.22);
-      box-shadow:none;
-    }
-    .btnX.whatsapp{
-      background: linear-gradient(180deg, var(--wa), var(--wa2));
-      border-color: rgba(22,163,74,.35);
-    }
-    .btnX:disabled{
-      opacity:.55;
-      cursor:not-allowed;
-      filter:grayscale(.2);
-      box-shadow:none;
-    }
-
-    /* Tabs */
     .tabs{
-      display:flex;
-      gap:8px;
-      margin:10px 0 14px;
-      position:relative;
-      z-index:1;
+      display:flex; gap:8px; margin: 10px 0 12px;
     }
     .tab{
       flex:1;
-      border:1px solid var(--border);
-      background: #fff;
+      border:1px solid rgba(15,23,42,.12);
+      background:#fff;
       padding:10px 12px;
       border-radius:999px;
       cursor:pointer;
-      font-weight:950;
+      font-weight:1100;
       font-size:13px;
-      color:var(--muted);
-      box-shadow: 0 10px 18px rgba(2,6,23,.05);
+      color: var(--muted);
     }
-    .tab[aria-selected="true"]{
+    .tab.active{
       border-color: rgba(37,99,235,.35);
       background: rgba(37,99,235,.08);
-      color: var(--primary2);
-      box-shadow: 0 16px 28px rgba(2,6,23,.08);
+      color: #1d4ed8;
     }
 
-    label{
-      display:block;
-      font-size:12px;
-      color:var(--muted);
-      margin:10px 0 6px;
-      font-weight:850;
-      position:relative;
-      z-index:1;
-    }
-    .fieldWrap{ position:relative; z-index:1; }
+    label{display:block; margin:10px 0 6px; font-size:12px; font-weight:1000; color:var(--muted)}
     .field{
       width:100%;
-      padding:12px 44px 12px 12px;
+      padding:12px 12px;
       border-radius:14px;
-      border:1px solid rgba(15,23,42,.14);
-      background:var(--field);
+      border:1px solid rgba(15,23,42,.12);
+      background: var(--field);
       outline:none;
-      font-size:14px;
-      transition: box-shadow .15s, border-color .15s, background .15s;
-      box-shadow: 0 12px 22px rgba(2,6,23,.06);
+      font-size:15px;
+      transition: box-shadow .14s ease, border-color .14s ease, background .14s ease;
     }
     .field:focus{
-      border-color: rgba(37,99,235,.45);
-      box-shadow: 0 0 0 5px var(--focus);
       background:#fff;
+      border-color: rgba(37,99,235,.45);
+      box-shadow: var(--ring);
     }
-    .togglePass{
+
+    .passwrap{ position:relative; }
+    .eye{
       position:absolute;
-      right:10px;
-      top:50%;
-      transform:translateY(-50%);
+      right:10px; top:50%;
+      transform: translateY(-50%);
       border:none;
       background:transparent;
       cursor:pointer;
-      font-size:16px;
-      opacity:.78;
+      font-size:18px;
+      opacity:.75;
       padding:6px;
-      border-radius:10px;
     }
-    .togglePass:hover{ opacity:1; background:rgba(2,6,23,.05); }
+    .eye:active{ transform: translateY(-50%) scale(.98); }
 
-    .row{
-      display:flex;
+    .row2{
+      display:flex; align-items:center; justify-content:space-between;
       gap:10px;
-      align-items:center;
-      justify-content:space-between;
       margin-top:10px;
-      position:relative;
-      z-index:1;
+      flex-wrap:wrap;
     }
-    .small{
-      font-size:12px;
-      color:var(--muted);
-      margin:0;
-    }
+    .small{font-size:12px; color:var(--muted); margin:0}
     .link{
-      border:none;
-      background:none;
-      padding:0;
+      border:none; background:none; padding:0;
       cursor:pointer;
-      color:var(--primary2);
-      font-weight:950;
+      color:#1d4ed8;
+      font-weight:1100;
       font-size:12px;
       text-decoration:underline;
     }
 
-    .btn{
-      width:100%;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid rgba(37,99,235,.35);
-      background: linear-gradient(180deg, var(--primary), var(--primary2));
-      color:#fff;
-      font-weight:1000;
-      letter-spacing:.2px;
-      cursor:pointer;
-      margin-top:12px;
-      transition: transform .06s ease, filter .15s ease, box-shadow .15s ease;
-      box-shadow: 0 16px 30px rgba(2,6,23,.12);
-      position:relative;
-      z-index:1;
-    }
-    .btn:hover{filter:brightness(1.03); box-shadow: 0 20px 42px rgba(2,6,23,.16)}
-    .btn:active{transform:translateY(1px)}
-    .btn.secondary{
-      background:#fff;
-      color:var(--primary2);
-      border-color: rgba(37,99,235,.25);
-      box-shadow:none;
-    }
-
     .msg{
-      margin:12px 0 0;
+      margin-top:12px;
       padding:10px 12px;
       border-radius:14px;
-      border:1px solid var(--border);
+      border:1px solid rgba(15,23,42,.12);
       background:#fff;
       color:var(--muted);
       font-size:13px;
       white-space:pre-wrap;
       display:none;
-      position:relative;
-      z-index:1;
-      box-shadow: 0 14px 26px rgba(2,6,23,.06);
     }
     .msg.show{display:block}
     .msg.ok{border-color:rgba(22,163,74,.30); background:rgba(22,163,74,.08); color:#14532d}
     .msg.warn{border-color:rgba(245,158,11,.35); background:rgba(245,158,11,.10); color:#7c2d12}
     .msg.bad{border-color:rgba(220,38,38,.30); background:rgba(220,38,38,.08); color:#7f1d1d}
 
-    .footer{
-      margin-top:14px;
-      font-size:12px;
-      color:var(--muted);
-      text-align:center;
-      position:relative;
-      z-index:1;
-    }
-
-    /* Small helper */
-    code{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace}
+    .footer{margin-top:14px; font-size:12px; color:var(--muted); text-align:center}
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <!-- Lado esquerdo -->
-    <section class="hero" aria-label="Informações do projeto">
+    <!-- ESQUERDA: Premium + Pix -->
+    <section class="hero" aria-label="Premium e pagamento">
       <div class="brand">
         <div class="logo">LPP</div>
         <div>
           <h1>Lesão por Pressão</h1>
-          <p>Área restrita (conta necessária)</p>
+          <p>Projeto Integrador • Acesso Premium</p>
         </div>
       </div>
 
-      <h2>Acesso do aluno/usuário</h2>
+      <h2>Premium por R$ 2,00</h2>
       <p class="sub">
-        Visualize o Premium e o Pix antes de entrar. Após login, o sistema verifica automaticamente seu acesso.
+        Antes mesmo de entrar, você já pode ver o Pix e enviar o comprovante.
+        Depois do pagamento, a liberação é feita marcando seu perfil como <code>premium=true</code>.
       </p>
 
-      <ul class="bullets">
-        <li><span class="dot"></span><span><b>Premium R$ 2,00</b> (Pix) — acesso à Seleção de Produtos</span></li>
-        <li><span class="dot"></span><span><b>Enviar comprovante</b> pelo WhatsApp em 1 toque</span></li>
-        <li><span class="dot"></span><span><b>Recuperação de senha</b> por e-mail (Supabase)</span></li>
-      </ul>
-    </section>
-
-    <!-- Lado direito -->
-    <main class="card" aria-label="Login e cadastro">
-      <h3>Entrar</h3>
-      <p class="hint">
-        Premium disponível antes do login. Depois de entrar, se <code>premium=true</code> você vai para “Seleção de Produtos”.
-        Se não tiver Premium, você volta para a página inicial.
-      </p>
-
-      <!-- ✅ Premium antes do login -->
-      <section class="premiumBox" aria-label="Acesso Premium via Pix">
-        <div class="premiumTop">
-          <span class="badge"><span class="spark"></span> Acesso Premium</span>
-          <span class="price">R$ 2,00</span>
-        </div>
-
-        <p class="premiumSteps">
-          <b>1)</b> Copie a chave Pix e pague no seu app bancário.<br>
-          <b>2)</b> Toque em <b>“Enviar comprovante”</b> e mande no WhatsApp.<br>
-          <b>3)</b> Faça login para o sistema verificar seu acesso.
-        </p>
+      <div class="pay">
+        <h3>Pagamento via Pix</h3>
+        <div class="price">R$ 2,00</div>
 
         <div class="chips">
           <span class="chip">Pix apenas</span>
@@ -508,35 +289,40 @@
           <span class="chip">Confirmação por WhatsApp</span>
         </div>
 
-        <textarea id="pixPayload" readonly>28d39758-0fe0-47f1-9c7c-9cb6e032c5cf</textarea>
+        <textarea id="pixPayload" readonly>28d39758-0fe0-47f1-9c7c-9cb6e032c5cf
+Referência: PREMIUM-LPP
+Valor: 2,00</textarea>
 
-        <div class="pixRow">
-          <button id="btnCopyPix" class="btnX" type="button">📋 Copiar Pix</button>
-          <button id="btnOpenPremium" class="btnX secondary" type="button">⭐ Ver página Premium</button>
+        <div class="row">
+          <button class="btn" id="btnCopyPix" type="button">📋 Copiar Pix</button>
+          <button class="btn secondary" id="btnGoPremium" type="button">⭐ Ver página Premium</button>
+          <button class="btn secondary" id="btnWhatsapp" type="button">💬 Enviar comprovante no WhatsApp</button>
         </div>
+      </div>
+    </section>
 
-        <div class="pixRow">
-          <button id="btnWhatsapp" class="btnX whatsapp" type="button" disabled title="Copie o Pix primeiro">
-            💬 Enviar comprovante no WhatsApp
-          </button>
-        </div>
-      </section>
+    <!-- DIREITA: Login / Signup -->
+    <main class="card" aria-label="Login e cadastro">
+      <h3 id="title">Entrar</h3>
+      <p class="hint" id="hint">
+        Faça login ou crie uma conta. Para reduzir erro de segurança, aguarde alguns segundos entre tentativas.
+      </p>
 
-      <div class="tabs" role="tablist" aria-label="Alternar modo">
-        <button class="tab" id="tabLogin" role="tab" aria-selected="true" type="button">Login</button>
-        <button class="tab" id="tabSignup" role="tab" aria-selected="false" type="button">Criar conta</button>
+      <div class="tabs" role="tablist">
+        <button class="tab active" id="tabLogin" type="button">Login</button>
+        <button class="tab" id="tabSignup" type="button">Criar conta</button>
       </div>
 
       <label for="email">Email</label>
       <input id="email" class="field" type="email" placeholder="seuemail@exemplo.com" autocomplete="email" />
 
       <label for="password">Senha</label>
-      <div class="fieldWrap">
+      <div class="passwrap">
         <input id="password" class="field" type="password" placeholder="mín. 6 caracteres" autocomplete="current-password" />
-        <button id="btnTogglePass" class="togglePass" type="button" aria-label="Mostrar senha">👁️</button>
+        <button class="eye" id="btnEye" type="button" aria-label="Mostrar senha">👁️</button>
       </div>
 
-      <div class="row">
+      <div class="row2">
         <p class="small" id="modeHint">Modo: Login</p>
         <button class="link" id="btnForgot" type="button">Esqueci minha senha</button>
       </div>
@@ -545,7 +331,6 @@
       <button class="btn secondary" id="btnGoHome" type="button">Voltar ao site</button>
 
       <div class="msg" id="msg" role="status" aria-live="polite"></div>
-
       <div class="footer">© 2026 • Projeto Integrador</div>
     </main>
   </div>
@@ -553,22 +338,21 @@
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-    // ====== CONFIG ======
+    // ===== CONFIG =====
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
 
     const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
     const EMAIL_REDIRECT_TO = SITE_BASE + "login.html";
-    const PREMIUM_PAGE = SITE_BASE + "premium.html";
-    const AFTER_PREMIUM_REDIRECT = SITE_BASE + "selecao-produtos.html";
-    const AFTER_NOT_PREMIUM_REDIRECT = SITE_BASE + "index.html";
+    const AFTER_LOGIN_PREMIUM_REDIRECT = SITE_BASE + "selecao-produtos.html";
 
-    // ✅ WhatsApp (DDI+DDD+número)
-    const WHATSAPP_NUMBER = "5515988119989";
+    // ✅ Regra solicitada:
+    // logou e NÃO tem premium => vai pro index
+    const GO_HOME_IF_NOT_PREMIUM = true;
 
-    // ====== Pix ======
-    const PIX_KEY = "28d39758-0fe0-47f1-9c7c-9cb6e032c5cf";
-    // =====================
+    // WhatsApp comprovante:
+    const WHATSAPP_PHONE = "5515988119989";
+    // ===================
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -577,90 +361,171 @@
 
     function setMsg(text, type="warn"){
       msgBox.textContent = text;
-      msgBox.className = "msg show " + (type || "warn");
+      msgBox.className = "msg show " + type;
     }
     function clearMsg(){
       msgBox.textContent = "";
       msgBox.className = "msg";
     }
 
-    // ===== Premium (antes do login): botões =====
-    const btnWhatsapp = el("btnWhatsapp");
+    // Anti-duplo-clique + cooldown
+    let busy = false;
+    let cooldownUntil = 0;
 
-    async function copyPix(){
+    function setBusy(on){
+      busy = on;
+      el("btnPrimary").disabled = on;
+      el("btnForgot").disabled = on;
+      el("tabLogin").disabled = on;
+      el("tabSignup").disabled = on;
+    }
+
+    function inCooldown(){
+      return Date.now() < cooldownUntil;
+    }
+
+    function startCooldown(ms=4200){
+      cooldownUntil = Date.now() + ms;
+    }
+
+    // Mostrar/ocultar senha
+    el("btnEye").addEventListener("click", () => {
+      const p = el("password");
+      const isPass = p.type === "password";
+      p.type = isPass ? "text" : "password";
+      el("btnEye").textContent = isPass ? "🙈" : "👁️";
+      el("btnEye").setAttribute("aria-label", isPass ? "Ocultar senha" : "Mostrar senha");
+    });
+
+    // Premium / Pix (lado esquerdo)
+    el("btnCopyPix").addEventListener("click", async () => {
       const val = el("pixPayload").value.trim();
       try{
         await navigator.clipboard.writeText(val);
-        setMsg("Pix copiado ✅\nCole no app do banco e pague R$ 2,00.\nAgora você pode enviar o comprovante no WhatsApp.", "ok");
-
-        // libera WhatsApp depois que copiar
-        btnWhatsapp.disabled = false;
-        btnWhatsapp.removeAttribute("title");
+        setMsg("Pix copiado ✅ Cole no app do banco e faça o pagamento.", "ok");
       }catch{
-        setMsg("Não foi possível copiar automaticamente.\nSelecione o Pix e copie manualmente.", "warn");
+        setMsg("Não consegui copiar automaticamente. Selecione o Pix e copie manualmente.", "warn");
       }
-    }
+    });
 
-    el("btnCopyPix").addEventListener("click", copyPix);
-    el("btnOpenPremium").addEventListener("click", () => window.location.href = PREMIUM_PAGE);
+    el("btnGoPremium").addEventListener("click", () => {
+      window.location.href = SITE_BASE + "premium.html";
+    });
 
-    btnWhatsapp.addEventListener("click", () => {
-      const email = (el("email").value || "").trim();
-      const uidHint = email ? `Email: ${email}` : "Email: (não informado)";
-      const mensagem = encodeURIComponent(
-        `Olá! Acabei de realizar o pagamento do Premium LPP (R$ 2,00).\n\nPix: ${PIX_KEY}\n${uidHint}\n\nVou enviar o comprovante nesta conversa.`
+    el("btnWhatsapp").addEventListener("click", async () => {
+      const { data } = await supabase.auth.getUser();
+      const email = data?.user?.email || "(sem login)";
+      const text = encodeURIComponent(
+        "Olá! Segue comprovante do Pix (Premium LPP). Meu e-mail de login é: " + email +
+        "\n\nChave Pix: 28d39758-0fe0-47f1-9c7c-9cb6e032c5cf\nValor: R$ 2,00\nReferência: PREMIUM-LPP"
       );
-      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${mensagem}`, "_blank");
+      window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${text}`, "_blank");
     });
 
-    // ===== Mostrar/ocultar senha =====
-    const btnToggle = el("btnTogglePass");
-    btnToggle.addEventListener("click", () => {
-      const pass = el("password");
-      const isPass = pass.type === "password";
-      pass.type = isPass ? "text" : "password";
-      btnToggle.textContent = isPass ? "🙈" : "👁️";
-      btnToggle.setAttribute("aria-label", isPass ? "Ocultar senha" : "Mostrar senha");
-    });
-
-    // ===== Tabs login/signup =====
+    // Tabs (modo)
     let mode = "login"; // "login" | "signup"
-    const tabLogin = el("tabLogin");
-    const tabSignup = el("tabSignup");
-    const btnPrimary = el("btnPrimary");
-    const modeHint = el("modeHint");
-    const btnForgot = el("btnForgot");
 
     function setMode(next){
       mode = next;
       clearMsg();
 
       const isLogin = mode === "login";
-      tabLogin.setAttribute("aria-selected", String(isLogin));
-      tabSignup.setAttribute("aria-selected", String(!isLogin));
+      el("tabLogin").classList.toggle("active", isLogin);
+      el("tabSignup").classList.toggle("active", !isLogin);
+
+      el("title").textContent = isLogin ? "Entrar" : "Criar conta";
+      el("modeHint").textContent = "Modo: " + (isLogin ? "Login" : "Criar conta");
+      el("btnPrimary").textContent = isLogin ? "Entrar" : "Criar conta";
 
       el("password").setAttribute("autocomplete", isLogin ? "current-password" : "new-password");
-
-      modeHint.textContent = "Modo: " + (isLogin ? "Login" : "Criar conta");
-      btnPrimary.textContent = isLogin ? "Entrar" : "Criar conta";
     }
 
-    tabLogin.addEventListener("click", () => setMode("login"));
-    tabSignup.addEventListener("click", () => setMode("signup"));
+    el("tabLogin").addEventListener("click", () => setMode("login"));
+    el("tabSignup").addEventListener("click", () => setMode("signup"));
 
-    el("btnGoHome").addEventListener("click", () => {
-      window.location.href = SITE_BASE + "index.html";
+    // Voltar home
+    el("btnGoHome").addEventListener("click", () => window.location.href = SITE_BASE + "index.html");
+
+    // Esqueci senha
+    el("btnForgot").addEventListener("click", async () => {
+      clearMsg();
+      const email = el("email").value.trim();
+      if (!email) return setMsg("Digite seu email primeiro para receber o link de recuperação.", "bad");
+      if (busy) return;
+
+      if (inCooldown()){
+        return setMsg("Aguarde alguns segundos antes de tentar novamente (proteção do servidor).", "warn");
+      }
+
+      setBusy(true);
+      setMsg("Enviando link de recuperação...", "warn");
+
+      const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: EMAIL_REDIRECT_TO });
+
+      setBusy(false);
+      startCooldown();
+
+      if (error) return setMsg("Erro ao enviar recuperação:\n" + error.message, "bad");
+      setMsg("Pronto ✅ Enviamos um link de recuperação para seu email.", "ok");
     });
 
-    async function isUserPremium(uid){
+    async function ensureProfileRow(uid){
+      // tenta ler
       const { data, error } = await supabase
         .from("profiles")
         .select("premium")
         .eq("id", uid)
-        .single();
+        .maybeSingle();
 
-      if (error) throw new Error(error.message);
-      return !!data?.premium;
+      // Se deu erro de RLS/estrutura, devolve para tratar
+      if (error && !data) return { premium: null, error };
+
+      // Se não tem linha, cria (precisa da policy INSERT própria)
+      if (!data){
+        const ins = await supabase.from("profiles").insert({ id: uid, premium: false });
+        if (ins.error) return { premium: null, error: ins.error };
+
+        // relê
+        const reread = await supabase
+          .from("profiles")
+          .select("premium")
+          .eq("id", uid)
+          .single();
+
+        if (reread.error) return { premium: null, error: reread.error };
+        return { premium: !!reread.data?.premium, error: null };
+      }
+
+      return { premium: !!data.premium, error: null };
+    }
+
+    async function checkPremiumAndRedirect(){
+      // Timeout para NÃO ficar infinito
+      const hardTimeoutMs = 8000;
+
+      const timer = new Promise((_, rej) =>
+        setTimeout(() => rej(new Error("Timeout ao verificar Premium (8s).")), hardTimeoutMs)
+      );
+
+      const task = (async () => {
+        const { data: u, error: uerr } = await supabase.auth.getUser();
+        if (uerr) throw uerr;
+        if (!u?.user) throw new Error("Sessão não encontrada após login.");
+
+        const uid = u.user.id;
+        const prof = await ensureProfileRow(uid);
+        if (prof.error) throw prof.error;
+
+        if (prof.premium){
+          setMsg("Premium ✅ Redirecionando…", "ok");
+          window.location.href = AFTER_LOGIN_PREMIUM_REDIRECT;
+        } else {
+          setMsg("Login ok, porém sem Premium. Indo para o início…", "warn");
+          if (GO_HOME_IF_NOT_PREMIUM) window.location.href = SITE_BASE + "index.html";
+        }
+      })();
+
+      return Promise.race([task, timer]);
     }
 
     async function handleLogin(email, password){
@@ -668,27 +533,15 @@
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) return setMsg("Erro no login:\n" + error.message, "bad");
 
-      setMsg("Login realizado. Verificando Premium…", "warn");
-
-      const { data: userRes, error: userErr } = await supabase.auth.getUser();
-      if (userErr || !userRes?.user) {
-        setMsg("Login ok, mas falha ao ler usuário.\nVoltando para início.", "warn");
-        window.location.href = AFTER_NOT_PREMIUM_REDIRECT;
-        return;
-      }
-
+      setMsg("Login realizado. Verificando Premium...", "warn");
       try{
-        const premium = await isUserPremium(userRes.user.id);
-        if (premium) {
-          setMsg("Premium ✅ Redirecionando…", "ok");
-          window.location.href = AFTER_PREMIUM_REDIRECT;
-        } else {
-          setMsg("Conta sem Premium. Indo para a página inicial…", "warn");
-          window.location.href = AFTER_NOT_PREMIUM_REDIRECT;
-        }
-      }catch(err){
-        setMsg("Não consegui consultar Premium:\n" + err.message + "\n\nIndo para a página inicial.", "warn");
-        window.location.href = AFTER_NOT_PREMIUM_REDIRECT;
+        await checkPremiumAndRedirect();
+      }catch(e){
+        setMsg(
+          "Login realizado, mas houve falha ao verificar Premium.\n" +
+          "Causa provável: tabela profiles/trigger/RLS.\n\nDetalhe:\n" + (e?.message || e),
+          "bad"
+        );
       }
     }
 
@@ -701,53 +554,48 @@
         options: { emailRedirectTo: EMAIL_REDIRECT_TO }
       });
 
-      if (error) return setMsg("Erro ao criar conta:\n" + error.message, "bad");
+      if (error){
+        // ✅ mensagem mais amigável para o rate-limit 4s
+        const msg = String(error.message || "");
+        if (msg.toLowerCase().includes("only request this after")){
+          return setMsg("Aguarde ~4 segundos e tente novamente (proteção do servidor).", "warn");
+        }
+        return setMsg("Erro ao criar conta:\n" + error.message, "bad");
+      }
 
       setMsg(
-        "Conta criada!\n\n1) Verifique seu email (e spam).\n2) Clique no link de confirmação.\n3) Depois volte e faça login.",
+        "Conta criada ✅\n\n1) Verifique seu email (e spam).\n2) Clique no link de confirmação.\n3) Depois volte e faça login.",
         "ok"
       );
     }
 
-    btnPrimary.addEventListener("click", async () => {
+    el("btnPrimary").addEventListener("click", async () => {
       clearMsg();
+
+      if (busy) return;
+      if (inCooldown()) return setMsg("Aguarde alguns segundos antes de tentar novamente.", "warn");
+
       const email = el("email").value.trim();
       const password = el("password").value;
 
       if (!email) return setMsg("Informe um email válido.", "bad");
       if (!password || password.length < 6) return setMsg("A senha deve ter pelo menos 6 caracteres.", "bad");
 
-      if (mode === "login") return handleLogin(email, password);
-      return handleSignup(email, password);
+      setBusy(true);
+
+      try{
+        if (mode === "login") await handleLogin(email, password);
+        else await handleSignup(email, password);
+      } finally {
+        setBusy(false);
+        startCooldown(); // evita erro dos 4s por clique repetido
+      }
     });
 
-    btnForgot.addEventListener("click", async () => {
-      clearMsg();
-      const email = el("email").value.trim();
-      if (!email) return setMsg("Digite seu email primeiro para receber o link de recuperação.", "bad");
-
-      setMsg("Enviando link de recuperação...", "warn");
-
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: EMAIL_REDIRECT_TO
-      });
-
-      if (error) return setMsg("Erro ao enviar recuperação:\n" + error.message, "bad");
-
-      setMsg(
-        "Pronto! Enviamos um link de recuperação para seu email.\n\nAbra o email e siga as instruções.",
-        "ok"
-      );
-    });
-
-    // Se veio ?mode=signup, abre direto
-    const params = new URLSearchParams(window.location.search);
-    const urlMode = params.get("mode");
-    if (urlMode === "signup") setMode("signup");
-    else setMode("login");
-
-    // deixa a chave no textarea garantida
-    el("pixPayload").value = PIX_KEY;
+    // Se vier ?mode=signup na URL
+    const params = new URLSearchParams(location.search);
+    const initial = params.get("mode");
+    setMode(initial === "signup" ? "signup" : "login");
 
     setMsg("Pronto. Preencha email e senha.", "warn");
   </script>
