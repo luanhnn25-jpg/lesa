@@ -1,719 +1,327 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#0b3d91" />
-  <title>Lesão por Pressão — Projeto Integrador</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>LPP • Plataforma Educacional</title>
 
-  <!-- PWA (se você já tem manifest/icons, mantenha) -->
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
-  <link rel="apple-touch-icon" href="icons/icon-192.png" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
+<link rel="manifest" href="manifest.webmanifest"/>
 
-  <style>
-    :root{
-      --blue-900:#0b3d91;
-      --blue-800:#0a2f73;
-      --bg:#f4f6f9;
-      --card:#ffffff;
-      --text:#0f172a;
-      --muted:#475569;
-      --border:rgba(15,23,42,.10);
-      --shadow:0 12px 30px rgba(2,6,23,.10);
-      --shadow2:0 18px 45px rgba(2,6,23,.16);
-      --radius:18px;
-      --accent:#2563eb;
+<style>
+:root{
+  --primary:#0b3d91;
+  --primary2:#0a2f73;
+  --premium:#16a34a;
+  --bg:#eef2f7;
+  --card:#ffffff;
+  --text:#0f172a;
+  --muted:#64748b;
+  --radius:20px;
+  --shadow:0 20px 45px rgba(2,6,23,.12);
+  --transition:.25s cubic-bezier(.4,0,.2,1);
+}
 
-      --ok:#16a34a;
-      --warn:#f59e0b;
-      --bad:#dc2626;
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
 
-      --chip:#eef2ff;
-      --ring: 0 0 0 4px rgba(56,130,246,.18);
-    }
+/* HEADER */
+.header{
+  background:linear-gradient(180deg,var(--primary),#0b4ab1);
+  color:#fff;
+  padding:30px 20px;
+  text-align:center;
+}
+.header h1{margin:0;font-size:32px}
+.header p{opacity:.9;margin:6px 0 0}
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      background:
-        radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.14), transparent 55%),
-        radial-gradient(900px 500px at 90% 10%, rgba(11,61,145,.12), transparent 55%),
-        var(--bg);
-      color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      line-height:1.55;
-    }
+/* NAV */
+.nav{
+  background:var(--primary2);
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+.nav-inner{
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px;
+  gap:15px;
+  flex-wrap:wrap;
+}
 
-    /* =========================
-       TOP HEADER (brand + user)
-       ========================= */
-    .top{
-      background: linear-gradient(180deg, var(--blue-900), #0b4ab1);
-      color:#fff;
-      padding: 18px 14px;
-      position: sticky;
-      top:0;
-      z-index: 80;
-      box-shadow: 0 12px 24px rgba(2,6,23,.12);
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      overflow:hidden;
-    }
-    .top::after{
-      content:"";
-      position:absolute;
-      inset:-60px -180px auto -180px;
-      height: 170px;
-      background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.18), transparent 60%);
-      transform: rotate(-2deg);
-      pointer-events:none;
-    }
-    .top-inner{
-      max-width:1100px;
-      margin:0 auto;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      position:relative;
-      z-index:1;
-      flex-wrap:wrap; /* ✅ evita “tampar” em telas menores */
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width: 260px;
-      flex: 1 1 420px;
-    }
-    .logo{
-      width:44px;height:44px;border-radius:14px;
-      display:grid;place-items:center;
-      font-weight: 950;
-      letter-spacing:.5px;
-      background: rgba(255,255,255,.14);
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow: 0 14px 28px rgba(2,6,23,.18);
-      flex:0 0 auto;
-    }
-    .brand h1{
-      margin:0;
-      font-size: clamp(18px, 2.2vw, 34px);
-      font-weight: 1000;
-      letter-spacing:.2px;
-      line-height:1.05;
-    }
-    .brand p{
-      margin:6px 0 0;
-      font-size: 13px;
-      opacity:.92;
-    }
+.nav-links{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.nav-links a{
+  color:#fff;
+  text-decoration:none;
+  padding:8px 14px;
+  border-radius:999px;
+  font-weight:700;
+  transition:var(--transition);
+}
+.nav-links a:hover{
+  background:rgba(255,255,255,.15);
+}
 
-    .top-actions{
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      gap:10px;
-      flex: 0 1 520px;
-      margin-left:auto;
-    }
+.user-area{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
 
-    .install-btn{
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.12);
-      color:#fff;
-      font-weight: 950;
-      border-radius: 999px;
-      padding:10px 14px;
-      cursor:pointer;
-      box-shadow: 0 14px 28px rgba(2,6,23,.18);
-      transition: transform .12s ease, background .12s ease;
-      white-space:nowrap;
-    }
-    .install-btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.14); }
-    .install-btn:focus-visible{ outline:none; box-shadow: var(--ring); }
+.badge-premium{
+  background:var(--premium);
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+  display:none;
+}
 
-    /* Usuário */
-    .user-pill{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.10);
-      box-shadow: 0 14px 28px rgba(2,6,23,.18);
-      cursor:pointer;
-      user-select:none;
-      max-width: 360px;
-      min-width: 0;
-      position:relative;
-      transition: transform .12s ease, background .12s ease;
-      white-space:nowrap;
-    }
-    .user-pill:hover{ transform: translateY(-1px); background: rgba(255,255,255,.12); }
-    .user-ico{
-      width:28px;height:28px;border-radius:999px;
-      display:grid;place-items:center;
-      background: rgba(255,255,255,.16);
-      border:1px solid rgba(255,255,255,.18);
-      flex:0 0 auto;
-    }
-    .user-text{
-      min-width:0;
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-      line-height:1.1;
-      max-width: 240px;
-    }
-    .user-hello{
-      font-size:12px;
-      opacity:.92;
-      font-weight:800;
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:4px 8px;
-      border-radius:999px;
-      font-size:11px;
-      font-weight:950;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.10);
-      width: fit-content;
-    }
-    .badge.premium{
-      border-color: rgba(22,163,74,.35);
-      background: rgba(22,163,74,.16);
-    }
-    .badge.free{
-      border-color: rgba(245,158,11,.35);
-      background: rgba(245,158,11,.16);
-    }
-    .user-email{
-      font-size:12px;
-      font-weight:900;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      max-width: 240px;
-      opacity:.96;
-    }
-    .chev{ margin-left:6px; opacity:.9; font-weight:900; flex:0 0 auto; }
+.user-btn{
+  background:rgba(255,255,255,.15);
+  padding:8px 14px;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:700;
+  color:#fff;
+}
 
-    .user-menu{
-      position:absolute;
-      right:0;
-      top: calc(100% + 10px);
-      width: 260px;
-      background:#0b2f73;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius: 16px;
-      box-shadow: 0 20px 45px rgba(2,6,23,.30);
-      padding:8px;
-      display:none;
-      z-index: 999;
-      transform-origin: top right;
-      animation: popMenu .12s ease both;
-    }
-    @keyframes popMenu{ from{opacity:0; transform: translateY(-6px) scale(.98);} to{opacity:1; transform: translateY(0) scale(1);} }
-    .user-menu.open{ display:block; }
-    .user-menu a, .user-menu button{
-      width:100%;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 10px;
-      border-radius: 12px;
-      border:1px solid transparent;
-      background: transparent;
-      color:#eaf2ff;
-      cursor:pointer;
-      font-weight:900;
-      text-decoration:none;
-      font-size:14px;
-      text-align:left;
-    }
-    .user-menu a:hover, .user-menu button:hover{
-      background: rgba(255,255,255,.10);
-      border-color: rgba(255,255,255,.10);
-    }
-    .user-menu .sep{
-      height:1px;
-      background: rgba(255,255,255,.14);
-      margin:6px 4px;
-    }
-    .user-note{
-      padding:10px 10px;
-      border-radius:12px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      font-size:12px;
-      color: rgba(234,242,255,.92);
-      line-height:1.35;
-      margin:6px 4px 8px;
-    }
+/* MAIN */
+.main{
+  max-width:1200px;
+  margin:40px auto;
+  padding:0 20px;
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:30px;
+}
 
-    /* =========================
-       NAV (SEPARADO DO USUÁRIO)
-       ========================= */
-    .nav{
-      background: var(--blue-800);
-      border-bottom:1px solid rgba(255,255,255,.10);
-      position: sticky;
-      top: 86px; /* ✅ fica abaixo do topo */
-      z-index: 70;
-      box-shadow: 0 10px 20px rgba(2,6,23,.10);
-    }
-    .nav-inner{
-      max-width:1100px;
-      margin:0 auto;
-      padding:10px 10px 12px;
-    }
-    .menu{
-      display:flex;
-      gap:10px;
-      overflow-x:auto;
-      -webkit-overflow-scrolling:touch;
-      scrollbar-width:none;
-      padding-bottom:6px;
-    }
-    .menu::-webkit-scrollbar{ display:none; }
-    .menu a{
-      flex:0 0 auto;
-      white-space:nowrap;
-      color:#fff;
-      text-decoration:none;
-      font-weight:850;
-      font-size:14px;
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.10);
-      transition: transform .14s ease, background .14s ease, box-shadow .14s ease, border-color .14s ease;
-      outline:none;
-    }
-    .menu a:hover{
-      background:rgba(255,255,255,.16);
-      transform: translateY(-1px);
-      box-shadow: 0 12px 20px rgba(2,6,23,.18);
-      border-color: rgba(255,255,255,.16);
-    }
-    .menu a:focus-visible{ box-shadow: var(--ring); }
-    .menu a[aria-current="page"]{
-      background:rgba(255,255,255,.22);
-      border-color:rgba(255,255,255,.28);
-      box-shadow: 0 12px 20px rgba(2,6,23,.20);
-    }
-    .menu a.premium-on{
-      background: linear-gradient(180deg, rgba(22,163,74,.20), rgba(22,163,74,.12));
-      border-color: rgba(22,163,74,.35);
-    }
+@media(max-width:900px){
+  .main{grid-template-columns:1fr;}
+}
 
-    @media (max-width: 900px){
-      .nav{ top: 116px; } /* topo fica mais alto quando quebra linha */
-      .top-actions{ width:100%; justify-content:space-between; }
-      .user-pill{ max-width: 100%; }
-    }
+/* CARDS */
+.card{
+  background:var(--card);
+  padding:25px;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  margin-bottom:25px;
+  transition:var(--transition);
+}
+.card:hover{
+  transform:translateY(-4px);
+}
 
-    /* =========================
-       MAIN
-       ========================= */
-    .container{
-      max-width:1100px;
-      margin:0 auto;
-      padding:18px 12px 40px;
-    }
-    .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      box-shadow:var(--shadow);
-      border-radius:var(--radius);
-      padding:18px 16px;
-      margin:14px 0;
-      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-    }
-    .card:hover{
-      transform: translateY(-2px);
-      box-shadow: var(--shadow2);
-      border-color: rgba(11,91,211,.18);
-    }
+/* FAQ PREMIUM */
+.faq-item{
+  border:1px solid #e2e8f0;
+  border-radius:14px;
+  margin-bottom:10px;
+  overflow:hidden;
+}
+.faq-question{
+  padding:14px;
+  background:#f8fafc;
+  cursor:pointer;
+  font-weight:700;
+  transition:var(--transition);
+}
+.faq-question:hover{background:#edf2f7}
+.faq-answer{
+  max-height:0;
+  overflow:hidden;
+  padding:0 14px;
+  transition:var(--transition);
+}
+.faq-item.active .faq-answer{
+  max-height:200px;
+  padding:14px;
+}
 
-    .title{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin:0 0 10px;
-      font-size:clamp(18px, 3.2vw, 22px);
-      font-weight:950;
-      color:#0b2b63;
-      letter-spacing:.2px;
-    }
-    .bar{
-      width:6px;
-      height:22px;
-      border-radius:999px;
-      background:var(--accent);
-      flex:0 0 auto;
-      box-shadow: 0 12px 20px rgba(37,99,235,.22);
-    }
-    .lead{
-      margin:0;
-      color:var(--muted);
-      font-size:15px;
-    }
+/* SIMULADO */
+.quiz-question{
+  margin-bottom:15px;
+}
+.quiz-question button{
+  display:block;
+  width:100%;
+  margin:5px 0;
+  padding:8px;
+  border-radius:10px;
+  border:1px solid #cbd5e1;
+  background:#fff;
+  cursor:pointer;
+}
+.quiz-question button.correct{background:#dcfce7;border-color:#16a34a}
+.quiz-question button.wrong{background:#fee2e2;border-color:#dc2626}
 
-    .grid{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap:14px;
-      align-items:start;
-    }
-    @media (max-width:900px){
-      .grid{grid-template-columns:1fr}
-    }
+/* BLOQUEIO PREMIUM */
+.locked{
+  position:relative;
+}
+.locked::after{
+  content:"Conteúdo Premium";
+  position:absolute;
+  inset:0;
+  background:rgba(255,255,255,.85);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-weight:900;
+  color:#16a34a;
+  font-size:18px;
+  border-radius:var(--radius);
+}
 
-    .img-wrap{
-      border:1px solid var(--border);
-      border-radius:16px;
-      overflow:hidden;
-      background:#fff;
-    }
-    .img-wrap img{
-      width:100%;
-      display:block;
-    }
+/* SEARCH */
+.search-box{
+  margin-bottom:15px;
+}
+.search-box input{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid #cbd5e1;
+}
 
-    /* FAQ */
-    .faq{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
-    }
-    @media (max-width:900px){
-      .faq{grid-template-columns:1fr}
-    }
-    details{
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius:16px;
-      box-shadow: var(--shadow);
-      padding:12px 12px;
-    }
-    summary{
-      cursor:pointer;
-      font-weight:950;
-      color:#0b2b63;
-      list-style:none;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-    summary::-webkit-details-marker{display:none}
-    .faq-body{
-      color:var(--muted);
-      margin:10px 0 0;
-      font-size:14px;
-      line-height:1.55;
-    }
-
-    .footer{
-      text-align:center;
-      color:var(--muted);
-      font-size:12px;
-      margin-top:18px;
-      padding-top:8px;
-    }
-
-    /* mini toast */
-    .toast{
-      position: fixed;
-      right: 14px;
-      bottom: 14px;
-      z-index: 120;
-      background: #0b2f73;
-      color:#eaf2ff;
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow: 0 18px 40px rgba(2,6,23,.26);
-      border-radius: 16px;
-      padding: 10px 12px;
-      max-width: 360px;
-      display:none;
-      white-space:pre-wrap;
-      font-size:13px;
-    }
-    .toast.show{ display:block; animation: popMenu .12s ease both; }
-  </style>
+footer{
+  text-align:center;
+  padding:20px;
+  color:var(--muted);
+}
+</style>
 </head>
 
 <body>
 
-  <!-- Supabase (sem module: mais compatível no GitHub Pages) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<header class="header">
+  <h1>Lesão por Pressão</h1>
+  <p>Plataforma Educacional Profissional</p>
+</header>
 
-  <header class="top">
-    <div class="top-inner">
-      <div class="brand">
-        <div class="logo">LPP</div>
-        <div>
-          <h1>Lesão por Pressão</h1>
-          <p>Projeto Integrador • conteúdo educativo</p>
-        </div>
-      </div>
-
-      <div class="top-actions">
-        <button class="install-btn" id="btnInstall" type="button">📲 Instalar aplicativo</button>
-
-        <!-- Usuário (nunca “tampa” o menu agora porque o menu fica em outra barra) -->
-        <div class="user-pill" id="userPill" role="button" aria-haspopup="menu" aria-expanded="false" tabindex="0">
-          <div class="user-ico">👤</div>
-          <div class="user-text">
-            <div class="user-hello">
-              Olá,
-              <span class="badge free" id="userBadge">Carregando…</span>
-            </div>
-            <div class="user-email" id="userEmail">Verificando sessão…</div>
-          </div>
-          <div class="chev">▾</div>
-
-          <div class="user-menu" id="userMenu" role="menu" aria-label="Menu do usuário">
-            <div class="user-note" id="userNote">Aguarde…</div>
-            <a href="./premium.html" role="menuitem">⭐ Premium</a>
-            <div class="sep"></div>
-            <a href="./login.html" role="menuitem" id="btnLogin">Entrar</a>
-            <button id="btnLogout" type="button" role="menuitem">Sair</button>
-          </div>
-        </div>
-      </div>
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-links">
+      <a href="#">Início</a>
+      <a href="#">Tratamento</a>
+      <a href="#">Impacto Econômico</a>
+      <a href="#">Perguntas</a>
+      <a href="#">Seleção de Produtos</a>
     </div>
-  </header>
 
-  <!-- MENU (separado do usuário => não sobrepõe) -->
-  <nav class="nav" aria-label="Navegação principal">
-    <div class="nav-inner">
-      <div class="menu">
-        <a href="index.html" aria-current="page">Início</a>
-        <a href="nosso-produto.html">Nosso Produto</a>
-        <a href="tratamento.html">Tratamento</a>
-        <a href="impacto-economico.html">Impacto Econômico</a>
-        <a href="guia-simples.html">Guia Simples</a>
-        <a class="premium-on" href="selecao-produtos.html">Seleção de Produtos ⭐</a>
-        <a href="avaliacao.html">Avaliação</a>
-      </div>
+    <div class="user-area">
+      <span class="badge-premium" id="premiumBadge">Premium ✔</span>
+      <div class="user-btn" id="userBtn">Entrar</div>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <main class="container">
+<main class="main">
 
-    <!-- CONTEÚDO (você pode manter o que já tinha; aqui está um layout bonito e leve) -->
-    <section class="card">
-      <h2 class="title"><span class="bar"></span>Conceito</h2>
+<section>
+<div class="card">
+<h2>FAQ Interativo</h2>
 
-      <div class="grid">
-        <p class="lead">
-          Lesão por pressão é um dano localizado na pele e/ou no tecido subjacente, geralmente sobre uma proeminência
-          óssea, resultante de pressão prolongada ou pressão associada ao cisalhamento.
-        </p>
+<div class="search-box">
+<input type="search" id="faqSearch" placeholder="Buscar pergunta...">
+</div>
 
-        <!-- ✅ Se você já tem a imagem em algum arquivo, mantenha o src correto -->
-        <div class="img-wrap" aria-label="Ilustração de lesão por pressão">
-          <img src="img/lpp-conceito.png" alt="Ilustração de lesão por pressão (pontos de risco e exemplos de lesões)."
-               onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=&quot;padding:14px;color:#475569&quot;><b>Dica:</b> coloque sua imagem aqui em <code>img/lpp-conceito.png</code> (ou ajuste o <code>src</code> para o arquivo correto).</div>';">
-        </div>
-      </div>
-    </section>
+<div id="faqList">
 
-    <!-- ✅ FAQ (MANTIDO: caixas embaixo) -->
-    <section class="card">
-      <h2 class="title"><span class="bar"></span>Perguntas frequentes (FAQ)</h2>
+<div class="faq-item">
+<div class="faq-question">O que é lesão por pressão?</div>
+<div class="faq-answer">Dano localizado na pele causado por pressão prolongada.</div>
+</div>
 
-      <div class="faq">
-        <details>
-          <summary>Como prevenir lesão por pressão? <span>+</span></summary>
-          <div class="faq-body">
-            Medidas-chave incluem: redistribuição de pressão (reposicionamento), redução de fricção/cisalhamento,
-            manejo de umidade/incontinência, avaliação de risco (ex.: escalas) e suporte nutricional quando necessário.
-          </div>
-        </details>
+<div class="faq-item">
+<div class="faq-question">Qual a principal medida preventiva?</div>
+<div class="faq-answer">Mudança de decúbito frequente.</div>
+</div>
 
-        <details>
-          <summary>O que mais influencia a cicatrização? <span>+</span></summary>
-          <div class="faq-body">
-            Além do curativo: alívio de pressão, controle glicêmico, perfusão/oxigenação, infecção, nutrição e adesão ao plano.
-            O “produto” sozinho não resolve sem o cuidado global.
-          </div>
-        </details>
+<div class="faq-item">
+<div class="faq-question">Diabetes interfere na cicatrização?</div>
+<div class="faq-answer">Sim, pode retardar o processo.</div>
+</div>
 
-        <details>
-          <summary>Quando devo suspeitar de infecção? <span>+</span></summary>
-          <div class="faq-body">
-            A suspeita pode ocorrer com aumento de dor, exsudato purulento, odor forte persistente, piora do leito,
-            hiperemia/edema progressivos e sinais sistêmicos. Avaliação profissional e protocolo institucional são essenciais.
-          </div>
-        </details>
+</div>
+</div>
 
-        <details>
-          <summary>Seleção de Produtos é Premium? <span>+</span></summary>
-          <div class="faq-body">
-            Sim. A página Premium valida seu perfil antes de liberar o conteúdo. Se você não for Premium, o sistema impede o acesso.
-          </div>
-        </details>
-      </div>
-    </section>
+<div class="card locked" id="premiumContent">
+<h2>Conteúdo Exclusivo Premium</h2>
+<p>Protocolos avançados e materiais técnicos.</p>
+</div>
+</section>
 
-    <div class="footer">© 2026 • Projeto Integrador</div>
-  </main>
+<aside>
+<div class="card">
+<h2>Simulado Rápido</h2>
 
-  <div class="toast" id="toast"></div>
+<div class="quiz-question">
+<p>1) Qual a principal causa da LPP?</p>
+<button data-correct="true">Pressão prolongada</button>
+<button>Corte superficial</button>
+<button>Infecção viral</button>
+</div>
 
-  <script>
-    // =========================
-    // PWA INSTALL (Android/Chrome)
-    // =========================
-    let deferredPrompt = null;
-    const btnInstall = document.getElementById("btnInstall");
-    const toast = document.getElementById("toast");
+<div class="quiz-question">
+<p>2) Mudança de decúbito deve ocorrer:</p>
+<button data-correct="true">A cada 2 horas</button>
+<button>A cada 12 horas</button>
+<button>Somente se houver dor</button>
+</div>
 
-    function showToast(msg){
-      toast.textContent = msg;
-      toast.classList.add("show");
-      setTimeout(()=> toast.classList.remove("show"), 2400);
+</div>
+</aside>
+
+</main>
+
+<footer>
+© 2026 Plataforma LPP
+</footer>
+
+<script>
+// FAQ Accordion
+document.querySelectorAll(".faq-question").forEach(q=>{
+  q.addEventListener("click",()=>{
+    q.parentElement.classList.toggle("active");
+  });
+});
+
+// Filtro inteligente
+document.getElementById("faqSearch").addEventListener("input",function(){
+  const val=this.value.toLowerCase();
+  document.querySelectorAll(".faq-item").forEach(item=>{
+    item.style.display=item.textContent.toLowerCase().includes(val)?"block":"none";
+  });
+});
+
+// Simulado
+document.querySelectorAll(".quiz-question button").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const parent=btn.parentElement;
+    parent.querySelectorAll("button").forEach(b=>b.disabled=true);
+    if(btn.dataset.correct){
+      btn.classList.add("correct");
+    }else{
+      btn.classList.add("wrong");
+      parent.querySelector("[data-correct]").classList.add("correct");
     }
-
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      btnInstall.style.display = "inline-block";
-    });
-
-    btnInstall.addEventListener("click", async () => {
-      if (!deferredPrompt) {
-        showToast("Se não aparecer a instalação, use o menu do navegador: “Adicionar à tela inicial”.");
-        return;
-      }
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-    });
-
-    // =========================
-    // USER MENU (não trava)
-    // =========================
-    const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
-
-    const userPill = document.getElementById("userPill");
-    const userMenu = document.getElementById("userMenu");
-    const userEmail = document.getElementById("userEmail");
-    const userBadge = document.getElementById("userBadge");
-    const userNote  = document.getElementById("userNote");
-    const btnLogout = document.getElementById("btnLogout");
-    const btnLogin  = document.getElementById("btnLogin");
-
-    function toggleMenu(open){
-      const willOpen = (typeof open === "boolean") ? open : !userMenu.classList.contains("open");
-      userMenu.classList.toggle("open", willOpen);
-      userPill.setAttribute("aria-expanded", String(willOpen));
-    }
-    document.addEventListener("click", (e) => {
-      if (!userPill.contains(e.target)) toggleMenu(false);
-    });
-    userPill.addEventListener("click", () => toggleMenu());
-    userPill.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleMenu(); }
-      if (e.key === "Escape") toggleMenu(false);
-    });
-
-    let supabaseClient = null;
-
-    async function initUser(){
-      try{
-        if (!window.supabase){
-          userEmail.textContent = "Sem conexão";
-          userBadge.textContent = "Offline";
-          userBadge.className = "badge free";
-          userNote.textContent = "Falha ao carregar Supabase. Recarregue a página.";
-          btnLogout.style.display = "none";
-          btnLogin.style.display = "flex";
-          return;
-        }
-
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // ✅ hard-timeout pra não ficar “verificando…” eterno
-        const hard = new Promise((_, rej) => setTimeout(() => rej(new Error("Timeout")), 3500));
-
-        const { data: userRes, error: userErr } = await Promise.race([
-          supabaseClient.auth.getUser(),
-          hard
-        ]);
-
-        if (userErr || !userRes?.user){
-          userEmail.textContent = "Não logado";
-          userBadge.textContent = "Visitante";
-          userBadge.className = "badge free";
-          userNote.textContent = "Você pode entrar para acessar recursos Premium.";
-          btnLogout.style.display = "none";
-          btnLogin.style.display = "flex";
-          return;
-        }
-
-        userEmail.textContent = userRes.user.email || "Usuário";
-        userNote.textContent = "Verificando Premium…";
-        btnLogout.style.display = "flex";
-        btnLogin.style.display = "none";
-
-        // consulta premium (se der erro, não trava)
-        const { data, error } = await Promise.race([
-          supabaseClient.from("profiles").select("premium").eq("id", userRes.user.id).single(),
-          new Promise((_, rej) => setTimeout(() => rej(new Error("Timeout perfis")), 3500))
-        ]);
-
-        if (error){
-          userBadge.textContent = "Logado";
-          userBadge.className = "badge free";
-          userNote.textContent = "Logado. Não foi possível ler Premium agora.";
-          return;
-        }
-
-        if (data?.premium){
-          userBadge.textContent = "Premium ✅";
-          userBadge.className = "badge premium";
-          userNote.textContent = "Premium ativo. Conteúdo Premium liberado.";
-        } else {
-          userBadge.textContent = "Grátis";
-          userBadge.className = "badge free";
-          userNote.textContent = "Plano gratuito. Ative Premium para liberar Seleção de Produtos.";
-        }
-
-      } catch(e){
-        userEmail.textContent = "Não logado";
-        userBadge.textContent = "Visitante";
-        userBadge.className = "badge free";
-        userNote.textContent = "Falha temporária ao verificar sessão.";
-        btnLogout.style.display = "none";
-        btnLogin.style.display = "flex";
-      }
-    }
-
-    btnLogout.addEventListener("click", async () => {
-      try{
-        await supabaseClient?.auth?.signOut?.();
-      } finally {
-        window.location.replace("./index.html");
-      }
-    });
-
-    initUser();
-  </script>
+  });
+});
+</script>
 
 </body>
 </html>
