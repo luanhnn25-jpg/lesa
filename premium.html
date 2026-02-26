@@ -233,7 +233,6 @@
       box-shadow:none;
     }
 
-    /* WhatsApp */
     .btn.whats{
       border-color: rgba(34,197,94,.30);
       background: linear-gradient(180deg, #22c55e, #16a34a);
@@ -465,7 +464,6 @@
     </main>
   </div>
 
-  <!-- Modal “Já paguei” -->
   <div id="paidModal" class="modal" aria-hidden="true">
     <div class="modalBox" role="dialog" aria-modal="true" aria-labelledby="paidTitle">
       <div class="modalTop">
@@ -474,22 +472,21 @@
       </div>
 
       <p class="modalText">
-        Para liberar automaticamente aqui, basta você aprovar no Supabase.
-        Para facilitar, peça ao usuário enviar o comprovante + o UID.
+        Para liberar, envie o comprovante no WhatsApp já com o UID. Assim você aprova mais rápido.
       </p>
 
       <div class="modalSteps">
         <div class="step">
           <b>1) Envie o comprovante no WhatsApp</b>
-          <small>Inclua o UID (mostrado abaixo) para aprovar mais rápido.</small>
+          <small>A mensagem já vai pronta com UID + valor + chave Pix.</small>
         </div>
         <div class="step">
-          <b>2) Eu marco Premium no perfil</b>
-          <small>Você marca <code>profiles.premium = true</code> para este UID.</small>
+          <b>2) Você aprova no Supabase</b>
+          <small>Marque <code>profiles.premium = true</code> para este UID.</small>
         </div>
         <div class="step">
           <b>3) Verificar novamente</b>
-          <small>Depois o usuário clica em “Verificar agora”.</small>
+          <small>Depois toque em “Verificar agora”.</small>
         </div>
       </div>
 
@@ -510,8 +507,12 @@
 
     const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
 
-    // ✅ seu link WhatsApp
-    const WHATS_BASE = "https://wa.me/qr/65P6A56O3LARC1";
+    // ✅ WhatsApp no formato internacional, sem espaços e sem +
+    const WHATS_NUMBER = "5515988119989";
+
+    // Pix
+    const PIX_KEY = "28d39758-0fe0-47f1-9c7c-9cb6e032c5cf";
+    const PRICE = "2,00";
 
     const msgEl  = document.getElementById("msg");
     const diagEl = document.getElementById("diag");
@@ -552,9 +553,14 @@
     document.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeModal(); });
 
     function makeWhatsLink(uid){
-      // Como seu link é QR, não dá para garantir texto pré-preenchido via wa.me/qr.
-      // Mesmo assim, deixo uma mensagem pronta no clipboard ao clicar “Já paguei”.
-      return WHATS_BASE;
+      const text =
+`Olá! Paguei o Premium LPP (R$ ${PRICE}) via Pix.
+
+UID: ${uid}
+Chave Pix: ${PIX_KEY}
+
+Segue comprovante em anexo.`;
+      return `https://wa.me/${WHATS_NUMBER}?text=${encodeURIComponent(text)}`;
     }
 
     async function checkPremium(){
@@ -580,7 +586,7 @@
       currentUid = uid;
       diagEl.innerHTML = "UID: <code>" + uid + "</code>";
 
-      // Atualiza links do Whats
+      // ✅ Atualiza links do Whats com texto pronto
       const w = makeWhatsLink(uid);
       btnWhatsTop.href = w;
       btnWhatsModal.href = w;
@@ -637,28 +643,9 @@
       }
     }
 
-    async function copyApproveMessage(){
-      if(!currentUid) return;
-      const msg =
-`Pagamento Premium LPP (R$ 2,00) via Pix
-UID: ${currentUid}
-Chave Pix: 28d39758-0fe0-47f1-9c7c-9cb6e032c5cf
-Anexei comprovante.`;
-      try{
-        await navigator.clipboard.writeText(msg);
-        setMsg("Mensagem pronta copiada ✅\nAgora abra o WhatsApp e cole junto com o comprovante.", "ok");
-      }catch{
-        // tudo bem, só não copia
-      }
-    }
-
     document.getElementById("btnRetry").addEventListener("click", checkPremium);
 
-    btnPaid.addEventListener("click", async () => {
-      // copia mensagem pronta para facilitar
-      await copyApproveMessage();
-      openModal();
-    });
+    btnPaid.addEventListener("click", () => openModal());
 
     btnModalVerify.addEventListener("click", async () => {
       closeModal();
