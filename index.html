@@ -3,15 +3,23 @@
 <head>
   <meta charset="utf-8" />
 
+  <!-- ✅ PWA: viewport -->
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- ✅ PWA: cor do tema -->
   <meta name="theme-color" content="#0b3d91" />
+
+  <!-- ✅ PWA: descrição -->
   <meta name="description" content="Lesão por Pressão - Projeto Integrador. Conteúdo educativo em formato instalável (PWA)." />
 
+  <!-- ✅ PWA: manifest -->
   <link rel="manifest" href="manifest.webmanifest" />
 
+  <!-- ✅ Favicons -->
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
   <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
 
+  <!-- ✅ iOS -->
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -24,7 +32,6 @@
       --lpp-blue-1:#0b3d91;
       --lpp-blue-2:#0a2f73;
       --lpp-blue-3:#0b5bd3;
-
       --lpp-bg:#eef2f7;
       --lpp-card:#ffffff;
       --lpp-text:#0f172a;
@@ -39,6 +46,10 @@
 
       --lpp-ring: 0 0 0 4px rgba(56, 130, 246, .18);
       --lpp-border: rgba(15, 23, 42, .08);
+
+      --glass: rgba(255,255,255,.10);
+      --glass2: rgba(255,255,255,.14);
+      --glassBorder: rgba(255,255,255,.18);
     }
 
     *{ box-sizing:border-box; }
@@ -84,26 +95,7 @@
       font-size: 14px;
     }
 
-    .lpp-pill{
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: #edf4ff;
-      border: 1px solid #d8e7ff;
-      color:#0b2b63;
-      font-weight:900;
-      font-size: 13px;
-      cursor:pointer;
-      user-select:none;
-      transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
-      box-shadow: 0 10px 18px rgba(2,6,23,.06);
-    }
-    .lpp-pill:hover{
-      background:#e7f0ff;
-      transform: translateY(-1px);
-      box-shadow: 0 16px 28px rgba(2,6,23,.10);
-    }
-
-    /* NAV */
+    /* NAV (refeito: profissional / não sobrepõe / não quebra) */
     .lpp-nav{
       background: var(--lpp-blue-2);
       position: sticky;
@@ -116,27 +108,31 @@
       max-width: var(--lpp-max);
       margin: 0 auto;
       padding: 10px 12px;
+    }
+
+    /* ✅ novo container: links à esquerda + usuário à direita */
+    .navBar{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:12px;
+      gap: 10px;
+      min-height: 46px;
     }
 
-    /* LINKS */
-    .lpp-menu{
+    /* Links (scroll horizontal no mobile, sem encostar no bloco do usuário) */
+    .navLinks{
       display:flex;
-      gap:10px;
+      gap: 10px;
       align-items:center;
-      overflow-x:auto;
+      min-width: 0;           /* importante p/ scroll funcionar */
+      overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
-      flex:1 1 auto;
-      min-width: 0;
-      padding: 2px 0;
+      padding: 4px 2px;
     }
-    .lpp-menu::-webkit-scrollbar{ display:none; }
+    .navLinks::-webkit-scrollbar{ display:none; }
 
-    .lpp-menu a{
+    .navLinks a{
       color:#eaf2ff;
       text-decoration:none;
       padding: 10px 12px;
@@ -148,192 +144,160 @@
       transition: transform .15s ease, background .15s ease, box-shadow .15s ease, opacity .15s ease;
       outline: none;
       flex: 0 0 auto;
-      position:relative;
     }
-    .lpp-menu a:hover{
+    .navLinks a:hover{
       background: rgba(255,255,255,.14);
       transform: translateY(-1px);
       box-shadow: 0 10px 18px rgba(2,6,23,.18);
     }
-    .lpp-menu a:focus-visible{
+    .navLinks a:focus-visible{
       box-shadow: var(--lpp-ring);
       background: rgba(255,255,255,.14);
     }
-    .lpp-menu a[aria-current="page"]{
+    .navLinks a[aria-current="page"]{
       background: rgba(255,255,255,.18);
       outline: 1px solid rgba(255,255,255,.16);
       box-shadow: 0 10px 18px rgba(2,6,23,.20);
     }
 
-    /* ✅ LINK BLOQUEADO (Premium) */
-    .lpp-menu a.locked{
-      opacity: .92;
-      background: rgba(255,255,255,.08);
-      border: 1px dashed rgba(255,255,255,.22);
-      padding: 10px 12px;
-    }
-    .lpp-menu a.locked:hover{
-      background: rgba(255,255,255,.12);
-      transform: translateY(-1px);
-    }
-    .lpp-menu a.locked::after{
-      content: attr(data-tip);
-      position:absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: -44px;
-
-      background: rgba(15,23,42,.95);
-      color:#fff;
-      padding: 8px 10px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 900;
-      white-space: nowrap;
-      box-shadow: 0 18px 45px rgba(2,6,23,.35);
-
-      opacity: 0;
-      pointer-events:none;
-      transition: opacity .12s ease, transform .12s ease;
-    }
-    .lpp-menu a.locked:hover::after{
-      opacity: 1;
-      transform: translateX(-50%) translateY(-2px);
-    }
-
-    /* USER */
-    .user-area{
+    /* ✅ Bloco do usuário (direita) */
+    .navUser{
       flex: 0 0 auto;
       position: relative;
-      display:flex;
-      align-items:center;
-      gap:10px;
     }
 
-    .user-btn{
+    .userPill{
       display:flex;
       align-items:center;
       gap:10px;
-
-      max-width: 320px;
-      min-width: 180px;
-
-      padding: 10px 12px;
+      padding: 9px 12px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.10);
+      border: 1px solid var(--glassBorder);
+      background: linear-gradient(180deg, var(--glass2), var(--glass));
       color:#fff;
       font-weight: 900;
-      cursor:pointer;
-      outline:none;
-      box-shadow: 0 10px 18px rgba(2,6,23,.16);
-      transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
-      min-width: 0;
+      cursor: pointer;
+      user-select:none;
+      box-shadow: 0 14px 26px rgba(2,6,23,.18);
+      transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
+      max-width: 320px;
     }
-    .user-btn:hover{ background: rgba(255,255,255,.16); transform: translateY(-1px); box-shadow: 0 14px 26px rgba(2,6,23,.22); }
-    .user-btn:focus-visible{ box-shadow: var(--lpp-ring); }
-
-    .user-icon{
-      width: 28px;
-      height: 28px;
-      flex: 0 0 auto;
+    .userPill:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 18px 34px rgba(2,6,23,.22);
+      background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.10));
+    }
+    .userIcon{
+      width: 28px; height: 28px;
+      border-radius: 999px;
       display:grid;
       place-items:center;
-      border-radius: 999px;
-      background: rgba(255,255,255,.22);
-      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.18);
+      flex:0 0 auto;
     }
-    .user-icon svg{ width: 18px; height: 18px; opacity:.95; }
-
-    .user-text{
+    .userText{
+      min-width: 0;
       display:flex;
-      flex-direction:column;
-      gap:2px;
-      min-width:0;
+      flex-direction: column;
+      line-height: 1.1;
     }
-    .user-email{
-      font-size: 12px;
-      font-weight: 900;
-      opacity: .96;
-
-      overflow:hidden;
-      text-overflow: ellipsis;
+    .userTitle{
+      font-size: 13px;
+      font-weight: 950;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       max-width: 220px;
     }
-    .user-status{
-      display:flex;
-      align-items:center;
-      gap:6px;
+    .userSub{
       font-size: 11px;
-      opacity: .85;
-      font-weight: 800;
+      opacity: .9;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 220px;
+    }
+    .caret{
+      opacity:.9;
+      font-size: 12px;
+      margin-left: 2px;
+      flex:0 0 auto;
     }
 
-    .badge{
-      display:inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 10.5px;
-      font-weight: 950;
-      border: 1px solid rgba(255,255,255,.22);
-      background: rgba(255,255,255,.14);
-      color:#fff;
-    }
-    .badge.premium{
-      background: rgba(34,197,94,.18);
-      border-color: rgba(34,197,94,.35);
-    }
-
-    .caret{ opacity:.9; font-size: 12px; margin-left:auto; }
-
-    /* Dropdown animado */
-    .dropdown{
+    .userMenu{
       position:absolute;
+      right:0;
       top: calc(100% + 10px);
-      right: 0;
       width: min(320px, 92vw);
-
-      background:#fff;
-      border: 1px solid rgba(15,23,42,.10);
+      background: #ffffff;
       border-radius: 16px;
-      box-shadow: 0 18px 45px rgba(2,6,23,.22);
-      padding: 10px;
-
-      opacity: 0;
-      transform: translateY(-6px) scale(.98);
-      pointer-events: none;
-
-      transition: opacity .14s ease, transform .14s ease;
+      border: 1px solid rgba(15,23,42,.12);
+      box-shadow: 0 24px 60px rgba(2,6,23,.22);
+      overflow:hidden;
+      display:none;
       z-index: 999;
-      transform-origin: top right;
     }
-    .dropdown.open{
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      pointer-events: auto;
-    }
+    .userMenu.open{ display:block; }
 
-    .drop-item{
-      width:100%;
+    .menuHead{
+      padding: 12px 12px 10px;
+      background: linear-gradient(180deg, #f8fbff, #ffffff);
+      border-bottom: 1px solid rgba(15,23,42,.08);
+    }
+    .menuHead .m1{ font-weight: 1000; color:#0b2b63; font-size: 13px; }
+    .menuHead .m2{ margin-top:4px; color:#475569; font-size: 12px; word-break: break-all; }
+
+    .menuActions{
+      padding: 10px;
+      display:grid;
+      gap: 8px;
+    }
+    .menuBtn{
+      width: 100%;
+      text-align:left;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: #fff;
+      color:#0f172a;
+      font-weight: 950;
+      cursor:pointer;
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
       display:flex;
       align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(15,23,42,.08);
-      background: #fff;
-      color: #0f172a;
-      cursor:pointer;
-      font-weight: 900;
-      text-decoration:none;
+      justify-content: space-between;
+      gap: 10px;
     }
-    .drop-item:hover{ background:#f8fafc; }
-    .drop-muted{ font-size: 12px; color: var(--lpp-muted); font-weight: 800; }
-    .drop-sep{ height:1px; background: rgba(15,23,42,.10); margin:10px 4px; }
+    .menuBtn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px rgba(2,6,23,.10);
+      background: #f8fafc;
+    }
+    .menuBtn.primary{
+      border-color: rgba(37,99,235,.22);
+      background: linear-gradient(180deg, rgba(37,99,235,.10), rgba(37,99,235,.06));
+      color:#1d4ed8;
+    }
+    .menuBtn.bad{
+      border-color: rgba(220,38,38,.22);
+      background: rgba(220,38,38,.06);
+      color:#991b1b;
+    }
+    .tag{
+      font-size: 11px;
+      font-weight: 950;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.12);
+      background: #f8fafc;
+      color:#334155;
+      flex: 0 0 auto;
+    }
+    .tag.ok{ background: rgba(22,163,74,.10); border-color: rgba(22,163,74,.18); color:#166534; }
+    .tag.warn{ background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.20); color:#7c2d12; }
 
-    /* Conteúdo */
+    /* MAIN */
     .lpp-main{
       max-width: var(--lpp-max);
       margin: 22px auto 60px;
@@ -377,7 +341,6 @@
       display:inline-block;
       box-shadow: 0 10px 18px rgba(11,91,211,.25);
     }
-
     .lpp-text{
       margin:0;
       color: var(--lpp-muted);
@@ -415,6 +378,25 @@
     }
     .lpp-card:hover .lpp-figure img{
       transform: scale(1.03);
+    }
+
+    .lpp-pill{
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: #edf4ff;
+      border: 1px solid #d8e7ff;
+      color:#0b2b63;
+      font-weight:900;
+      font-size: 13px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
+      box-shadow: 0 10px 18px rgba(2,6,23,.06);
+    }
+    .lpp-pill:hover{
+      background:#e7f0ff;
+      transform: translateY(-1px);
+      box-shadow: 0 16px 28px rgba(2,6,23,.10);
     }
 
     .lpp-search{
@@ -528,11 +510,11 @@
     }
 
     @media (max-width: 480px){
-      .user-btn{ min-width: 160px; }
-      .user-email{ max-width: 160px; }
       .lpp-card{ padding: 16px; }
       .lpp-title{ font-size: 18px; }
       .lpp-text, .lpp-list{ font-size: 15px; }
+      .userPill{ max-width: 220px; }
+      .userTitle, .userSub{ max-width: 150px; }
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -540,7 +522,9 @@
       *{ transition:none !important; animation:none !important; }
     }
 
-    /* PWA MODAL */
+    /* =========================================================
+       ✅ PWA MODAL (isolado)
+       ========================================================= */
     .pwa-modal{
       position: fixed;
       inset: 0;
@@ -628,56 +612,63 @@
   <nav class="lpp-nav" aria-label="Navegação principal">
     <div class="lpp-nav-inner">
 
-      <div class="lpp-menu" id="menuLinks">
-        <a href="index.html" aria-current="page">Início</a>
-        <a href="nosso-produto.html">Nosso Produto</a>
-        <a href="tratamento.html">Tratamento</a>
-        <a href="impacto-economico.html">Impacto Econômico</a>
-        <a href="guia-simples.html">Guia Simples</a>
+      <!-- ✅ NAV PROFISSIONAL -->
+      <div class="navBar">
 
-        <!-- ✅ será bloqueado se não premium -->
-        <a id="navSelecao" href="premium.html" class="locked" data-tip="Premium necessário">
-          Seleção de Produtos 🔒
-        </a>
-
-        <a href="avaliacao.html">Avaliação</a>
-      </div>
-
-      <div class="user-area" aria-label="Área do usuário">
-        <button id="userBtn" class="user-btn" type="button" aria-expanded="false">
-          <span class="user-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M4 20a8 8 0 0 1 16 0" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-
-          <span class="user-text">
-            <span id="userEmail" class="user-email">Carregando…</span>
-            <span id="userStatus" class="user-status">Verificando sessão…</span>
-          </span>
-
-          <span class="caret">▾</span>
-        </button>
-
-        <div id="userDrop" class="dropdown" role="menu" aria-label="Menu do usuário">
-          <a id="dropLogin" class="drop-item" href="login.html?mode=login">
-            Entrar <span class="drop-muted">Login</span>
-          </a>
-          <a id="dropSignup" class="drop-item" href="login.html?mode=signup">
-            Criar conta <span class="drop-muted">Cadastro</span>
-          </a>
-
-          <div class="drop-sep"></div>
-
-          <a id="dropPremium" class="drop-item" href="premium.html" style="display:none;">
-            Premium <span class="drop-muted">Desbloquear</span>
-          </a>
-          <button id="dropLogout" class="drop-item" type="button" style="display:none;">
-            Sair <span class="drop-muted">Logout</span>
-          </button>
+        <!-- LINKS (esquerda) -->
+        <div class="navLinks" id="menuLinks">
+          <a href="index.html" aria-current="page">Início</a>
+          <a href="nosso-produto.html">Nosso Produto</a>
+          <a href="tratamento.html">Tratamento</a>
+          <a href="impacto-economico.html">Impacto Econômico</a>
+          <a href="guia-simples.html">Guia Simples</a>
+          <a href="selecao-produtos.html">Seleção de Produtos</a>
+          <a href="avaliacao.html">Avaliação</a>
         </div>
+
+        <!-- USUÁRIO (direita) -->
+        <div class="navUser" id="navUser">
+          <button class="userPill" id="userPill" type="button" aria-haspopup="menu" aria-expanded="false">
+            <span class="userIcon">👤</span>
+            <span class="userText">
+              <span class="userTitle" id="userTitle">Conta</span>
+              <span class="userSub" id="userSub">Verificando sessão…</span>
+            </span>
+            <span class="caret">▾</span>
+          </button>
+
+          <div class="userMenu" id="userMenu" role="menu" aria-label="Menu do usuário">
+            <div class="menuHead">
+              <div class="m1" id="menuHeadTitle">Conta</div>
+              <div class="m2" id="menuHeadSub">Carregando…</div>
+            </div>
+
+            <div class="menuActions">
+              <button class="menuBtn primary" id="btnGoPremium" type="button">
+                <span>⭐ Premium</span>
+                <span class="tag" id="tagPremium">…</span>
+              </button>
+
+              <button class="menuBtn" id="btnLogin" type="button">
+                <span>🔑 Entrar</span>
+                <span class="tag warn">Login</span>
+              </button>
+
+              <button class="menuBtn" id="btnSignup" type="button">
+                <span>📝 Criar conta</span>
+                <span class="tag">Novo</span>
+              </button>
+
+              <button class="menuBtn bad" id="btnLogout" type="button">
+                <span>🚪 Sair</span>
+                <span class="tag">Logout</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
+      <!-- ✅ /NAV PROFISSIONAL -->
 
     </div>
   </nav>
@@ -737,6 +728,7 @@
 
       <div class="lpp-results" id="resultsBox" aria-live="polite"></div>
 
+      <!-- ✅ FAQ -->
       <div class="lpp-faq" id="faqList">
         <details class="lpp-qa" data-tags="vermelho pele início">
           <summary>1) Pele vermelha já é lesão por pressão?</summary>
@@ -861,16 +853,21 @@
     </section>
   </main>
 
-  <footer class="lpp-footer">© 2026 - Projeto Integrador</footer>
+  <footer class="lpp-footer">
+    © 2026 - Projeto Integrador
+  </footer>
 
-  <!-- Modal instalação -->
+  <!-- ✅ Modal instalação -->
   <div id="pwaModal" class="pwa-modal" aria-hidden="true">
     <div class="pwa-box" role="dialog" aria-modal="true" aria-labelledby="pwaTitle">
       <h2 id="pwaTitle" class="pwa-title">Instalar aplicativo</h2>
+
       <img class="pwa-img" src="saude123.png" alt="Imagem relacionada à saúde" loading="lazy">
+
       <p class="pwa-text" id="pwaHelpText">
         No Android (Chrome): abra este site → menu ⋮ → <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.
       </p>
+
       <div class="pwa-actions">
         <button id="pwaCancel" class="pwa-btn pwa-btn-secondary">Fechar</button>
         <button id="pwaConfirm" class="pwa-btn pwa-btn-primary">Instalar</button>
@@ -878,7 +875,7 @@
     </div>
   </div>
 
-  <!-- FAQ busca -->
+  <!-- ✅ FAQ busca -->
   <script>
     const input = document.getElementById('searchInput');
     const resultsBox = document.getElementById('resultsBox');
@@ -889,6 +886,7 @@
         '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
       }[m]));
     }
+
     function highlight(text, query){
       if(!query) return escapeHtml(text);
       const q = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -947,9 +945,32 @@
         input.focus();
       });
     });
+
+    const cards = Array.from(document.querySelectorAll('.lpp-card'));
+    const canHover = window.matchMedia('(hover:hover)').matches;
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+    if(canHover){
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width;
+          const y = (e.clientY - r.top) / r.height;
+
+          const rx = clamp((0.5 - y) * 6, -6, 6);
+          const ry = clamp((x - 0.5) * 6, -6, 6);
+
+          card.style.transform = `translateY(-3px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+        });
+      });
+    }
   </script>
 
-  <!-- Service Worker -->
+  <!-- ✅ Service Worker -->
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
@@ -964,7 +985,7 @@
     }
   </script>
 
-  <!-- Botão instalar -->
+  <!-- ✅ Botão instalar -->
   <script>
     let deferredPrompt = null;
 
@@ -978,6 +999,7 @@
       modal.classList.add("open");
       modal.setAttribute("aria-hidden", "false");
     }
+
     function closeModal(){
       modal.classList.remove("open");
       modal.setAttribute("aria-hidden", "true");
@@ -1017,7 +1039,7 @@
     modal?.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
   </script>
 
-  <!-- MENU DO USUÁRIO (Supabase) + lock/unlock seleção -->
+  <!-- ✅ MENU PROFISSIONAL (SUPABASE) - SEM TRAVAR EM "CARREGANDO" -->
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
@@ -1027,112 +1049,136 @@
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const userBtn = document.getElementById("userBtn");
-    const userDrop = document.getElementById("userDrop");
+    const userPill = document.getElementById("userPill");
+    const userMenu = document.getElementById("userMenu");
 
-    const userEmail = document.getElementById("userEmail");
-    const userStatus = document.getElementById("userStatus");
+    const userTitle = document.getElementById("userTitle");
+    const userSub = document.getElementById("userSub");
 
-    const dropLogin = document.getElementById("dropLogin");
-    const dropSignup = document.getElementById("dropSignup");
-    const dropPremium = document.getElementById("dropPremium");
-    const dropLogout = document.getElementById("dropLogout");
+    const menuHeadTitle = document.getElementById("menuHeadTitle");
+    const menuHeadSub = document.getElementById("menuHeadSub");
+    const tagPremium = document.getElementById("tagPremium");
 
-    const navSelecao = document.getElementById("navSelecao");
+    const btnGoPremium = document.getElementById("btnGoPremium");
+    const btnLogin = document.getElementById("btnLogin");
+    const btnSignup = document.getElementById("btnSignup");
+    const btnLogout = document.getElementById("btnLogout");
 
-    function openDrop(){
-      userDrop.classList.add("open");
-      userBtn.setAttribute("aria-expanded","true");
-    }
-    function closeDrop(){
-      userDrop.classList.remove("open");
-      userBtn.setAttribute("aria-expanded","false");
-    }
+    const setPill = (title, sub) => {
+      userTitle.textContent = title;
+      userSub.textContent = sub;
+      menuHeadTitle.textContent = title;
+      menuHeadSub.textContent = sub;
+    };
 
-    userBtn.addEventListener("click", () => {
-      if (userDrop.classList.contains("open")) closeDrop();
-      else openDrop();
+    const setPremiumTag = (state) => {
+      if (state === true){
+        tagPremium.textContent = "Premium";
+        tagPremium.className = "tag ok";
+      } else if (state === false){
+        tagPremium.textContent = "Sem Premium";
+        tagPremium.className = "tag warn";
+      } else {
+        tagPremium.textContent = "…";
+        tagPremium.className = "tag";
+      }
+    };
+
+    const openMenu = () => {
+      userMenu.classList.add("open");
+      userPill.setAttribute("aria-expanded", "true");
+    };
+    const closeMenu = () => {
+      userMenu.classList.remove("open");
+      userPill.setAttribute("aria-expanded", "false");
+    };
+
+    userPill.addEventListener("click", () => {
+      if (userMenu.classList.contains("open")) closeMenu();
+      else openMenu();
     });
 
     document.addEventListener("click", (e) => {
-      if (!userDrop.contains(e.target) && !userBtn.contains(e.target)) closeDrop();
+      if (!document.getElementById("navUser").contains(e.target)) closeMenu();
     });
 
-    // ✅ Menu: bloqueia Seleção
-    function lockSelecao(){
-      if(!navSelecao) return;
-      navSelecao.href = SITE_BASE + "premium.html";
-      navSelecao.classList.add("locked");
-      navSelecao.dataset.tip = "Premium necessário";
-      navSelecao.setAttribute("aria-label", "Seleção de Produtos (bloqueado - Premium)");
-      navSelecao.textContent = "Seleção de Produtos 🔒";
-    }
+    btnLogin.addEventListener("click", () => window.location.href = SITE_BASE + "login.html?mode=login");
+    btnSignup.addEventListener("click", () => window.location.href = SITE_BASE + "login.html?mode=signup");
+    btnGoPremium.addEventListener("click", () => window.location.href = SITE_BASE + "premium.html");
 
-    // ✅ Menu: libera Seleção
-    function unlockSelecao(){
-      if(!navSelecao) return;
-      navSelecao.href = SITE_BASE + "selecao-produtos.html";
-      navSelecao.classList.remove("locked");
-      navSelecao.removeAttribute("data-tip");
-      navSelecao.setAttribute("aria-label", "Seleção de Produtos");
-      navSelecao.textContent = "Seleção de Produtos";
-    }
-
-    function setLoggedOut(){
-      userEmail.textContent = "Entrar / Criar conta";
-      userStatus.textContent = "Não autenticado";
-
-      dropLogin.style.display = "";
-      dropSignup.style.display = "";
-      dropPremium.style.display = "none";
-      dropLogout.style.display = "none";
-
-      lockSelecao();
-    }
-
-    async function setLoggedIn(user){
-      const email = user.email || "Usuário";
-      userEmail.textContent = email;
-
-      dropLogin.style.display = "none";
-      dropSignup.style.display = "none";
-      dropPremium.style.display = "";
-      dropLogout.style.display = "";
-
-      userStatus.textContent = "Conta ativa";
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("premium")
-        .eq("id", user.id)
-        .single();
-
-      if(!error && data?.premium){
-        userStatus.innerHTML = `Premium ✅ <span class="badge premium">VIP</span>`;
-        unlockSelecao();
-      }else{
-        userStatus.innerHTML = `Conta ativa <span class="badge">Free</span>`;
-        lockSelecao();
-      }
-    }
-
-    async function renderState(){
-      userEmail.textContent = "Carregando…";
-      userStatus.textContent = "Verificando sessão…";
-
-      const { data: userRes, error } = await supabase.auth.getUser();
-      if (error || !userRes?.user) return setLoggedOut();
-      return setLoggedIn(userRes.user);
-    }
-
-    dropLogout.addEventListener("click", async () => {
+    btnLogout.addEventListener("click", async () => {
       await supabase.auth.signOut();
-      closeDrop();
+      closeMenu();
       window.location.href = SITE_BASE + "index.html";
     });
 
-    supabase.auth.onAuthStateChange(() => renderState());
-    renderState();
+    async function readPremium(uid){
+      try{
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("premium")
+          .eq("id", uid)
+          .single();
+        if (error) return null;
+        return !!data?.premium;
+      }catch{
+        return null;
+      }
+    }
+
+    async function refreshUserUI(){
+      // ✅ fallback para nunca ficar travado no “carregando”
+      let fallbackTimer = setTimeout(() => {
+        setPill("Conta", "Toque para entrar");
+        setPremiumTag(null);
+      }, 2500);
+
+      try{
+        setPill("Conta", "Verificando sessão…");
+        setPremiumTag(null);
+
+        const { data: userRes, error: userErr } = await supabase.auth.getUser();
+        if (userErr || !userRes?.user){
+          clearTimeout(fallbackTimer);
+          setPill("Conta", "Toque para entrar");
+          setPremiumTag(false);
+
+          // estado de botões
+          btnLogin.style.display = "";
+          btnSignup.style.display = "";
+          btnLogout.style.display = "none";
+          return;
+        }
+
+        const email = userRes.user.email || "Usuário";
+        clearTimeout(fallbackTimer);
+        setPill("Olá,", email);
+
+        // premium
+        const premium = await readPremium(userRes.user.id);
+        setPremiumTag(premium);
+
+        // estado de botões
+        btnLogin.style.display = "none";
+        btnSignup.style.display = "none";
+        btnLogout.style.display = "";
+      }catch{
+        clearTimeout(fallbackTimer);
+        setPill("Conta", "Toque para entrar");
+        setPremiumTag(null);
+        btnLogin.style.display = "";
+        btnSignup.style.display = "";
+        btnLogout.style.display = "none";
+      }
+    }
+
+    // Primeira carga
+    refreshUserUI();
+
+    // Atualiza quando auth muda (login/logout)
+    supabase.auth.onAuthStateChange(() => {
+      refreshUserUI();
+    });
   </script>
 
 </body>
