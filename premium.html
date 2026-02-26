@@ -3,91 +3,297 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b3d91" />
   <title>Premium • LPP</title>
 
   <style>
     :root{
-      --bg1:#0b3d91; --bg2:#0a2f73; --card:#fff; --text:#0f172a; --muted:#475569;
-      --border:rgba(15,23,42,.12); --shadow:0 18px 40px rgba(2,6,23,.14);
-      --radius:18px; --primary:#2563eb; --ok:#16a34a; --bad:#dc2626; --warn:#f59e0b;
+      --bg1:#0b3d91;
+      --bg2:#0a2f73;
+      --bg3:#0b5bd3;
+
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+
+      --border:rgba(15,23,42,.12);
+      --shadow:0 18px 40px rgba(2,6,23,.14);
+      --shadow2:0 22px 70px rgba(2,6,23,.22);
+      --shadowSoft:0 12px 28px rgba(2,6,23,.10);
+
+      --radius:20px;
+
+      --primary:#2563eb;
+      --primary2:#1d4ed8;
+      --ok:#16a34a;
+      --bad:#dc2626;
+      --warn:#f59e0b;
+
       --focus:rgba(37,99,235,.22);
       --chip:#eef2ff;
+
+      --glass:rgba(255,255,255,.10);
+      --glassBorder:rgba(255,255,255,.18);
     }
+
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--text);
-      background: linear-gradient(180deg, var(--bg1), var(--bg2));
-      display:flex; align-items:center; justify-content:center; padding:18px;
-    }
-    .card{
-      width:min(640px, 100%); background:var(--card); border:1px solid var(--border);
-      border-radius:var(--radius); box-shadow:var(--shadow); padding:18px 16px;
-    }
-    h1{margin:0 0 6px; font-size:20px; font-weight:950}
-    p{margin:8px 0; color:var(--muted); line-height:1.5}
-    .pill{
-      display:inline-block; padding:6px 10px; border-radius:999px;
-      border:1px solid var(--border); background:#f8fafc; font-weight:900; font-size:12px; color:var(--muted);
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(900px 520px at 18% 8%, rgba(255,255,255,.16), transparent 55%),
+        radial-gradient(980px 560px at 88% 18%, rgba(255,255,255,.12), transparent 55%),
+        radial-gradient(520px 420px at 60% 92%, rgba(11,91,211,.22), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
     }
 
+    .wrap{
+      width:min(920px, 100%);
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:16px;
+      align-items:stretch;
+    }
+    @media (max-width: 900px){
+      .wrap{grid-template-columns:1fr}
+    }
+
+    .hero{
+      border:1px solid var(--glassBorder);
+      border-radius:var(--radius);
+      padding:18px;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow2);
+      color:#fff;
+      position:relative;
+      overflow:hidden;
+      animation: fadeUp .22s ease both;
+    }
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:-120px -140px auto auto;
+      width:420px;
+      height:420px;
+      background: radial-gradient(circle at 30% 30%, rgba(37,99,235,.55), transparent 62%);
+      transform: rotate(12deg);
+      pointer-events:none;
+      opacity:.95;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .logo{
+      width:46px;height:46px;
+      border-radius:16px;
+      display:grid;place-items:center;
+      font-weight:1000;
+      letter-spacing:.6px;
+      background:rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow: 0 14px 26px rgba(2,6,23,.16);
+    }
+    .brand h1{
+      margin:0;
+      font-size:18px;
+      font-weight:1000;
+      letter-spacing:.2px;
+    }
+    .brand p{
+      margin:2px 0 0;
+      font-size:12px;
+      opacity:.92;
+    }
+    .hero h2{
+      margin:8px 0 8px;
+      font-size: clamp(22px, 3.4vw, 30px);
+      font-weight:1000;
+      letter-spacing:.2px;
+      text-shadow: 0 10px 24px rgba(2,6,23,.24);
+    }
+    .hero .sub{
+      margin:0;
+      opacity:.92;
+      line-height:1.55;
+      max-width:52ch;
+      font-size:14px;
+    }
+    .bullets{
+      margin:14px 0 0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+    .bullets li{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      padding:10px 12px;
+      border-radius:16px;
+      box-shadow: 0 14px 24px rgba(2,6,23,.12);
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background:rgba(255,255,255,.86);
+      margin-top:6px;
+      flex:0 0 auto;
+    }
+    .bullets b{font-weight:1000}
+    .bullets span{opacity:.92;font-size:13px;line-height:1.45}
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
+      border:1px solid rgba(15,23,42,.10);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow2);
+      padding:16px;
+      animation: fadeUp .22s ease both;
+    }
+
+    .pill{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(15,23,42,.10);
+      background:#f8fafc;
+      font-weight:1000;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .pill .mini{
+      width:10px;height:10px;border-radius:999px;
+      background: rgba(37,99,235,.80);
+      box-shadow: 0 10px 16px rgba(37,99,235,.24);
+    }
+
+    h3{margin:10px 0 6px; font-size:18px; font-weight:1000}
+    p{margin:8px 0; color:var(--muted); line-height:1.55}
+
     .msg{
-      margin-top:12px; padding:10px 12px; border-radius:14px; border:1px solid var(--border);
-      background:#fff; white-space:pre-wrap;
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:16px;
+      border:1px solid rgba(15,23,42,.10);
+      background:#fff;
+      white-space:pre-wrap;
+      box-shadow: var(--shadowSoft);
     }
     .msg.ok{border-color:rgba(22,163,74,.30); background:rgba(22,163,74,.08); color:#14532d}
     .msg.bad{border-color:rgba(220,38,38,.30); background:rgba(220,38,38,.08); color:#7f1d1d}
     .msg.warn{border-color:rgba(245,158,11,.35); background:rgba(245,158,11,.10); color:#7c2d12}
 
     .row{display:flex; gap:10px; margin-top:12px; flex-wrap:wrap}
+
     .btn{
-      flex:1 1 180px; padding:12px 12px; border-radius:14px; cursor:pointer; font-weight:950;
+      flex:1 1 180px;
+      padding:12px 12px;
+      border-radius:16px;
+      cursor:pointer;
+      font-weight:1000;
       border:1px solid rgba(37,99,235,.28);
-      background:linear-gradient(180deg,#2563eb,#1d4ed8);
+      background:linear-gradient(180deg,var(--primary),var(--primary2));
       color:#fff;
+      box-shadow: 0 16px 28px rgba(37,99,235,.18);
+      transition: transform .06s ease, filter .14s ease, box-shadow .14s ease;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
     }
-    .btn.secondary{background:#fff; color:#1d4ed8}
-    .btn.ghost{background:transparent; color:#0f172a; border:1px solid var(--border)}
+    .btn:hover{filter:brightness(1.03); box-shadow: 0 18px 34px rgba(37,99,235,.22);}
+    .btn:active{transform:translateY(1px)}
+    .btn:focus-visible{outline:none; box-shadow: 0 0 0 5px var(--focus), 0 18px 34px rgba(37,99,235,.22);}
+
+    .btn.secondary{
+      background:#fff;
+      color:#1d4ed8;
+      border-color: rgba(37,99,235,.22);
+      box-shadow: none;
+    }
+    .btn.ghost{
+      background:transparent;
+      color:#0f172a;
+      border:1px solid rgba(15,23,42,.12);
+      box-shadow:none;
+    }
+
+    /* WhatsApp */
+    .btn.whats{
+      border-color: rgba(34,197,94,.30);
+      background: linear-gradient(180deg, #22c55e, #16a34a);
+      box-shadow: 0 16px 28px rgba(22,163,74,.18);
+    }
+    .btn.whats:hover{box-shadow: 0 18px 34px rgba(22,163,74,.22);}
 
     .small{font-size:12px; color:var(--muted)}
     code{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace}
 
     .pay{
       margin-top:12px;
-      border:1px solid var(--border);
-      border-radius:16px;
+      border:1px solid rgba(15,23,42,.10);
+      border-radius:18px;
       padding:12px;
-      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      background:
+        radial-gradient(380px 220px at 10% 0%, rgba(37,99,235,.14), transparent 60%),
+        linear-gradient(180deg, #ffffff, #f8fafc);
+      box-shadow: var(--shadowSoft);
+      overflow:hidden;
+    }
+    .payHead{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
     }
     .pay h2{
-      margin:0 0 6px;
+      margin:0 0 2px;
       font-size:16px;
-      font-weight:950;
+      font-weight:1000;
     }
     .price{
-      font-size:28px;
-      font-weight:1000;
+      font-size:30px;
+      font-weight:1100;
       margin:2px 0 8px;
       color:#0b3d91;
       letter-spacing:.2px;
     }
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 8px}
     .chip{
-      display:inline-block;
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
       padding:6px 10px;
       border-radius:999px;
       background:var(--chip);
       border:1px solid rgba(37,99,235,.18);
       color:#1e40af;
-      font-weight:900;
+      font-weight:1000;
       font-size:12px;
-      margin:6px 6px 0 0;
     }
+    .chip .ico{opacity:.9}
+    .hint{margin-top:8px; font-size:13px; color:var(--muted)}
     textarea{
       width:100%;
       margin-top:10px;
-      min-height:92px;
-      border-radius:14px;
-      border:1px solid var(--border);
+      min-height:84px;
+      border-radius:16px;
+      border:1px solid rgba(15,23,42,.12);
       padding:10px 10px;
       resize:none;
       outline:none;
@@ -95,164 +301,391 @@
       font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       font-size:13px;
       color:#0f172a;
+      box-shadow: 0 10px 18px rgba(2,6,23,.06);
     }
-    textarea:focus{box-shadow:0 0 0 4px var(--focus)}
-    .hint{margin-top:8px; font-size:13px; color:var(--muted)}
+    textarea:focus{box-shadow:0 0 0 5px var(--focus), 0 10px 18px rgba(2,6,23,.06)}
     .hide{display:none !important;}
+
+    .modal{
+      position:fixed;
+      inset:0;
+      background: rgba(2,6,23,.58);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index: 999999;
+    }
+    .modal.open{display:flex}
+    .modalBox{
+      width:min(540px, 100%);
+      background:#fff;
+      border-radius:20px;
+      border:1px solid rgba(15,23,42,.10);
+      box-shadow: 0 22px 70px rgba(2,6,23,.32);
+      padding:14px;
+      animation: pop .16s ease both;
+    }
+    .modalTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:8px;
+    }
+    .modalTitle{
+      margin:0;
+      font-size:16px;
+      font-weight:1100;
+      color:#0b2b63;
+    }
+    .xbtn{
+      border:1px solid rgba(15,23,42,.10);
+      background:#fff;
+      border-radius:12px;
+      padding:10px 12px;
+      cursor:pointer;
+      font-weight:1100;
+    }
+    .modalText{
+      margin:0 0 10px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.55;
+    }
+    .modalSteps{
+      display:grid;
+      gap:10px;
+      margin: 10px 0 6px;
+    }
+    .step{
+      border:1px solid rgba(15,23,42,.10);
+      border-radius:16px;
+      padding:10px 12px;
+      background: linear-gradient(180deg, #fff, #f8fafc);
+      box-shadow: 0 12px 22px rgba(2,6,23,.08);
+    }
+    .step b{color:#0b2b63}
+    .step small{display:block;color:var(--muted);margin-top:4px;line-height:1.45}
+    .modalActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      margin-top:10px;
+    }
+
+    @keyframes fadeUp{
+      from{ opacity:0; transform: translateY(8px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+    @keyframes pop{
+      from{ opacity:0; transform: translateY(10px) scale(.98); }
+      to{ opacity:1; transform: translateY(0) scale(1); }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{transition:none !important; animation:none !important;}
+    }
   </style>
 </head>
 
 <body>
-  <main class="card">
-    <span class="pill">Área Premium</span>
-    <h1 id="title">Verificando seu acesso…</h1>
-    <p id="subtitle">Se ficar preso aqui, a caixa abaixo vai mostrar o motivo.</p>
+  <div class="wrap">
 
-    <div id="msg" class="msg warn">Iniciando…</div>
-
-    <!-- 💠 Bloco de pagamento (aparece quando NÃO for premium) -->
-    <section id="payBox" class="pay hide" aria-label="Pagamento Pix Premium">
-      <h2>Pagamento via Pix</h2>
-      <div class="price">R$ 2,00</div>
-      <div>
-        <span class="chip">Pix apenas</span>
-        <span class="chip">Acesso Premium</span>
+    <section class="hero" aria-label="Informações do Premium">
+      <div class="brand">
+        <div class="logo">LPP</div>
+        <div>
+          <h1>Lesão por Pressão</h1>
+          <p>Desbloqueio Premium (Pix)</p>
+        </div>
       </div>
 
-      <p class="hint">
-        1) Copie o Pix “copia e cola” abaixo e pague no seu app bancário.<br>
-        2) Depois clique em <b>“Já paguei (verificar)”</b>.
+      <h2>Premium por R$ 2,00</h2>
+      <p class="sub">
+        Ao liberar o Premium, você acessa conteúdos bloqueados (ex.: <b>Seleção de Produtos</b>).
+        O pagamento é via Pix e a ativação ocorre após aprovação no seu perfil.
       </p>
 
-      <!-- ✅ TROQUE AQUI pelo seu Pix real (chave ou payload copia e cola) -->
-      <textarea id="pixPayload" readonly>
-28d39758-0fe0-47f1-9c7c-9cb6e032c5cf
-Referência: PREMIUM-LPP
-Valor: 2,00
-      </textarea>
-
-      <div class="row">
-        <button id="btnCopyPix" class="btn" type="button">Copiar Pix (copia e cola)</button>
-        <button id="btnPaid" class="btn secondary" type="button">Já paguei (verificar)</button>
-      </div>
-
-      <p class="hint">
-        Observação: se a liberação for manual, pode levar alguns minutos até seu perfil ser marcado como <code>premium=true</code>.
-      </p>
+      <ul class="bullets">
+        <li><span class="dot"></span><span><b>Rápido</b> (Pix) + confirmação</span></li>
+        <li><span class="dot"></span><span><b>Liberação no perfil</b> (<code>premium=true</code>)</span></li>
+        <li><span class="dot"></span><span><b>Suporte</b> via WhatsApp (comprovante)</span></li>
+      </ul>
     </section>
 
-    <div class="row">
-      <button id="btnRetry" class="btn ghost" type="button">Tentar novamente</button>
-      <button id="btnLogout" class="btn ghost" type="button">Sair</button>
+    <main class="card">
+      <span class="pill"><span class="mini"></span>Área Premium</span>
+      <h3 id="title">Verificando seu acesso…</h3>
+      <p id="subtitle">Se ficar preso aqui, a caixa abaixo vai mostrar o motivo.</p>
+
+      <div id="msg" class="msg warn">Iniciando…</div>
+
+      <section id="payBox" class="pay hide" aria-label="Pagamento Pix Premium">
+        <div class="payHead">
+          <div>
+            <h2>Pagamento via Pix</h2>
+            <div class="price">R$ 2,00</div>
+          </div>
+          <div class="chips">
+            <span class="chip"><span class="ico">⚡</span>Pix</span>
+            <span class="chip"><span class="ico">🔓</span>Premium</span>
+          </div>
+        </div>
+
+        <p class="hint">
+          1) Toque em <b>Copiar Pix</b> e cole no app do banco.<br>
+          2) Pague <b>R$ 2,00</b> e depois toque em <b>Já paguei</b> (envie o comprovante no WhatsApp).
+        </p>
+
+        <textarea id="pixPayload" readonly>28d39758-0fe0-47f1-9c7c-9cb6e032c5cf</textarea>
+
+        <div class="row">
+          <button id="btnCopyPix" class="btn" type="button">Copiar Pix</button>
+          <button id="btnPaid" class="btn secondary" type="button">Já paguei</button>
+        </div>
+
+        <div class="row">
+          <a id="btnWhatsTop" class="btn whats" href="#" target="_blank" rel="noopener">📩 Enviar comprovante no WhatsApp</a>
+        </div>
+
+        <p class="hint">
+          Após o pagamento, a liberação é feita marcando seu perfil como <code>premium=true</code>.
+          Depois disso, esta página libera automaticamente.
+        </p>
+      </section>
+
+      <div class="row">
+        <button id="btnRetry" class="btn ghost" type="button">Tentar novamente</button>
+        <button id="btnLogout" class="btn ghost" type="button">Sair</button>
+      </div>
+
+      <p class="small" id="diag"></p>
+    </main>
+  </div>
+
+  <!-- Modal “Já paguei” -->
+  <div id="paidModal" class="modal" aria-hidden="true">
+    <div class="modalBox" role="dialog" aria-modal="true" aria-labelledby="paidTitle">
+      <div class="modalTop">
+        <h3 id="paidTitle" class="modalTitle">Já paguei — envie o comprovante</h3>
+        <button id="paidClose" class="xbtn" type="button">Fechar ✕</button>
+      </div>
+
+      <p class="modalText">
+        Para liberar automaticamente aqui, basta você aprovar no Supabase.
+        Para facilitar, peça ao usuário enviar o comprovante + o UID.
+      </p>
+
+      <div class="modalSteps">
+        <div class="step">
+          <b>1) Envie o comprovante no WhatsApp</b>
+          <small>Inclua o UID (mostrado abaixo) para aprovar mais rápido.</small>
+        </div>
+        <div class="step">
+          <b>2) Eu marco Premium no perfil</b>
+          <small>Você marca <code>profiles.premium = true</code> para este UID.</small>
+        </div>
+        <div class="step">
+          <b>3) Verificar novamente</b>
+          <small>Depois o usuário clica em “Verificar agora”.</small>
+        </div>
+      </div>
+
+      <div class="modalActions">
+        <button id="btnModalCopyUid" class="btn secondary" type="button">Copiar UID</button>
+        <a id="btnWhatsModal" class="btn whats" href="#" target="_blank" rel="noopener">📩 Abrir WhatsApp</a>
+        <button id="btnModalVerify" class="btn" type="button">Verificar agora</button>
+      </div>
     </div>
+  </div>
 
-    <p class="small" id="diag"></p>
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-    <script type="module">
-      import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+    const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
-      const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
-      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
 
-      // ✅ Base do seu GitHub Pages
-      const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
+    // ✅ seu link WhatsApp
+    const WHATS_BASE = "https://wa.me/qr/65P6A56O3LARC1";
 
-      const msgEl  = document.getElementById("msg");
-      const diagEl = document.getElementById("diag");
-      const payBox = document.getElementById("payBox");
-      const titleEl = document.getElementById("title");
-      const subtitleEl = document.getElementById("subtitle");
+    const msgEl  = document.getElementById("msg");
+    const diagEl = document.getElementById("diag");
+    const payBox = document.getElementById("payBox");
+    const titleEl = document.getElementById("title");
+    const subtitleEl = document.getElementById("subtitle");
 
-      const setMsg = (text, type="warn") => {
-        msgEl.className = "msg " + type;
-        msgEl.textContent = text;
-      };
+    const btnCopy = document.getElementById("btnCopyPix");
+    const btnPaid = document.getElementById("btnPaid");
 
-      const showPay = (show) => {
-        payBox.classList.toggle("hide", !show);
-      };
+    const btnWhatsTop = document.getElementById("btnWhatsTop");
+    const btnWhatsModal = document.getElementById("btnWhatsModal");
 
-      async function checkPremium(){
-        showPay(false);
-        titleEl.textContent = "Verificando seu acesso…";
-        subtitleEl.textContent = "Se ficar preso aqui, a caixa abaixo vai mostrar o motivo.";
+    const paidModal = document.getElementById("paidModal");
+    const paidClose = document.getElementById("paidClose");
+    const btnModalVerify = document.getElementById("btnModalVerify");
+    const btnModalCopyUid = document.getElementById("btnModalCopyUid");
 
-        setMsg("1/3) Lendo sessão do usuário…", "warn");
+    let currentUid = "";
 
-        // getUser é mais confiável que getSession em páginas estáticas
-        const { data: userRes, error: userErr } = await supabase.auth.getUser();
+    const setMsg = (text, type="warn") => {
+      msgEl.className = "msg " + type;
+      msgEl.textContent = text;
+    };
 
-        if (userErr) {
-          setMsg("Erro ao ler usuário:\n" + userErr.message + "\n\nVoltando para login…", "bad");
-          setTimeout(() => window.location.replace(SITE_BASE + "login.html"), 1200);
-          return;
-        }
-        if (!userRes?.user) {
-          setMsg("Sem sessão ativa.\nIndo para login…", "bad");
-          setTimeout(() => window.location.replace(SITE_BASE + "login.html"), 800);
-          return;
-        }
+    const showPay = (show) => payBox.classList.toggle("hide", !show);
 
-        const uid = userRes.user.id;
-        diagEl.innerHTML = "UID: <code>" + uid + "</code>";
+    function openModal(){
+      paidModal.classList.add("open");
+      paidModal.setAttribute("aria-hidden","false");
+    }
+    function closeModal(){
+      paidModal.classList.remove("open");
+      paidModal.setAttribute("aria-hidden","true");
+    }
+    paidClose.addEventListener("click", closeModal);
+    paidModal.addEventListener("click", (e)=>{ if(e.target === paidModal) closeModal(); });
+    document.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeModal(); });
 
-        setMsg("2/3) Consultando seu status premium…", "warn");
+    function makeWhatsLink(uid){
+      // Como seu link é QR, não dá para garantir texto pré-preenchido via wa.me/qr.
+      // Mesmo assim, deixo uma mensagem pronta no clipboard ao clicar “Já paguei”.
+      return WHATS_BASE;
+    }
 
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("premium")
-          .eq("id", uid)
-          .single();
+    async function checkPremium(){
+      showPay(false);
+      titleEl.textContent = "Verificando seu acesso…";
+      subtitleEl.textContent = "Se ficar preso aqui, a caixa abaixo vai mostrar o motivo.";
+      setMsg("1/3) Lendo sessão do usuário…", "warn");
 
-        if (error) {
-          setMsg(
-            "Erro ao consultar a tabela profiles:\n" + error.message +
-            "\n\nProváveis causas:\n- RLS/policy não criada\n- Não existe linha do seu usuário em profiles\n- Cache antigo carregando código antigo",
-            "bad"
-          );
-          return;
-        }
+      const { data: userRes, error: userErr } = await supabase.auth.getUser();
 
-        setMsg("3/3) Resultado recebido.", "warn");
+      if (userErr) {
+        setMsg("Erro ao ler usuário:\n" + userErr.message + "\n\nVoltando para login…", "bad");
+        setTimeout(() => window.location.replace(SITE_BASE + "login.html"), 1200);
+        return;
+      }
+      if (!userRes?.user) {
+        setMsg("Sem sessão ativa.\nIndo para login…", "bad");
+        setTimeout(() => window.location.replace(SITE_BASE + "login.html"), 800);
+        return;
+      }
 
-        if (data?.premium) {
-          setMsg("Premium ✅ Redirecionando para Seleção de Produtos…", "ok");
-          window.location.replace(SITE_BASE + "selecao-produtos.html");
-          return;
-        }
+      const uid = userRes.user.id;
+      currentUid = uid;
+      diagEl.innerHTML = "UID: <code>" + uid + "</code>";
 
-        // Não premium => mostra pagamento
-        titleEl.textContent = "Acesso Premium (R$ 2,00 via Pix)";
-        subtitleEl.textContent = "Pague no Pix e depois verifique para liberar a página Seleção de Produtos.";
+      // Atualiza links do Whats
+      const w = makeWhatsLink(uid);
+      btnWhatsTop.href = w;
+      btnWhatsModal.href = w;
+
+      setMsg("2/3) Consultando seu status premium…", "warn");
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("premium")
+        .eq("id", uid)
+        .single();
+
+      if (error) {
         setMsg(
-          "Você ainda NÃO tem Premium.\n\nPague R$ 2,00 via Pix e clique em “Já paguei (verificar)”.",
-          "warn"
+          "Erro ao consultar a tabela profiles:\n" + error.message +
+          "\n\nProváveis causas:\n- RLS/policy não criada\n- Não existe linha do seu usuário em profiles\n- Cache antigo carregando código antigo",
+          "bad"
         );
-        showPay(true);
+        return;
       }
 
-      async function copyPix(){
-        const val = document.getElementById("pixPayload").value.trim();
-        try{
-          await navigator.clipboard.writeText(val);
-          setMsg("Pix copiado ✅\nAgora cole no app do banco e pague R$ 2,00.\nDepois clique em “Já paguei (verificar)”.", "ok");
-        }catch{
-          setMsg("Não foi possível copiar automaticamente.\nSelecione o texto do Pix e copie manualmente.", "warn");
-        }
+      setMsg("3/3) Resultado recebido.", "warn");
+
+      if (data?.premium) {
+        titleEl.textContent = "Premium ativo ✅";
+        subtitleEl.textContent = "Acesso liberado. Redirecionando para Seleção de Produtos…";
+        setMsg("Premium ✅ Redirecionando…", "ok");
+        setTimeout(() => window.location.replace(SITE_BASE + "selecao-produtos.html"), 650);
+        return;
       }
 
-      document.getElementById("btnRetry").addEventListener("click", checkPremium);
-      document.getElementById("btnPaid").addEventListener("click", checkPremium);
-      document.getElementById("btnCopyPix").addEventListener("click", copyPix);
+      titleEl.textContent = "Acesso Premium (R$ 2,00 via Pix)";
+      subtitleEl.textContent = "Pague no Pix e depois toque em “Já paguei” para enviar o comprovante.";
+      setMsg("Você ainda NÃO tem Premium.\n\nPague R$ 2,00 via Pix e toque em “Já paguei”.", "warn");
+      showPay(true);
+    }
 
-      document.getElementById("btnLogout").addEventListener("click", async () => {
-        await supabase.auth.signOut();
-        window.location.replace(SITE_BASE + "index.html");
-      });
+    async function copyPix(){
+      const payload = document.getElementById("pixPayload").value.trim();
+      const old = btnCopy.textContent;
+      btnCopy.textContent = "Copiando…";
+      btnCopy.disabled = true;
 
-      checkPremium();
-    </script>
-  </main>
+      try{
+        await navigator.clipboard.writeText(payload);
+        btnCopy.textContent = "Copiado ✅";
+        setMsg("Pix copiado ✅\nAgora cole no app do banco e pague R$ 2,00.\nDepois toque em “Já paguei”.", "ok");
+        try{ navigator.vibrate?.(30); }catch{}
+        setTimeout(() => { btnCopy.textContent = old; btnCopy.disabled = false; }, 1600);
+      }catch{
+        btnCopy.textContent = old;
+        btnCopy.disabled = false;
+        setMsg("Não foi possível copiar automaticamente.\nSelecione o Pix e copie manualmente.", "warn");
+      }
+    }
+
+    async function copyApproveMessage(){
+      if(!currentUid) return;
+      const msg =
+`Pagamento Premium LPP (R$ 2,00) via Pix
+UID: ${currentUid}
+Chave Pix: 28d39758-0fe0-47f1-9c7c-9cb6e032c5cf
+Anexei comprovante.`;
+      try{
+        await navigator.clipboard.writeText(msg);
+        setMsg("Mensagem pronta copiada ✅\nAgora abra o WhatsApp e cole junto com o comprovante.", "ok");
+      }catch{
+        // tudo bem, só não copia
+      }
+    }
+
+    document.getElementById("btnRetry").addEventListener("click", checkPremium);
+
+    btnPaid.addEventListener("click", async () => {
+      // copia mensagem pronta para facilitar
+      await copyApproveMessage();
+      openModal();
+    });
+
+    btnModalVerify.addEventListener("click", async () => {
+      closeModal();
+      await checkPremium();
+    });
+
+    btnModalCopyUid.addEventListener("click", async () => {
+      if(!currentUid){
+        setMsg("UID ainda não carregou. Clique em “Tentar novamente”.", "warn");
+        return;
+      }
+      try{
+        await navigator.clipboard.writeText(currentUid);
+        setMsg("UID copiado ✅\nUse este UID no Supabase para marcar premium=true.", "ok");
+      }catch{
+        setMsg("Não consegui copiar o UID automaticamente. Copie manualmente do campo abaixo.", "warn");
+      }
+    });
+
+    btnCopy.addEventListener("click", copyPix);
+
+    document.getElementById("btnLogout").addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      window.location.replace(SITE_BASE + "index.html");
+    });
+
+    checkPremium();
+  </script>
 </body>
 </html>
