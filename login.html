@@ -9,30 +9,41 @@
     :root{
       --bg1:#0b3d91;
       --bg2:#0a2f73;
+
       --card:#ffffff;
       --text:#0f172a;
       --muted:#475569;
+
       --border:rgba(15,23,42,.12);
-      --shadow:0 18px 40px rgba(2,6,23,.14);
-      --radius:18px;
+      --shadow:0 22px 60px rgba(2,6,23,.22);
+      --shadowSoft:0 12px 30px rgba(2,6,23,.14);
+
+      --radius:20px;
+
       --primary:#2563eb;
       --primary2:#1d4ed8;
+
       --ok:#16a34a;
       --warn:#f59e0b;
       --bad:#dc2626;
+
       --field:#f8fafc;
       --focus:rgba(37,99,235,.22);
+      --chip:#eef2ff;
+      --glass:rgba(255,255,255,.10);
+      --glassBorder:rgba(255,255,255,.18);
     }
 
     *{box-sizing:border-box}
     html,body{height:100%}
+
     body{
       margin:0;
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--text);
       background:
-        radial-gradient(1000px 500px at 20% 10%, rgba(255,255,255,.15), transparent 60%),
-        radial-gradient(900px 500px at 80% 20%, rgba(255,255,255,.12), transparent 60%),
+        radial-gradient(1000px 520px at 15% 10%, rgba(255,255,255,.16), transparent 60%),
+        radial-gradient(900px 520px at 85% 20%, rgba(37,99,235,.22), transparent 62%),
         linear-gradient(180deg, var(--bg1), var(--bg2));
       display:flex;
       align-items:center;
@@ -43,7 +54,7 @@
     .wrap{
       width:min(980px, 100%);
       display:grid;
-      grid-template-columns: 1.1fr .9fr;
+      grid-template-columns: 1fr 460px;
       gap:16px;
       align-items:stretch;
     }
@@ -51,134 +62,164 @@
       .wrap{grid-template-columns:1fr}
     }
 
+    /* HERO (mais limpo) */
     .hero{
-      border:1px solid rgba(255,255,255,.18);
+      border:1px solid var(--glassBorder);
       border-radius:var(--radius);
       padding:22px;
-      background:rgba(255,255,255,.10);
+      background:var(--glass);
       backdrop-filter: blur(10px);
-      box-shadow: 0 18px 55px rgba(0,0,0,.18);
+      box-shadow: 0 18px 55px rgba(0,0,0,.20);
       color:#fff;
       position:relative;
       overflow:hidden;
+      min-height: 320px;
     }
     .hero::after{
       content:"";
       position:absolute;
-      inset:-80px -120px auto auto;
-      width:360px;
-      height:360px;
-      background: radial-gradient(circle at 30% 30%, rgba(37,99,235,.55), transparent 60%);
-      transform: rotate(15deg);
+      inset:-120px -140px auto auto;
+      width:420px;
+      height:420px;
+      background: radial-gradient(circle at 30% 30%, rgba(37,99,235,.62), transparent 62%);
+      transform: rotate(18deg);
       pointer-events:none;
-      opacity:.9;
+      opacity:.95;
     }
+
     .brand{
       display:flex;
       gap:10px;
       align-items:center;
-      margin-bottom:16px;
+      margin-bottom:12px;
     }
     .logo{
       width:44px;
       height:44px;
       border-radius:14px;
-      background:rgba(255,255,255,.18);
-      border:1px solid rgba(255,255,255,.20);
+      background:rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.22);
       display:grid;
       place-items:center;
-      font-weight:900;
+      font-weight:1000;
       letter-spacing:.5px;
+      box-shadow: 0 10px 22px rgba(0,0,0,.16);
     }
     .brand h1{
       font-size:18px;
       margin:0;
-      font-weight:900;
+      font-weight:950;
       letter-spacing:.2px;
     }
     .brand p{
       margin:2px 0 0;
       font-size:12px;
-      opacity:.92;
+      opacity:.9;
     }
+
     .hero h2{
       margin:10px 0 8px;
-      font-size:clamp(22px, 3.2vw, 30px);
-      font-weight:950;
+      font-size:clamp(22px, 3.2vw, 32px);
+      font-weight:1000;
       letter-spacing:.2px;
     }
     .hero .sub{
       margin:0;
-      opacity:.92;
+      opacity:.94;
       line-height:1.5;
-      max-width:52ch;
+      max-width:56ch;
       font-size:14px;
     }
-    .bullets{
-      margin:16px 0 0;
-      padding:0;
-      list-style:none;
-      display:grid;
-      gap:10px;
-    }
-    .bullets li{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.16);
-      padding:10px 12px;
-      border-radius:14px;
-    }
-    .dot{
-      width:10px;height:10px;border-radius:999px;
-      background:rgba(255,255,255,.85);
-      margin-top:6px;
-      flex:0 0 auto;
-    }
-    .bullets b{font-weight:900}
-    .bullets span{opacity:.92;font-size:13px;line-height:1.45}
 
+    .chips{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      font-size:12px;
+      font-weight:900;
+      color:#fff;
+    }
+    .chip i{
+      width:10px;height:10px;border-radius:999px;background:rgba(255,255,255,.9);
+      display:inline-block;
+    }
+
+    /* CARD */
     .card{
       background:var(--card);
       border:1px solid var(--border);
       border-radius:var(--radius);
       box-shadow: var(--shadow);
       padding:18px 16px;
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-120px auto auto -120px;
+      width:260px;
+      height:260px;
+      background: radial-gradient(circle at 30% 30%, rgba(37,99,235,.18), transparent 62%);
+      pointer-events:none;
     }
 
     .card h3{
       margin:0 0 6px;
       font-size:18px;
-      font-weight:950;
+      font-weight:1000;
       letter-spacing:.2px;
+      position:relative;
+      z-index:1;
     }
     .card .hint{
-      margin:0 0 14px;
+      margin:0 0 12px;
       color:var(--muted);
       font-size:13px;
       line-height:1.45;
+      position:relative;
+      z-index:1;
     }
 
+    /* Tabs mais elegantes */
     .tabs{
       display:flex;
       gap:8px;
       margin:10px 0 14px;
+      padding:6px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:linear-gradient(180deg,#fff,#f8fafc);
+      box-shadow: var(--shadowSoft);
+      position:relative;
+      z-index:1;
     }
     .tab{
       flex:1;
-      border:1px solid var(--border);
-      background: #fff;
+      border:1px solid transparent;
+      background: transparent;
       padding:10px 12px;
       border-radius:999px;
       cursor:pointer;
-      font-weight:900;
+      font-weight:1000;
       font-size:13px;
       color:var(--muted);
+      transition: transform .06s ease, background .15s ease, border-color .15s ease;
     }
+    .tab:active{transform:scale(.99)}
     .tab[aria-selected="true"]{
-      border-color: rgba(37,99,235,.35);
-      background: rgba(37,99,235,.08);
+      border-color: rgba(37,99,235,.28);
+      background: rgba(37,99,235,.10);
       color: var(--primary2);
     }
 
@@ -187,7 +228,9 @@
       font-size:12px;
       color:var(--muted);
       margin:10px 0 6px;
-      font-weight:800;
+      font-weight:900;
+      position:relative;
+      z-index:1;
     }
     .field{
       width:100%;
@@ -197,7 +240,9 @@
       background:var(--field);
       outline:none;
       font-size:14px;
-      transition: box-shadow .15s, border-color .15s;
+      transition: box-shadow .15s, border-color .15s, background .15s;
+      position:relative;
+      z-index:1;
     }
     .field:focus{
       border-color: rgba(37,99,235,.45);
@@ -211,6 +256,8 @@
       align-items:center;
       justify-content:space-between;
       margin-top:10px;
+      position:relative;
+      z-index:1;
     }
     .small{
       font-size:12px;
@@ -223,7 +270,7 @@
       padding:0;
       cursor:pointer;
       color:var(--primary2);
-      font-weight:900;
+      font-weight:1000;
       font-size:12px;
       text-decoration:underline;
     }
@@ -235,11 +282,14 @@
       border:1px solid rgba(37,99,235,.35);
       background: linear-gradient(180deg, var(--primary), var(--primary2));
       color:#fff;
-      font-weight:950;
+      font-weight:1000;
       letter-spacing:.2px;
       cursor:pointer;
       margin-top:12px;
       transition: transform .05s ease, filter .15s ease;
+      box-shadow: 0 12px 24px rgba(29,78,216,.22);
+      position:relative;
+      z-index:1;
     }
     .btn:hover{filter:brightness(1.03)}
     .btn:active{transform:translateY(1px)}
@@ -260,6 +310,8 @@
       font-size:13px;
       white-space:pre-wrap;
       display:none;
+      position:relative;
+      z-index:1;
     }
     .msg.show{display:block}
     .msg.ok{border-color:rgba(22,163,74,.30); background:rgba(22,163,74,.08); color:#14532d}
@@ -271,46 +323,48 @@
       font-size:12px;
       color:var(--muted);
       text-align:center;
+      position:relative;
+      z-index:1;
     }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <!-- Lado esquerdo -->
+    <!-- Lado esquerdo (mais limpo, menos informação) -->
     <section class="hero" aria-label="Informações do projeto">
       <div class="brand">
         <div class="logo">LPP</div>
         <div>
           <h1>Lesão por Pressão</h1>
-          <p>Área restrita (conta necessária)</p>
+          <p>Área restrita • acesso por conta</p>
         </div>
       </div>
 
-      <h2>Acesso do aluno/usuário</h2>
+      <h2>Entre para continuar</h2>
       <p class="sub">
-        Entre com sua conta para acessar recursos premium (ex.: seleção de produtos).
-        Caso seja seu primeiro acesso, crie sua conta e confirme o e-mail.
+        Acesse conteúdo do projeto e recursos premium (ex.: seleção de produtos).  
+        Se precisar, você pode recuperar sua senha por e-mail.
       </p>
 
-      <ul class="bullets">
-        <li><span class="dot"></span><span><b>Autenticação segura</b> via Supabase</span></li>
-        <li><span class="dot"></span><span><b>Recuperação de senha</b> por e-mail</span></li>
-        <li><span class="dot"></span><span><b>Compatível com celular</b> e desktop</span></li>
-      </ul>
+      <div class="chips" aria-label="Recursos">
+        <span class="chip"><i></i>Login seguro</span>
+        <span class="chip"><i></i>Senha por e-mail</span>
+        <span class="chip"><i></i>Mobile</span>
+      </div>
     </section>
 
     <!-- Lado direito -->
     <main class="card" aria-label="Login e cadastro">
       <h3>Entrar</h3>
-      <p class="hint">Use o mesmo e-mail e senha cadastrados. Se você ainda não tem conta, clique em “Criar conta”.</p>
+      <p class="hint">Use seu e-mail e senha. Para primeiro acesso, crie sua conta.</p>
 
       <div class="tabs" role="tablist" aria-label="Alternar modo">
         <button class="tab" id="tabLogin" role="tab" aria-selected="true" type="button">Login</button>
         <button class="tab" id="tabSignup" role="tab" aria-selected="false" type="button">Criar conta</button>
       </div>
 
-      <label for="email">Email</label>
+      <label for="email">E-mail</label>
       <input id="email" class="field" type="email" placeholder="seuemail@exemplo.com" autocomplete="email" />
 
       <label for="password">Senha</label>
@@ -377,6 +431,10 @@
 
       modeHint.textContent = "Modo: " + (isLogin ? "Login" : "Criar conta");
       btnPrimary.textContent = isLogin ? "Entrar" : "Criar conta";
+      document.querySelector("main.card h3").textContent = isLogin ? "Entrar" : "Criar conta";
+      document.querySelector("main.card .hint").textContent = isLogin
+        ? "Use seu e-mail e senha para acessar."
+        : "Crie sua conta e confirme o e-mail para concluir o cadastro.";
     }
 
     tabLogin.addEventListener("click", () => setMode("login"));
@@ -387,22 +445,21 @@
     });
 
     async function handleLogin(email, password){
-      setMsg("Entrando...", "warn");
+      setMsg("Entrando…", "warn");
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) return setMsg("Erro no login:\n" + error.message, "bad");
 
-      setMsg("Login realizado. Redirecionando…", "ok");
+      setMsg("Login realizado ✅ Redirecionando…", "ok");
       window.location.href = AFTER_LOGIN_REDIRECT;
     }
 
     async function handleSignup(email, password){
-      setMsg("Criando conta...", "warn");
+      setMsg("Criando conta…", "warn");
 
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          // ✅ garante que o email de confirmação volta para /lesa/
           emailRedirectTo: EMAIL_REDIRECT_TO
         }
       });
@@ -410,7 +467,7 @@
       if (error) return setMsg("Erro ao criar conta:\n" + error.message, "bad");
 
       setMsg(
-        "Conta criada!\n\n1) Verifique seu email (e spam).\n2) Clique no link de confirmação.\n3) Depois volte e faça login.",
+        "Conta criada ✅\n\nVerifique seu e-mail (e spam) e confirme o cadastro.\nDepois volte e faça login.",
         "ok"
       );
     }
@@ -420,7 +477,7 @@
       const email = el("email").value.trim();
       const password = el("password").value;
 
-      if (!email) return setMsg("Informe um email válido.", "bad");
+      if (!email) return setMsg("Informe um e-mail válido.", "bad");
       if (!password || password.length < 6) return setMsg("A senha deve ter pelo menos 6 caracteres.", "bad");
 
       if (mode === "login") return handleLogin(email, password);
@@ -430,11 +487,10 @@
     btnForgot.addEventListener("click", async () => {
       clearMsg();
       const email = el("email").value.trim();
-      if (!email) return setMsg("Digite seu email primeiro para receber o link de recuperação.", "bad");
+      if (!email) return setMsg("Digite seu e-mail para receber o link de recuperação.", "bad");
 
-      setMsg("Enviando link de recuperação...", "warn");
+      setMsg("Enviando link de recuperação…", "warn");
 
-      // ✅ Envia email de recuperação e redireciona de volta para /lesa/
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: EMAIL_REDIRECT_TO
       });
@@ -442,17 +498,13 @@
       if (error) return setMsg("Erro ao enviar recuperação:\n" + error.message, "bad");
 
       setMsg(
-        "Pronto! Enviamos um link de recuperação para seu email.\n\nAbra o email e siga as instruções.",
+        "Link enviado ✅\nVerifique seu e-mail e siga as instruções.",
         "ok"
       );
     });
 
-    // Se você quiser, pode detectar sessão existente e pular direto:
-    // const { data } = await supabase.auth.getSession();
-    // if (data.session) window.location.href = AFTER_LOGIN_REDIRECT;
-
     setMode("login");
-    setMsg("Pronto. Preencha email e senha.", "warn");
+    setMsg("Pronto. Preencha e-mail e senha.", "warn");
   </script>
 </body>
 </html>
