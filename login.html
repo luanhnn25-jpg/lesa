@@ -3,20 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Acesso Premium • LPP</title>
+  <title>Acesso • LPP</title>
 
   <style>
     :root{
-      --bg1:#0b3d91; --bg2:#0a2f73;
-      --card:#ffffff; --text:#0f172a; --muted:#475569;
+      --bg1:#0b3d91;
+      --bg2:#0a2f73;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
       --border:rgba(15,23,42,.12);
-      --shadow:0 18px 45px rgba(2,6,23,.18);
-      --shadow2:0 12px 30px rgba(2,6,23,.12);
+      --shadow:0 18px 40px rgba(2,6,23,.14);
+      --shadow2:0 28px 70px rgba(2,6,23,.20);
       --radius:18px;
-      --primary:#2563eb; --primary2:#1d4ed8;
-      --ok:#16a34a; --warn:#f59e0b; --bad:#dc2626;
-      --field:#f8fafc; --focus:rgba(37,99,235,.22);
-      --chip:#eef2ff;
+      --primary:#2563eb;
+      --primary2:#1d4ed8;
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --bad:#dc2626;
+      --field:#f8fafc;
+      --focus:rgba(37,99,235,.22);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -25,215 +31,133 @@
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--text);
       background:
-        radial-gradient(1100px 520px at 15% 5%, rgba(255,255,255,.14), transparent 55%),
-        radial-gradient(900px 520px at 85% 15%, rgba(255,255,255,.10), transparent 60%),
+        radial-gradient(1000px 500px at 20% 10%, rgba(255,255,255,.16), transparent 60%),
+        radial-gradient(900px 500px at 80% 20%, rgba(255,255,255,.12), transparent 60%),
         linear-gradient(180deg, var(--bg1), var(--bg2));
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:18px;
+      padding:18px 14px;
     }
 
     .wrap{
-      width:min(1040px, 100%);
+      width:min(1020px, 100%);
       display:grid;
-      grid-template-columns: 1.1fr .9fr;
+      grid-template-columns: 1.05fr .95fr;
       gap:16px;
       align-items:stretch;
     }
-    @media (max-width: 920px){
-      .wrap{grid-template-columns:1fr}
-    }
+    @media (max-width: 900px){ .wrap{grid-template-columns:1fr} }
 
-    .hero{
+    .glass{
       border:1px solid rgba(255,255,255,.18);
       border-radius:var(--radius);
       padding:20px;
       background:rgba(255,255,255,.10);
       backdrop-filter: blur(10px);
-      box-shadow: 0 18px 55px rgba(0,0,0,.18);
+      box-shadow: var(--shadow2);
       color:#fff;
       position:relative;
       overflow:hidden;
-      min-height: 340px;
     }
-    .hero::after{
+    .glass::after{
       content:"";
       position:absolute;
       inset:-90px -140px auto auto;
-      width:380px;height:380px;
+      width:420px;
+      height:420px;
       background: radial-gradient(circle at 30% 30%, rgba(37,99,235,.55), transparent 60%);
-      transform: rotate(18deg);
+      transform: rotate(12deg);
       pointer-events:none;
       opacity:.9;
     }
-    .brand{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      margin-bottom:12px;
-    }
+
+    .brand{display:flex; gap:10px; align-items:center; margin-bottom:14px;}
     .logo{
-      width:46px;height:46px;border-radius:16px;
+      width:44px;height:44px;border-radius:14px;
       background:rgba(255,255,255,.18);
       border:1px solid rgba(255,255,255,.20);
       display:grid;place-items:center;
-      font-weight:950;letter-spacing:.6px;
+      font-weight:950;letter-spacing:.5px;
     }
-    .brand h1{margin:0;font-size:18px;font-weight:950}
+    .brand h1{font-size:18px;margin:0;font-weight:950;letter-spacing:.2px}
     .brand p{margin:2px 0 0;font-size:12px;opacity:.92}
 
-    .hero h2{
-      margin:10px 0 8px;
-      font-size:clamp(22px, 3.2vw, 32px);
-      font-weight:1000;
-      letter-spacing:.2px;
-    }
-    .hero .sub{
-      margin:0;
-      opacity:.92;
-      line-height:1.55;
-      max-width:56ch;
-      font-size:14px;
-    }
+    .glass h2{margin:10px 0 6px;font-size:clamp(22px, 3.2vw, 30px);font-weight:1000}
+    .glass .sub{margin:0;opacity:.92;line-height:1.5;max-width:56ch;font-size:14px}
 
-    .bullets{
-      margin:14px 0 0;
-      padding:0;
-      list-style:none;
-      display:grid;
-      gap:10px;
-    }
-    .bullets li{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
+    .pay{
+      margin-top:14px;
       background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.16);
-      padding:10px 12px;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:16px;
+      padding:14px;
+    }
+    .payTop{display:flex; align-items:flex-end; justify-content:space-between; gap:10px; flex-wrap:wrap;}
+    .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px;
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.18);
+      font-weight:900; font-size:12px;
+    }
+    .price{font-size:34px; font-weight:1000; letter-spacing:.2px; margin:6px 0 0}
+    .pay p{margin:10px 0 0; opacity:.95; font-size:13px; line-height:1.45}
+    .pixBox{
+      margin-top:10px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
       border-radius:14px;
+      padding:10px;
     }
-    .dot{
-      width:10px;height:10px;border-radius:999px;
-      background:rgba(255,255,255,.85);
-      margin-top:6px;flex:0 0 auto;
+    .pixBox textarea{
+      width:100%;
+      min-height:78px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.18);
+      padding:10px;
+      resize:none;
+      outline:none;
+      background:rgba(255,255,255,.10);
+      color:#fff;
+      font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:13px;
     }
-    .bullets b{font-weight:950}
-    .bullets span{opacity:.92;font-size:13px;line-height:1.45}
+    .pixActions{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;}
+    .btnWide{
+      flex:1 1 220px;
+      padding:12px 12px;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:950;
+      border:1px solid rgba(255,255,255,.20);
+      background:rgba(255,255,255,.14);
+      color:#fff;
+      transition: transform .05s ease, filter .15s ease;
+    }
+    .btnWide:hover{filter:brightness(1.03)}
+    .btnWide:active{transform:translateY(1px)}
+    .btnWide.primary{
+      background:linear-gradient(180deg,#22c55e,#16a34a);
+      border-color:rgba(255,255,255,.18);
+    }
+    .btnWide.blue{
+      background:linear-gradient(180deg,#2563eb,#1d4ed8);
+      border-color:rgba(255,255,255,.18);
+    }
 
     .card{
       background:var(--card);
       border:1px solid var(--border);
       border-radius:var(--radius);
       box-shadow: var(--shadow);
-      padding:16px;
+      padding:18px 16px;
       overflow:hidden;
     }
+    .card h3{margin:0 0 6px;font-size:18px;font-weight:1000}
+    .hint{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.45}
 
-    .topBadge{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:10px;
-    }
-    .pill{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding:7px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:#f8fafc;
-      font-weight:950;
-      font-size:12px;
-      color:var(--muted);
-    }
-
-    .pay{
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:12px;
-      background:linear-gradient(180deg, #ffffff, #f7fbff);
-      box-shadow: var(--shadow2);
-    }
-    .pay h3{margin:0 0 6px;font-size:16px;font-weight:1000}
-    .price{
-      font-size:30px;
-      font-weight:1000;
-      margin:2px 0 10px;
-      color:#0b3d91;
-      letter-spacing:.2px;
-    }
-    .chips{margin:6px 0 0}
-    .chip{
-      display:inline-block;
-      padding:6px 10px;
-      border-radius:999px;
-      background:var(--chip);
-      border:1px solid rgba(37,99,235,.18);
-      color:#1e40af;
-      font-weight:950;
-      font-size:12px;
-      margin:6px 6px 0 0;
-    }
-    .hint{
-      margin:8px 0 10px;
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.5;
-    }
-    textarea{
-      width:100%;
-      min-height:74px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      padding:10px;
-      resize:none;
-      outline:none;
-      background:#fff;
-      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
-      font-size:13px;
-      color:#0f172a;
-    }
-    textarea:focus{box-shadow:0 0 0 4px var(--focus)}
-
-    .btn{
-      width:100%;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid rgba(37,99,235,.35);
-      background: linear-gradient(180deg, var(--primary), var(--primary2));
-      color:#fff;
-      font-weight:1000;
-      cursor:pointer;
-      margin-top:10px;
-      transition: transform .05s ease, filter .15s ease;
-    }
-    .btn:hover{filter:brightness(1.03)}
-    .btn:active{transform:translateY(1px)}
-    .btn.secondary{
-      background:#fff;
-      color:#1d4ed8;
-      border-color: rgba(37,99,235,.25);
-    }
-    .btn.whats{
-      background: linear-gradient(180deg, #22c55e, #16a34a);
-      border-color: rgba(22,163,74,.35);
-    }
-
-    .card h4{
-      margin:14px 0 6px;
-      font-size:16px;
-      font-weight:1000;
-      letter-spacing:.2px;
-    }
-
-    .tabs{
-      display:flex;
-      gap:8px;
-      margin:10px 0 12px;
-    }
+    .tabs{display:flex; gap:8px; margin:10px 0 14px;}
     .tab{
       flex:1;
       border:1px solid var(--border);
@@ -248,20 +172,13 @@
     .tab[aria-selected="true"]{
       border-color: rgba(37,99,235,.35);
       background: rgba(37,99,235,.08);
-      color: #1d4ed8;
+      color: var(--primary2);
     }
 
-    label{
-      display:block;
-      font-size:12px;
-      color:var(--muted);
-      margin:10px 0 6px;
-      font-weight:900;
-    }
-    .fieldWrap{position:relative}
+    label{display:block;font-size:12px;color:var(--muted);margin:10px 0 6px;font-weight:900}
     .field{
       width:100%;
-      padding:12px 44px 12px 12px;
+      padding:12px 12px;
       border-radius:14px;
       border:1px solid var(--border);
       background:var(--field);
@@ -274,7 +191,9 @@
       box-shadow: 0 0 0 5px var(--focus);
       background:#fff;
     }
-    .togglePwd{
+
+    .pwRow{position:relative;}
+    .pwBtn{
       position:absolute;
       right:10px;
       top:50%;
@@ -282,16 +201,12 @@
       border:none;
       background:transparent;
       cursor:pointer;
-      width:34px;height:34px;
-      border-radius:10px;
-      display:grid;place-items:center;
+      font-weight:950;
       color:#1d4ed8;
-      font-weight:1000;
+      padding:6px 8px;
+      border-radius:10px;
     }
-    .togglePwd:focus-visible{
-      outline:none;
-      box-shadow: 0 0 0 4px var(--focus);
-    }
+    .pwBtn:hover{background:rgba(37,99,235,.08)}
 
     .row{
       display:flex;
@@ -301,21 +216,41 @@
       margin-top:10px;
       flex-wrap:wrap;
     }
-    .small{
-      font-size:12px;
-      color:var(--muted);
-      margin:0;
-    }
+    .small{font-size:12px;color:var(--muted);margin:0}
     .link{
       border:none;
       background:none;
       padding:0;
       cursor:pointer;
-      color:#1d4ed8;
-      font-weight:1000;
+      color:var(--primary2);
+      font-weight:950;
       font-size:12px;
       text-decoration:underline;
     }
+
+    .btn{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(37,99,235,.35);
+      background: linear-gradient(180deg, var(--primary), var(--primary2));
+      color:#fff;
+      font-weight:1000;
+      letter-spacing:.2px;
+      cursor:pointer;
+      margin-top:12px;
+      transition: transform .05s ease, filter .15s ease;
+    }
+    .btn:hover{filter:brightness(1.03)}
+    .btn:active{transform:translateY(1px)}
+    .btn.secondary{
+      background:#fff;
+      color:var(--primary2);
+      border-color: rgba(37,99,235,.25);
+      box-shadow:none;
+    }
+    .btn:disabled,
+    .btnWide:disabled{opacity:.65; cursor:not-allowed}
 
     .msg{
       margin:12px 0 0;
@@ -333,74 +268,59 @@
     .msg.warn{border-color:rgba(245,158,11,.35); background:rgba(245,158,11,.10); color:#7c2d12}
     .msg.bad{border-color:rgba(220,38,38,.30); background:rgba(220,38,38,.08); color:#7f1d1d}
 
-    .footer{
-      margin-top:12px;
-      font-size:12px;
-      color:var(--muted);
-      text-align:center;
-    }
+    .footer{margin-top:14px;font-size:12px;color:var(--muted);text-align:center}
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <!-- Lado esquerdo -->
-    <section class="hero" aria-label="Informações Premium">
+
+    <!-- ESQUERDA: Premium + Pix + WhatsApp -->
+    <section class="glass" aria-label="Premium e pagamento">
       <div class="brand">
         <div class="logo">LPP</div>
         <div>
           <h1>Lesão por Pressão</h1>
-          <p>Conteúdo premium (acesso pago)</p>
+          <p>Acesso Premium (conteúdo pago)</p>
         </div>
       </div>
 
-      <h2>Premium por R$ 2,00 (Pix)</h2>
+      <h2>Premium por R$ 2,00</h2>
       <p class="sub">
-        Após o pagamento, envie o comprovante no WhatsApp para liberação do seu perfil (<b>premium=true</b>).
-        Depois, faça login e o sistema libera automaticamente a <b>Seleção de Produtos</b>.
+        Pagamento via Pix e confirmação por WhatsApp (envio de comprovante).
+        Após liberação no seu perfil (<b>premium=true</b>), a página <b>Seleção de Produtos</b> é desbloqueada.
       </p>
 
-      <ul class="bullets">
-        <li><span class="dot"></span><span><b>Pix</b> (pagamento rápido)</span></li>
-        <li><span class="dot"></span><span><b>Confirmação por WhatsApp</b> (comprovante)</span></li>
-        <li><span class="dot"></span><span><b>Liberação</b> via perfil no Supabase</span></li>
-      </ul>
-    </section>
-
-    <!-- Lado direito -->
-    <main class="card" aria-label="Pagamento e Acesso">
-      <div class="topBadge">
-        <span class="pill">⭐ Acesso Premium</span>
-        <span class="pill">Pix • R$ 2,00</span>
-      </div>
-
-      <!-- PAGAMENTO (sempre visível antes do login) -->
-      <section class="pay" aria-label="Pagamento via Pix">
-        <h3>Pagamento via Pix</h3>
+      <div class="pay">
+        <div class="payTop">
+          <span class="tag">⚡ Pix apenas</span>
+          <span class="tag">🔒 Libera Seleção de Produtos</span>
+          <span class="tag">💬 Confirmação por WhatsApp</span>
+        </div>
         <div class="price">R$ 2,00</div>
 
-        <div class="chips">
-          <span class="chip">Pix apenas</span>
-          <span class="chip">Libera Seleção de Produtos</span>
-          <span class="chip">Confirmação WhatsApp</span>
+        <div class="pixBox">
+          <p style="margin:0 0 8px; font-weight:900; font-size:13px; opacity:.95;">Pix (chave aleatória)</p>
+          <textarea id="pixPayload" readonly>28d39758-0fe0-47f1-9c7c-9cb6e032c5cf</textarea>
+
+          <div class="pixActions">
+            <button id="btnCopyPix" class="btnWide blue" type="button">📋 Copiar Pix</button>
+            <button id="btnWhats" class="btnWide primary" type="button">💬 Enviar comprovante no WhatsApp</button>
+          </div>
+
+          <p style="margin:10px 0 0; font-size:12px; opacity:.92;">
+            Dica: após pagar, envie o comprovante no WhatsApp. Depois, faça login e o sistema verifica seu acesso.
+          </p>
         </div>
+      </div>
+    </section>
 
-        <p class="hint">
-          1) Copie a chave Pix e pague no seu banco.<br/>
-          2) Toque em <b>Enviar comprovante</b> e mande no WhatsApp.<br/>
-          3) Faça login para o sistema verificar seu acesso.
-        </p>
-
-        <textarea id="pixKey" readonly>28d39758-0fe0-47f1-9c7c-9cb6e032c5cf</textarea>
-
-        <button id="btnCopyPix" class="btn" type="button">📋 Copiar Pix</button>
-        <button id="btnOpenPremium" class="btn secondary" type="button">⭐ Ver página Premium</button>
-        <button id="btnWhats" class="btn whats" type="button">💬 Enviar comprovante no WhatsApp</button>
-      </section>
-
-      <h4>Entrar</h4>
-      <p class="hint" style="margin-top:0">
-        Faça login. Se você <b>não</b> tiver Premium, você será direcionado(a) para a página inicial.
+    <!-- DIREITA: Login / Cadastro -->
+    <main class="card" aria-label="Login e cadastro">
+      <h3>Entrar / Criar conta</h3>
+      <p class="hint">
+        Se você criou a conta agora, confirme o e-mail antes de tentar entrar.
+        Se não receber, o problema é configuração de URL/SMTP no Supabase.
       </p>
 
       <div class="tabs" role="tablist" aria-label="Alternar modo">
@@ -412,9 +332,9 @@
       <input id="email" class="field" type="email" placeholder="seuemail@exemplo.com" autocomplete="email" />
 
       <label for="password">Senha</label>
-      <div class="fieldWrap">
+      <div class="pwRow">
         <input id="password" class="field" type="password" placeholder="mín. 6 caracteres" autocomplete="current-password" />
-        <button id="btnTogglePwd" class="togglePwd" type="button" aria-label="Mostrar senha">👁️</button>
+        <button id="btnTogglePw" class="pwBtn" type="button" aria-label="Mostrar senha">👁</button>
       </div>
 
       <div class="row">
@@ -434,28 +354,30 @@
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-    // ===================== CONFIG =====================
+    // ====== CONFIG ======
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
 
     const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
-    const EMAIL_REDIRECT_TO = SITE_BASE + "login.html";
+    const EMAIL_REDIRECT_TO = SITE_BASE + "login.html"; // deve estar permitido no Supabase
+    const GO_IF_PREMIUM = SITE_BASE + "selecao-produtos.html";
+    const GO_IF_NOT_PREMIUM = SITE_BASE + "index.html";
 
-    // Rotas pós login:
-    const AFTER_LOGIN_PREMIUM = SITE_BASE + "selecao-produtos.html";
-    const AFTER_LOGIN_NOT_PREMIUM = SITE_BASE + "index.html";
-
-    // Página premium (onde você explica/mostra pagamento)
-    const PREMIUM_PAGE = SITE_BASE + "premium.html";
-
-    // WhatsApp (número informado por você)
     const WHATS_NUMBER = "5515988119989"; // +55 15 98811-9989
-    // ==================================================
+    // =====================
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const el = (id) => document.getElementById(id);
     const msgBox = el("msg");
+
+    const btnPrimary = el("btnPrimary");
+    const tabLogin = el("tabLogin");
+    const tabSignup = el("tabSignup");
+    const modeHint = el("modeHint");
+
+    let mode = "login"; // "login" | "signup"
+    let cooldownUntil = 0;
 
     function setMsg(text, type="warn"){
       msgBox.textContent = text;
@@ -465,48 +387,28 @@
       msgBox.textContent = "";
       msgBox.className = "msg";
     }
-
-    // ----------- Pix / Whats ----------
-    async function copyPix(){
-      const val = el("pixKey").value.trim();
-      try{
-        await navigator.clipboard.writeText(val);
-        setMsg("Pix copiado ✅\nCole no app do banco e pague R$ 2,00.\nDepois envie o comprovante no WhatsApp.", "ok");
-      }catch{
-        setMsg("Não foi possível copiar automaticamente.\nSelecione o Pix e copie manualmente.", "warn");
-      }
+    function setBusy(isBusy){
+      btnPrimary.disabled = !!isBusy;
+      el("btnForgot").disabled = !!isBusy;
+      el("btnGoHome").disabled = !!isBusy;
+      tabLogin.disabled = !!isBusy;
+      tabSignup.disabled = !!isBusy;
     }
-
-    function openWhats(){
-      const email = el("email").value.trim() || "(meu email)";
-      const txt =
-`Olá! Paguei o Premium LPP (R$ 2,00 via Pix).
-Email: ${email}
-
-Estou enviando o comprovante. Pode liberar meu acesso (premium=true)?`;
-      const url = "https://wa.me/" + WHATS_NUMBER + "?text=" + encodeURIComponent(txt);
-      window.open(url, "_blank");
+    function startCooldown(ms){
+      cooldownUntil = Date.now() + ms;
+      const tick = () => {
+        const left = cooldownUntil - Date.now();
+        if (left <= 0){
+          btnPrimary.disabled = false;
+          btnPrimary.textContent = (mode === "login" ? "Entrar" : "Criar conta");
+          return;
+        }
+        btnPrimary.disabled = true;
+        btnPrimary.textContent = `Aguarde ${Math.ceil(left/1000)}s…`;
+        requestAnimationFrame(tick);
+      };
+      tick();
     }
-
-    el("btnCopyPix").addEventListener("click", copyPix);
-    el("btnWhats").addEventListener("click", openWhats);
-    el("btnOpenPremium").addEventListener("click", () => window.location.href = PREMIUM_PAGE);
-
-    // ----------- Mostrar senha ----------
-    el("btnTogglePwd").addEventListener("click", () => {
-      const inp = el("password");
-      const isPwd = inp.type === "password";
-      inp.type = isPwd ? "text" : "password";
-      el("btnTogglePwd").textContent = isPwd ? "🙈" : "👁️";
-      el("btnTogglePwd").setAttribute("aria-label", isPwd ? "Ocultar senha" : "Mostrar senha");
-    });
-
-    // ----------- Tabs login / signup ----------
-    let mode = "login"; // "login" | "signup"
-    const tabLogin = el("tabLogin");
-    const tabSignup = el("tabSignup");
-    const btnPrimary = el("btnPrimary");
-    const modeHint = el("modeHint");
 
     function setMode(next){
       mode = next;
@@ -518,149 +420,170 @@ Estou enviando o comprovante. Pode liberar meu acesso (premium=true)?`;
       modeHint.textContent = "Modo: " + (isLogin ? "Login" : "Criar conta");
       btnPrimary.textContent = isLogin ? "Entrar" : "Criar conta";
     }
+
     tabLogin.addEventListener("click", () => setMode("login"));
     tabSignup.addEventListener("click", () => setMode("signup"));
 
-    // Permite abrir já na aba pelo parâmetro ?mode=signup
-    const params = new URLSearchParams(location.search);
-    if (params.get("mode") === "signup") setMode("signup");
-    else setMode("login");
-
     el("btnGoHome").addEventListener("click", () => window.location.href = SITE_BASE + "index.html");
 
-    // ----------- Anti-spam / cooldown (resolve erro “after 4 seconds”) ----------
-    let busy = false;
-    let cooldownUntil = 0;
+    // Mostrar/ocultar senha
+    el("btnTogglePw").addEventListener("click", () => {
+      const pw = el("password");
+      const isPw = pw.type === "password";
+      pw.type = isPw ? "text" : "password";
+      el("btnTogglePw").textContent = isPw ? "🙈" : "👁";
+    });
 
-    function canRun(){
-      const now = Date.now();
-      if (busy) return false;
-      if (now < cooldownUntil) return false;
-      return true;
-    }
-    function startCooldown(ms){
-      cooldownUntil = Date.now() + ms;
-    }
-    function setBusy(v){
-      busy = v;
-      btnPrimary.disabled = v;
-      btnPrimary.style.opacity = v ? ".75" : "1";
-      btnPrimary.style.cursor = v ? "not-allowed" : "pointer";
-    }
-
-    // ----------- Verificação premium (sem loop infinito) ----------
-    async function fetchPremium(uid){
-      // timeout simples
-      const timeoutMs = 8000;
-      const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), timeoutMs));
-
-      const query = supabase
-        .from("profiles")
-        .select("premium")
-        .eq("id", uid)
-        .single();
-
-      const res = await Promise.race([query, timeout]);
-      return res; // { data, error }
-    }
-
-    async function checkAndRedirectAfterLogin(){
-      setMsg("Login realizado. Verificando Premium…", "warn");
-
-      const { data: userRes, error: userErr } = await supabase.auth.getUser();
-      if (userErr || !userRes?.user){
-        setMsg("Falha ao confirmar sessão. Indo para início…", "bad");
-        setTimeout(() => window.location.href = AFTER_LOGIN_NOT_PREMIUM, 900);
-        return;
+    // Copiar Pix
+    el("btnCopyPix").addEventListener("click", async () => {
+      const val = el("pixPayload").value.trim();
+      try{
+        await navigator.clipboard.writeText(val);
+        setMsg("Pix copiado ✅\nCole no app do banco e pague R$ 2,00.\nDepois envie o comprovante no WhatsApp.", "ok");
+      }catch{
+        setMsg("Não consegui copiar automaticamente.\nSelecione o Pix e copie manualmente.", "warn");
       }
+    });
 
-      const uid = userRes.user.id;
+    // WhatsApp (mensagem pré-pronta)
+    el("btnWhats").addEventListener("click", async () => {
+      // tenta pegar email/uid se já existir sessão
+      let email = el("email").value.trim();
+      let uid = "";
+      try{
+        const { data } = await supabase.auth.getUser();
+        uid = data?.user?.id || "";
+        email = email || data?.user?.email || "";
+      }catch{}
+
+      const msg =
+        "Olá! Paguei o Premium LPP (R$ 2,00 via Pix).%0A" +
+        "Chave Pix: 28d39758-0fe0-47f1-9c7c-9cb6e032c5cf%0A" +
+        (email ? `Email: ${encodeURIComponent(email)}%0A` : "") +
+        (uid ? `UID: ${encodeURIComponent(uid)}%0A` : "") +
+        "Vou enviar o comprovante aqui nesta conversa.";
+
+      window.open(`https://wa.me/${WHATS_NUMBER}?text=${msg}`, "_blank");
+    });
+
+    async function checkPremiumAndRedirect(){
+      // timeout para não travar infinito
+      const timeoutMs = 10000;
+      const t = setTimeout(() => {
+        setBusy(false);
+        setMsg("Demorou para verificar o Premium.\nTente novamente em instantes.", "warn");
+      }, timeoutMs);
 
       try{
-        const { data, error } = await fetchPremium(uid);
+        setMsg("Login realizado. Verificando Premium...", "warn");
 
-        if (error){
-          // Se não existir linha no profiles, trate como não premium (evita “infinito”)
-          setMsg(
-            "Não foi possível validar o Premium agora.\n" +
-            "Você será direcionado(a) para a página inicial.\n\n" +
-            "Detalhe: " + error.message,
-            "warn"
-          );
-          setTimeout(() => window.location.href = AFTER_LOGIN_NOT_PREMIUM, 1300);
+        const { data: userRes, error: userErr } = await supabase.auth.getUser();
+        if (userErr) {
+          setMsg("Erro ao ler usuário:\n" + userErr.message, "bad");
+          return;
+        }
+        if (!userRes?.user) {
+          setMsg("Sessão não encontrada. Faça login novamente.", "bad");
           return;
         }
 
-        if (data?.premium){
-          setMsg("Premium ✅ Acesso liberado. Redirecionando…", "ok");
-          setTimeout(() => window.location.href = AFTER_LOGIN_PREMIUM, 700);
-        }else{
-          setMsg("Você não tem Premium. Indo para a página inicial…", "warn");
-          setTimeout(() => window.location.href = AFTER_LOGIN_NOT_PREMIUM, 900);
+        const uid = userRes.user.id;
+
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("premium")
+          .eq("id", uid)
+          .single();
+
+        if (error) {
+          setMsg(
+            "Não consegui consultar o Premium.\n" +
+            "Motivos comuns:\n" +
+            "- Trigger não criou linha em profiles\n" +
+            "- RLS/Policy impedindo select\n\n" +
+            "Erro: " + error.message,
+            "bad"
+          );
+          return;
         }
-      }catch(e){
-        setMsg("Tempo de resposta excedido ao validar Premium.\nIndo para a página inicial…", "warn");
-        setTimeout(() => window.location.href = AFTER_LOGIN_NOT_PREMIUM, 1200);
+
+        if (data?.premium) {
+          setMsg("Premium ✅ Liberado. Indo para Seleção de Produtos…", "ok");
+          window.location.href = GO_IF_PREMIUM;
+          return;
+        }
+
+        setMsg("Sua conta NÃO tem Premium.\nVoltando para a página inicial…", "warn");
+        window.location.href = GO_IF_NOT_PREMIUM;
+
+      } finally {
+        clearTimeout(t);
+        setBusy(false);
       }
     }
 
-    // ----------- Login / Signup ----------
     async function handleLogin(email, password){
-      setMsg("Entrando…", "warn");
+      setBusy(true);
+      setMsg("Entrando...", "warn");
+
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) return setMsg("Erro no login:\n" + error.message, "bad");
-      await checkAndRedirectAfterLogin();
+
+      if (error) {
+        setBusy(false);
+        setMsg("Erro no login:\n" + error.message, "bad");
+        startCooldown(2500);
+        return;
+      }
+
+      await checkPremiumAndRedirect();
     }
 
     async function handleSignup(email, password){
-      setMsg("Criando conta…", "warn");
+      setBusy(true);
+      setMsg("Criando conta...", "warn");
 
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: { emailRedirectTo: EMAIL_REDIRECT_TO }
       });
 
-      if (error){
-        // Rate limit comum: "only request this after 4 seconds"
-        setMsg("Erro ao criar conta:\n" + error.message + "\n\nAguarde alguns segundos e tente novamente.", "bad");
+      setBusy(false);
+
+      if (error) {
+        setMsg(
+          "Erro ao criar conta:\n" + error.message +
+          "\n\nDica: aguarde alguns segundos e tente novamente.",
+          "bad"
+        );
         startCooldown(5000);
         return;
       }
 
-      setMsg(
-        "Conta criada!\n\n1) Verifique seu email (e spam).\n2) Clique no link de confirmação.\n3) Depois volte e faça login.\n\nDica: após pagar o Pix, envie o comprovante no WhatsApp para liberar o Premium.",
-        "ok"
-      );
-
-      startCooldown(4000);
-    }
-
-    // ----------- Forgot password ----------
-    el("btnForgot").addEventListener("click", async () => {
-      if (busy) return;
-      clearMsg();
-      const email = el("email").value.trim();
-      if (!email) return setMsg("Digite seu email para receber o link de recuperação.", "bad");
-
-      setBusy(true);
-      try{
-        setMsg("Enviando link de recuperação…", "warn");
-        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: EMAIL_REDIRECT_TO });
-        if (error) return setMsg("Erro ao enviar recuperação:\n" + error.message, "bad");
-        setMsg("Pronto! Enviamos um link de recuperação para seu email.", "ok");
-      }finally{
-        setBusy(false);
-      }
-    });
-
-    // ----------- Botão principal ----------
-    btnPrimary.addEventListener("click", async () => {
-      if (!canRun()){
-        const sec = Math.ceil((cooldownUntil - Date.now())/1000);
-        if (sec > 0) setMsg("Aguarde " + sec + "s antes de tentar novamente.", "warn");
+      // Se confirmação por e-mail estiver ativa, normalmente NÃO vem sessão
+      if (!data?.session) {
+        setMsg(
+          "Conta criada ✅\n\n" +
+          "Agora confirme o e-mail:\n" +
+          "1) Veja a caixa de entrada e o SPAM.\n" +
+          "2) Clique no link de confirmação.\n" +
+          "3) Volte e faça login.\n\n" +
+          "Se não chegar, revise no Supabase:\n" +
+          "- Authentication → URL Configuration\n" +
+          "- SMTP",
+          "ok"
+        );
+        startCooldown(4000);
         return;
       }
+
+      // Caso confirmação esteja OFF
+      setMsg("Conta criada e logada ✅ Verificando Premium…", "ok");
+      await checkPremiumAndRedirect();
+    }
+
+    btnPrimary.addEventListener("click", async () => {
+      if (Date.now() < cooldownUntil) return;
 
       clearMsg();
       const email = el("email").value.trim();
@@ -669,17 +592,42 @@ Estou enviando o comprovante. Pode liberar meu acesso (premium=true)?`;
       if (!email) return setMsg("Informe um email válido.", "bad");
       if (!password || password.length < 6) return setMsg("A senha deve ter pelo menos 6 caracteres.", "bad");
 
-      setBusy(true);
-      try{
-        if (mode === "login") await handleLogin(email, password);
-        else await handleSignup(email, password);
-      }finally{
-        setBusy(false);
-      }
+      if (mode === "login") return handleLogin(email, password);
+      return handleSignup(email, password);
     });
 
-    // Mensagem inicial
-    setMsg("Pronto. Você pode pagar via Pix e/ou fazer login.", "warn");
+    el("btnForgot").addEventListener("click", async () => {
+      if (Date.now() < cooldownUntil) return;
+
+      clearMsg();
+      const email = el("email").value.trim();
+      if (!email) return setMsg("Digite seu email primeiro para receber o link de recuperação.", "bad");
+
+      setBusy(true);
+      setMsg("Enviando link de recuperação...", "warn");
+
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: EMAIL_REDIRECT_TO
+      });
+
+      setBusy(false);
+
+      if (error) {
+        setMsg("Erro ao enviar recuperação:\n" + error.message, "bad");
+        startCooldown(3000);
+        return;
+      }
+
+      setMsg("Pronto ✅\nEnviamos um link de recuperação para seu email.\nVerifique também o SPAM.", "ok");
+      startCooldown(2500);
+    });
+
+    // Param opcional: login.html?mode=signup
+    const params = new URLSearchParams(location.search);
+    const m = params.get("mode");
+    if (m === "signup") setMode("signup"); else setMode("login");
+
+    setMsg("Pronto. Selecione Login ou Criar conta.", "warn");
   </script>
 </body>
 </html>
