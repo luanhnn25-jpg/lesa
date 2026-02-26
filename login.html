@@ -3,24 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#0b3d91" />
-  <title>Entrar • LPP</title>
+  <title>Acesso Premium • LPP</title>
 
   <style>
     :root{
       --bg1:#0b3d91; --bg2:#0a2f73;
       --card:#ffffff; --text:#0f172a; --muted:#475569;
-      --border:rgba(15,23,42,.10);
-      --shadow:0 18px 45px rgba(2,6,23,.14);
-      --shadow2:0 22px 60px rgba(2,6,23,.20);
+      --border:rgba(15,23,42,.12);
+      --shadow:0 18px 45px rgba(2,6,23,.18);
+      --shadow2:0 12px 30px rgba(2,6,23,.12);
       --radius:18px;
       --primary:#2563eb; --primary2:#1d4ed8;
       --ok:#16a34a; --warn:#f59e0b; --bad:#dc2626;
-      --ring:0 0 0 4px rgba(56,130,246,.18);
-      --field:#f8fafc;
+      --field:#f8fafc; --focus:rgba(37,99,235,.22);
       --chip:#eef2ff;
     }
-
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -28,20 +25,20 @@
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--text);
       background:
-        radial-gradient(1000px 520px at 15% 8%, rgba(255,255,255,.16), transparent 60%),
-        radial-gradient(900px 520px at 85% 18%, rgba(255,255,255,.12), transparent 60%),
+        radial-gradient(1100px 520px at 15% 5%, rgba(255,255,255,.14), transparent 55%),
+        radial-gradient(900px 520px at 85% 15%, rgba(255,255,255,.10), transparent 60%),
         linear-gradient(180deg, var(--bg1), var(--bg2));
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:18px 14px;
+      padding:18px;
     }
 
     .wrap{
-      width:min(1050px, 100%);
+      width:min(1040px, 100%);
       display:grid;
       grid-template-columns: 1.1fr .9fr;
-      gap:14px;
+      gap:16px;
       align-items:stretch;
     }
     @media (max-width: 920px){
@@ -51,201 +48,280 @@
     .hero{
       border:1px solid rgba(255,255,255,.18);
       border-radius:var(--radius);
-      background: rgba(255,255,255,.10);
+      padding:20px;
+      background:rgba(255,255,255,.10);
       backdrop-filter: blur(10px);
-      box-shadow: var(--shadow2);
+      box-shadow: 0 18px 55px rgba(0,0,0,.18);
       color:#fff;
-      padding:18px;
       position:relative;
       overflow:hidden;
+      min-height: 340px;
     }
     .hero::after{
       content:"";
       position:absolute;
-      right:-120px; top:-120px;
-      width:360px; height:360px;
+      inset:-90px -140px auto auto;
+      width:380px;height:380px;
       background: radial-gradient(circle at 30% 30%, rgba(37,99,235,.55), transparent 60%);
       transform: rotate(18deg);
-      opacity:.9;
       pointer-events:none;
+      opacity:.9;
     }
-
     .brand{
-      display:flex; gap:10px; align-items:center;
-      margin-bottom:10px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin-bottom:12px;
     }
     .logo{
-      width:44px; height:44px;
-      border-radius:14px;
-      display:grid; place-items:center;
-      background: rgba(255,255,255,.18);
-      border: 1px solid rgba(255,255,255,.20);
-      font-weight:1000;
-      letter-spacing:.5px;
-      box-shadow: 0 14px 26px rgba(0,0,0,.18);
+      width:46px;height:46px;border-radius:16px;
+      background:rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.20);
+      display:grid;place-items:center;
+      font-weight:950;letter-spacing:.6px;
     }
-    .brand h1{margin:0; font-size:16px; font-weight:1000}
-    .brand p{margin:2px 0 0; font-size:12px; opacity:.92}
+    .brand h1{margin:0;font-size:18px;font-weight:950}
+    .brand p{margin:2px 0 0;font-size:12px;opacity:.92}
 
     .hero h2{
       margin:10px 0 8px;
-      font-size: clamp(20px, 3.2vw, 28px);
-      font-weight:1100;
+      font-size:clamp(22px, 3.2vw, 32px);
+      font-weight:1000;
       letter-spacing:.2px;
     }
-    .sub{
+    .hero .sub{
       margin:0;
       opacity:.92;
       line-height:1.55;
-      font-size: 13.5px;
-      max-width: 60ch;
+      max-width:56ch;
+      font-size:14px;
+    }
+
+    .bullets{
+      margin:14px 0 0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+    .bullets li{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      padding:10px 12px;
+      border-radius:14px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background:rgba(255,255,255,.85);
+      margin-top:6px;flex:0 0 auto;
+    }
+    .bullets b{font-weight:950}
+    .bullets span{opacity:.92;font-size:13px;line-height:1.45}
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      padding:16px;
+      overflow:hidden;
+    }
+
+    .topBadge{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:10px;
+    }
+    .pill{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:#f8fafc;
+      font-weight:950;
+      font-size:12px;
+      color:var(--muted);
     }
 
     .pay{
-      margin-top:12px;
-      background: rgba(255,255,255,.12);
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 16px;
-      padding: 12px;
-      box-shadow: 0 12px 22px rgba(0,0,0,.16);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+      background:linear-gradient(180deg, #ffffff, #f7fbff);
+      box-shadow: var(--shadow2);
     }
-    .pay h3{margin:0 0 6px; font-size:14px; font-weight:1000}
-    .price{font-size:26px; font-weight:1200; margin:2px 0 8px}
-    .chips{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px}
+    .pay h3{margin:0 0 6px;font-size:16px;font-weight:1000}
+    .price{
+      font-size:30px;
+      font-weight:1000;
+      margin:2px 0 10px;
+      color:#0b3d91;
+      letter-spacing:.2px;
+    }
+    .chips{margin:6px 0 0}
     .chip{
       display:inline-block;
-      padding: 7px 10px;
+      padding:6px 10px;
       border-radius:999px;
-      background: rgba(255,255,255,.16);
-      border:1px solid rgba(255,255,255,.18);
-      color:#fff;
+      background:var(--chip);
+      border:1px solid rgba(37,99,235,.18);
+      color:#1e40af;
       font-weight:950;
       font-size:12px;
+      margin:6px 6px 0 0;
+    }
+    .hint{
+      margin:8px 0 10px;
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.5;
     }
     textarea{
       width:100%;
-      min-height:68px;
-      resize:none;
+      min-height:74px;
       border-radius:14px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.12);
-      color:#fff;
+      border:1px solid var(--border);
       padding:10px;
+      resize:none;
       outline:none;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      background:#fff;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
       font-size:13px;
+      color:#0f172a;
     }
-    textarea:focus{ box-shadow: 0 0 0 4px rgba(255,255,255,.14); }
+    textarea:focus{box-shadow:0 0 0 4px var(--focus)}
 
-    .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
     .btn{
-      flex:1 1 180px;
       width:100%;
       padding:12px 12px;
       border-radius:14px;
-      cursor:pointer;
-      font-weight:1100;
-      border:1px solid rgba(37,99,235,.28);
+      border:1px solid rgba(37,99,235,.35);
       background: linear-gradient(180deg, var(--primary), var(--primary2));
       color:#fff;
-      transition: transform .06s ease, filter .15s ease, opacity .15s ease;
+      font-weight:1000;
+      cursor:pointer;
+      margin-top:10px;
+      transition: transform .05s ease, filter .15s ease;
     }
-    .btn:hover{ filter:brightness(1.03); }
-    .btn:active{ transform: translateY(1px); }
+    .btn:hover{filter:brightness(1.03)}
+    .btn:active{transform:translateY(1px)}
     .btn.secondary{
-      background: rgba(255,255,255,.14);
-      border:1px solid rgba(255,255,255,.22);
+      background:#fff;
+      color:#1d4ed8;
+      border-color: rgba(37,99,235,.25);
     }
-    .btn:disabled{opacity:.55; cursor:not-allowed; filter:none; transform:none}
-
-    .card{
-      background: linear-gradient(180deg, #fff, #fbfdff);
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding:16px;
+    .btn.whats{
+      background: linear-gradient(180deg, #22c55e, #16a34a);
+      border-color: rgba(22,163,74,.35);
     }
 
-    .card h3{
-      margin:0 0 6px;
-      font-size:18px;
-      font-weight:1100;
-      color:#0b2b63;
+    .card h4{
+      margin:14px 0 6px;
+      font-size:16px;
+      font-weight:1000;
+      letter-spacing:.2px;
     }
-    .hint{margin:0 0 10px; color:var(--muted); font-size:13px; line-height:1.45}
 
     .tabs{
-      display:flex; gap:8px; margin: 10px 0 12px;
+      display:flex;
+      gap:8px;
+      margin:10px 0 12px;
     }
     .tab{
       flex:1;
-      border:1px solid rgba(15,23,42,.12);
+      border:1px solid var(--border);
       background:#fff;
       padding:10px 12px;
       border-radius:999px;
       cursor:pointer;
-      font-weight:1100;
+      font-weight:950;
       font-size:13px;
-      color: var(--muted);
+      color:var(--muted);
     }
-    .tab.active{
+    .tab[aria-selected="true"]{
       border-color: rgba(37,99,235,.35);
       background: rgba(37,99,235,.08);
       color: #1d4ed8;
     }
 
-    label{display:block; margin:10px 0 6px; font-size:12px; font-weight:1000; color:var(--muted)}
+    label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin:10px 0 6px;
+      font-weight:900;
+    }
+    .fieldWrap{position:relative}
     .field{
       width:100%;
-      padding:12px 12px;
+      padding:12px 44px 12px 12px;
       border-radius:14px;
-      border:1px solid rgba(15,23,42,.12);
-      background: var(--field);
+      border:1px solid var(--border);
+      background:var(--field);
       outline:none;
-      font-size:15px;
-      transition: box-shadow .14s ease, border-color .14s ease, background .14s ease;
+      font-size:14px;
+      transition: box-shadow .15s, border-color .15s;
     }
     .field:focus{
-      background:#fff;
       border-color: rgba(37,99,235,.45);
-      box-shadow: var(--ring);
+      box-shadow: 0 0 0 5px var(--focus);
+      background:#fff;
     }
-
-    .passwrap{ position:relative; }
-    .eye{
+    .togglePwd{
       position:absolute;
-      right:10px; top:50%;
-      transform: translateY(-50%);
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
       border:none;
       background:transparent;
       cursor:pointer;
-      font-size:18px;
-      opacity:.75;
-      padding:6px;
+      width:34px;height:34px;
+      border-radius:10px;
+      display:grid;place-items:center;
+      color:#1d4ed8;
+      font-weight:1000;
     }
-    .eye:active{ transform: translateY(-50%) scale(.98); }
+    .togglePwd:focus-visible{
+      outline:none;
+      box-shadow: 0 0 0 4px var(--focus);
+    }
 
-    .row2{
-      display:flex; align-items:center; justify-content:space-between;
+    .row{
+      display:flex;
       gap:10px;
+      align-items:center;
+      justify-content:space-between;
       margin-top:10px;
       flex-wrap:wrap;
     }
-    .small{font-size:12px; color:var(--muted); margin:0}
+    .small{
+      font-size:12px;
+      color:var(--muted);
+      margin:0;
+    }
     .link{
-      border:none; background:none; padding:0;
+      border:none;
+      background:none;
+      padding:0;
       cursor:pointer;
       color:#1d4ed8;
-      font-weight:1100;
+      font-weight:1000;
       font-size:12px;
       text-decoration:underline;
     }
 
     .msg{
-      margin-top:12px;
+      margin:12px 0 0;
       padding:10px 12px;
       border-radius:14px;
-      border:1px solid rgba(15,23,42,.12);
+      border:1px solid var(--border);
       background:#fff;
       color:var(--muted);
       font-size:13px;
@@ -257,72 +333,91 @@
     .msg.warn{border-color:rgba(245,158,11,.35); background:rgba(245,158,11,.10); color:#7c2d12}
     .msg.bad{border-color:rgba(220,38,38,.30); background:rgba(220,38,38,.08); color:#7f1d1d}
 
-    .footer{margin-top:14px; font-size:12px; color:var(--muted); text-align:center}
+    .footer{
+      margin-top:12px;
+      font-size:12px;
+      color:var(--muted);
+      text-align:center;
+    }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <!-- ESQUERDA: Premium + Pix -->
-    <section class="hero" aria-label="Premium e pagamento">
+    <!-- Lado esquerdo -->
+    <section class="hero" aria-label="Informações Premium">
       <div class="brand">
         <div class="logo">LPP</div>
         <div>
           <h1>Lesão por Pressão</h1>
-          <p>Projeto Integrador • Acesso Premium</p>
+          <p>Conteúdo premium (acesso pago)</p>
         </div>
       </div>
 
-      <h2>Premium por R$ 2,00</h2>
+      <h2>Premium por R$ 2,00 (Pix)</h2>
       <p class="sub">
-        Antes mesmo de entrar, você já pode ver o Pix e enviar o comprovante.
-        Depois do pagamento, a liberação é feita marcando seu perfil como <code>premium=true</code>.
+        Após o pagamento, envie o comprovante no WhatsApp para liberação do seu perfil (<b>premium=true</b>).
+        Depois, faça login e o sistema libera automaticamente a <b>Seleção de Produtos</b>.
       </p>
 
-      <div class="pay">
+      <ul class="bullets">
+        <li><span class="dot"></span><span><b>Pix</b> (pagamento rápido)</span></li>
+        <li><span class="dot"></span><span><b>Confirmação por WhatsApp</b> (comprovante)</span></li>
+        <li><span class="dot"></span><span><b>Liberação</b> via perfil no Supabase</span></li>
+      </ul>
+    </section>
+
+    <!-- Lado direito -->
+    <main class="card" aria-label="Pagamento e Acesso">
+      <div class="topBadge">
+        <span class="pill">⭐ Acesso Premium</span>
+        <span class="pill">Pix • R$ 2,00</span>
+      </div>
+
+      <!-- PAGAMENTO (sempre visível antes do login) -->
+      <section class="pay" aria-label="Pagamento via Pix">
         <h3>Pagamento via Pix</h3>
         <div class="price">R$ 2,00</div>
 
         <div class="chips">
           <span class="chip">Pix apenas</span>
           <span class="chip">Libera Seleção de Produtos</span>
-          <span class="chip">Confirmação por WhatsApp</span>
+          <span class="chip">Confirmação WhatsApp</span>
         </div>
 
-        <textarea id="pixPayload" readonly>28d39758-0fe0-47f1-9c7c-9cb6e032c5cf
-Referência: PREMIUM-LPP
-Valor: 2,00</textarea>
+        <p class="hint">
+          1) Copie a chave Pix e pague no seu banco.<br/>
+          2) Toque em <b>Enviar comprovante</b> e mande no WhatsApp.<br/>
+          3) Faça login para o sistema verificar seu acesso.
+        </p>
 
-        <div class="row">
-          <button class="btn" id="btnCopyPix" type="button">📋 Copiar Pix</button>
-          <button class="btn secondary" id="btnGoPremium" type="button">⭐ Ver página Premium</button>
-          <button class="btn secondary" id="btnWhatsapp" type="button">💬 Enviar comprovante no WhatsApp</button>
-        </div>
-      </div>
-    </section>
+        <textarea id="pixKey" readonly>28d39758-0fe0-47f1-9c7c-9cb6e032c5cf</textarea>
 
-    <!-- DIREITA: Login / Signup -->
-    <main class="card" aria-label="Login e cadastro">
-      <h3 id="title">Entrar</h3>
-      <p class="hint" id="hint">
-        Faça login ou crie uma conta. Para reduzir erro de segurança, aguarde alguns segundos entre tentativas.
+        <button id="btnCopyPix" class="btn" type="button">📋 Copiar Pix</button>
+        <button id="btnOpenPremium" class="btn secondary" type="button">⭐ Ver página Premium</button>
+        <button id="btnWhats" class="btn whats" type="button">💬 Enviar comprovante no WhatsApp</button>
+      </section>
+
+      <h4>Entrar</h4>
+      <p class="hint" style="margin-top:0">
+        Faça login. Se você <b>não</b> tiver Premium, você será direcionado(a) para a página inicial.
       </p>
 
-      <div class="tabs" role="tablist">
-        <button class="tab active" id="tabLogin" type="button">Login</button>
-        <button class="tab" id="tabSignup" type="button">Criar conta</button>
+      <div class="tabs" role="tablist" aria-label="Alternar modo">
+        <button class="tab" id="tabLogin" role="tab" aria-selected="true" type="button">Login</button>
+        <button class="tab" id="tabSignup" role="tab" aria-selected="false" type="button">Criar conta</button>
       </div>
 
       <label for="email">Email</label>
       <input id="email" class="field" type="email" placeholder="seuemail@exemplo.com" autocomplete="email" />
 
       <label for="password">Senha</label>
-      <div class="passwrap">
+      <div class="fieldWrap">
         <input id="password" class="field" type="password" placeholder="mín. 6 caracteres" autocomplete="current-password" />
-        <button class="eye" id="btnEye" type="button" aria-label="Mostrar senha">👁️</button>
+        <button id="btnTogglePwd" class="togglePwd" type="button" aria-label="Mostrar senha">👁️</button>
       </div>
 
-      <div class="row2">
+      <div class="row">
         <p class="small" id="modeHint">Modo: Login</p>
         <button class="link" id="btnForgot" type="button">Esqueci minha senha</button>
       </div>
@@ -331,6 +426,7 @@ Valor: 2,00</textarea>
       <button class="btn secondary" id="btnGoHome" type="button">Voltar ao site</button>
 
       <div class="msg" id="msg" role="status" aria-live="polite"></div>
+
       <div class="footer">© 2026 • Projeto Integrador</div>
     </main>
   </div>
@@ -338,21 +434,23 @@ Valor: 2,00</textarea>
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-    // ===== CONFIG =====
+    // ===================== CONFIG =====================
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
 
     const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
     const EMAIL_REDIRECT_TO = SITE_BASE + "login.html";
-    const AFTER_LOGIN_PREMIUM_REDIRECT = SITE_BASE + "selecao-produtos.html";
 
-    // ✅ Regra solicitada:
-    // logou e NÃO tem premium => vai pro index
-    const GO_HOME_IF_NOT_PREMIUM = true;
+    // Rotas pós login:
+    const AFTER_LOGIN_PREMIUM = SITE_BASE + "selecao-produtos.html";
+    const AFTER_LOGIN_NOT_PREMIUM = SITE_BASE + "index.html";
 
-    // WhatsApp comprovante:
-    const WHATSAPP_PHONE = "5515988119989";
-    // ===================
+    // Página premium (onde você explica/mostra pagamento)
+    const PREMIUM_PAGE = SITE_BASE + "premium.html";
+
+    // WhatsApp (número informado por você)
+    const WHATS_NUMBER = "5515988119989"; // +55 15 98811-9989
+    // ==================================================
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -361,192 +459,161 @@ Valor: 2,00</textarea>
 
     function setMsg(text, type="warn"){
       msgBox.textContent = text;
-      msgBox.className = "msg show " + type;
+      msgBox.className = "msg show " + (type || "warn");
     }
     function clearMsg(){
       msgBox.textContent = "";
       msgBox.className = "msg";
     }
 
-    // Anti-duplo-clique + cooldown
-    let busy = false;
-    let cooldownUntil = 0;
-
-    function setBusy(on){
-      busy = on;
-      el("btnPrimary").disabled = on;
-      el("btnForgot").disabled = on;
-      el("tabLogin").disabled = on;
-      el("tabSignup").disabled = on;
-    }
-
-    function inCooldown(){
-      return Date.now() < cooldownUntil;
-    }
-
-    function startCooldown(ms=4200){
-      cooldownUntil = Date.now() + ms;
-    }
-
-    // Mostrar/ocultar senha
-    el("btnEye").addEventListener("click", () => {
-      const p = el("password");
-      const isPass = p.type === "password";
-      p.type = isPass ? "text" : "password";
-      el("btnEye").textContent = isPass ? "🙈" : "👁️";
-      el("btnEye").setAttribute("aria-label", isPass ? "Ocultar senha" : "Mostrar senha");
-    });
-
-    // Premium / Pix (lado esquerdo)
-    el("btnCopyPix").addEventListener("click", async () => {
-      const val = el("pixPayload").value.trim();
+    // ----------- Pix / Whats ----------
+    async function copyPix(){
+      const val = el("pixKey").value.trim();
       try{
         await navigator.clipboard.writeText(val);
-        setMsg("Pix copiado ✅ Cole no app do banco e faça o pagamento.", "ok");
+        setMsg("Pix copiado ✅\nCole no app do banco e pague R$ 2,00.\nDepois envie o comprovante no WhatsApp.", "ok");
       }catch{
-        setMsg("Não consegui copiar automaticamente. Selecione o Pix e copie manualmente.", "warn");
+        setMsg("Não foi possível copiar automaticamente.\nSelecione o Pix e copie manualmente.", "warn");
       }
+    }
+
+    function openWhats(){
+      const email = el("email").value.trim() || "(meu email)";
+      const txt =
+`Olá! Paguei o Premium LPP (R$ 2,00 via Pix).
+Email: ${email}
+
+Estou enviando o comprovante. Pode liberar meu acesso (premium=true)?`;
+      const url = "https://wa.me/" + WHATS_NUMBER + "?text=" + encodeURIComponent(txt);
+      window.open(url, "_blank");
+    }
+
+    el("btnCopyPix").addEventListener("click", copyPix);
+    el("btnWhats").addEventListener("click", openWhats);
+    el("btnOpenPremium").addEventListener("click", () => window.location.href = PREMIUM_PAGE);
+
+    // ----------- Mostrar senha ----------
+    el("btnTogglePwd").addEventListener("click", () => {
+      const inp = el("password");
+      const isPwd = inp.type === "password";
+      inp.type = isPwd ? "text" : "password";
+      el("btnTogglePwd").textContent = isPwd ? "🙈" : "👁️";
+      el("btnTogglePwd").setAttribute("aria-label", isPwd ? "Ocultar senha" : "Mostrar senha");
     });
 
-    el("btnGoPremium").addEventListener("click", () => {
-      window.location.href = SITE_BASE + "premium.html";
-    });
-
-    el("btnWhatsapp").addEventListener("click", async () => {
-      const { data } = await supabase.auth.getUser();
-      const email = data?.user?.email || "(sem login)";
-      const text = encodeURIComponent(
-        "Olá! Segue comprovante do Pix (Premium LPP). Meu e-mail de login é: " + email +
-        "\n\nChave Pix: 28d39758-0fe0-47f1-9c7c-9cb6e032c5cf\nValor: R$ 2,00\nReferência: PREMIUM-LPP"
-      );
-      window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${text}`, "_blank");
-    });
-
-    // Tabs (modo)
+    // ----------- Tabs login / signup ----------
     let mode = "login"; // "login" | "signup"
+    const tabLogin = el("tabLogin");
+    const tabSignup = el("tabSignup");
+    const btnPrimary = el("btnPrimary");
+    const modeHint = el("modeHint");
 
     function setMode(next){
       mode = next;
       clearMsg();
-
       const isLogin = mode === "login";
-      el("tabLogin").classList.toggle("active", isLogin);
-      el("tabSignup").classList.toggle("active", !isLogin);
-
-      el("title").textContent = isLogin ? "Entrar" : "Criar conta";
-      el("modeHint").textContent = "Modo: " + (isLogin ? "Login" : "Criar conta");
-      el("btnPrimary").textContent = isLogin ? "Entrar" : "Criar conta";
-
+      tabLogin.setAttribute("aria-selected", String(isLogin));
+      tabSignup.setAttribute("aria-selected", String(!isLogin));
       el("password").setAttribute("autocomplete", isLogin ? "current-password" : "new-password");
+      modeHint.textContent = "Modo: " + (isLogin ? "Login" : "Criar conta");
+      btnPrimary.textContent = isLogin ? "Entrar" : "Criar conta";
     }
+    tabLogin.addEventListener("click", () => setMode("login"));
+    tabSignup.addEventListener("click", () => setMode("signup"));
 
-    el("tabLogin").addEventListener("click", () => setMode("login"));
-    el("tabSignup").addEventListener("click", () => setMode("signup"));
+    // Permite abrir já na aba pelo parâmetro ?mode=signup
+    const params = new URLSearchParams(location.search);
+    if (params.get("mode") === "signup") setMode("signup");
+    else setMode("login");
 
-    // Voltar home
     el("btnGoHome").addEventListener("click", () => window.location.href = SITE_BASE + "index.html");
 
-    // Esqueci senha
-    el("btnForgot").addEventListener("click", async () => {
-      clearMsg();
-      const email = el("email").value.trim();
-      if (!email) return setMsg("Digite seu email primeiro para receber o link de recuperação.", "bad");
-      if (busy) return;
+    // ----------- Anti-spam / cooldown (resolve erro “after 4 seconds”) ----------
+    let busy = false;
+    let cooldownUntil = 0;
 
-      if (inCooldown()){
-        return setMsg("Aguarde alguns segundos antes de tentar novamente (proteção do servidor).", "warn");
-      }
+    function canRun(){
+      const now = Date.now();
+      if (busy) return false;
+      if (now < cooldownUntil) return false;
+      return true;
+    }
+    function startCooldown(ms){
+      cooldownUntil = Date.now() + ms;
+    }
+    function setBusy(v){
+      busy = v;
+      btnPrimary.disabled = v;
+      btnPrimary.style.opacity = v ? ".75" : "1";
+      btnPrimary.style.cursor = v ? "not-allowed" : "pointer";
+    }
 
-      setBusy(true);
-      setMsg("Enviando link de recuperação...", "warn");
+    // ----------- Verificação premium (sem loop infinito) ----------
+    async function fetchPremium(uid){
+      // timeout simples
+      const timeoutMs = 8000;
+      const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), timeoutMs));
 
-      const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: EMAIL_REDIRECT_TO });
-
-      setBusy(false);
-      startCooldown();
-
-      if (error) return setMsg("Erro ao enviar recuperação:\n" + error.message, "bad");
-      setMsg("Pronto ✅ Enviamos um link de recuperação para seu email.", "ok");
-    });
-
-    async function ensureProfileRow(uid){
-      // tenta ler
-      const { data, error } = await supabase
+      const query = supabase
         .from("profiles")
         .select("premium")
         .eq("id", uid)
-        .maybeSingle();
+        .single();
 
-      // Se deu erro de RLS/estrutura, devolve para tratar
-      if (error && !data) return { premium: null, error };
+      const res = await Promise.race([query, timeout]);
+      return res; // { data, error }
+    }
 
-      // Se não tem linha, cria (precisa da policy INSERT própria)
-      if (!data){
-        const ins = await supabase.from("profiles").insert({ id: uid, premium: false });
-        if (ins.error) return { premium: null, error: ins.error };
+    async function checkAndRedirectAfterLogin(){
+      setMsg("Login realizado. Verificando Premium…", "warn");
 
-        // relê
-        const reread = await supabase
-          .from("profiles")
-          .select("premium")
-          .eq("id", uid)
-          .single();
-
-        if (reread.error) return { premium: null, error: reread.error };
-        return { premium: !!reread.data?.premium, error: null };
+      const { data: userRes, error: userErr } = await supabase.auth.getUser();
+      if (userErr || !userRes?.user){
+        setMsg("Falha ao confirmar sessão. Indo para início…", "bad");
+        setTimeout(() => window.location.href = AFTER_LOGIN_NOT_PREMIUM, 900);
+        return;
       }
 
-      return { premium: !!data.premium, error: null };
-    }
+      const uid = userRes.user.id;
 
-    async function checkPremiumAndRedirect(){
-      // Timeout para NÃO ficar infinito
-      const hardTimeoutMs = 8000;
+      try{
+        const { data, error } = await fetchPremium(uid);
 
-      const timer = new Promise((_, rej) =>
-        setTimeout(() => rej(new Error("Timeout ao verificar Premium (8s).")), hardTimeoutMs)
-      );
-
-      const task = (async () => {
-        const { data: u, error: uerr } = await supabase.auth.getUser();
-        if (uerr) throw uerr;
-        if (!u?.user) throw new Error("Sessão não encontrada após login.");
-
-        const uid = u.user.id;
-        const prof = await ensureProfileRow(uid);
-        if (prof.error) throw prof.error;
-
-        if (prof.premium){
-          setMsg("Premium ✅ Redirecionando…", "ok");
-          window.location.href = AFTER_LOGIN_PREMIUM_REDIRECT;
-        } else {
-          setMsg("Login ok, porém sem Premium. Indo para o início…", "warn");
-          if (GO_HOME_IF_NOT_PREMIUM) window.location.href = SITE_BASE + "index.html";
+        if (error){
+          // Se não existir linha no profiles, trate como não premium (evita “infinito”)
+          setMsg(
+            "Não foi possível validar o Premium agora.\n" +
+            "Você será direcionado(a) para a página inicial.\n\n" +
+            "Detalhe: " + error.message,
+            "warn"
+          );
+          setTimeout(() => window.location.href = AFTER_LOGIN_NOT_PREMIUM, 1300);
+          return;
         }
-      })();
 
-      return Promise.race([task, timer]);
+        if (data?.premium){
+          setMsg("Premium ✅ Acesso liberado. Redirecionando…", "ok");
+          setTimeout(() => window.location.href = AFTER_LOGIN_PREMIUM, 700);
+        }else{
+          setMsg("Você não tem Premium. Indo para a página inicial…", "warn");
+          setTimeout(() => window.location.href = AFTER_LOGIN_NOT_PREMIUM, 900);
+        }
+      }catch(e){
+        setMsg("Tempo de resposta excedido ao validar Premium.\nIndo para a página inicial…", "warn");
+        setTimeout(() => window.location.href = AFTER_LOGIN_NOT_PREMIUM, 1200);
+      }
     }
 
+    // ----------- Login / Signup ----------
     async function handleLogin(email, password){
-      setMsg("Entrando...", "warn");
+      setMsg("Entrando…", "warn");
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) return setMsg("Erro no login:\n" + error.message, "bad");
-
-      setMsg("Login realizado. Verificando Premium...", "warn");
-      try{
-        await checkPremiumAndRedirect();
-      }catch(e){
-        setMsg(
-          "Login realizado, mas houve falha ao verificar Premium.\n" +
-          "Causa provável: tabela profiles/trigger/RLS.\n\nDetalhe:\n" + (e?.message || e),
-          "bad"
-        );
-      }
+      await checkAndRedirectAfterLogin();
     }
 
     async function handleSignup(email, password){
-      setMsg("Criando conta...", "warn");
+      setMsg("Criando conta…", "warn");
 
       const { error } = await supabase.auth.signUp({
         email,
@@ -555,26 +622,47 @@ Valor: 2,00</textarea>
       });
 
       if (error){
-        // ✅ mensagem mais amigável para o rate-limit 4s
-        const msg = String(error.message || "");
-        if (msg.toLowerCase().includes("only request this after")){
-          return setMsg("Aguarde ~4 segundos e tente novamente (proteção do servidor).", "warn");
-        }
-        return setMsg("Erro ao criar conta:\n" + error.message, "bad");
+        // Rate limit comum: "only request this after 4 seconds"
+        setMsg("Erro ao criar conta:\n" + error.message + "\n\nAguarde alguns segundos e tente novamente.", "bad");
+        startCooldown(5000);
+        return;
       }
 
       setMsg(
-        "Conta criada ✅\n\n1) Verifique seu email (e spam).\n2) Clique no link de confirmação.\n3) Depois volte e faça login.",
+        "Conta criada!\n\n1) Verifique seu email (e spam).\n2) Clique no link de confirmação.\n3) Depois volte e faça login.\n\nDica: após pagar o Pix, envie o comprovante no WhatsApp para liberar o Premium.",
         "ok"
       );
+
+      startCooldown(4000);
     }
 
-    el("btnPrimary").addEventListener("click", async () => {
-      clearMsg();
-
+    // ----------- Forgot password ----------
+    el("btnForgot").addEventListener("click", async () => {
       if (busy) return;
-      if (inCooldown()) return setMsg("Aguarde alguns segundos antes de tentar novamente.", "warn");
+      clearMsg();
+      const email = el("email").value.trim();
+      if (!email) return setMsg("Digite seu email para receber o link de recuperação.", "bad");
 
+      setBusy(true);
+      try{
+        setMsg("Enviando link de recuperação…", "warn");
+        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: EMAIL_REDIRECT_TO });
+        if (error) return setMsg("Erro ao enviar recuperação:\n" + error.message, "bad");
+        setMsg("Pronto! Enviamos um link de recuperação para seu email.", "ok");
+      }finally{
+        setBusy(false);
+      }
+    });
+
+    // ----------- Botão principal ----------
+    btnPrimary.addEventListener("click", async () => {
+      if (!canRun()){
+        const sec = Math.ceil((cooldownUntil - Date.now())/1000);
+        if (sec > 0) setMsg("Aguarde " + sec + "s antes de tentar novamente.", "warn");
+        return;
+      }
+
+      clearMsg();
       const email = el("email").value.trim();
       const password = el("password").value;
 
@@ -582,22 +670,16 @@ Valor: 2,00</textarea>
       if (!password || password.length < 6) return setMsg("A senha deve ter pelo menos 6 caracteres.", "bad");
 
       setBusy(true);
-
       try{
         if (mode === "login") await handleLogin(email, password);
         else await handleSignup(email, password);
-      } finally {
+      }finally{
         setBusy(false);
-        startCooldown(); // evita erro dos 4s por clique repetido
       }
     });
 
-    // Se vier ?mode=signup na URL
-    const params = new URLSearchParams(location.search);
-    const initial = params.get("mode");
-    setMode(initial === "signup" ? "signup" : "login");
-
-    setMsg("Pronto. Preencha email e senha.", "warn");
+    // Mensagem inicial
+    setMsg("Pronto. Você pode pagar via Pix e/ou fazer login.", "warn");
   </script>
 </body>
 </html>
