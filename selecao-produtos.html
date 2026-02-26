@@ -1,7 +1,9 @@
 <!doctype html>
-<html lang="pt-br"><head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b3d91" />
   <title>Seleção de Produtos — Lesão por Pressão (LPP)</title>
 
   <style>
@@ -12,29 +14,289 @@
       --lpp-card:#ffffff;
       --lpp-text:#0f172a;
       --lpp-muted:#475569;
-      --lpp-border:rgba(15,23,42,.12);
-      --lpp-shadow:0 10px 25px rgba(2,6,23,.08);
+      --lpp-border:rgba(15,23,42,.10);
+      --lpp-shadow:0 12px 30px rgba(2,6,23,.10);
+      --lpp-shadow2:0 18px 45px rgba(2,6,23,.16);
       --lpp-radius:18px;
       --lpp-accent:#2563eb;
-      --lpp-ok:#16a34a;
-      --lpp-warn:#f59e0b;
-      --lpp-bad:#dc2626;
-      --lpp-chip:#eef2ff;
+
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --bad:#dc2626;
+
+      --chip:#eef2ff;
+      --ring: 0 0 0 4px rgba(56,130,246,.18);
     }
 
+    *{box-sizing:border-box}
     html,body{height:100%}
+
     body{
-      margin:0 !important;
-      background:var(--lpp-bg) !important;
-      color:var(--lpp-text) !important;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif !important;
-      line-height:1.55 !important;
+      margin:0;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.14), transparent 55%),
+        radial-gradient(900px 500px at 90% 10%, rgba(11,61,145,.12), transparent 55%),
+        var(--lpp-bg);
+      color:var(--lpp-text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      line-height:1.55;
     }
 
     /* ✅ enquanto valida premium, o main fica escondido */
     body[data-locked="1"] main{ display:none; }
 
-    /* ✅ tela de carregamento/erro (pra não ficar “branco”) */
+    /* =========================
+       TOP HEADER + NAV (PRO)
+       ========================= */
+    .top{
+      background: linear-gradient(180deg, var(--lpp-blue-900), #0b4ab1);
+      color:#fff;
+      padding: 18px 14px;
+      position: sticky;
+      top:0;
+      z-index: 60;
+      box-shadow: 0 12px 24px rgba(2,6,23,.12);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+    .top::after{
+      content:"";
+      position:absolute;
+      inset:-60px -180px auto -180px;
+      height: 170px;
+      background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.18), transparent 60%);
+      transform: rotate(-2deg);
+      pointer-events:none;
+    }
+    .top-inner{
+      max-width:1100px;
+      margin:0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      position:relative;
+      z-index:1;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      display:grid;place-items:center;
+      font-weight: 950;
+      letter-spacing:.5px;
+      background: rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 14px 28px rgba(2,6,23,.18);
+      flex:0 0 auto;
+    }
+    .brand h1{
+      margin:0;
+      font-size: 16px;
+      font-weight: 950;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .brand p{
+      margin:2px 0 0;
+      font-size: 12px;
+      opacity:.92;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .user-pill{
+      display:none; /* aparece só se logado */
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.10);
+      box-shadow: 0 14px 28px rgba(2,6,23,.18);
+      cursor:pointer;
+      user-select:none;
+      max-width: 420px;
+      min-width: 0;
+      position:relative;
+      transition: transform .12s ease, background .12s ease;
+    }
+    .user-pill:hover{ transform: translateY(-1px); background: rgba(255,255,255,.12); }
+    .user-ico{
+      width:28px;height:28px;border-radius:999px;
+      display:grid;place-items:center;
+      background: rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.18);
+      flex:0 0 auto;
+    }
+    .user-text{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      line-height:1.1;
+    }
+    .user-hello{
+      font-size:12px;
+      opacity:.92;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:4px 8px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:950;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      width: fit-content;
+    }
+    .badge.premium{
+      border-color: rgba(22,163,74,.35);
+      background: rgba(22,163,74,.16);
+    }
+    .badge.free{
+      border-color: rgba(245,158,11,.35);
+      background: rgba(245,158,11,.16);
+    }
+    .user-email{
+      font-size:12px;
+      font-weight:900;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width: 260px;
+      opacity:.96;
+    }
+    .chev{ margin-left:6px; opacity:.9; font-weight:900; flex:0 0 auto; }
+
+    .user-menu{
+      position:absolute;
+      right:0;
+      top: calc(100% + 10px);
+      width: 260px;
+      background:#0b2f73;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 16px;
+      box-shadow: 0 20px 45px rgba(2,6,23,.30);
+      padding:8px;
+      display:none;
+      z-index: 999;
+      transform-origin: top right;
+      animation: popMenu .12s ease both;
+    }
+    @keyframes popMenu{ from{opacity:0; transform: translateY(-6px) scale(.98);} to{opacity:1; transform: translateY(0) scale(1);} }
+    .user-menu.open{ display:block; }
+    .user-menu a, .user-menu button{
+      width:100%;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 10px;
+      border-radius: 12px;
+      border:1px solid transparent;
+      background: transparent;
+      color:#eaf2ff;
+      cursor:pointer;
+      font-weight:900;
+      text-decoration:none;
+      font-size:14px;
+      text-align:left;
+    }
+    .user-menu a:hover, .user-menu button:hover{
+      background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.10);
+    }
+    .user-menu .sep{
+      height:1px;
+      background: rgba(255,255,255,.14);
+      margin:6px 4px;
+    }
+    .user-note{
+      padding:10px 10px;
+      border-radius:12px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      font-size:12px;
+      color: rgba(234,242,255,.92);
+      line-height:1.35;
+      margin:6px 4px 8px;
+    }
+
+    .nav{
+      background: var(--lpp-blue-800);
+      border-bottom:1px solid rgba(255,255,255,.10);
+      position: sticky;
+      top: 78px; /* fica abaixo do header */
+      z-index: 55;
+      box-shadow: 0 10px 20px rgba(2,6,23,.10);
+    }
+    .nav-inner{
+      max-width:1100px;
+      margin:0 auto;
+      padding:10px 10px 12px;
+    }
+    .menu{
+      display:flex;
+      gap:10px;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      padding-bottom:6px;
+    }
+    .menu::-webkit-scrollbar{ display:none; }
+
+    .menu a{
+      flex:0 0 auto;
+      white-space:nowrap;
+      color:#fff;
+      text-decoration:none;
+      font-weight:850;
+      font-size:14px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.10);
+      transition: transform .14s ease, background .14s ease, box-shadow .14s ease, border-color .14s ease;
+      outline:none;
+    }
+    .menu a:hover{
+      background:rgba(255,255,255,.16);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 20px rgba(2,6,23,.18);
+      border-color: rgba(255,255,255,.16);
+    }
+    .menu a:focus-visible{ box-shadow: var(--ring); }
+    .menu a[aria-current="page"]{
+      background:rgba(255,255,255,.22);
+      border-color:rgba(255,255,255,.28);
+      box-shadow: 0 12px 20px rgba(2,6,23,.20);
+    }
+    .menu a.premium-on{
+      background: linear-gradient(180deg, rgba(22,163,74,.20), rgba(22,163,74,.12));
+      border-color: rgba(22,163,74,.35);
+    }
+
+    @media (max-width: 900px){
+      .nav{ top: 86px; }
+      .user-email{ max-width: 180px; }
+    }
+
+    /* =========================
+       LOCK SCREEN (NUNCA BRANCO)
+       ========================= */
     #lockScreen{
       max-width:1100px;
       margin:18px auto;
@@ -44,70 +306,65 @@
       background:#fff;
       border:1px solid var(--lpp-border);
       border-radius:var(--lpp-radius);
-      box-shadow:var(--lpp-shadow);
+      box-shadow: var(--lpp-shadow2);
       padding:16px;
+      position:relative;
+      overflow:hidden;
     }
-    .lock-title{font-weight:900; margin:0 0 8px}
+    .lock-card::after{
+      content:"";
+      position:absolute;
+      right:-90px;
+      top:-110px;
+      width:260px;
+      height:260px;
+      background: radial-gradient(circle at 30% 30%, rgba(11,91,211,.16), transparent 65%);
+      transform: rotate(15deg);
+      pointer-events:none;
+    }
+    .lock-title{font-weight:950; margin:0 0 8px; color:#0b2b63;}
     .lock-text{color:var(--lpp-muted); margin:0; white-space:pre-wrap}
+    .bar{
+      margin-top:12px;
+      height:10px;
+      border-radius:999px;
+      background:#eef2f7;
+      overflow:hidden;
+      border:1px solid rgba(15,23,42,.08);
+    }
+    .bar > div{
+      height:100%;
+      width:40%;
+      background: linear-gradient(90deg, rgba(11,91,211,.25), rgba(11,91,211,.75), rgba(11,91,211,.25));
+      animation: move 1.0s linear infinite;
+    }
+    @keyframes move{ from{ transform: translateX(-120%);} to{ transform: translateX(260%);} }
 
-    .lpp-header{
-      background: linear-gradient(180deg, var(--lpp-blue-900), var(--lpp-blue-800));
-      color:#fff;
-      text-align:center;
-      padding:28px 16px 18px;
-    }
-    .lpp-header h1{
-      margin:0;
-      font-size:clamp(22px, 4vw, 38px);
-      font-weight:900;
-      letter-spacing:.2px;
-    }
-    .lpp-header p{
-      margin:8px 0 0;
-      opacity:.9;
-      font-size:14px;
-    }
-
-    .lpp-nav{
-      position:sticky;
-      top:0;
-      z-index:50;
-      background:#0a2f73;
-      border-bottom:1px solid rgba(255,255,255,.12);
-    }
-    .lpp-nav-inner{
-      max-width:1100px;
-      margin:0 auto;
-      padding:10px 10px 12px;
-    }
-    .lpp-menu{
+    .lock-actions{
+      margin-top: 12px;
       display:flex;
       gap:10px;
-      overflow-x:auto;
-      -webkit-overflow-scrolling:touch;
-      scrollbar-width:thin;
-      padding-bottom:6px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
     }
-    .lpp-menu::-webkit-scrollbar{height:6px}
-    .lpp-menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25);border-radius:999px}
-    .lpp-menu a{
-      flex:0 0 auto;
-      white-space:nowrap;
-      color:#fff !important;
-      text-decoration:none !important;
-      font-weight:700;
-      font-size:14px;
+    .btn{
       padding:10px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.10);
+      border-radius: 14px;
+      border:1px solid rgba(37,99,235,.28);
+      background: linear-gradient(180deg,#2563eb,#1d4ed8);
+      color:#fff;
+      font-weight:950;
+      cursor:pointer;
     }
-    .lpp-menu a:hover{background:rgba(255,255,255,.16)}
-    .lpp-menu a[aria-current="page"]{
-      background:rgba(255,255,255,.22);
-      border-color:rgba(255,255,255,.28);
+    .btn.secondary{
+      background:#fff;
+      color:#1d4ed8;
+      border-color: rgba(37,99,235,.22);
     }
 
+    /* =========================
+       MAIN CONTENT (SEU CONTEÚDO)
+       ========================= */
     .lpp-main{
       max-width:1100px;
       margin:0 auto;
@@ -120,6 +377,12 @@
       border-radius:var(--lpp-radius);
       padding:18px 16px;
       margin:14px 0;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .lpp-card:hover{
+      transform: translateY(-2px);
+      box-shadow: var(--lpp-shadow2);
+      border-color: rgba(11,91,211,.18);
     }
 
     .lpp-title{
@@ -128,7 +391,9 @@
       gap:10px;
       margin:0 0 10px;
       font-size:clamp(18px, 3.2vw, 22px);
-      font-weight:900;
+      font-weight:950;
+      color:#0b2b63;
+      letter-spacing:.2px;
     }
     .lpp-bar{
       width:6px;
@@ -136,6 +401,7 @@
       border-radius:999px;
       background:var(--lpp-accent);
       flex:0 0 auto;
+      box-shadow: 0 12px 20px rgba(37,99,235,.22);
     }
     .lpp-lead{
       margin:0;
@@ -188,15 +454,15 @@
       display:inline-block;
       padding:4px 8px;
       border-radius:999px;
-      border:1px solid var(--lpp-border);
+      border:1px solid rgba(15,23,42,.12);
       background:#f8fafc;
       font-size:12px;
-      font-weight:800;
+      font-weight:850;
       margin:4px 6px 0 0;
     }
-    .lpp-tag.ok{border-color:rgba(22,163,74,.25);background:rgba(22,163,74,.10);color:var(--lpp-ok)}
+    .lpp-tag.ok{border-color:rgba(22,163,74,.25);background:rgba(22,163,74,.10);color:var(--ok)}
     .lpp-tag.warn{border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.12);color:#92400e}
-    .lpp-tag.bad{border-color:rgba(220,38,38,.25);background:rgba(220,38,38,.10);color:var(--lpp-bad)}
+    .lpp-tag.bad{border-color:rgba(220,38,38,.25);background:rgba(220,38,38,.10);color:var(--bad)}
     .lpp-tag.info{border-color:rgba(37,99,235,.25);background:rgba(37,99,235,.10);color:var(--lpp-accent)}
 
     .lpp-note{
@@ -214,7 +480,8 @@
     .lpp-callout h3{
       margin:0 0 8px;
       font-size:16px;
-      font-weight:900;
+      font-weight:950;
+      color:#0b2b63;
     }
     .lpp-callout ul{
       margin:0 0 0 18px;
@@ -234,7 +501,8 @@
     .lpp-item h4{
       margin:0 0 6px;
       font-size:15px;
-      font-weight:900;
+      font-weight:950;
+      color:#0b2b63;
     }
     .lpp-item p{
       margin:0;
@@ -244,10 +512,10 @@
 
     .lpp-chip{
       display:inline-block;
-      background:var(--lpp-chip);
+      background:var(--chip);
       border:1px solid rgba(37,99,235,.18);
       color:#1e40af;
-      font-weight:800;
+      font-weight:850;
       font-size:12px;
       padding:6px 10px;
       border-radius:999px;
@@ -266,90 +534,49 @@
 
 <body data-locked="1">
 
-  <!-- Supabase (não usa module: mais compatível) -->
+  <!-- Supabase (sem module: mais compatível) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    document.body.setAttribute("data-locked","1");
 
-    const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+  <!-- TOP HEADER -->
+  <header class="top" aria-label="Cabeçalho">
+    <div class="top-inner">
+      <div class="brand">
+        <div class="logo">LPP</div>
+        <div style="min-width:0">
+          <h1>Seleção de Produtos</h1>
+          <p>Material Premium — organização didática para cuidado em LPP</p>
+        </div>
+      </div>
 
-    function setLockMsg(txt){
-      const el = document.getElementById("lockMsg");
-      if (el) el.textContent = txt;
-    }
+      <div class="user-pill" id="userPill" role="button" aria-haspopup="menu" aria-expanded="false" tabindex="0">
+        <div class="user-ico">👤</div>
+        <div class="user-text">
+          <div class="user-hello">
+            Olá,
+            <span class="badge premium" id="userBadge">Premium ✅</span>
+          </div>
+          <div class="user-email" id="userEmail">Carregando…</div>
+        </div>
+        <div class="chev">▾</div>
 
-    (async () => {
-      try {
-        if (!window.supabase) {
-          setLockMsg("Falha ao carregar a biblioteca do Supabase.\nVerifique internet/cache e recarregue a página.");
-          return;
-        }
-
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        setLockMsg("1/3) Lendo usuário logado…");
-        const { data: userRes, error: userErr } = await supabase.auth.getUser();
-
-        if (userErr) {
-          setLockMsg("Erro ao ler usuário:\n" + userErr.message + "\n\nIndo para login…");
-          setTimeout(() => window.location.replace("./login.html"), 1200);
-          return;
-        }
-        if (!userRes?.user) {
-          setLockMsg("Sem sessão ativa.\n\nIndo para login…");
-          setTimeout(() => window.location.replace("./login.html"), 800);
-          return;
-        }
-
-        const uid = userRes.user.id;
-
-        setLockMsg("2/3) Consultando status premium…");
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("premium")
-          .eq("id", uid)
-          .single();
-
-        if (error) {
-          setLockMsg(
-            "Erro ao consultar 'profiles':\n" + error.message +
-            "\n\nCausas comuns:\n- Não existe linha do seu usuário em profiles\n- RLS/policy bloqueando SELECT\n- Cache antigo do GitHub Pages"
-          );
-          return;
-        }
-
-        setLockMsg("3/3) Resultado recebido…");
-
-        if (!data?.premium) {
-          setLockMsg("Você não tem Premium.\n\nRedirecionando para pagamento…");
-          setTimeout(() => window.location.replace("./premium.html"), 800);
-          return;
-        }
-
-        // ✅ premium: libera conteúdo
-        document.body.removeAttribute("data-locked");
-        const lock = document.getElementById("lockScreen");
-        if (lock) lock.style.display = "none";
-
-      } catch (e) {
-        setLockMsg("Falha inesperada:\n" + (e?.message || String(e)));
-      }
-    })();
-  </script>
-
-  <header class="lpp-header">
-    <h1>Seleção de Produtos (LPP)</h1>
-    <p>Material de estudo: limpeza, coberturas, desbridamento, proteção e suporte</p>
+        <div class="user-menu" id="userMenu" role="menu" aria-label="Menu do usuário">
+          <div class="user-note" id="userNote">Verificando seu perfil…</div>
+          <a href="./premium.html" role="menuitem">⭐ Premium</a>
+          <div class="sep"></div>
+          <button id="btnLogout" type="button" role="menuitem">Sair</button>
+        </div>
+      </div>
+    </div>
   </header>
 
-  <nav class="lpp-nav" aria-label="Navegação principal">
-    <div class="lpp-nav-inner">
-      <div class="lpp-menu">
+  <!-- NAV PROFISSIONAL -->
+  <nav class="nav" aria-label="Navegação principal">
+    <div class="nav-inner">
+      <div class="menu">
         <a href="index.html">Início</a>
         <a href="nosso-produto.html">Nosso Produto</a>
         <a href="tratamento.html">Tratamento</a>
-        <a href="selecao-produtos.html" aria-current="page">Seleção de Produtos</a>
+        <a class="premium-on" href="selecao-produtos.html" aria-current="page">Seleção de Produtos ⭐</a>
         <a href="impacto-economico.html">Impacto Econômico</a>
         <a href="guia-simples.html">Guia Simples</a>
         <a href="avaliacao.html">Avaliação</a>
@@ -360,8 +587,14 @@
   <!-- ✅ tela de carregamento/erro -->
   <section id="lockScreen">
     <div class="lock-card">
-      <p class="lock-title">Carregando acesso Premium…</p>
+      <p class="lock-title" id="lockTitle">Carregando acesso Premium…</p>
       <p id="lockMsg" class="lock-text">Iniciando verificação…</p>
+      <div class="bar"><div></div></div>
+
+      <div class="lock-actions">
+        <button class="btn secondary" id="btnHome" type="button">Voltar ao início</button>
+        <button class="btn" id="btnRetry" type="button">Tentar novamente</button>
+      </div>
     </div>
   </section>
 
@@ -647,4 +880,156 @@
 
     <div class="lpp-footer">© 2026 - Projeto Integrador</div>
   </main>
-</body></html>
+
+  <script>
+    // =========================
+    // SUPABASE + GUARDA PREMIUM
+    // =========================
+    document.body.setAttribute("data-locked","1");
+
+    const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+
+    function setLockTitle(txt){
+      const el = document.getElementById("lockTitle");
+      if (el) el.textContent = txt;
+    }
+    function setLockMsg(txt){
+      const el = document.getElementById("lockMsg");
+      if (el) el.textContent = txt;
+    }
+
+    const btnHome = document.getElementById("btnHome");
+    const btnRetry = document.getElementById("btnRetry");
+
+    btnHome?.addEventListener("click", () => window.location.replace("./index.html"));
+    btnRetry?.addEventListener("click", () => checkAccess());
+
+    // Menu usuário
+    const userPill = document.getElementById("userPill");
+    const userMenu = document.getElementById("userMenu");
+    const userEmail = document.getElementById("userEmail");
+    const userBadge = document.getElementById("userBadge");
+    const userNote  = document.getElementById("userNote");
+    const btnLogout = document.getElementById("btnLogout");
+
+    function toggleMenu(open){
+      if (!userMenu) return;
+      const willOpen = (typeof open === "boolean") ? open : !userMenu.classList.contains("open");
+      userMenu.classList.toggle("open", willOpen);
+      userPill?.setAttribute("aria-expanded", String(willOpen));
+    }
+    document.addEventListener("click", (e) => {
+      if (!userPill) return;
+      if (!userPill.contains(e.target)) toggleMenu(false);
+    });
+    userPill?.addEventListener("click", () => toggleMenu());
+    userPill?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleMenu(); }
+      if (e.key === "Escape") toggleMenu(false);
+    });
+
+    let supabaseClient = null;
+
+    async function checkAccess(){
+      try{
+        // Hard timeout anti “infinito”
+        let hard = setTimeout(() => {
+          setLockTitle("Falha ao verificar");
+          setLockMsg("Demorou mais que o esperado.\nVoltando ao início por segurança…");
+          setTimeout(() => window.location.replace("./index.html"), 1100);
+        }, 4500);
+
+        setLockTitle("Carregando acesso Premium…");
+        setLockMsg("1/3) Preparando verificação…");
+
+        if (!window.supabase){
+          clearTimeout(hard);
+          setLockTitle("Erro");
+          setLockMsg("Falha ao carregar a biblioteca do Supabase.\nVerifique internet/cache e recarregue.");
+          return;
+        }
+
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        setLockMsg("2/3) Lendo usuário logado…");
+        const { data: userRes, error: userErr } = await supabaseClient.auth.getUser();
+
+        if (userErr || !userRes?.user){
+          clearTimeout(hard);
+          setLockTitle("Login necessário");
+          setLockMsg("Sem sessão ativa.\nIndo para o login…");
+          setTimeout(() => window.location.replace("./login.html?mode=login"), 900);
+          return;
+        }
+
+        // UI usuário
+        userPill.style.display = "flex";
+        userEmail.textContent = userRes.user.email || "Usuário";
+        userBadge.textContent = "Verificando…";
+        userBadge.className = "badge free";
+        userNote.textContent = "Verificando status premium…";
+
+        const uid = userRes.user.id;
+
+        setLockMsg("3/3) Consultando status premium…");
+        const { data, error } = await supabaseClient
+          .from("profiles")
+          .select("premium")
+          .eq("id", uid)
+          .single();
+
+        clearTimeout(hard);
+
+        if (error){
+          setLockTitle("Erro ao consultar Premium");
+          setLockMsg(
+            "Não foi possível consultar 'profiles'.\n\nDetalhe:\n" + error.message +
+            "\n\nVoltando ao início por segurança…"
+          );
+          setTimeout(() => window.location.replace("./index.html"), 1300);
+          return;
+        }
+
+        if (!data?.premium){
+          setLockTitle("Acesso Premium necessário");
+          setLockMsg("Seu perfil não é Premium.\nVoltando ao início…");
+          userBadge.textContent = "Grátis";
+          userBadge.className = "badge free";
+          userNote.textContent = "Plano gratuito. Ative Premium para liberar.";
+          setTimeout(() => window.location.replace("./index.html?msg=precisa-premium"), 1100);
+          return;
+        }
+
+        // ✅ premium OK: libera conteúdo
+        userBadge.textContent = "Premium ✅";
+        userBadge.className = "badge premium";
+        userNote.textContent = "Premium ativo. Acesso liberado.";
+
+        document.body.removeAttribute("data-locked");
+        const lock = document.getElementById("lockScreen");
+        if (lock) lock.style.display = "none";
+
+      }catch(e){
+        setLockTitle("Falha inesperada");
+        setLockMsg("Erro:\n" + (e?.message || String(e)));
+      }
+    }
+
+    btnLogout?.addEventListener("click", async () => {
+      try{
+        if (!supabaseClient && window.supabase) {
+          supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+        await supabaseClient?.auth?.signOut?.();
+      } finally {
+        window.location.replace("./index.html");
+      }
+    });
+
+    // Inicializa
+    checkAccess();
+  </script>
+
+</body>
+</html>
