@@ -124,7 +124,7 @@
       display:flex;
       gap: 10px;
       align-items:center;
-      min-width: 0;           /* importante p/ scroll funcionar */
+      min-width: 0;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
@@ -523,6 +523,53 @@
     }
 
     /* =========================================================
+       ✅ PREMIUM LINK (isolado, não sobrescreve nada)
+       ========================================================= */
+    .pp-link{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 900;
+      letter-spacing: .1px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color:#eaf2ff;
+      box-shadow: 0 10px 18px rgba(2,6,23,.14);
+    }
+    .pp-link:hover{
+      background: rgba(255,255,255,.16);
+    }
+    .pp-lock{
+      width: 18px;
+      display:inline-grid;
+      place-items:center;
+      opacity: .95;
+    }
+    .pp-badge{
+      font-size: 11px;
+      font-weight: 1000;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(245,158,11,.14);
+      border: 1px solid rgba(245,158,11,.22);
+      color:#fff;
+    }
+    .pp-badge--ok{
+      background: rgba(22,163,74,.14);
+      border-color: rgba(22,163,74,.22);
+    }
+    .pp-badge--bad{
+      background: rgba(220,38,38,.14);
+      border-color: rgba(220,38,38,.22);
+    }
+    .pp-link[aria-disabled="true"]{
+      opacity:.85;
+      cursor: progress;
+    }
+
+    /* =========================================================
        ✅ PWA MODAL (isolado)
        ========================================================= */
     .pwa-modal{
@@ -624,6 +671,13 @@
           <a href="guia-simples.html">Guia Simples</a>
           <a href="selecao-produtos.html">Seleção de Produtos</a>
           <a href="avaliacao.html">Avaliação</a>
+
+          <!-- ✅ NOVO: Perguntas Premium (não abre direto) -->
+          <a href="#" id="goPerguntasPremium" class="pp-link" aria-disabled="true">
+            <span class="pp-lock" id="ppLock" aria-hidden="true">⏳</span>
+            <span>Perguntas</span>
+            <span class="pp-badge" id="ppBadge">Verificando…</span>
+          </a>
         </div>
 
         <!-- USUÁRIO (direita) -->
@@ -1039,7 +1093,7 @@
     modal?.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
   </script>
 
-  <!-- ✅ MENU PROFISSIONAL (SUPABASE) - SEM TRAVAR EM "CARREGANDO" -->
+  <!-- ✅ MENU PROFISSIONAL (SUPABASE) + GATE PREMIUM (Perguntas) -->
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
@@ -1064,6 +1118,14 @@
     const btnSignup = document.getElementById("btnSignup");
     const btnLogout = document.getElementById("btnLogout");
 
+    // Perguntas Premium (nav)
+    const goPerguntasPremium = document.getElementById("goPerguntasPremium");
+    const ppLock = document.getElementById("ppLock");
+    const ppBadge = document.getElementById("ppBadge");
+
+    const CACHE_KEY = "lpp_premium_status_v1";
+    const CACHE_TTL_MS = 3 * 60 * 1000;
+
     const setPill = (title, sub) => {
       userTitle.textContent = title;
       userSub.textContent = sub;
@@ -1083,6 +1145,61 @@
         tagPremium.className = "tag";
       }
     };
+
+    function ppSet(state){
+      // state: "checking" | "anon" | "free" | "premium" | "error"
+      if (!goPerguntasPremium || !ppLock || !ppBadge) return;
+
+      if (state === "checking"){
+        goPerguntasPremium.setAttribute("aria-disabled","true");
+        ppLock.textContent = "⏳";
+        ppBadge.textContent = "Verificando…";
+        ppBadge.className = "pp-badge";
+        return;
+      }
+
+      goPerguntasPremium.setAttribute("aria-disabled","false");
+
+      if (state === "anon"){
+        ppLock.textContent = "🔒";
+        ppBadge.textContent = "Login";
+        ppBadge.className = "pp-badge";
+        return;
+      }
+      if (state === "premium"){
+        ppLock.textContent = "🔓";
+        ppBadge.textContent = "Ativo";
+        ppBadge.className = "pp-badge pp-badge--ok";
+        return;
+      }
+      if (state === "free"){
+        ppLock.textContent = "🔒";
+        ppBadge.textContent = "Premium";
+        ppBadge.className = "pp-badge pp-badge--bad";
+        return;
+      }
+      // error
+      ppLock.textContent = "⚠️";
+      ppBadge.textContent = "Erro";
+      ppBadge.className = "pp-badge";
+    }
+
+    function cacheSet(value){
+      try{
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ value, at: Date.now() }));
+      }catch{}
+    }
+    function cacheGet(){
+      try{
+        const obj = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
+        if (!obj) return null;
+        if ((Date.now() - obj.at) > CACHE_TTL_MS) return null;
+        return obj.value;
+      }catch{ return null; }
+    }
+    function cacheClear(){
+      try{ localStorage.removeItem(CACHE_KEY); }catch{}
+    }
 
     const openMenu = () => {
       userMenu.classList.add("open");
@@ -1109,6 +1226,7 @@
     btnLogout.addEventListener("click", async () => {
       await supabase.auth.signOut();
       closeMenu();
+      cacheClear();
       window.location.href = SITE_BASE + "index.html";
     });
 
@@ -1126,16 +1244,80 @@
       }
     }
 
+    async function getPremiumStatus(){
+      // tenta cache
+      const cached = cacheGet();
+      if (cached === "anon" || cached === "free" || cached === "premium") {
+        ppSet(cached);
+      } else {
+        ppSet("checking");
+      }
+
+      const { data: userRes, error: userErr } = await supabase.auth.getUser();
+      if (userErr || !userRes?.user){
+        cacheSet("anon");
+        ppSet("anon");
+        return "anon";
+      }
+
+      const premium = await readPremium(userRes.user.id);
+      if (premium === true){
+        cacheSet("premium");
+        ppSet("premium");
+        return "premium";
+      }
+      if (premium === false){
+        cacheSet("free");
+        ppSet("free");
+        return "free";
+      }
+
+      cacheSet("error");
+      ppSet("error");
+      return "error";
+    }
+
+    async function goPerguntas(){
+      ppSet("checking");
+
+      const { data: userRes, error: userErr } = await supabase.auth.getUser();
+      if (userErr || !userRes?.user){
+        cacheSet("anon");
+        ppSet("anon");
+        window.location.href = SITE_BASE + "login.html?mode=login&next=perguntas.html";
+        return;
+      }
+
+      const premium = await readPremium(userRes.user.id);
+      if (premium === true){
+        cacheSet("premium");
+        ppSet("premium");
+        window.location.href = SITE_BASE + "perguntas.html";
+        return;
+      }
+
+      cacheSet("free");
+      ppSet("free");
+      window.location.href = SITE_BASE + "premium.html";
+    }
+
+    goPerguntasPremium?.addEventListener("click", (e) => {
+      e.preventDefault();
+      goPerguntas();
+    });
+
     async function refreshUserUI(){
-      // ✅ fallback para nunca ficar travado no “carregando”
+      // fallback para nunca ficar travado no “carregando”
       let fallbackTimer = setTimeout(() => {
         setPill("Conta", "Toque para entrar");
         setPremiumTag(null);
+        ppSet("anon");
       }, 2500);
 
       try{
         setPill("Conta", "Verificando sessão…");
         setPremiumTag(null);
+        ppSet("checking");
 
         const { data: userRes, error: userErr } = await supabase.auth.getUser();
         if (userErr || !userRes?.user){
@@ -1143,10 +1325,12 @@
           setPill("Conta", "Toque para entrar");
           setPremiumTag(false);
 
-          // estado de botões
           btnLogin.style.display = "";
           btnSignup.style.display = "";
           btnLogout.style.display = "none";
+
+          cacheSet("anon");
+          ppSet("anon");
           return;
         }
 
@@ -1154,30 +1338,46 @@
         clearTimeout(fallbackTimer);
         setPill("Olá,", email);
 
-        // premium
         const premium = await readPremium(userRes.user.id);
         setPremiumTag(premium);
 
-        // estado de botões
         btnLogin.style.display = "none";
         btnSignup.style.display = "none";
         btnLogout.style.display = "";
+
+        if (premium === true){
+          cacheSet("premium");
+          ppSet("premium");
+        } else if (premium === false){
+          cacheSet("free");
+          ppSet("free");
+        } else {
+          cacheSet("error");
+          ppSet("error");
+        }
       }catch{
         clearTimeout(fallbackTimer);
         setPill("Conta", "Toque para entrar");
         setPremiumTag(null);
+
         btnLogin.style.display = "";
         btnSignup.style.display = "";
         btnLogout.style.display = "none";
+
+        cacheSet("error");
+        ppSet("error");
       }
     }
 
     // Primeira carga
     refreshUserUI();
+    getPremiumStatus();
 
     // Atualiza quando auth muda (login/logout)
     supabase.auth.onAuthStateChange(() => {
+      cacheClear();
       refreshUserUI();
+      getPremiumStatus();
     });
   </script>
 
