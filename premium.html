@@ -161,6 +161,8 @@
       box-shadow: var(--shadow2);
       padding:16px;
       animation: fadeUp .22s ease both;
+      position:relative;
+      overflow:hidden;
     }
 
     .pill{
@@ -305,6 +307,24 @@
     textarea:focus{box-shadow:0 0 0 5px var(--focus), 0 10px 18px rgba(2,6,23,.06)}
     .hide{display:none !important;}
 
+    /* Skeleton (para não ficar “carregando infinito” sem feedback visual) */
+    .sk{
+      display:none;
+      margin-top:10px;
+      border-radius:16px;
+      border:1px solid rgba(15,23,42,.08);
+      background: linear-gradient(90deg,#f1f5f9 0%,#e2e8f0 35%,#f1f5f9 70%);
+      background-size: 240% 100%;
+      animation: shimmer 1.1s ease-in-out infinite;
+      height: 54px;
+      box-shadow: var(--shadowSoft);
+    }
+    .sk.show{display:block}
+    @keyframes shimmer{
+      0%{background-position: 100% 0}
+      100%{background-position: 0% 0}
+    }
+
     .modal{
       position:fixed;
       inset:0;
@@ -403,7 +423,7 @@
 
       <h2>Premium por R$ 2,00</h2>
       <p class="sub">
-        Ao liberar o Premium, você acessa conteúdos bloqueados (ex.: <b>Seleção de Produtos</b>).
+        Ao liberar o Premium, você acessa conteúdos bloqueados (ex.: <b>Perguntas</b> e <b>Seleção de Produtos</b>).
         O pagamento é via Pix e a ativação ocorre após aprovação no seu perfil.
       </p>
 
@@ -419,6 +439,7 @@
       <h3 id="title">Verificando seu acesso…</h3>
       <p id="subtitle">Se ficar preso aqui, a caixa abaixo vai mostrar o motivo.</p>
 
+      <div id="sk" class="sk show" aria-hidden="true"></div>
       <div id="msg" class="msg warn">Iniciando…</div>
 
       <section id="payBox" class="pay hide" aria-label="Pagamento Pix Premium">
@@ -519,6 +540,7 @@
     const payBox = document.getElementById("payBox");
     const titleEl = document.getElementById("title");
     const subtitleEl = document.getElementById("subtitle");
+    const skEl = document.getElementById("sk");
 
     const btnCopy = document.getElementById("btnCopyPix");
     const btnPaid = document.getElementById("btnPaid");
@@ -533,12 +555,19 @@
 
     let currentUid = "";
 
+    // ✅ Para onde redirecionar quando Premium estiver ativo:
+    // - pode chamar: premium.html?go=perguntas.html
+    // - ou: premium.html?go=selecao-produtos.html
+    const goParam = new URLSearchParams(location.search).get("go");
+    const GO_TO = goParam ? (SITE_BASE + goParam.replace(/^\//, "")) : (SITE_BASE + "selecao-produtos.html");
+
     const setMsg = (text, type="warn") => {
       msgEl.className = "msg " + type;
       msgEl.textContent = text;
     };
 
     const showPay = (show) => payBox.classList.toggle("hide", !show);
+    const setSk = (on) => skEl.classList.toggle("show", !!on);
 
     function openModal(){
       paidModal.classList.add("open");
@@ -563,22 +592,72 @@ Segue comprovante em anexo.`;
       return `https://wa.me/${WHATS_NUMBER}?text=${encodeURIComponent(text)}`;
     }
 
+    // ✅ Normaliza premium (boolean / texto / número)
+    function isPremiumValue(v){
+      if (v === true) return true;
+      if (typeof v === "string") return ["true","1","yes","sim"].includes(v.trim().toLowerCase());
+      if (typeof v === "number") return v === 1;
+      return false;
+    }
+
+    // ✅ Garante que existe linha em profiles (evita .single() falhar)
+    async function ensureProfileRow(user){
+      try{
+        await supabase.from("profiles").upsert({
+          id: user.id,
+          email: user.email || null,
+          updated_at: new Date().toISOString()
+        });
+      }catch(_e){
+        // se RLS estiver bloqueando insert/update, isso não quebra o fluxo;
+        // apenas ajudará a mostrar o erro real na consulta.
+      }
+    }
+
     async function checkPremium(){
+      setSk(true);
       showPay(false);
+
       titleEl.textContent = "Verificando seu acesso…";
       subtitleEl.textContent = "Se ficar preso aqui, a caixa abaixo vai mostrar o motivo.";
       setMsg("1/3) Lendo sessão do usuário…", "warn");
 
+      // ✅ Anti “carregando infinito”: se travar, libera UI e mostra diagnóstico
+      let hardFallback = setTimeout(() => {
+        setSk(false);
+        setMsg(
+          "Tempo excedido ao verificar sessão.\n\nPossíveis causas:\n- Internet instável\n- Bloqueio do Supabase (RLS)\n- Script antigo em cache\n\nToque em “Tentar novamente”.",
+          "warn"
+        );
+      }, 2800);
+
+      // ✅ Melhor: getSession primeiro (mais rápido e estável)
+      const { data: sRes } = await supabase.auth.getSession();
+      const session = sRes?.session;
+
+      if(!session){
+        clearTimeout(hardFallback);
+        setSk(false);
+        setMsg("Sem sessão ativa.\nIndo para login…", "bad");
+        setTimeout(() => window.location.replace(SITE_BASE + "login.html?mode=login"), 800);
+        return;
+      }
+
+      // ✅ Agora pega o user (confirma)
       const { data: userRes, error: userErr } = await supabase.auth.getUser();
 
       if (userErr) {
+        clearTimeout(hardFallback);
+        setSk(false);
         setMsg("Erro ao ler usuário:\n" + userErr.message + "\n\nVoltando para login…", "bad");
-        setTimeout(() => window.location.replace(SITE_BASE + "login.html"), 1200);
+        setTimeout(() => window.location.replace(SITE_BASE + "login.html?mode=login"), 1200);
         return;
       }
       if (!userRes?.user) {
+        clearTimeout(hardFallback);
+        setSk(false);
         setMsg("Sem sessão ativa.\nIndo para login…", "bad");
-        setTimeout(() => window.location.replace(SITE_BASE + "login.html"), 800);
+        setTimeout(() => window.location.replace(SITE_BASE + "login.html?mode=login"), 800);
         return;
       }
 
@@ -591,18 +670,26 @@ Segue comprovante em anexo.`;
       btnWhatsTop.href = w;
       btnWhatsModal.href = w;
 
-      setMsg("2/3) Consultando seu status premium…", "warn");
+      setMsg("2/3) Garantindo seu perfil e consultando Premium…", "warn");
 
+      // ✅ cria/atualiza linha do perfil (se não existir)
+      await ensureProfileRow(userRes.user);
+
+      // ✅ consulta premium
       const { data, error } = await supabase
         .from("profiles")
         .select("premium")
         .eq("id", uid)
         .single();
 
+      clearTimeout(hardFallback);
+      setSk(false);
+
       if (error) {
+        // Mostra erro útil (RLS, perfil inexistente, etc.)
         setMsg(
-          "Erro ao consultar a tabela profiles:\n" + error.message +
-          "\n\nProváveis causas:\n- RLS/policy não criada\n- Não existe linha do seu usuário em profiles\n- Cache antigo carregando código antigo",
+          "Falha ao consultar 'profiles':\n" + error.message +
+          "\n\nCorreções comuns:\n- Criar policy SELECT no Supabase (RLS)\n- Garantir que existe linha em profiles\n- Confirmar que premium é boolean TRUE\n\nToque em “Tentar novamente” após corrigir.",
           "bad"
         );
         return;
@@ -610,11 +697,13 @@ Segue comprovante em anexo.`;
 
       setMsg("3/3) Resultado recebido.", "warn");
 
-      if (data?.premium) {
+      const premiumOk = isPremiumValue(data?.premium);
+
+      if (premiumOk) {
         titleEl.textContent = "Premium ativo ✅";
-        subtitleEl.textContent = "Acesso liberado. Redirecionando para Seleção de Produtos…";
-        setMsg("Premium ✅ Redirecionando…", "ok");
-        setTimeout(() => window.location.replace(SITE_BASE + "selecao-produtos.html"), 650);
+        subtitleEl.textContent = "Acesso liberado. Redirecionando…";
+        setMsg("Premium ✅ Redirecionando para: " + GO_TO.replace(SITE_BASE,""), "ok");
+        setTimeout(() => window.location.replace(GO_TO), 650);
         return;
       }
 
@@ -644,7 +733,6 @@ Segue comprovante em anexo.`;
     }
 
     document.getElementById("btnRetry").addEventListener("click", checkPremium);
-
     btnPaid.addEventListener("click", () => openModal());
 
     btnModalVerify.addEventListener("click", async () => {
@@ -668,8 +756,13 @@ Segue comprovante em anexo.`;
     btnCopy.addEventListener("click", copyPix);
 
     document.getElementById("btnLogout").addEventListener("click", async () => {
-      await supabase.auth.signOut();
+      try{ await supabase.auth.signOut(); }catch(e){}
       window.location.replace(SITE_BASE + "index.html");
+    });
+
+    // ✅ Revalida quando a aba volta (muita gente paga e volta pro navegador)
+    document.addEventListener("visibilitychange", () => {
+      if(document.visibilityState === "visible") checkPremium();
     });
 
     checkPremium();
