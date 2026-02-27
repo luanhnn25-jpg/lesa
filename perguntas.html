@@ -19,10 +19,7 @@
       --ok:#16a34a; --warn:#f59e0b; --bad:#dc2626;
       --ring:0 0 0 4px rgba(56,130,246,.18);
       --chip:#eef2ff;
-      --glass:rgba(255,255,255,.10);
-      --glassBorder:rgba(255,255,255,.18);
     }
-
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{
@@ -84,7 +81,7 @@
       box-shadow: 0 10px 18px rgba(2,6,23,.22);
     }
 
-    /* ===== User bubble ===== */
+    /* ===== User bubble (sem overlay/backdrop) ===== */
     .userbox{ position:relative; min-width: 230px; display:flex; justify-content:flex-end; }
     .userbtn{
       width:100%;
@@ -120,14 +117,6 @@
     }
     .caret{ opacity:.9; }
 
-    .backdrop{
-      position:fixed; inset:0;
-      background: rgba(2,6,23,.45);
-      display:none;
-      z-index: 1999;
-    }
-    .backdrop.open{ display:block; }
-
     .menu{
       position:absolute; top: calc(100% + 8px); right:0;
       width:min(340px, 92vw);
@@ -162,7 +151,6 @@
       .nav{ display:none; }
       .userbox{ min-width:auto; width: 100%; }
       .brand{ min-width:auto; }
-
       .menu{
         position:fixed;
         left: 12px;
@@ -176,8 +164,7 @@
 
     /* ===== Layout ===== */
     .wrap{ max-width:1100px; margin: 18px auto 60px; padding: 0 14px; }
-    .grid{ display:grid; grid-template-columns: 1.05fr .95fr; gap: 14px; align-items:start; }
-    @media (max-width: 980px){ .grid{ grid-template-columns:1fr; } }
+    .grid{ display:grid; grid-template-columns: 1fr; gap: 14px; align-items:start; }
 
     .card{
       background: linear-gradient(180deg,#fff, #fbfdff);
@@ -346,30 +333,6 @@
     .skeleton.big{ height: 18px; }
     @keyframes shimmer{ 0%{ background-position: 0% 0; } 100%{ background-position: 200% 0; } }
 
-    .pay{
-      margin-top:12px;
-      border:1px solid rgba(15,23,42,.12);
-      border-radius: 16px;
-      padding: 12px;
-      background: linear-gradient(180deg, #ffffff, #f8fafc);
-    }
-    .pay h2{ margin:0 0 6px; font-size: 16px; font-weight: 1000; }
-    .price{ font-size: 30px; font-weight: 1100; color:#0b3d91; margin: 2px 0 6px; }
-
-    textarea{
-      width:100%;
-      border-radius: 14px;
-      border:1px solid rgba(15,23,42,.12);
-      padding: 10px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 13px;
-      resize:none;
-      min-height: 88px;
-      outline:none;
-      background:#fff;
-    }
-    textarea:focus{ box-shadow: var(--ring); }
-
     .foot{
       text-align:center;
       color:#64748b;
@@ -406,24 +369,20 @@
       <div class="userbox">
         <button id="userBtn" class="userbtn" type="button" aria-haspopup="menu" aria-expanded="false">
           <div class="userleft">
-            <div class="avatar" id="avatar">?</div>
+            <div class="avatar" id="avatar">V</div>
             <div class="userinfo">
               <div class="name" id="userName">Visitante</div>
-              <div class="state" id="userState">Checando…</div>
+              <div class="state" id="userState">Acesso livre</div>
             </div>
           </div>
           <div class="caret">▾</div>
         </button>
 
         <div id="userMenu" class="menu" role="menu" aria-label="Menu do usuário">
-          <div class="muted" id="userMeta">Acesso: visitante</div>
+          <div class="muted" id="userMeta">Acesso: livre (sem Premium)</div>
 
           <button class="item" id="goLogin" type="button" role="menuitem">
             Entrar / Criar conta <span class="tag">login</span>
-          </button>
-
-          <button class="item" id="goPremium" type="button" role="menuitem">
-            Premium <span class="tag" id="tagPremium">—</span>
           </button>
 
           <button class="item" id="logoutBtn" type="button" role="menuitem">
@@ -434,139 +393,77 @@
     </div>
   </header>
 
-  <div id="backdrop" class="backdrop" aria-hidden="true"></div>
-
   <main class="wrap">
     <div class="grid">
-      <!-- Coluna esquerda -->
-      <section class="card">
-        <h2 class="title">Acesso Premium e pagamento</h2>
-        <p class="lead">
-          Esta funcionalidade é Premium. Antes do login, você já visualiza o valor e as instruções do Pix.
-          Após o pagamento, envie o comprovante via WhatsApp para liberação do <code>premium=true</code>.
-        </p>
-
-        <div class="pay" id="payBox">
-          <h2>Premium (R$ 2,00 via Pix)</h2>
-          <div class="price">R$ 2,00</div>
-          <div class="mini">
-            <span class="chip">Pix</span>
-            <span class="chip">Libera Perguntas + Seleção</span>
-            <span class="chip">COREN-SP + gov.br + PubMed</span>
-          </div>
-
-          <p class="lead" style="margin-top:10px;">
-            1) Copie o Pix abaixo e pague no app do banco.<br>
-            2) Clique em <b>Enviar comprovante</b> e encaminhe no WhatsApp.
-          </p>
-
-          <textarea id="pixPayload" readonly>28d39758-0fe0-47f1-9c7c-9cb6e032c5cf
-Referência: PREMIUM-LPP
-Valor: 2,00</textarea>
-
-          <div class="row" style="margin-top:10px;">
-            <div class="col"><button class="btn" id="copyPix" type="button">Copiar Pix</button></div>
-            <div class="col"><button class="btn secondary" id="sendWhatsapp" type="button">Enviar comprovante no WhatsApp</button></div>
-          </div>
-
-          <div id="statusMsg" class="msg"></div>
-        </div>
-      </section>
-
-      <!-- Coluna direita -->
       <section class="card">
         <h2 class="title">Perguntar</h2>
-        <p class="lead" id="appSubtitle">
-          Para liberar, faça login e tenha Premium ativo.
+        <p class="lead">
+          Acesso livre. Você pode pesquisar e ver as fontes (oficiais e PubMed) sem login.
         </p>
 
-        <!-- Bloqueado -->
-        <div id="lockedBox" style="display:none;">
-          <div class="msg warn show">
-            Área <b>Premium</b>. Faça login e tenha <code>premium=true</code> em <code>profiles</code>.
-          </div>
+        <label for="question">Pergunta</label>
+        <input id="question" class="field" type="text" placeholder="Ex.: prevenção de lesão por pressão, curativos, protocolos..." />
 
-          <div class="row" style="margin-top:10px;">
-            <div class="col"><button class="btn" id="btnLogin" type="button">Entrar / Criar conta</button></div>
-            <div class="col"><button class="btn secondary" id="btnPremium" type="button">Ir para Premium</button></div>
-            <div class="col"><button class="btn ghost" id="btnHome" type="button">Voltar ao início</button></div>
+        <div class="row">
+          <div class="col">
+            <label for="years">Janela (anos)</label>
+            <select id="years" class="field">
+              <option value="3">Últimos 3 anos</option>
+              <option value="5" selected>Últimos 5 anos</option>
+              <option value="10">Últimos 10 anos</option>
+              <option value="15">Últimos 15 anos</option>
+            </select>
           </div>
-
-          <div class="msg warn show" style="margin-top:10px;">
-            <b>Opcional:</b> se você quiser, ao logar sem Premium ele pode voltar ao Início automaticamente.
-          </div>
-
-          <div class="row" style="margin-top:10px;">
-            <div class="col"><button class="btn ghost" id="btnForceHome" type="button">Ativar redirecionamento automático (sem Premium)</button></div>
+          <div class="col">
+            <label for="limit">Resultados</label>
+            <select id="limit" class="field">
+              <option value="4">4</option>
+              <option value="6" selected>6</option>
+              <option value="8">8</option>
+              <option value="10">10</option>
+            </select>
           </div>
         </div>
 
-        <!-- Liberado -->
-        <div id="appBox" style="display:none;">
-          <label for="question">Pergunta</label>
-          <input id="question" class="field" type="text" placeholder="Ex.: Vacinação, curativos, protocolos COREN, etc." />
-
-          <div class="row">
-            <div class="col">
-              <label for="years">Janela (anos)</label>
-              <select id="years" class="field">
-                <option value="3">Últimos 3 anos</option>
-                <option value="5" selected>Últimos 5 anos</option>
-                <option value="10">Últimos 10 anos</option>
-                <option value="15">Últimos 15 anos</option>
-              </select>
-            </div>
-            <div class="col">
-              <label for="limit">Resultados</label>
-              <select id="limit" class="field">
-                <option value="4">4</option>
-                <option value="6" selected>6</option>
-                <option value="8">8</option>
-                <option value="10">10</option>
-              </select>
-            </div>
+        <div class="toggle">
+          <div>
+            <strong>Modo IA (síntese)</strong><br>
+            <span>Se o backend tiver síntese ativada, ele retorna uma resposta resumida.</span>
           </div>
-
-          <div class="toggle" style="margin-top:10px;">
-            <div>
-              <strong>Modo IA (síntese)</strong><br>
-              <span>Ativa síntese no backend (se configurado).</span>
-            </div>
-            <div id="aiSwitch" class="switch" role="switch" aria-checked="false" tabindex="0"></div>
-          </div>
-
-          <div class="row" style="margin-top:10px;">
-            <div class="col"><button class="btn" id="askBtn" type="button">Buscar</button></div>
-            <div class="col"><button class="btn secondary" id="clearBtn" type="button">Limpar</button></div>
-          </div>
-
-          <div class="tabs" id="tabs" style="display:none;">
-            <button class="tab active" data-tab="answer" type="button">Resposta</button>
-            <button class="tab" data-tab="official" type="button">Fontes oficiais</button>
-            <button class="tab" data-tab="pubmed" type="button">PubMed</button>
-          </div>
-
-          <div class="panel">
-            <div id="loading" style="display:none;">
-              <div class="skeleton big"></div>
-              <div class="skeleton"></div>
-              <div class="skeleton"></div>
-              <div class="skeleton"></div>
-              <div class="skeleton"></div>
-            </div>
-
-            <div id="answerBox" style="display:none;"></div>
-            <div id="officialBox" style="display:none;"></div>
-            <div id="pubmedBox" style="display:none;"></div>
-          </div>
-
-          <div class="row" id="refsRow" style="margin-top:10px; display:none;">
-            <div class="col"><button class="btn ghost" id="copyRefs" type="button">Copiar referências</button></div>
-            <div class="col"><button class="btn ghost" id="copyLinks" type="button">Copiar links</button></div>
-          </div>
-
-          <div class="msg" id="msg"></div>
+          <div id="aiSwitch" class="switch" role="switch" aria-checked="false" tabindex="0"></div>
         </div>
+
+        <div class="row" style="margin-top:10px;">
+          <div class="col"><button class="btn" id="askBtn" type="button">Buscar</button></div>
+          <div class="col"><button class="btn secondary" id="clearBtn" type="button">Limpar</button></div>
+        </div>
+
+        <div class="tabs" id="tabs" style="display:none;">
+          <button class="tab active" data-tab="answer" type="button">Resposta</button>
+          <button class="tab" data-tab="official" type="button">Fontes oficiais</button>
+          <button class="tab" data-tab="pubmed" type="button">PubMed</button>
+        </div>
+
+        <div class="panel">
+          <div id="loading" style="display:none;">
+            <div class="skeleton big"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+          </div>
+
+          <div id="answerBox" style="display:none;"></div>
+          <div id="officialBox" style="display:none;"></div>
+          <div id="pubmedBox" style="display:none;"></div>
+        </div>
+
+        <div class="row" id="refsRow" style="margin-top:10px; display:none;">
+          <div class="col"><button class="btn ghost" id="copyRefs" type="button">Copiar referências</button></div>
+          <div class="col"><button class="btn ghost" id="copyLinks" type="button">Copiar links</button></div>
+        </div>
+
+        <div class="msg" id="msg"></div>
 
         <div class="foot">© 2026 • Projeto Integrador</div>
       </section>
@@ -583,43 +480,71 @@ Valor: 2,00</textarea>
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
 
-    // ✅ AGORA: Supabase Edge Function (base até /functions/v1)
+    // ✅ Edge Function base (/functions/v1)
     const ASK_API_BASE = "https://owpswekkfaleauwjmahc.supabase.co/functions/v1";
-
-    // WhatsApp para comprovante:
-    const WHATSAPP_PHONE = "5515988119989";
-    const WHATSAPP_DEFAULT_TEXT = "Olá! Segue comprovante do Pix (Premium LPP). Meu e-mail de login é: ";
-
-    // Redirecionar automaticamente ao início se logar sem premium?
-    let AUTO_HOME_IF_NOT_PREMIUM = false;
 
     // =========================
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const $ = (id) => document.getElementById(id);
 
+    // Menu usuário (sem backdrop)
     const userBtn = $("userBtn");
     const userMenu = $("userMenu");
-    const backdrop = $("backdrop");
+    const goLogin = $("goLogin");
+    const logoutBtn = $("logoutBtn");
+
     const userName = $("userName");
     const userState = $("userState");
     const avatar = $("avatar");
     const userMeta = $("userMeta");
-    const tagPremium = $("tagPremium");
 
-    const goLogin = $("goLogin");
-    const goPremium = $("goPremium");
-    const logoutBtn = $("logoutBtn");
+    function openMenu(open){
+      userMenu.classList.toggle("open", !!open);
+      userBtn.setAttribute("aria-expanded", String(!!open));
+    }
+    function closeMenu(){ openMenu(false); }
 
-    const statusMsg = $("statusMsg");
+    userBtn.addEventListener("click", () => openMenu(!userMenu.classList.contains("open")));
+    document.addEventListener("click", (e) => {
+      if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) closeMenu();
+    });
+    window.addEventListener("scroll", closeMenu, { passive:true });
+    window.addEventListener("pageshow", closeMenu);
 
-    const lockedBox = $("lockedBox");
-    const appBox = $("appBox");
+    goLogin.addEventListener("click", () => window.location.href = SITE_BASE + "login.html?mode=login");
+    logoutBtn.addEventListener("click", async () => {
+      try{ await supabase.auth.signOut(); }catch(e){}
+      closeMenu();
+      renderUser(); // volta para visitante
+    });
 
-    const btnLogin = $("btnLogin");
-    const btnPremium = $("btnPremium");
-    const btnHome = $("btnHome");
-    const btnForceHome = $("btnForceHome");
+    async function renderUser(){
+      // A página é livre. Login só muda o “status” no topo.
+      try{
+        const { data } = await supabase.auth.getUser();
+        const u = data?.user;
+        if (u?.email){
+          userName.textContent = u.email;
+          userState.textContent = "Logado (acesso livre)";
+          userMeta.textContent = "Acesso: livre (sem Premium)";
+          avatar.textContent = (u.email[0] || "U").toUpperCase();
+        }else{
+          userName.textContent = "Visitante";
+          userState.textContent = "Acesso livre";
+          userMeta.textContent = "Acesso: livre (sem Premium)";
+          avatar.textContent = "V";
+        }
+      }catch{
+        userName.textContent = "Visitante";
+        userState.textContent = "Acesso livre";
+        userMeta.textContent = "Acesso: livre (sem Premium)";
+        avatar.textContent = "V";
+      }
+    }
 
+    // =========================
+    // App perguntas
+    // =========================
     const question = $("question");
     const years = $("years");
     const limit = $("limit");
@@ -639,44 +564,8 @@ Valor: 2,00</textarea>
     const copyRefs = $("copyRefs");
     const copyLinks = $("copyLinks");
 
-    const copyPix = $("copyPix");
-    const sendWhatsapp = $("sendWhatsapp");
-    const pixPayload = $("pixPayload");
-
-    function isPremiumValue(v){
-      if (v === true) return true;
-      if (typeof v === "string") return ["true","1","yes","sim"].includes(v.trim().toLowerCase());
-      if (typeof v === "number") return v === 1;
-      return false;
-    }
-
-    function setTopUser(label, state, isPremium){
-      userName.textContent = label;
-      userState.textContent = state;
-
-      const ch = (label || "?").trim().slice(0,1).toUpperCase();
-      avatar.textContent = ch || "?";
-
-      if (isPremium === true) {
-        tagPremium.textContent = "premium";
-        tagPremium.className = "tag ok";
-      } else if (isPremium === false) {
-        tagPremium.textContent = "free";
-        tagPremium.className = "tag bad";
-      } else {
-        tagPremium.textContent = "—";
-        tagPremium.className = "tag";
-      }
-    }
-
-    function setStatus(text, type="warn"){
-      statusMsg.className = "msg show " + type;
-      statusMsg.textContent = text;
-    }
-    function hideStatus(){
-      statusMsg.className = "msg";
-      statusMsg.textContent = "";
-    }
+    let lastCitations = [];
+    let lastLinks = [];
 
     function setMsg(text, type="warn"){
       msg.className = "msg show " + type;
@@ -687,69 +576,15 @@ Valor: 2,00</textarea>
       msg.textContent = "";
     }
 
-    // =========================
-    // ✅ MENU: anti-trava “tela escura”
-    // =========================
-    function openMenu(open){
-      userMenu.classList.toggle("open", !!open);
-      userBtn.setAttribute("aria-expanded", String(!!open));
-      backdrop.classList.toggle("open", !!open);
-      backdrop.setAttribute("aria-hidden", String(!open));
-    }
-
-    function forceCloseMenu(){
-      userMenu.classList.remove("open");
-      userBtn.setAttribute("aria-expanded", "false");
-      backdrop.classList.remove("open");
-      backdrop.setAttribute("aria-hidden", "true");
-    }
-
-    userBtn.addEventListener("click", () => {
-      const isOpen = userMenu.classList.contains("open");
-      openMenu(!isOpen);
-    });
-
-    backdrop.addEventListener("click", forceCloseMenu);
-
-    document.addEventListener("scroll", () => forceCloseMenu(), { passive:true });
-
-    document.addEventListener("click", (e) => {
-      if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) forceCloseMenu();
-    });
-
-    // ✅ iPhone/Android: volta/retoma página (bfcache) pode deixar backdrop preso
-    window.addEventListener("pageshow", forceCloseMenu);
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible") forceCloseMenu();
-    });
-
-    goLogin.addEventListener("click", () => window.location.href = SITE_BASE + "login.html?mode=login");
-    goPremium.addEventListener("click", () => window.location.href = SITE_BASE + "premium.html?go=perguntas.html");
-
-    logoutBtn.addEventListener("click", async () => {
-      try{ await supabase.auth.signOut(); }catch(e){}
-      window.location.href = SITE_BASE + "index.html";
-    });
-
-    btnLogin?.addEventListener("click", () => window.location.href = SITE_BASE + "login.html?mode=login");
-    btnPremium?.addEventListener("click", () => window.location.href = SITE_BASE + "premium.html?go=perguntas.html");
-    btnHome?.addEventListener("click", () => window.location.href = SITE_BASE + "index.html");
-
-    btnForceHome?.addEventListener("click", () => {
-      AUTO_HOME_IF_NOT_PREMIUM = true;
-      setStatus("Redirecionamento automático ativado ✅ (logou sem Premium → vai para o Início).", "ok");
-    });
-
-    aiSwitch.addEventListener("click", () => toggleAI());
-    aiSwitch.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleAI(); }
-    });
-
     function toggleAI(){
       aiEnabled = !aiEnabled;
       aiSwitch.classList.toggle("on", aiEnabled);
       aiSwitch.setAttribute("aria-checked", String(aiEnabled));
     }
+    aiSwitch.addEventListener("click", toggleAI);
+    aiSwitch.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleAI(); }
+    });
 
     function setLoading(on){
       loading.style.display = on ? "" : "none";
@@ -775,12 +610,9 @@ Valor: 2,00</textarea>
       pubmedBox.style.display = (name === "pubmed") ? "" : "none";
     }
 
-    function wireTabs(){
-      document.querySelectorAll(".tab").forEach(btn => {
-        btn.onclick = () => setTab(btn.dataset.tab);
-      });
-    }
-    wireTabs();
+    document.querySelectorAll(".tab").forEach(btn => {
+      btn.onclick = () => setTab(btn.dataset.tab);
+    });
 
     clearBtn.addEventListener("click", () => {
       question.value = "";
@@ -796,28 +628,6 @@ Valor: 2,00</textarea>
       question.focus();
     });
 
-    copyPix.addEventListener("click", async () => {
-      try{
-        await navigator.clipboard.writeText(pixPayload.value.trim());
-        setStatus("Pix copiado ✅ Cole no app do banco e faça o pagamento.", "ok");
-      }catch{
-        setStatus("Não consegui copiar automaticamente. Selecione o Pix e copie manualmente.", "warn");
-      }
-    });
-
-    sendWhatsapp.addEventListener("click", async () => {
-      const { data } = await supabase.auth.getUser();
-      const email = data?.user?.email || "(sem login)";
-      const text = encodeURIComponent(
-        WHATSAPP_DEFAULT_TEXT + email +
-        "\n\nChave Pix: 28d39758-0fe0-47f1-9c7c-9cb6e032c5cf\nValor: R$ 2,00\nReferência: PREMIUM-LPP"
-      );
-      window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${text}`, "_blank");
-    });
-
-    let lastCitations = [];
-    let lastLinks = [];
-
     copyRefs.addEventListener("click", async () => {
       try{
         const refs = lastCitations.map((c,i) => `${i+1}. ${c.title} — ${c.source}. ${c.url}`).join("\n");
@@ -830,8 +640,7 @@ Valor: 2,00</textarea>
 
     copyLinks.addEventListener("click", async () => {
       try{
-        const links = lastLinks.join("\n");
-        await navigator.clipboard.writeText(links);
+        await navigator.clipboard.writeText(lastLinks.join("\n"));
         setMsg("Links copiados ✅", "ok");
       }catch{
         setMsg("Não consegui copiar automaticamente.", "warn");
@@ -852,7 +661,6 @@ Valor: 2,00</textarea>
         url.searchParams.set("years", years.value);
         url.searchParams.set("ai", aiEnabled ? "1" : "0");
 
-        // ✅ Supabase Functions: enviar apikey/Authorization (funciona mesmo se verify_jwt=false)
         const r = await fetch(url.toString(), {
           method:"GET",
           headers: {
@@ -875,7 +683,7 @@ Valor: 2,00</textarea>
         answerBox.innerHTML = `
           <div class="result">
             <h3>Resposta</h3>
-            <p>${esc(data.answer || "Sem resposta sintetizada. Consulte as fontes abaixo.")}</p>
+            <p>${esc(data.answer || "Sem síntese. Consulte as fontes abaixo.")}</p>
             <div class="mini">
               <span class="chip">Domínios: ${(data.domains_used || []).slice(0,8).map(esc).join(", ") || "—"}</span>
               <span class="chip">${esc(data.generated_at || "")}</span>
@@ -932,116 +740,7 @@ Valor: 2,00</textarea>
     askBtn.addEventListener("click", ask);
     question.addEventListener("keydown", (e) => { if (e.key === "Enter") ask(); });
 
-    // ✅ Tenta garantir linha em profiles (evita “sou premium mas não libera” por falta de linha)
-    async function ensureProfileRow(user){
-      try{
-        await supabase.from("profiles").upsert({
-          id: user.id,
-          email: user.email || null,
-          updated_at: new Date().toISOString()
-        });
-      }catch(_e){
-        // se RLS bloquear upsert, não quebra o app; o erro real aparece no select.
-      }
-    }
-
-    async function gate(){
-      hideStatus();
-      setTopUser("Visitante", "Checando sessão…", null);
-      lockedBox.style.display = "";
-      appBox.style.display = "none";
-
-      // ✅ Anti “carregando infinito” (aumentado para celular)
-      let timedOut = false;
-      const hardTimer = setTimeout(() => {
-        timedOut = true;
-        setTopUser("Visitante", "Verificação lenta…", null);
-        setStatus(
-          "A verificação está demorando.\n\nPossíveis causas:\n- cache antigo do site (service worker)\n- RLS/policy bloqueando leitura da tabela profiles\n\nToque em Login/Premium e volte.",
-          "warn"
-        );
-      }, 8000);
-
-      // ✅ Primeiro: session (mais rápido). Depois: user.
-      const { data: sRes } = await supabase.auth.getSession();
-      const session = sRes?.session;
-
-      if (!session){
-        clearTimeout(hardTimer);
-        if (!timedOut){
-          setTopUser("Visitante", "Não logado", null);
-          userMeta.textContent = "Acesso: visitante";
-          setStatus("Faça login para acessar (Premium).", "warn");
-        }
-        return;
-      }
-
-      const { data: userRes, error: userErr } = await supabase.auth.getUser();
-
-      if (userErr || !userRes?.user){
-        clearTimeout(hardTimer);
-        setTopUser("Visitante", "Sessão inválida", null);
-        userMeta.textContent = "Sessão indisponível";
-        setStatus("Erro ao verificar login. Abra Login e tente novamente.", "bad");
-        return;
-      }
-
-      const email = userRes.user.email || "Usuário";
-      userMeta.textContent = "E-mail: " + email;
-
-      setTopUser(email, "Checando Premium…", null);
-
-      // ✅ garante linha do perfil (se não existir)
-      await ensureProfileRow(userRes.user);
-
-      // ✅ Premium check (robusto)
-      const uid = userRes.user.id;
-      const { data: prof, error: profErr } = await supabase
-        .from("profiles")
-        .select("premium")
-        .eq("id", uid)
-        .single();
-
-      clearTimeout(hardTimer);
-
-      if (profErr){
-        setTopUser(email, "Falha ao ler profiles", null);
-        lockedBox.style.display = "";
-        appBox.style.display = "none";
-        setStatus(
-          "Não consegui ler a tabela profiles.\n\nErro: " + profErr.message +
-          "\n\nCausas comuns:\n- RLS sem policy SELECT para profiles\n- linha do usuário não existe (upsert bloqueado)\n\nAjuste no Supabase e toque em “Premium” para testar.",
-          "bad"
-        );
-        return;
-      }
-
-      const premiumOk = isPremiumValue(prof?.premium);
-
-      if (premiumOk){
-        setTopUser(email, "Premium ativo ✅", true);
-        lockedBox.style.display = "none";
-        appBox.style.display = "";
-        setStatus("Premium ativo. Você pode perguntar.", "ok");
-        return;
-      }
-
-      setTopUser(email, "Sem Premium", false);
-      lockedBox.style.display = "";
-      appBox.style.display = "none";
-      setStatus("Você está logado, mas sem Premium. Pague via Pix e envie comprovante.", "warn");
-
-      if (AUTO_HOME_IF_NOT_PREMIUM){
-        window.location.replace(SITE_BASE + "index.html");
-      }
-    }
-
-    supabase.auth.onAuthStateChange(() => gate());
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible") gate();
-    });
-
-    gate();
+    renderUser();
   </script>
 </body>
 </html>
