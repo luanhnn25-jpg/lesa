@@ -9,12 +9,13 @@
 
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
   <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
+
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="LPP" />
 
-  <title>Lesão por Pressão - Plataforma</title>
+  <title>Lesão por Pressão - Projeto Integrador</title>
 
   <style>
     :root{
@@ -31,18 +32,10 @@
       --lpp-shadow-soft: 0 10px 24px rgba(2, 6, 23, .08);
 
       --lpp-radius: 18px;
-      --lpp-max: 1100px;
+      --lpp-max: 980px;
 
       --lpp-ring: 0 0 0 4px rgba(56, 130, 246, .18);
       --lpp-border: rgba(15, 23, 42, .08);
-
-      --ok:#22c55e;
-      --warn:#f59e0b;
-      --bad:#ef4444;
-
-      --glass: rgba(255,255,255,.10);
-      --glass2: rgba(255,255,255,.14);
-      --glassBorder: rgba(255,255,255,.18);
     }
 
     *{ box-sizing:border-box; }
@@ -100,9 +93,6 @@
       user-select:none;
       transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
       box-shadow: 0 10px 18px rgba(2,6,23,.06);
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
     }
     .lpp-pill:hover{
       background:#e7f0ff;
@@ -126,8 +116,7 @@
       display:flex;
       align-items:center;
       gap:12px;
-      justify-content:space-between; /* evita sobreposição */
-      flex-wrap:wrap;
+      justify-content:space-between;
     }
 
     .lpp-menu{
@@ -153,10 +142,10 @@
       font-size: 14px;
       line-height: 1;
       white-space: nowrap;
-      transition: transform .15s ease, background .15s ease, box-shadow .15s ease, opacity .15s ease;
+      transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
       outline: none;
       flex: 0 0 auto;
-      border:1px solid transparent;
+      border: 1px solid transparent;
     }
     .lpp-menu a:hover{
       background: rgba(255,255,255,.14);
@@ -170,7 +159,6 @@
       box-shadow: 0 10px 18px rgba(2,6,23,.20);
     }
 
-    /* USER AREA */
     .user-area{
       flex: 0 0 auto;
       position: relative;
@@ -178,16 +166,17 @@
       align-items:center;
       gap:10px;
     }
+
     .user-btn{
       display:flex;
       align-items:center;
       gap:10px;
-      max-width: 360px;
-      min-width: 200px;
+      max-width: 320px;
+      min-width: 180px;
       padding: 10px 12px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.14);
-      background: linear-gradient(180deg, var(--glass2), var(--glass));
+      background: rgba(255,255,255,.10);
       color:#fff;
       font-weight: 950;
       cursor:pointer;
@@ -196,12 +185,16 @@
       transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
       min-width: 0;
     }
-    .user-btn:hover{ background: rgba(255,255,255,.16); transform: translateY(-1px); box-shadow: 0 14px 26px rgba(2,6,23,.22); }
+    .user-btn:hover{
+      background: rgba(255,255,255,.16);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px rgba(2,6,23,.22);
+    }
     .user-btn:focus-visible{ box-shadow: var(--lpp-ring); }
 
     .user-icon{
-      width: 30px;
-      height: 30px;
+      width: 28px;
+      height: 28px;
       flex: 0 0 auto;
       display:grid;
       place-items:center;
@@ -211,31 +204,32 @@
     }
     .user-icon svg{ width: 18px; height: 18px; opacity:.95; }
 
-    .user-text{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+    .user-text{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width:0;
+    }
     .user-email{
       font-size: 12px;
       font-weight: 950;
-      opacity: .98;
+      opacity: .96;
       overflow:hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 230px;
+      max-width: 220px;
     }
     .user-status{
       display:flex;
       align-items:center;
-      gap:8px;
+      gap:6px;
       font-size: 11px;
-      opacity: .92;
+      opacity: .90;
       font-weight: 850;
-      min-height: 16px;
     }
-    .caret{ opacity:.9; font-size: 12px; margin-left:auto; }
 
     .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
+      display:inline-block;
       padding: 2px 8px;
       border-radius: 999px;
       font-size: 10.5px;
@@ -243,62 +237,65 @@
       border: 1px solid rgba(255,255,255,.22);
       background: rgba(255,255,255,.14);
       color:#fff;
-      white-space:nowrap;
     }
     .badge.premium{
       background: rgba(34,197,94,.18);
       border-color: rgba(34,197,94,.35);
     }
     .badge.verified{
-      background: rgba(59,130,246,.20);
-      border-color: rgba(59,130,246,.35);
+      background: rgba(59,130,246,.18);
+      border-color: rgba(59,130,246,.32);
     }
 
-    /* Skeleton login */
-    .skeleton{
-      display:inline-block;
-      height: 10px;
-      width: 160px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(255,255,255,.18) 25%, rgba(255,255,255,.30) 37%, rgba(255,255,255,.18) 63%);
-      background-size: 400% 100%;
-      animation: shimmer 1.2s infinite;
-    }
-    .skeleton.small{ width: 120px; height: 9px; opacity:.9; }
-    @keyframes shimmer{ 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+    .caret{ opacity:.9; font-size: 12px; margin-left:auto; }
 
-    /* Dropdown animado */
+    /* ✅ Dropdown melhor (não cobre tudo) */
     .dropdown{
       position:absolute;
       top: calc(100% + 10px);
       right: 0;
       width: min(360px, 92vw);
+
       background:#fff;
       border: 1px solid rgba(15,23,42,.10);
       border-radius: 16px;
       box-shadow: 0 18px 45px rgba(2,6,23,.22);
       padding: 10px;
+
       opacity: 0;
       transform: translateY(-6px) scale(.98);
       pointer-events: none;
+
       transition: opacity .14s ease, transform .14s ease;
-      z-index: 999;
-      transform-origin: top right;
+      z-index: 9999;
+
+      max-height: min(70vh, 520px);
+      overflow: auto;
     }
     .dropdown.open{
       opacity: 1;
       transform: translateY(0) scale(1);
       pointer-events: auto;
     }
+
     .drop-head{
       padding: 10px 10px 8px;
       border-radius: 14px;
-      background: linear-gradient(180deg, #f8fbff, #fff);
+      background: linear-gradient(180deg, #f8fbff, #ffffff);
       border: 1px solid rgba(15,23,42,.08);
       margin-bottom: 10px;
     }
-    .drop-head .t1{ font-weight: 1000; color:#0b2b63; font-size: 13px; }
-    .drop-head .t2{ margin-top:4px; color:#475569; font-size: 12px; word-break: break-all; }
+    .drop-head .t1{
+      font-weight: 950;
+      color:#0b2b63;
+      font-size: 13px;
+    }
+    .drop-head .t2{
+      margin-top:4px;
+      color:#475569;
+      font-size: 12px;
+      word-break: break-all;
+    }
 
     .drop-item{
       width:100%;
@@ -306,7 +303,7 @@
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      padding: 10px 12px;
+      padding: 11px 12px;
       border-radius: 12px;
       border: 1px solid rgba(15,23,42,.08);
       background: #fff;
@@ -314,13 +311,34 @@
       cursor:pointer;
       font-weight: 950;
       text-decoration:none;
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
     }
-    .drop-item:hover{ background:#f8fafc; }
+    .drop-item:hover{
+      background:#f8fafc;
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(2,6,23,.10);
+    }
     .drop-muted{ font-size: 12px; color: var(--lpp-muted); font-weight: 850; }
     .drop-sep{ height:1px; background: rgba(15,23,42,.10); margin:10px 4px; }
-    .drop-item.danger{ border-color: rgba(239,68,68,.18); background: rgba(239,68,68,.05); color:#991b1b; }
 
-    /* MAIN */
+    /* ✅ MOBILE: vira “bottom sheet” */
+    @media (max-width: 640px){
+      .dropdown{
+        position: fixed;
+        left: 10px;
+        right: 10px;
+        top: auto;
+        bottom: 10px;
+        width: auto;
+        max-height: 55vh;
+        border-radius: 18px;
+        transform: translateY(10px);
+        transform-origin: bottom center;
+      }
+      .dropdown.open{ transform: translateY(0); }
+    }
+
+    /* CONTEÚDO */
     .lpp-main{
       max-width: var(--lpp-max);
       margin: 22px auto 60px;
@@ -387,57 +405,33 @@
       background:#f8fafc;
       border: 1px solid #e5e7eb;
       box-shadow: var(--lpp-shadow-soft);
+      transition: transform .18s ease, box-shadow .18s ease;
     }
     .lpp-figure img{
       width:100%;
       height:auto;
       display:block;
+      transform: scale(1.001);
+      transition: transform .25s ease;
     }
-
-    /* Premium lock visual */
-    .premium-block{
-      position:relative;
-      border-radius: 16px;
-      overflow:hidden;
+    .lpp-card:hover .lpp-figure{
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(2, 6, 23, .12);
     }
-    .premium-block.locked > *{
-      filter: blur(3px);
-      pointer-events:none;
-      user-select:none;
+    .lpp-card:hover .lpp-figure img{
+      transform: scale(1.03);
     }
-    .premium-block.locked::after{
-      content:"🔒 Conteúdo Premium • Faça upgrade para desbloquear";
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 12px;
-      text-align:center;
-      background: rgba(255,255,255,.78);
-      color:#0b2b63;
-      font-weight:1000;
-      letter-spacing:.2px;
-    }
-
-    /* Entrance animation */
-    .reveal{
-      opacity:0;
-      transform: translateY(18px);
-      transition: opacity .6s ease, transform .6s ease;
-    }
-    .reveal.visible{ opacity:1; transform:none; }
 
     /* FAQ */
-    .faq-toolbar{
+    .lpp-search{
       display:flex;
       gap: 10px;
-      flex-wrap:wrap;
+      flex-wrap: wrap;
       align-items:center;
       margin-top: 12px;
     }
-    .faq-toolbar input{
-      flex: 1 1 260px;
+    .lpp-search input{
+      flex: 1 1 240px;
       padding: 12px 14px;
       border-radius: 14px;
       border: 1px solid #dbe3ef;
@@ -446,45 +440,60 @@
       background: #fff;
       transition: box-shadow .14s ease, border-color .14s ease;
     }
-    .faq-toolbar input:focus{
+    .lpp-search input:focus{
       border-color:#9cc3ff;
       box-shadow: var(--lpp-ring);
     }
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: #fff;
-      font-weight: 950;
-      font-size: 13px;
-      cursor:pointer;
-      user-select:none;
-      box-shadow: 0 10px 18px rgba(2,6,23,.06);
-      transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
-      white-space:nowrap;
-    }
-    .chip:hover{ transform: translateY(-1px); box-shadow: 0 16px 28px rgba(2,6,23,.10); background:#f8fafc; }
-    .chip.active{ border-color: rgba(11,91,211,.25); background: rgba(11,91,211,.06); color:#1d4ed8; }
-    .chip small{ font-size: 11px; font-weight:900; opacity:.75; }
 
-    .faq-meta{
+    .lpp-faq{
       margin-top: 10px;
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    details.lpp-qa{
+      border: 1px solid #e5eaf3;
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: #fff;
+      box-shadow: 0 12px 22px rgba(2,6,23,.06);
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+      overflow:hidden;
+    }
+    details.lpp-qa:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 18px 34px rgba(2,6,23,.10);
+      border-color: rgba(11,91,211,.18);
+    }
+    details.lpp-qa summary{
+      cursor:pointer;
+      font-weight: 950;
+      color: #0b2b63;
+      list-style:none;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
+      gap: 10px;
+      font-size: 15px;
+      outline:none;
+    }
+    details.lpp-qa summary::-webkit-details-marker{ display:none; }
+    details.lpp-qa summary::after{
+      content:"▾";
+      opacity:.75;
+      font-size: 16px;
+      transition: transform .16s ease;
+    }
+    details.lpp-qa[open] summary::after{ content:"▴"; }
+
+    .lpp-answer{
+      margin: 10px 0 0;
       color: var(--lpp-muted);
-      font-size: 13px;
+      line-height: 1.6;
+      font-size: 14.5px;
     }
 
-    .lpp-results{
-      margin-top: 10px;
-      display:none;
-    }
+    .lpp-results{ margin-top: 10px; display:none; }
     .lpp-results.visible{ display:block; }
     .lpp-result{
       padding: 12px 12px;
@@ -512,62 +521,6 @@
       border-radius: 4px;
     }
 
-    /* Premium “accordion” bonito usando details, com sensação de curso */
-    .lpp-faq{
-      margin-top: 10px;
-      display:flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    details.lpp-qa{
-      border: 1px solid #e5eaf3;
-      border-radius: 16px;
-      background: #fff;
-      box-shadow: 0 12px 22px rgba(2,6,23,.06);
-      overflow:hidden;
-      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
-    }
-    details.lpp-qa:hover{
-      transform: translateY(-2px);
-      box-shadow: 0 18px 34px rgba(2,6,23,.10);
-      border-color: rgba(11,91,211,.18);
-    }
-    details.lpp-qa summary{
-      cursor:pointer;
-      font-weight: 1000;
-      color: #0b2b63;
-      list-style:none;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      font-size: 15px;
-      outline:none;
-      padding: 12px 12px;
-      background: linear-gradient(180deg, #ffffff, #fbfdff);
-    }
-    details.lpp-qa summary::-webkit-details-marker{ display:none; }
-    details.lpp-qa summary::after{
-      content:"▾";
-      opacity:.75;
-      font-size: 16px;
-      transition: transform .16s ease;
-    }
-    details.lpp-qa[open] summary::after{ transform: rotate(180deg); }
-
-    .lpp-answer{
-      padding: 0 12px 12px;
-      margin: 0;
-      color: var(--lpp-muted);
-      line-height: 1.6;
-      font-size: 14.5px;
-    }
-
-    @keyframes fadeUp{
-      from{ opacity:0; transform: translateY(6px); }
-      to{ opacity:1; transform: translateY(0); }
-    }
-
     .lpp-footer{
       text-align:center;
       color:#64748b;
@@ -575,10 +528,14 @@
       padding: 18px 10px 30px;
     }
 
-    /* MOBILE ajustes */
+    @keyframes fadeUp{
+      from{ opacity:0; transform: translateY(6px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+
     @media (max-width: 480px){
-      .user-btn{ min-width: 170px; }
-      .user-email{ max-width: 170px; }
+      .user-btn{ min-width: 160px; }
+      .user-email{ max-width: 160px; }
       .lpp-card{ padding: 16px; }
       .lpp-title{ font-size: 18px; }
       .lpp-text, .lpp-list{ font-size: 15px; }
@@ -587,7 +544,6 @@
     @media (prefers-reduced-motion: reduce){
       html{ scroll-behavior:auto; }
       *{ transition:none !important; animation:none !important; }
-      .reveal{ opacity:1; transform:none; }
     }
 
     /* PWA MODAL */
@@ -610,14 +566,17 @@
       border: 1px solid rgba(15, 23, 42, .10);
       box-shadow: 0 20px 55px rgba(2,6,23,.28);
       padding: 16px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       transform: none !important;
     }
+
     .pwa-title{
       margin: 0 0 10px;
       font-size: 18px;
       font-weight: 950;
       color: #0b2b63;
     }
+
     .pwa-img{
       width: 100%;
       height: auto;
@@ -627,18 +586,21 @@
       box-shadow: 0 12px 24px rgba(2,6,23,.12);
       margin-bottom: 10px;
     }
+
     .pwa-text{
       margin: 0 0 12px;
       font-size: 14.5px;
       line-height: 1.6;
       color: #475569;
     }
+
     .pwa-actions{
       display:flex;
       gap: 10px;
       justify-content: flex-end;
       flex-wrap: wrap;
     }
+
     .pwa-btn{
       padding: 10px 14px;
       border-radius: 999px;
@@ -653,6 +615,22 @@
       outline:none;
       box-shadow: 0 0 0 4px rgba(56, 130, 246, .20);
     }
+
+    /* ✅ skeleton login */
+    .skeleton{
+      display:inline-block;
+      width: 160px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,255,255,.18), rgba(255,255,255,.28), rgba(255,255,255,.18));
+      background-size: 240px 100%;
+      animation: sk 1.1s infinite;
+    }
+    .skeleton.small{ width: 120px; height: 10px; opacity:.95; }
+    @keyframes sk{
+      0%{ background-position: -240px 0; }
+      100%{ background-position: 240px 0; }
+    }
   </style>
 </head>
 
@@ -660,7 +638,7 @@
 
   <header class="lpp-header">
     <h1>Lesão por Pressão</h1>
-    <p>Projeto Integrador • Plataforma Educativa</p>
+    <p>Projeto Integrador</p>
 
     <div style="margin-top:14px;">
       <button id="pwaInstallBtn" class="lpp-pill" style="display:none;">
@@ -669,7 +647,6 @@
     </div>
   </header>
 
-  <!-- NAV -->
   <nav class="lpp-nav" aria-label="Navegação principal">
     <div class="lpp-nav-inner">
 
@@ -685,7 +662,7 @@
       </div>
 
       <div class="user-area" aria-label="Área do usuário">
-        <button id="userBtn" class="user-btn" type="button" aria-expanded="false" aria-haspopup="menu">
+        <button id="userBtn" class="user-btn" type="button" aria-expanded="false">
           <span class="user-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none">
               <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -708,21 +685,19 @@
           </div>
 
           <a id="dropLogin" class="drop-item" href="login.html?mode=login">
-            🔑 Entrar <span class="drop-muted">Login</span>
+            Entrar <span class="drop-muted">Login</span>
           </a>
-
           <a id="dropSignup" class="drop-item" href="login.html?mode=signup">
-            📝 Criar conta <span class="drop-muted">Cadastro</span>
+            Criar conta <span class="drop-muted">Cadastro</span>
           </a>
 
           <div class="drop-sep"></div>
 
           <a id="dropPremium" class="drop-item" href="premium.html" style="display:none;">
-            ⭐ Premium <span class="drop-muted">Desbloquear</span>
+            Premium <span class="drop-muted">Desbloquear</span>
           </a>
-
-          <button id="dropLogout" class="drop-item danger" type="button" style="display:none;">
-            🚪 Sair <span class="drop-muted">Logout</span>
+          <button id="dropLogout" class="drop-item" type="button" style="display:none;">
+            Sair <span class="drop-muted">Logout</span>
           </button>
         </div>
       </div>
@@ -731,20 +706,19 @@
   </nav>
 
   <main class="lpp-main">
-
-    <section class="lpp-card reveal" id="conceito">
+    <section class="lpp-card" id="conceito">
       <h2 class="lpp-title">Conceito</h2>
       <p class="lpp-text">
-        Lesão por pressão é um dano localizado na pele e/ou no tecido subjacente, geralmente sobre uma proeminência óssea,
-        resultante de pressão prolongada ou pressão associada ao cisalhamento.
+        Lesão por pressão é um dano localizado na pele e/ou no tecido subjacente, geralmente sobre
+        uma proeminência óssea, resultante de pressão prolongada ou pressão associada ao cisalhamento.
       </p>
 
       <div class="lpp-figure">
-        <img src="lesao.png" alt="Exemplo ilustrativo de lesão por pressão em proeminência óssea" loading="lazy" />
+        <img src="lesao.png" alt="Exemplo ilustrativo de lesão por pressão em proeminência óssea" />
       </div>
     </section>
 
-    <section class="lpp-card reveal" id="fatores">
+    <section class="lpp-card" id="fatores">
       <h2 class="lpp-title">Fatores de Risco</h2>
       <ul class="lpp-list">
         <li>Imobilidade prolongada</li>
@@ -756,189 +730,158 @@
       </ul>
     </section>
 
-    <section class="lpp-card reveal" id="classificacao">
+    <section class="lpp-card" id="classificacao">
       <h2 class="lpp-title">Classificação</h2>
       <p class="lpp-text">
-        As lesões por pressão são classificadas em estágios conforme profundidade e comprometimento tecidual:
-        Estágio 1 (pele íntegra com eritema não embranquece), Estágio 2 (perda parcial da pele), Estágio 3 (perda total da pele),
-        Estágio 4 (exposição de estruturas profundas), além de lesão tissular profunda e lesão não classificável.
+        As lesões por pressão são classificadas em estágios conforme profundidade e comprometimento tecidual.
       </p>
     </section>
 
-    <section class="lpp-card reveal" id="prevencao">
+    <section class="lpp-card" id="prevencao">
       <h2 class="lpp-title">Prevenção</h2>
       <p class="lpp-text">
-        Envolve avaliação de risco, reposicionamento, uso de superfícies de suporte, proteção contra fricção/cisalhamento
-        e cuidado com umidade e integridade da pele.
+        Envolve avaliação de risco, mudança de decúbito, uso de superfícies de suporte e cuidados adequados com a pele.
       </p>
     </section>
 
-    <!-- EXEMPLO: seção premium com bloqueio visual -->
-    <section class="lpp-card reveal" id="premiumAula">
-      <h2 class="lpp-title">Aula Avançada (Premium)</h2>
-
-      <div class="premium-block" data-premium-block="1">
-        <p class="lpp-text">
-          Conteúdo aprofundado sobre tomada de decisão por tecido do leito, exsudato, cavidade, maceração e sinais de infecção,
-          com exemplos práticos e checklist de reavaliação.
-        </p>
-        <ul class="lpp-list">
-          <li>Checklist de reavaliação e troca de cobertura</li>
-          <li>Condutas por cenário clínico (didático)</li>
-          <li>Fluxo de decisão (resumo operacional)</li>
-        </ul>
-      </div>
-
-      <p class="lpp-text" style="margin-top:10px">
-        <span class="badge verified">✔ Verificado</span>
-        <span class="badge premium">Premium</span>
-      </p>
-    </section>
-
-    <section class="lpp-card reveal" id="faq">
-      <h2 class="lpp-title">Perguntas frequentes (FAQ)</h2>
+    <section class="lpp-card" id="faq">
+      <h2 class="lpp-title">Perguntas frequentes</h2>
       <p class="lpp-text">
-        Busque por palavras (ex.: “troca”, “dor”, “vermelho”, “umidade”) ou use os filtros inteligentes.
+        Digite uma palavra (ex.: “troca”, “dor”, “vermelho”, “umidade”) para localizar perguntas e respostas.
       </p>
 
-      <div class="faq-toolbar">
-        <input id="searchInput" type="search" placeholder="Buscar no FAQ..." autocomplete="off" />
-        <span class="chip" data-tag="troca">troca <small>filtro</small></span>
-        <span class="chip" data-tag="vermelho">vermelho <small>filtro</small></span>
-        <span class="chip" data-tag="umidade">umidade <small>filtro</small></span>
-        <span class="chip" data-tag="dor">dor <small>filtro</small></span>
-        <span class="chip" data-tag="infecção">infecção <small>filtro</small></span>
-        <span class="chip" data-tag="prevenção">prevenção <small>filtro</small></span>
+      <div class="lpp-search">
+        <input id="searchInput" type="search" placeholder="Buscar no FAQ..." />
+        <span class="lpp-pill" data-q="troca">troca</span>
+        <span class="lpp-pill" data-q="vermelho">vermelho</span>
+        <span class="lpp-pill" data-q="umidade">umidade</span>
+        <span class="lpp-pill" data-q="dor">dor</span>
       </div>
 
-      <div class="faq-meta">
-        <div id="faqMetaLeft">Digite para pesquisar. Resultados aparecem abaixo.</div>
-        <button id="clearFilters" class="lpp-pill" type="button" style="display:none;">🧹 Limpar filtros</button>
-      </div>
-
-      <!-- resultados rápidos -->
       <div class="lpp-results" id="resultsBox" aria-live="polite"></div>
 
-      <!-- lista completa -->
       <div class="lpp-faq" id="faqList">
-        <details class="lpp-qa" data-tags="vermelho pele início prevenção">
+        <details class="lpp-qa" data-tags="vermelho pele início">
           <summary>1) Pele vermelha já é lesão por pressão?</summary>
           <div class="lpp-answer">
-            Pode ser sinal inicial. Se a vermelhidão não clareia ao aliviar a pressão e persiste, é alerta importante.
-            Evite massagear e procure orientação profissional.
+            Pode ser o primeiro sinal. Se a vermelhidão não clareia ao aliviar a pressão e persiste, é um alerta importante.
+            Evite massagear e procure orientação de um profissional de saúde.
           </div>
         </details>
 
-        <details class="lpp-qa" data-tags="troca posição decúbito 2 horas prevenção">
+        <details class="lpp-qa" data-tags="troca posição decúbito 2 horas">
           <summary>2) De quanto em quanto tempo devo mudar a posição?</summary>
           <div class="lpp-answer">
             Em geral, recomenda-se reposicionamento programado (frequentemente a cada 2 horas),
-            porém pode variar conforme risco, tolerância e orientação da equipe.
+            mas pode variar conforme tolerância, risco e orientação da equipe.
           </div>
         </details>
 
-        <details class="lpp-qa" data-tags="umidade fralda suor higiene barreira prevenção">
+        <details class="lpp-qa" data-tags="umidade fralda higiene barreira">
           <summary>3) O que fazer quando a pele fica úmida por fralda/suor?</summary>
           <div class="lpp-answer">
-            Reduzir umidade é essencial: higiene suave, secagem sem fricção, troca de fralda/roupas e barreira protetora quando indicada.
+            Reduzir umidade é essencial: higiene suave, secagem sem fricção e uso de barreira protetora (quando indicada).
+            Trocar fraldas/roupas sempre que necessário.
           </div>
         </details>
 
-        <details class="lpp-qa" data-tags="dor infecção febre pus odor urgente">
+        <details class="lpp-qa" data-tags="dor infecção febre pus cheiro">
           <summary>4) Quando devo procurar ajuda urgente?</summary>
           <div class="lpp-answer">
-            Se houver piora rápida, pus/odor forte, febre, dor intensa, pele muito quente/vermelha ao redor, ou piora do estado geral.
+            Procure serviço de saúde se houver aumento rápido da ferida, pus/odor forte, febre, dor intensa,
+            pele muito quente/vermelha ao redor, ou piora do estado geral.
           </div>
         </details>
 
-        <details class="lpp-qa" data-tags="curativo casa produto orientação">
+        <details class="lpp-qa" data-tags="curativo casa produto">
           <summary>5) Posso escolher curativo sozinho(a) em casa?</summary>
           <div class="lpp-answer">
-            A escolha depende de estágio, exsudato, tecido do leito e profundidade. Para segurança, deve ser orientada por profissional.
+            A escolha depende de estágio, exsudato, tecido do leito e profundidade. Por segurança,
+            deve ser orientada por profissional.
           </div>
         </details>
 
         <details class="lpp-qa" data-tags="estágio classificação grau 1 2 3 4">
           <summary>6) Quais são os estágios (graus) da lesão por pressão?</summary>
           <div class="lpp-answer">
-            Estágio 1: eritema não embranquece com pele íntegra. Estágio 2: perda parcial da pele.
-            Estágio 3: perda total da pele com exposição de gordura. Estágio 4: exposição de músculo/tendão/osso.
-            Existem ainda lesão tissular profunda e lesão não classificável.
+            Em geral: Estágio 1 (pele íntegra com eritema que não embranquece), Estágio 2 (perda parcial da pele),
+            Estágio 3 (perda total da pele com exposição de gordura), Estágio 4 (exposição de músculo/tendão/osso).
+            Há ainda lesão tissular profunda e lesão não classificável.
           </div>
         </details>
 
         <details class="lpp-qa" data-tags="calcanhar sacro trocânter cotovelo occipital local comum">
           <summary>7) Quais locais do corpo têm mais risco de lesão por pressão?</summary>
           <div class="lpp-answer">
-            Proeminências ósseas: sacro/cóccix, calcâneos, trocânteres, maléolos, cotovelos e occipital, dependendo da posição.
+            Principalmente sobre proeminências ósseas: sacro/cóccix, calcâneos, trocânteres (quadril),
+            maléolos (tornozelo), cotovelos e occipital, dependendo da posição.
           </div>
         </details>
 
-        <details class="lpp-qa" data-tags="colchão caixa de ovo pneumático superfície suporte prevenção">
+        <details class="lpp-qa" data-tags="colchão caixa de ovo pneumático superfície suporte">
           <summary>8) Colchão “caixa de ovo” evita lesão por pressão?</summary>
           <div class="lpp-answer">
-            Pode ajudar no conforto e redistribuição de pressão, mas não substitui reposicionamento, inspeção da pele e controle de umidade.
-            Em alto risco, podem ser necessárias superfícies específicas.
+            Pode ajudar no conforto e na distribuição de pressão, mas não substitui reposicionamento, inspeção da pele,
+            controle de umidade e avaliação de risco. Para alto risco, podem ser indicadas superfícies específicas.
           </div>
         </details>
 
-        <details class="lpp-qa" data-tags="massagem vermelho esfregar risco prevenção">
+        <details class="lpp-qa" data-tags="massagem vermelhidão esfregar risco">
           <summary>9) Posso massagear a pele avermelhada para “ativar a circulação”?</summary>
           <div class="lpp-answer">
-            Não é recomendado massagear áreas avermelhadas sobre proeminências ósseas, pois pode aumentar dano tecidual.
-            Priorize alívio de pressão e proteção da pele.
+            Não é recomendado massagear áreas vermelhas sobre proeminências ósseas, pois pode aumentar o dano tecidual.
+            O mais importante é aliviar pressão e proteger a pele.
           </div>
         </details>
 
-        <details class="lpp-qa" data-tags="umidade maceração barreira creme zinco prevenção">
+        <details class="lpp-qa" data-tags="umidade maceração barreira creme zinco">
           <summary>10) Qual creme ajuda quando há risco de maceração?</summary>
           <div class="lpp-answer">
-            Barreiras protetoras (ex.: óxido de zinco ou barreiras poliméricas) podem ser usadas conforme protocolo e avaliação.
-            O essencial é reduzir umidade e evitar fricção.
+            Frequentemente utiliza-se barreira protetora (ex.: óxido de zinco ou barreiras poliméricas),
+            conforme protocolo e avaliação. O essencial é reduzir umidade e evitar fricção.
           </div>
         </details>
 
         <details class="lpp-qa" data-tags="sinais infecção pus febre odor calor">
           <summary>11) Quais sinais podem indicar infecção na ferida?</summary>
           <div class="lpp-answer">
-            Aumento de dor, calor, vermelhidão ao redor, piora do exsudato (pus), odor forte, febre, aumento do tamanho da lesão
-            ou piora do estado geral. Procure avaliação profissional.
+            Aumento de dor, calor, vermelhidão ao redor, piora do exsudato (pus), odor forte, febre,
+            aumento do tamanho da lesão ou piora do estado geral. Procure avaliação profissional.
           </div>
         </details>
 
-        <details class="lpp-qa" data-tags="limpeza soro fisiológico sabonete água higiene">
+        <details class="lpp-qa" data-tags="limpeza soro fisiológico sabonete água">
           <summary>12) Como fazer higiene/limpeza da pele e da região em risco?</summary>
           <div class="lpp-answer">
             Preferir higiene suave, com água e sabonete neutro (quando indicado), enxágue e secagem sem esfregar.
-            Para feridas, seguir orientação profissional/protocolo do serviço.
+            Evitar fricção intensa. Para feridas, seguir protocolo/orientação profissional.
           </div>
         </details>
 
-        <details class="lpp-qa" data-tags="nutrição proteína água cicatrização prevenção">
+        <details class="lpp-qa" data-tags="nutrição proteína água cicatrização">
           <summary>13) Alimentação influencia na prevenção e cicatrização?</summary>
           <div class="lpp-answer">
-            Sim. Nutrição e hidratação adequadas contribuem para integridade da pele e cicatrização.
+            Sim. Estado nutricional adequado e hidratação contribuem para integridade da pele e cicatrização.
             Em pacientes de risco, pode ser necessária avaliação nutricional.
           </div>
         </details>
 
-        <details class="lpp-qa" data-tags="fricção cisalhamento arrastar lençol transferência prevenção">
+        <details class="lpp-qa" data-tags="fricção cisalhamento arrastar lençol transferência">
           <summary>14) O que é fricção e cisalhamento e por que pioram a lesão?</summary>
           <div class="lpp-answer">
-            Fricção é atrito (ex.: arrastar no lençol). Cisalhamento ocorre quando o corpo desliza e a pele “fica”,
-            lesionando tecidos profundos. Reduz-se com técnica correta de mobilização e suporte.
+            Fricção é o atrito na pele (ex.: arrastar no lençol). Cisalhamento ocorre quando a pele “fica” e o corpo desliza,
+            lesionando tecidos mais profundos. Reduz-se com técnica correta de mobilização e suporte.
           </div>
         </details>
 
         <details class="lpp-qa" data-tags="curativo troca frequência exsudato">
           <summary>15) Com que frequência trocar o curativo?</summary>
           <div class="lpp-answer">
-            Depende da cobertura, exsudato, estágio e protocolo. A frequência deve ser definida por profissional após avaliação.
+            Depende do tipo de cobertura, volume de exsudato, estágio e protocolo. A frequência deve ser definida por profissional.
           </div>
         </details>
       </div>
     </section>
-
   </main>
 
   <footer class="lpp-footer">© 2026 - Projeto Integrador</footer>
@@ -958,20 +901,14 @@
     </div>
   </div>
 
-  <!-- FAQ / filtros / performance -->
+  <!-- FAQ busca (com debounce, limite e scroll) -->
   <script>
     const input = document.getElementById('searchInput');
     const resultsBox = document.getElementById('resultsBox');
     const faqs = Array.from(document.querySelectorAll('#faqList details.lpp-qa'));
-    const chips = Array.from(document.querySelectorAll('.chip[data-tag]'));
-    const clearFiltersBtn = document.getElementById('clearFilters');
-    const faqMetaLeft = document.getElementById('faqMetaLeft');
 
-    const state = {
-      query: "",
-      activeTags: new Set(),
-      debounceId: null
-    };
+    const LIMIT = 8;
+    let t = null;
 
     function escapeHtml(str){
       return str.replace(/[&<>"']/g, m => ({
@@ -985,119 +922,75 @@
       return escapeHtml(text).replace(re, '<mark>$1</mark>');
     }
 
-    function matchesTag(detailsEl){
-      if(state.activeTags.size === 0) return true;
-      const tags = (detailsEl.getAttribute('data-tags') || '').toLowerCase();
-      for(const t of state.activeTags){
-        if(tags.includes(String(t).toLowerCase())) return true;
-      }
-      return false;
-    }
-
-    function matchesQuery(detailsEl){
-      const query = state.query.trim().toLowerCase();
-      if(!query) return true;
-      const title = detailsEl.querySelector('summary')?.innerText.toLowerCase() || '';
-      const body  = detailsEl.querySelector('.lpp-answer')?.innerText.toLowerCase() || '';
-      const tags  = (detailsEl.getAttribute('data-tags') || '').toLowerCase();
-      return (title + ' ' + body + ' ' + tags).includes(query);
-    }
-
-    function applySearch(){
-      const q = state.query.trim().toLowerCase();
-      const activeCount = state.activeTags.size;
-
-      // filtro lógico
-      const matched = faqs.filter(d => matchesTag(d) && matchesQuery(d));
-
-      // meta
-      if(!q && activeCount === 0){
+    function doSearchNow(q){
+      const query = (q || '').trim().toLowerCase();
+      if(!query){
         resultsBox.classList.remove('visible');
         resultsBox.innerHTML = '';
-        faqMetaLeft.textContent = 'Digite para pesquisar. Resultados aparecem abaixo.';
-        clearFiltersBtn.style.display = 'none';
-        // fecha tudo
         faqs.forEach(d => d.open = false);
         return;
       }
 
-      clearFiltersBtn.style.display = (q || activeCount) ? 'inline-flex' : 'none';
-      faqMetaLeft.textContent = `Encontradas ${matched.length} correspondências (mostrando até 8).`;
-
-      // resultados limitados
-      const limit = 8;
-      const shown = matched.slice(0, limit);
+      const matched = faqs.filter(d => {
+        const title = d.querySelector('summary')?.innerText.toLowerCase() || '';
+        const body  = d.querySelector('.lpp-answer')?.innerText.toLowerCase() || '';
+        const tags  = (d.getAttribute('data-tags') || '').toLowerCase();
+        return (title + ' ' + body + ' ' + tags).includes(query);
+      });
 
       resultsBox.classList.add('visible');
 
-      if(shown.length === 0){
+      if(matched.length === 0){
         resultsBox.innerHTML = `
           <div class="lpp-result">
             <h3>Nenhum resultado</h3>
-            <p>Tente outra palavra (ex.: “troca”, “vermelho”, “umidade”, “dor”) ou remova filtros.</p>
+            <p>Tente outra palavra (ex.: “troca”, “vermelho”, “umidade”, “dor”).</p>
           </div>
         `;
-        resultsBox.scrollIntoView({ behavior:"smooth", block:"start" });
-        faqs.forEach(d => d.open = false);
         return;
       }
 
-      resultsBox.innerHTML = shown.map(d => {
+      const limited = matched.slice(0, LIMIT);
+
+      resultsBox.innerHTML = limited.map(d => {
         const title = d.querySelector('summary')?.innerText || '';
         const body = d.querySelector('.lpp-answer')?.innerText || '';
         return `
           <div class="lpp-result">
-            <h3>${highlight(title, q)}</h3>
-            <p>${highlight(body, q)}</p>
+            <h3>${highlight(title, query)}</h3>
+            <p>${highlight(body, query)}</p>
           </div>
         `;
-      }).join('');
+      }).join('') + (matched.length > LIMIT ? `
+        <div class="lpp-result">
+          <h3>Mais resultados…</h3>
+          <p>Foram encontrados ${matched.length} itens. Refine sua busca para ver mais detalhes.</p>
+        </div>
+      ` : '');
 
-      // abre os 3 primeiros na lista completa (boa UX)
+      // abre os 2 primeiros
       faqs.forEach(d => d.open = false);
-      shown.forEach((d, i) => d.open = i < 3);
+      limited.forEach((d, i) => d.open = i < 2);
 
-      // scroll suave para resultados
-      resultsBox.scrollIntoView({ behavior:"smooth", block:"start" });
+      // scroll suave até os resultados
+      resultsBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    function debounceApply(){
-      clearTimeout(state.debounceId);
-      state.debounceId = setTimeout(applySearch, 300);
+    function debouncedSearch(val){
+      clearTimeout(t);
+      t = setTimeout(() => doSearchNow(val), 300);
     }
 
-    input?.addEventListener('input', (e) => {
-      state.query = e.target.value || "";
-      debounceApply();
-    });
+    input?.addEventListener('input', (e) => debouncedSearch(e.target.value));
 
-    chips.forEach(chip => {
-      chip.addEventListener('click', () => {
-        const tag = chip.getAttribute('data-tag');
-        if(!tag) return;
-
-        if(state.activeTags.has(tag)){
-          state.activeTags.delete(tag);
-          chip.classList.remove('active');
-        }else{
-          state.activeTags.add(tag);
-          chip.classList.add('active');
-        }
-        applySearch();
+    document.querySelectorAll('.lpp-pill[data-q]').forEach(p => {
+      p.addEventListener('click', () => {
+        const q = p.getAttribute('data-q') || '';
+        input.value = q;
+        doSearchNow(q);
+        input.focus();
       });
     });
-
-    clearFiltersBtn?.addEventListener('click', () => {
-      state.query = "";
-      input.value = "";
-      state.activeTags.clear();
-      chips.forEach(c => c.classList.remove('active'));
-      applySearch();
-      input.focus();
-    });
-
-    // inicial
-    applySearch();
   </script>
 
   <!-- Service Worker -->
@@ -1115,7 +1008,7 @@
     }
   </script>
 
-  <!-- Botão instalar + modal -->
+  <!-- Botão instalar -->
   <script>
     let deferredPrompt = null;
 
@@ -1135,7 +1028,7 @@
     }
 
     window.addEventListener("load", () => {
-      installBtn.style.display = "inline-flex";
+      installBtn.style.display = "inline-block";
       installBtn.textContent = "📌 Como instalar no Android";
       confirmBtn.textContent = "Entendi";
       confirmBtn.onclick = closeModal;
@@ -1145,7 +1038,7 @@
       e.preventDefault();
       deferredPrompt = e;
 
-      installBtn.style.display = "inline-flex";
+      installBtn.style.display = "inline-block";
       installBtn.textContent = "📲 Instalar aplicativo";
 
       confirmBtn.textContent = "Instalar";
@@ -1168,18 +1061,7 @@
     modal?.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
   </script>
 
-  <!-- Animação de entrada nas seções -->
-  <script>
-    const revealEls = Array.from(document.querySelectorAll('.reveal'));
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(ent => {
-        if(ent.isIntersecting) ent.target.classList.add('visible');
-      });
-    }, { threshold: 0.12 });
-    revealEls.forEach(el => io.observe(el));
-  </script>
-
-  <!-- MENU DO USUÁRIO (Supabase) + Skeleton loader + Premium lock -->
+  <!-- MENU DO USUÁRIO (Supabase) - ✅ anti-skeleton infinito -->
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
@@ -1203,8 +1085,6 @@
     const dropPremium = document.getElementById("dropPremium");
     const dropLogout = document.getElementById("dropLogout");
 
-    const premiumBlocks = Array.from(document.querySelectorAll('[data-premium-block="1"]'));
-
     function openDrop(){
       userDrop.classList.add("open");
       userBtn.setAttribute("aria-expanded","true");
@@ -1214,7 +1094,7 @@
       userBtn.setAttribute("aria-expanded","false");
     }
 
-    userBtn.addEventListener("click", () => {
+    userBtn?.addEventListener("click", () => {
       userDrop.classList.contains("open") ? closeDrop() : openDrop();
     });
 
@@ -1222,27 +1102,24 @@
       if (!userDrop.contains(e.target) && !userBtn.contains(e.target)) closeDrop();
     });
 
-    function lockPremium(){
-      premiumBlocks.forEach(el => el.classList.add('locked'));
-    }
-    function unlockPremium(){
-      premiumBlocks.forEach(el => el.classList.remove('locked'));
-    }
+    window.addEventListener("scroll", () => {
+      if(userDrop.classList.contains("open")) closeDrop();
+    }, { passive:true });
 
     function setLoggedOut(){
       userEmail.textContent = "Entrar / Criar conta";
       userStatus.innerHTML = `Não autenticado <span class="badge">Free</span>`;
       dropHeadTitle.textContent = "Conta";
       dropHeadSub.textContent = "Você não está autenticado";
+
       dropLogin.style.display = "";
       dropSignup.style.display = "";
-      dropPremium.style.display = "";
+      dropPremium.style.display = "none";
       dropLogout.style.display = "none";
-      lockPremium();
     }
 
     async function setLoggedIn(user){
-      const email = user.email || "Usuário";
+      const email = user?.email || "Usuário";
       userEmail.textContent = email;
 
       dropHeadTitle.textContent = "Conta ativa";
@@ -1253,58 +1130,74 @@
       dropPremium.style.display = "";
       dropLogout.style.display = "";
 
-      // checar premium
       userStatus.innerHTML = `Conta ativa <span class="badge verified">✔ Verificado</span>`;
 
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("premium")
-        .eq("id", user.id)
-        .single();
+      try{
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("premium")
+          .eq("id", user.id)
+          .single();
 
-      if(!error && data?.premium){
-        userStatus.innerHTML = `Premium <span class="badge premium">VIP</span> <span class="badge verified">✔ Verificado</span>`;
-        dropPremium.style.display = "none";
-        unlockPremium();
-      }else{
+        if(!error && data?.premium){
+          userStatus.innerHTML = `Premium <span class="badge premium">VIP</span> <span class="badge verified">✔ Verificado</span>`;
+          dropPremium.style.display = "none";
+        }else{
+          userStatus.innerHTML = `Conta ativa <span class="badge">Free</span>`;
+        }
+      }catch(err){
         userStatus.innerHTML = `Conta ativa <span class="badge">Free</span>`;
-        lockPremium();
       }
     }
 
-    async function renderStateFast(){
-      // tira sensação de “carregamento infinito”
-      // usa getSession primeiro (mais rápido) e depois valida user
+    function withTimeout(promise, ms){
+      return Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), ms))
+      ]);
+    }
+
+    async function renderStateSafe(){
       userEmail.innerHTML = `<span class="skeleton"></span>`;
       userStatus.innerHTML = `<span class="skeleton small"></span>`;
       dropHeadTitle.textContent = "Conta";
       dropHeadSub.textContent = "Verificando sessão…";
 
-      const { data: sessRes } = await supabase.auth.getSession();
-      const session = sessRes?.session;
+      const hardFallback = setTimeout(() => {
+        if(String(userEmail.innerHTML).includes("skeleton")) setLoggedOut();
+      }, 2500);
 
-      if(!session){
-        setLoggedOut();
-        return;
-      }
+      try{
+        const sess = await withTimeout(supabase.auth.getSession(), 2500);
+        const session = sess?.data?.session;
 
-      // confirma o usuário (estado mais confiável)
-      const { data: userRes, error } = await supabase.auth.getUser();
-      if(error || !userRes?.user){
-        setLoggedOut();
-        return;
+        if(!session){
+          clearTimeout(hardFallback);
+          return setLoggedOut();
+        }
+
+        const u = await withTimeout(supabase.auth.getUser(), 3500);
+        const user = u?.data?.user;
+
+        clearTimeout(hardFallback);
+
+        if(!user) return setLoggedOut();
+        return await setLoggedIn(user);
+
+      }catch(err){
+        clearTimeout(hardFallback);
+        return setLoggedOut();
       }
-      await setLoggedIn(userRes.user);
     }
 
-    dropLogout.addEventListener("click", async () => {
-      await supabase.auth.signOut();
+    dropLogout?.addEventListener("click", async () => {
+      try{ await supabase.auth.signOut(); }catch(e){}
       closeDrop();
       window.location.href = SITE_BASE + "index.html";
     });
 
-    supabase.auth.onAuthStateChange(() => renderStateFast());
-    renderStateFast();
+    supabase.auth.onAuthStateChange(() => renderStateSafe());
+    renderStateSafe();
   </script>
 
 </body>
