@@ -409,8 +409,8 @@
   <footer>© 2026 • Projeto Integrador</footer>
 
   <script>
-    // ✅ endpoint público da sua Edge Function (depois do deploy com --no-verify-jwt)
-    const FUNCTION_URL = "https://owpswekkfaleauwjmahc.supabase.co/functions/v1/ask";
+    // ✅ URL correta para Edge Function (mais compatível com CORS em GitHub Pages)
+    const FUNCTION_URL = "https://owpswekkfaleauwjmahc.functions.supabase.co/ask";
 
     const el = (id) => document.getElementById(id);
 
@@ -560,7 +560,11 @@
         url.searchParams.set("ai", String(ai));
 
         // ✅ SEM Authorization, SEM apikey
-        const res = await fetch(url.toString(), { method:"GET", cache:"no-store" });
+        const res = await fetch(url.toString(), {
+          method:"GET",
+          cache:"no-store",
+          mode:"cors"
+        });
 
         if(!res.ok){
           const txt = await res.text().catch(() => "");
