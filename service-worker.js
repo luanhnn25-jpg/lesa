@@ -6,6 +6,7 @@ const CORE_ASSETS = [
   "./index.html",
   "./offline.html",
   "./manifest.webmanifest",
+  "./service-worker.js", // ✅ recomendado
 ];
 
 // Pré-cache “opcional” (não trava se algum arquivo estiver faltando)
@@ -23,17 +24,16 @@ const OPTIONAL_ASSETS = [
 
   "./lesao.png",
 
-  // ✅ ícones na raiz (sem acento)
+  // ✅ ícones na raiz
   "./icon-192.png",
   "./icon-512.png",
   "./maskable-512.png",
 
-  // ✅ imagem do modal (raiz)
+  // ✅ imagem do modal
   "./saude123.png",
 ];
 
 // ✅ páginas sensíveis: NÃO cachear HTML
-// (evita “visitante” mesmo logado / evita HTML antigo com sessão antiga)
 const NO_CACHE_HTML_SUFFIX = [
   "/login.html",
   "/confirm.html",
@@ -46,7 +46,6 @@ self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
 
-    // força recarregar do servidor (evita instalar arquivo antigo)
     const coreRequests = CORE_ASSETS.map(
       (url) => new Request(url, { cache: "reload" })
     );
@@ -72,26 +71,44 @@ self.addEventListener("activate", (event) => {
 function isHTML(request) {
   return request.headers.get("accept")?.includes("text/html");
 }
-
 function isImage(request) {
   return request.destination === "image";
 }
-
 function isNoCachePath(url) {
-  // robusto para /lesa/login.html, /lesa/confirm.html, etc.
   return NO_CACHE_HTML_SUFFIX.some((suffix) => url.pathname.endsWith(suffix));
+}
+
+// ✅ normaliza a chave do cache p/ HTML (remove query/hash)
+function normalizeHtmlRequest(request) {
+  const url = new URL(request.url);
+  url.search = "";
+  url.hash = "";
+  return new Request(url.toString(), {
+    method: "GET",
+    headers: request.headers,
+    mode: request.mode,
+    credentials: request.credentials,
+    redirect: request.redirect,
+    referrer: request.referrer,
+    referrerPolicy: request.referrerPolicy,
+    integrity: request.integrity,
+    cache: "no-store",
+  });
 }
 
 // HTML: network-first (atualiza conteúdo), cai no cache/offline se falhar
 async function networkFirst(request) {
   const cache = await caches.open(CACHE_NAME);
+
+  // ✅ evita cache fragmentado por query
+  const cacheKey = normalizeHtmlRequest(request);
+
   try {
     const fresh = await fetch(request);
-    // cacheia HTML “normal”
-    cache.put(request, fresh.clone());
+    cache.put(cacheKey, fresh.clone());
     return fresh;
   } catch {
-    const cached = await cache.match(request);
+    const cached = await cache.match(cacheKey);
     return cached || cache.match("./offline.html") || cache.match("./index.html");
   }
 }
@@ -129,12 +146,10 @@ self.addEventListener("fetch", (event) => {
 
   // HTML
   if (isHTML(event.request)) {
-    // ✅ não cachear páginas sensíveis
     if (isNoCachePath(url)) {
       event.respondWith(networkOnlyWithFallback(event.request));
       return;
     }
-    // demais HTML: network-first
     event.respondWith(networkFirst(event.request));
     return;
   }
