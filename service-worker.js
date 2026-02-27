@@ -1,4 +1,4 @@
-const CACHE_NAME = "lpp-v15"; // troque a versão quando atualizar
+const CACHE_NAME = "lpp-v16"; // troque a versão quando atualizar
 
 // Cache mínimo garantido (caminhos relativos para GitHub Pages /lesa/)
 const CORE_ASSETS = [
@@ -25,6 +25,14 @@ const OPTIONAL_ASSETS = [
 
   // ✅ imagem do modal (raiz)
   "./saude123.png"
+];
+
+// ✅ Páginas sensíveis: NÃO cachear HTML (evita “visitante” mesmo logado)
+const NO_CACHE_HTML = [
+  "/lesa/login.html",
+  "/lesa/perguntas.html",
+  "/lesa/premium.html",
+  "/lesa/selecao-produtos.html"
 ];
 
 self.addEventListener("install", (event) => {
@@ -62,6 +70,10 @@ function isImage(request) {
   return request.destination === "image";
 }
 
+function isNoCachePath(url) {
+  return NO_CACHE_HTML.includes(url.pathname);
+}
+
 // HTML: network-first (atualiza conteúdo), cai no cache/offline se falhar
 async function networkFirst(request) {
   const cache = await caches.open(CACHE_NAME);
@@ -72,6 +84,17 @@ async function networkFirst(request) {
   } catch {
     const cached = await cache.match(request);
     return cached || cache.match("./offline.html");
+  }
+}
+
+// ✅ HTML sensível: network-only (não grava cache) + fallback offline
+async function networkOnlyWithFallback(request) {
+  try {
+    // força buscar do servidor e evita cache do navegador
+    return await fetch(request, { cache: "no-store" });
+  } catch {
+    const cache = await caches.open(CACHE_NAME);
+    return (await cache.match("./offline.html")) || (await cache.match("./index.html"));
   }
 }
 
@@ -98,6 +121,13 @@ self.addEventListener("fetch", (event) => {
 
   // HTML
   if (isHTML(event.request)) {
+    // ✅ Não cachear páginas sensíveis
+    if (isNoCachePath(url)) {
+      event.respondWith(networkOnlyWithFallback(event.request));
+      return;
+    }
+
+    // Demais HTML: network-first
     event.respondWith(networkFirst(event.request));
     return;
   }
