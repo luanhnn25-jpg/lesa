@@ -5,26 +5,27 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#0b3d91" />
   <title>Perguntas • Fontes Oficiais + PubMed • LPP</title>
+  <meta name="description" content="Perguntas com fontes oficiais e PubMed (acesso livre, sem login)." />
 
   <style>
     :root{
       --bg1:#0b3d91; --bg2:#0a2f73; --bg3:#0b5bd3;
-      --page:#eef2f7; --card:#ffffff; --text:#0f172a;
-      --muted:#475569; --muted2:#64748b;
+      --page:#eef2f7; --card:#fff; --text:#0f172a; --muted:#475569; --muted2:#64748b;
       --border:rgba(15,23,42,.10);
       --shadow:0 12px 30px rgba(2,6,23,.10);
       --shadow2:0 18px 45px rgba(2,6,23,.14);
       --radius:18px;
-      --primary:#2563eb; --primary2:#1d4ed8;
       --ok:#16a34a; --warn:#f59e0b; --bad:#dc2626;
       --ring:0 0 0 4px rgba(56,130,246,.18);
       --chip:#eef2ff;
+      --glass:rgba(255,255,255,.10);
+      --glassBorder:rgba(255,255,255,.18);
     }
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{
       margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--text);
       background:
         radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.15), transparent 55%),
@@ -32,715 +33,700 @@
         var(--page);
     }
 
-    /* ===== Top header ===== */
-    .top{
-      position:sticky; top:0; z-index:1000;
-      background: linear-gradient(180deg, var(--bg1), var(--bg2));
+    /* HEADER */
+    header{
+      background: linear-gradient(180deg, var(--bg1), #0b4ab1);
       color:#fff;
-      box-shadow: 0 12px 24px rgba(2,6,23,.18);
+      padding: 18px 14px 14px;
+      position: sticky;
+      top:0;
+      z-index: 20;
+      box-shadow: 0 12px 24px rgba(2,6,23,.14);
       border-bottom: 1px solid rgba(255,255,255,.10);
     }
-    .top-inner{
-      max-width:1100px; margin:0 auto;
-      padding: 12px 12px;
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    .topbar{
+      max-width: 980px;
+      margin: 0 auto;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      justify-content:space-between;
     }
-    .brand{ display:flex; align-items:center; gap:10px; min-width: 220px; }
+    .brand{
+      display:flex; gap:10px; align-items:center; min-width: 0;
+    }
     .logo{
-      width:40px;height:40px;border-radius:14px;
+      width:42px;height:42px;border-radius:14px;
+      background:rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.18);
       display:grid; place-items:center;
-      font-weight:1000; letter-spacing:.6px;
-      background: rgba(255,255,255,.14);
-      border: 1px solid rgba(255,255,255,.18);
-      box-shadow: 0 12px 22px rgba(2,6,23,.18);
+      font-weight: 1000;
+      letter-spacing:.3px;
+      flex:0 0 auto;
     }
-    .brand h1{ margin:0; font-size:14px; font-weight:950; letter-spacing:.2px; line-height:1.1; }
-    .brand p{ margin:2px 0 0; font-size:12px; opacity:.92; line-height:1.2; }
+    .brandText{min-width:0}
+    .brandTitle{
+      font-weight: 1000;
+      margin:0;
+      font-size: 15px;
+      line-height: 1.1;
+    }
+    .brandSub{
+      margin:3px 0 0;
+      font-size: 12px;
+      opacity:.92;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      max-width: 62vw;
+    }
 
-    .nav{
-      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
-      justify-content:center; overflow:hidden;
-    }
-    .nav a{
-      color:#eaf2ff; text-decoration:none;
-      font-weight:900; font-size:13px;
-      padding:10px 12px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
+    .userPill{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
       background: rgba(255,255,255,.10);
-      transition: transform .14s ease, background .14s ease, box-shadow .14s ease;
-      white-space:nowrap;
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: 0 10px 18px rgba(2,6,23,.16);
+      min-width: 210px;
+      max-width: 360px;
+      color:#fff;
     }
-    .nav a:hover{
-      background: rgba(255,255,255,.16);
-      transform: translateY(-1px);
-      box-shadow: 0 10px 18px rgba(2,6,23,.20);
-    }
-    .nav a[aria-current="page"]{
-      background: rgba(255,255,255,.22);
-      border-color: rgba(255,255,255,.28);
-      box-shadow: 0 10px 18px rgba(2,6,23,.22);
-    }
-
-    /* ===== User bubble (sem overlay/backdrop) ===== */
-    .userbox{ position:relative; min-width: 230px; display:flex; justify-content:flex-end; }
-    .userbtn{
-      width:100%;
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding:10px 12px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.10);
-      color:#fff; cursor:pointer;
-      font-weight:950;
-      box-shadow: 0 10px 18px rgba(2,6,23,.18);
-      transition: transform .14s ease, background .14s ease;
-      outline:none;
-    }
-    .userbtn:hover{ background: rgba(255,255,255,.16); transform: translateY(-1px); }
-    .userbtn:focus-visible{ box-shadow: var(--ring), 0 10px 18px rgba(2,6,23,.18); }
-
-    .userleft{ display:flex; align-items:center; gap:10px; min-width:0; }
-    .avatar{
+    .userIcon{
       width:28px;height:28px;border-radius:999px;
-      background: rgba(255,255,255,.20);
-      border:1px solid rgba(255,255,255,.24);
+      background: rgba(255,255,255,.22);
+      border: 1px solid rgba(255,255,255,.18);
       display:grid; place-items:center;
-      font-weight:1000; flex:0 0 auto;
+      flex:0 0 auto;
+      font-weight: 1000;
     }
-    .userinfo{ display:flex; flex-direction:column; gap:2px; min-width:0; }
-    .userinfo .name{
-      font-size:12px; opacity:.92; font-weight:900;
-      white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 180px;
+    .userTxt{min-width:0; display:flex; flex-direction:column; gap:2px}
+    .userLine1{
+      font-weight: 1000;
+      font-size: 12px;
+      opacity:.96;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
     }
-    .userinfo .state{
-      font-size:11px; opacity:.86;
-      white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 180px;
+    .userLine2{
+      font-weight: 900;
+      font-size: 11px;
+      opacity:.90;
+      display:flex; align-items:center; gap:6px;
     }
-    .caret{ opacity:.9; }
+    .badge{
+      display:inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 1000;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.14);
+      color:#fff;
+      line-height: 1.4;
+    }
+    .badge.free{ background: rgba(255,255,255,.14); }
+    .badge.ok{ background: rgba(34,197,94,.18); border-color: rgba(34,197,94,.35); }
+    .badge.warn{ background: rgba(245,158,11,.16); border-color: rgba(245,158,11,.32); }
+    .badge.bad{ background: rgba(220,38,38,.16); border-color: rgba(220,38,38,.32); }
 
-    .menu{
-      position:absolute; top: calc(100% + 8px); right:0;
-      width:min(340px, 92vw);
-      background: #fff;
-      border:1px solid rgba(15,23,42,.12);
-      border-radius: 16px;
-      box-shadow: 0 18px 45px rgba(2,6,23,.20);
-      padding:10px;
-      display:none;
-      z-index: 2000;
+    main{
+      max-width: 980px;
+      margin: 18px auto 56px;
+      padding: 0 14px;
     }
-    .menu.open{ display:block; }
-    .menu .item{
-      width:100%; border:none; background:#fff; text-align:left;
-      padding:10px 12px; border-radius:14px; cursor:pointer;
-      font-weight:900; color:#0f172a;
-      display:flex; align-items:center; justify-content:space-between;
-    }
-    .menu .item:hover{ background:#f1f5f9; }
-    .menu .muted{ color:#475569; font-weight:800; font-size:12px; margin:4px 12px 10px; }
-
-    .tag{
-      display:inline-block; padding:6px 10px; border-radius:999px;
-      background: rgba(37,99,235,.10);
-      border:1px solid rgba(37,99,235,.20);
-      color:#1e40af; font-size:12px; font-weight:1000;
-    }
-    .tag.ok{ background: rgba(22,163,74,.10); border-color: rgba(22,163,74,.18); color:#14532d; }
-    .tag.bad{ background: rgba(220,38,38,.10); border-color: rgba(220,38,38,.18); color:#7f1d1d; }
-
-    @media (max-width: 980px){
-      .nav{ display:none; }
-      .userbox{ min-width:auto; width: 100%; }
-      .brand{ min-width:auto; }
-      .menu{
-        position:fixed;
-        left: 12px;
-        right: 12px;
-        top: 74px;
-        width: auto;
-        max-height: calc(100vh - 90px);
-        overflow:auto;
-      }
-    }
-
-    /* ===== Layout ===== */
-    .wrap{ max-width:1100px; margin: 18px auto 60px; padding: 0 14px; }
-    .grid{ display:grid; grid-template-columns: 1fr; gap: 14px; align-items:start; }
 
     .card{
-      background: linear-gradient(180deg,#fff, #fbfdff);
-      border:1px solid var(--border);
+      background: var(--card);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 16px;
-      transition: box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+      margin: 14px 0;
     }
-    .card:hover{ box-shadow: var(--shadow2); border-color: rgba(11,91,211,.20); transform: translateY(-1px); }
-
-    .title{
-      margin:0 0 8px;
-      font-size: 18px; font-weight: 1000;
-      color:#0b2b63; letter-spacing:.2px;
+    .titleRow{
       display:flex; align-items:center; gap:10px;
+      font-weight: 1000;
+      color:#0b2b63;
+      margin:0 0 10px;
+      font-size: 18px;
     }
-    .title::before{
-      content:""; width:4px; height:22px; border-radius:999px;
+    .titleRow::before{
+      content:"";
+      width:4px; height:22px; border-radius:999px;
       background: var(--bg3);
       box-shadow: 0 10px 18px rgba(11,91,211,.25);
+      display:inline-block;
     }
-    .lead{ margin:0; color: var(--muted); line-height:1.6; font-size:14.5px; }
-
-    .msg{
-      margin-top: 10px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border:1px solid rgba(15,23,42,.12);
-      background:#fff;
+    .hint{
+      margin: 0 0 12px;
       color: var(--muted);
-      font-size: 13px;
-      white-space: pre-wrap;
-      display:none;
+      line-height: 1.55;
+      font-size: 14px;
     }
-    .msg.show{ display:block; }
-    .msg.ok{ border-color: rgba(22,163,74,.30); background: rgba(22,163,74,.08); color:#14532d; }
-    .msg.warn{ border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.10); color:#7c2d12; }
-    .msg.bad{ border-color: rgba(220,38,38,.30); background: rgba(220,38,38,.08); color:#7f1d1d; }
 
-    label{ display:block; margin: 10px 0 6px; font-size:12px; font-weight:900; color: var(--muted); }
-    .field{
-      width:100%;
+    label{
+      display:block;
+      margin: 10px 0 6px;
+      font-weight: 900;
+      font-size: 12px;
+      color: var(--muted2);
+    }
+    input[type="text"], select{
+      width: 100%;
+      border: 1px solid rgba(15,23,42,.12);
+      background: #fff;
       border-radius: 14px;
-      border:1px solid rgba(15,23,42,.12);
-      background:#fff;
       padding: 12px 12px;
+      outline: none;
       font-size: 15px;
-      outline:none;
       transition: box-shadow .14s ease, border-color .14s ease;
     }
-    .field:focus{ border-color: rgba(37,99,235,.45); box-shadow: var(--ring); }
-
-    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    .row .col{ flex:1 1 180px; }
-
-    .btn{
-      border:none; cursor:pointer;
-      padding:12px 12px; border-radius:14px;
-      font-weight:1000; letter-spacing:.2px;
-      width:100%;
-      background: linear-gradient(180deg, var(--primary), var(--primary2));
-      color:#fff;
-      border:1px solid rgba(37,99,235,.28);
-      transition: transform .06s ease, filter .15s ease, box-shadow .15s ease;
+    input[type="text"]:focus, select:focus{
+      border-color: rgba(56,130,246,.35);
+      box-shadow: var(--ring);
     }
-    .btn:hover{ filter:brightness(1.03); }
-    .btn:active{ transform: translateY(1px); }
-    .btn.secondary{ background:#fff; color:#1d4ed8; border:1px solid rgba(37,99,235,.20); }
-    .btn.ghost{ background: transparent; color: #0f172a; border:1px solid rgba(15,23,42,.14); }
-
-    .toggle{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid rgba(15,23,42,.10);
-      background: #fff;
-      margin-top:10px;
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
-    .toggle strong{ font-size:13px; color:#0b2b63; }
-    .toggle span{ font-size:12px; color: var(--muted2); }
+    @media (max-width: 700px){
+      .grid{ grid-template-columns:1fr; }
+      .userPill{ min-width: 170px; }
+    }
 
+    .toggleRow{
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: #f8fafc;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .toggleText{
+      min-width:0;
+    }
+    .toggleText b{ color:#0b2b63; }
+    .toggleText p{
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
     .switch{
-      width:44px; height:26px; border-radius:999px;
+      width: 52px;
+      height: 32px;
+      border-radius: 999px;
       background: rgba(15,23,42,.16);
-      position:relative; cursor:pointer;
-      border:1px solid rgba(15,23,42,.10);
+      position: relative;
+      border: 1px solid rgba(15,23,42,.10);
       flex: 0 0 auto;
+      cursor:pointer;
+      transition: background .14s ease;
     }
     .switch::after{
       content:"";
-      position:absolute; top:3px; left:3px;
-      width:20px; height:20px; border-radius:999px;
+      position:absolute;
+      top: 4px;
+      left: 4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
       background:#fff;
       box-shadow: 0 10px 18px rgba(2,6,23,.20);
-      transition: transform .18s ease;
+      transition: transform .14s ease;
     }
-    .switch.on{ background: rgba(37,99,235,.55); border-color: rgba(37,99,235,.35); }
-    .switch.on::after{ transform: translateX(18px); }
+    .switch.on{ background: rgba(34,197,94,.35); }
+    .switch.on::after{ transform: translateX(20px); }
 
-    .tabs{ display:flex; gap:8px; margin-top: 12px; flex-wrap: wrap; }
-    .tab{
-      flex: 1 1 160px;
-      border:1px solid rgba(15,23,42,.12);
-      background:#fff;
-      padding:10px 12px;
-      border-radius:999px;
+    .btnRow{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (max-width: 700px){
+      .btnRow{ grid-template-columns: 1fr; }
+    }
+
+    .btn{
+      border:none;
+      border-radius: 14px;
+      padding: 12px 12px;
       cursor:pointer;
-      font-weight:1000;
+      font-weight: 1000;
+      font-size: 15px;
+      transition: transform .05s ease, filter .15s ease;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      background: linear-gradient(180deg, #2563eb, #1d4ed8);
+      color:#fff;
+      box-shadow: 0 14px 26px rgba(37,99,235,.22);
+    }
+    .btn.secondary{
+      background:#fff;
+      color:#1d4ed8;
+      border: 1px solid rgba(37,99,235,.25);
+    }
+    .btn:disabled{ opacity:.65; cursor:not-allowed; }
+
+    .chips{
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: var(--chip);
+      border: 1px solid rgba(37,99,235,.14);
+      color:#0b2b63;
+      font-weight: 1000;
+      font-size: 12px;
+    }
+
+    .tabs{
+      display:flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .tab{
+      flex: 1 1 170px;
+      border: 1px solid rgba(15,23,42,.10);
+      background:#fff;
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-weight: 1000;
       font-size: 13px;
       color: var(--muted);
+      transition: background .14s ease, transform .14s ease, border-color .14s ease;
     }
     .tab.active{
       border-color: rgba(37,99,235,.35);
       background: rgba(37,99,235,.08);
-      color: #1d4ed8;
+      color:#1d4ed8;
     }
 
-    .panel{
-      margin-top: 10px;
-      border:1px solid rgba(15,23,42,.10);
-      border-radius: 16px;
+    .panel{ margin-top: 12px; }
+    .msg{
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(15,23,42,.10);
       background:#fff;
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .msg.ok{ border-color: rgba(22,163,74,.25); background: rgba(22,163,74,.08); color:#14532d; }
+    .msg.warn{ border-color: rgba(245,158,11,.30); background: rgba(245,158,11,.10); color:#7c2d12; }
+    .msg.bad{ border-color: rgba(220,38,38,.25); background: rgba(220,38,38,.08); color:#7f1d1d; }
+
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .item{
+      border: 1px solid rgba(15,23,42,.10);
+      background:#fff;
+      border-radius: 14px;
       padding: 12px;
       box-shadow: 0 12px 22px rgba(2,6,23,.06);
     }
-
-    .result{
-      border:1px solid rgba(15,23,42,.10);
-      border-radius: 14px;
-      padding: 10px 12px;
-      margin: 10px 0;
-      background: linear-gradient(180deg, #fff, #fbfdff);
-      box-shadow: 0 12px 20px rgba(2,6,23,.06);
+    .item h3{
+      margin:0 0 6px;
+      font-size: 14.5px;
+      color:#0b2b63;
+      line-height: 1.35;
     }
-    .result h3{ margin:0 0 6px; font-size: 14px; color:#0b2b63; line-height:1.3; }
-    .result p{ margin:0; color: var(--muted); font-size: 13px; line-height:1.5; }
-    .result a{ color:#1d4ed8; font-weight:900; text-decoration:none; word-break: break-word; }
-    .result a:hover{ text-decoration: underline; }
-
-    .mini{
-      font-size:12px; color: var(--muted2);
-      margin-top:8px;
-      display:flex; gap: 8px; flex-wrap: wrap; align-items:center;
+    .meta{
+      display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+      color: var(--muted);
+      font-size: 12.5px;
     }
-    .chip{
-      display:inline-block;
-      padding:6px 10px;
-      border-radius:999px;
-      background: var(--chip);
-      border:1px solid rgba(37,99,235,.18);
-      color:#1e40af;
-      font-weight:1000;
-      font-size:12px;
+    .a{
+      color:#1d4ed8;
+      font-weight: 900;
+      text-decoration: underline;
     }
 
-    .skeleton{
-      border-radius: 14px;
-      background: linear-gradient(90deg, rgba(15,23,42,.06), rgba(15,23,42,.10), rgba(15,23,42,.06));
-      background-size: 200% 100%;
-      animation: shimmer 1.1s infinite linear;
-      height: 14px;
-      margin: 10px 0;
-    }
-    .skeleton.big{ height: 18px; }
-    @keyframes shimmer{ 0%{ background-position: 0% 0; } 100%{ background-position: 200% 0; } }
-
-    .foot{
+    footer{
       text-align:center;
       color:#64748b;
-      font-size:12px;
-      margin-top: 16px;
-      padding: 10px;
-    }
-
-    @media (prefers-reduced-motion: reduce){
-      *{ animation:none !important; transition:none !important; }
-      html{ scroll-behavior:auto; }
+      font-size: 13px;
+      padding: 18px 10px 30px;
     }
   </style>
 </head>
 
 <body>
-  <header class="top">
-    <div class="top-inner">
+  <header>
+    <div class="topbar">
       <div class="brand">
         <div class="logo">LPP</div>
-        <div>
-          <h1>Perguntas com Fontes Oficiais</h1>
-          <p>gov.br • COREN-SP • OMS/OPAS • PubMed</p>
+        <div class="brandText">
+          <p class="brandTitle" style="margin:0;">Perguntas com Fontes Oficiais</p>
+          <p class="brandSub">gov.br • COREN-SP • OMS/OPAS • PubMed</p>
         </div>
       </div>
 
-      <nav class="nav" aria-label="Menu">
-        <a href="index.html">Início</a>
-        <a href="selecao-produtos.html">Seleção de Produtos</a>
-        <a href="premium.html">Premium</a>
-        <a href="perguntas.html" aria-current="page">Perguntas</a>
-      </nav>
-
-      <div class="userbox">
-        <button id="userBtn" class="userbtn" type="button" aria-haspopup="menu" aria-expanded="false">
-          <div class="userleft">
-            <div class="avatar" id="avatar">V</div>
-            <div class="userinfo">
-              <div class="name" id="userName">Visitante</div>
-              <div class="state" id="userState">Acesso livre</div>
-            </div>
-          </div>
-          <div class="caret">▾</div>
-        </button>
-
-        <div id="userMenu" class="menu" role="menu" aria-label="Menu do usuário">
-          <div class="muted" id="userMeta">Acesso: livre (sem Premium)</div>
-
-          <button class="item" id="goLogin" type="button" role="menuitem">
-            Entrar / Criar conta <span class="tag">login</span>
-          </button>
-
-          <button class="item" id="logoutBtn" type="button" role="menuitem">
-            Sair <span class="tag bad">logout</span>
-          </button>
+      <!-- Acesso livre (sem dropdown para evitar “tela escura”) -->
+      <div class="userPill" aria-label="Status de acesso">
+        <div class="userIcon">V</div>
+        <div class="userTxt">
+          <div class="userLine1">Visitante</div>
+          <div class="userLine2">Acesso livre <span class="badge free">Free</span></div>
         </div>
       </div>
     </div>
   </header>
 
-  <main class="wrap">
-    <div class="grid">
-      <section class="card">
-        <h2 class="title">Perguntar</h2>
-        <p class="lead">
-          Acesso livre. Você pode pesquisar e ver as fontes (oficiais e PubMed) sem login.
-        </p>
+  <main>
+    <section class="card" aria-label="Perguntar">
+      <h2 class="titleRow">Perguntar</h2>
+      <p class="hint">
+        Acesso livre. Você pode pesquisar e ver as fontes (PubMed) sem login.
+        <br><b>Importante:</b> esta página depende da Edge Function <code>/functions/v1/ask</code>.
+      </p>
 
-        <label for="question">Pergunta</label>
-        <input id="question" class="field" type="text" placeholder="Ex.: prevenção de lesão por pressão, curativos, protocolos..." />
+      <label for="q">Pergunta</label>
+      <input id="q" type="text" placeholder="Ex.: qual agulha usar para vacina no deltoide?" />
 
-        <div class="row">
-          <div class="col">
-            <label for="years">Janela (anos)</label>
-            <select id="years" class="field">
-              <option value="3">Últimos 3 anos</option>
-              <option value="5" selected>Últimos 5 anos</option>
-              <option value="10">Últimos 10 anos</option>
-              <option value="15">Últimos 15 anos</option>
-            </select>
-          </div>
-          <div class="col">
-            <label for="limit">Resultados</label>
-            <select id="limit" class="field">
-              <option value="4">4</option>
-              <option value="6" selected>6</option>
-              <option value="8">8</option>
-              <option value="10">10</option>
-            </select>
-          </div>
+      <div class="grid">
+        <div>
+          <label for="years">Janela (anos)</label>
+          <select id="years">
+            <option value="1">Último 1 ano</option>
+            <option value="3">Últimos 3 anos</option>
+            <option value="5" selected>Últimos 5 anos</option>
+            <option value="10">Últimos 10 anos</option>
+            <option value="20">Últimos 20 anos</option>
+          </select>
         </div>
 
-        <div class="toggle">
-          <div>
-            <strong>Modo IA (síntese)</strong><br>
-            <span>Se o backend tiver síntese ativada, ele retorna uma resposta resumida.</span>
-          </div>
-          <div id="aiSwitch" class="switch" role="switch" aria-checked="false" tabindex="0"></div>
+        <div>
+          <label for="limit">Resultados</label>
+          <select id="limit">
+            <option value="4">4</option>
+            <option value="6" selected>6</option>
+            <option value="8">8</option>
+            <option value="10">10</option>
+          </select>
         </div>
+      </div>
 
-        <div class="row" style="margin-top:10px;">
-          <div class="col"><button class="btn" id="askBtn" type="button">Buscar</button></div>
-          <div class="col"><button class="btn secondary" id="clearBtn" type="button">Limpar</button></div>
+      <div class="toggleRow" role="group" aria-label="Modo IA">
+        <div class="toggleText">
+          <b>Modo IA (síntese)</b>
+          <p>Se estiver ativado, a função retorna um texto de síntese (baseado nos títulos do PubMed).</p>
         </div>
+        <div id="aiSwitch" class="switch" role="switch" aria-checked="false" tabindex="0"></div>
+      </div>
 
-        <div class="tabs" id="tabs" style="display:none;">
-          <button class="tab active" data-tab="answer" type="button">Resposta</button>
-          <button class="tab" data-tab="official" type="button">Fontes oficiais</button>
-          <button class="tab" data-tab="pubmed" type="button">PubMed</button>
-        </div>
+      <div class="btnRow">
+        <button id="btnBuscar" class="btn primary" type="button">Buscar</button>
+        <button id="btnLimpar" class="btn secondary" type="button">Limpar</button>
+      </div>
 
-        <div class="panel">
-          <div id="loading" style="display:none;">
-            <div class="skeleton big"></div>
-            <div class="skeleton"></div>
-            <div class="skeleton"></div>
-            <div class="skeleton"></div>
-            <div class="skeleton"></div>
-          </div>
+      <div class="chips" aria-label="Atalhos de busca">
+        <span class="chip" data-fill="lesão por pressão prevenção">lesão por pressão • prevenção</span>
+        <span class="chip" data-fill="pressure injury staging">pressure injury • staging</span>
+        <span class="chip" data-fill="intradermal vaccine needle deltoid">vacina • agulha • deltoide</span>
+        <span class="chip" data-fill="skin barrier moisture associated skin damage">umidade • barreira • pele</span>
+      </div>
 
-          <div id="answerBox" style="display:none;"></div>
-          <div id="officialBox" style="display:none;"></div>
-          <div id="pubmedBox" style="display:none;"></div>
-        </div>
+      <div class="tabs" aria-label="Abas de resultados">
+        <button class="tab active" id="tabResposta" type="button">Resposta</button>
+        <button class="tab" id="tabOficiais" type="button">Fontes oficiais</button>
+        <button class="tab" id="tabPubmed" type="button">PubMed</button>
+      </div>
 
-        <div class="row" id="refsRow" style="margin-top:10px; display:none;">
-          <div class="col"><button class="btn ghost" id="copyRefs" type="button">Copiar referências</button></div>
-          <div class="col"><button class="btn ghost" id="copyLinks" type="button">Copiar links</button></div>
-        </div>
+      <div class="panel" id="panel">
+        <div id="status" class="msg warn">Pronto ✅ Digite sua pergunta e toque em Buscar.</div>
+        <div id="answerBox" class="msg" style="display:none;"></div>
 
-        <div class="msg" id="msg"></div>
-
-        <div class="foot">© 2026 • Projeto Integrador</div>
-      </section>
-    </div>
+        <div id="webBox" class="list" style="display:none;"></div>
+        <div id="pubmedBox" class="list" style="display:none;"></div>
+      </div>
+    </section>
   </main>
 
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+  <footer>© 2026 • Projeto Integrador</footer>
 
-    // =========================
-    // CONFIG
-    // =========================
-    const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
+  <script>
+    // ====== CONFIG (PRODUÇÃO) ======
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+    const ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+    const FUNCTION_NAME = "ask"; // /functions/v1/ask
+    // ==============================
 
-    // ✅ Edge Function base (/functions/v1)
-    const ASK_API_BASE = "https://owpswekkfaleauwjmahc.supabase.co/functions/v1";
+    const el = (id) => document.getElementById(id);
 
-    // =========================
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const $ = (id) => document.getElementById(id);
+    const qEl = el("q");
+    const yearsEl = el("years");
+    const limitEl = el("limit");
 
-    // Menu usuário (sem backdrop)
-    const userBtn = $("userBtn");
-    const userMenu = $("userMenu");
-    const goLogin = $("goLogin");
-    const logoutBtn = $("logoutBtn");
+    const aiSwitch = el("aiSwitch");
+    let ai = 0;
 
-    const userName = $("userName");
-    const userState = $("userState");
-    const avatar = $("avatar");
-    const userMeta = $("userMeta");
+    const btnBuscar = el("btnBuscar");
+    const btnLimpar = el("btnLimpar");
 
-    function openMenu(open){
-      userMenu.classList.toggle("open", !!open);
-      userBtn.setAttribute("aria-expanded", String(!!open));
-    }
-    function closeMenu(){ openMenu(false); }
+    const tabResposta = el("tabResposta");
+    const tabOficiais = el("tabOficiais");
+    const tabPubmed = el("tabPubmed");
 
-    userBtn.addEventListener("click", () => openMenu(!userMenu.classList.contains("open")));
-    document.addEventListener("click", (e) => {
-      if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) closeMenu();
-    });
-    window.addEventListener("scroll", closeMenu, { passive:true });
-    window.addEventListener("pageshow", closeMenu);
+    const status = el("status");
+    const answerBox = el("answerBox");
+    const webBox = el("webBox");
+    const pubmedBox = el("pubmedBox");
 
-    goLogin.addEventListener("click", () => window.location.href = SITE_BASE + "login.html?mode=login");
-    logoutBtn.addEventListener("click", async () => {
-      try{ await supabase.auth.signOut(); }catch(e){}
-      closeMenu();
-      renderUser(); // volta para visitante
-    });
+    let activeTab = "resposta"; // resposta | oficiais | pubmed
 
-    async function renderUser(){
-      // A página é livre. Login só muda o “status” no topo.
-      try{
-        const { data } = await supabase.auth.getUser();
-        const u = data?.user;
-        if (u?.email){
-          userName.textContent = u.email;
-          userState.textContent = "Logado (acesso livre)";
-          userMeta.textContent = "Acesso: livre (sem Premium)";
-          avatar.textContent = (u.email[0] || "U").toUpperCase();
-        }else{
-          userName.textContent = "Visitante";
-          userState.textContent = "Acesso livre";
-          userMeta.textContent = "Acesso: livre (sem Premium)";
-          avatar.textContent = "V";
-        }
-      }catch{
-        userName.textContent = "Visitante";
-        userState.textContent = "Acesso livre";
-        userMeta.textContent = "Acesso: livre (sem Premium)";
-        avatar.textContent = "V";
-      }
+    function setTab(name){
+      activeTab = name;
+      tabResposta.classList.toggle("active", name === "resposta");
+      tabOficiais.classList.toggle("active", name === "oficiais");
+      tabPubmed.classList.toggle("active", name === "pubmed");
+
+      answerBox.style.display = (name === "resposta") ? "" : "none";
+      webBox.style.display = (name === "oficiais") ? "" : "none";
+      pubmedBox.style.display = (name === "pubmed") ? "" : "none";
     }
 
-    // =========================
-    // App perguntas
-    // =========================
-    const question = $("question");
-    const years = $("years");
-    const limit = $("limit");
-    const askBtn = $("askBtn");
-    const clearBtn = $("clearBtn");
-    const msg = $("msg");
-
-    const aiSwitch = $("aiSwitch");
-    let aiEnabled = false;
-
-    const tabs = $("tabs");
-    const loading = $("loading");
-    const answerBox = $("answerBox");
-    const officialBox = $("officialBox");
-    const pubmedBox = $("pubmedBox");
-    const refsRow = $("refsRow");
-    const copyRefs = $("copyRefs");
-    const copyLinks = $("copyLinks");
-
-    let lastCitations = [];
-    let lastLinks = [];
+    tabResposta.addEventListener("click", () => setTab("resposta"));
+    tabOficiais.addEventListener("click", () => setTab("oficiais"));
+    tabPubmed.addEventListener("click", () => setTab("pubmed"));
 
     function setMsg(text, type="warn"){
-      msg.className = "msg show " + type;
-      msg.textContent = text;
-    }
-    function clearMsg(){
-      msg.className = "msg";
-      msg.textContent = "";
+      status.className = "msg " + type;
+      status.textContent = text;
+      status.style.display = "";
     }
 
-    function toggleAI(){
-      aiEnabled = !aiEnabled;
-      aiSwitch.classList.toggle("on", aiEnabled);
-      aiSwitch.setAttribute("aria-checked", String(aiEnabled));
-    }
-    aiSwitch.addEventListener("click", toggleAI);
-    aiSwitch.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleAI(); }
-    });
-
-    function setLoading(on){
-      loading.style.display = on ? "" : "none";
-      if (on){
-        tabs.style.display = "none";
-        refsRow.style.display = "none";
-        answerBox.style.display = "none";
-        officialBox.style.display = "none";
-        pubmedBox.style.display = "none";
-      }
+    function setBusy(b){
+      btnBuscar.disabled = !!b;
+      btnLimpar.disabled = !!b;
+      qEl.disabled = !!b;
+      yearsEl.disabled = !!b;
+      limitEl.disabled = !!b;
     }
 
-    function esc(s){
-      return String(s||"").replace(/[&<>"']/g, m => ({
+    function escapeHtml(str){
+      return String(str ?? "").replace(/[&<>"']/g, m => ({
         '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
       }[m]));
     }
 
-    function setTab(name){
-      document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === name));
-      answerBox.style.display = (name === "answer") ? "" : "none";
-      officialBox.style.display = (name === "official") ? "" : "none";
-      pubmedBox.style.display = (name === "pubmed") ? "" : "none";
-    }
-
-    document.querySelectorAll(".tab").forEach(btn => {
-      btn.onclick = () => setTab(btn.dataset.tab);
-    });
-
-    clearBtn.addEventListener("click", () => {
-      question.value = "";
-      clearMsg();
-      tabs.style.display = "none";
-      refsRow.style.display = "none";
-      answerBox.style.display = "none";
-      officialBox.style.display = "none";
-      pubmedBox.style.display = "none";
-      answerBox.innerHTML = "";
-      officialBox.innerHTML = "";
-      pubmedBox.innerHTML = "";
-      question.focus();
-    });
-
-    copyRefs.addEventListener("click", async () => {
-      try{
-        const refs = lastCitations.map((c,i) => `${i+1}. ${c.title} — ${c.source}. ${c.url}`).join("\n");
-        await navigator.clipboard.writeText(refs);
-        setMsg("Referências copiadas ✅", "ok");
-      }catch{
-        setMsg("Não consegui copiar automaticamente.", "warn");
-      }
-    });
-
-    copyLinks.addEventListener("click", async () => {
-      try{
-        await navigator.clipboard.writeText(lastLinks.join("\n"));
-        setMsg("Links copiados ✅", "ok");
-      }catch{
-        setMsg("Não consegui copiar automaticamente.", "warn");
-      }
-    });
-
-    async function ask(){
-      clearMsg();
-      const q = question.value.trim();
-      if (!q) return setMsg("Digite uma pergunta.", "bad");
-
-      setLoading(true);
-
-      try{
-        const url = new URL(ASK_API_BASE.replace(/\/$/,"") + "/ask");
-        url.searchParams.set("q", q);
-        url.searchParams.set("limit", limit.value);
-        url.searchParams.set("years", years.value);
-        url.searchParams.set("ai", aiEnabled ? "1" : "0");
-
-        const r = await fetch(url.toString(), {
-          method:"GET",
-          headers: {
-            "apikey": SUPABASE_ANON_KEY,
-            "Authorization": "Bearer " + SUPABASE_ANON_KEY
-          }
-        });
-
-        let data = {};
-        try { data = await r.json(); } catch { data = { error: "Resposta inválida do servidor." }; }
-
-        if (!r.ok) {
-          setLoading(false);
-          return setMsg("Falha na busca:\n" + (data?.error || "erro desconhecido"), "bad");
-        }
-
-        lastCitations = Array.isArray(data.citations) ? data.citations : [];
-        lastLinks = lastCitations.map(c => c.url).filter(Boolean);
-
-        answerBox.innerHTML = `
-          <div class="result">
-            <h3>Resposta</h3>
-            <p>${esc(data.answer || "Sem síntese. Consulte as fontes abaixo.")}</p>
-            <div class="mini">
-              <span class="chip">Domínios: ${(data.domains_used || []).slice(0,8).map(esc).join(", ") || "—"}</span>
-              <span class="chip">${esc(data.generated_at || "")}</span>
-            </div>
+    function renderWeb(web){
+      // Por enquanto a função devolve web: []
+      if(!Array.isArray(web) || web.length === 0){
+        webBox.innerHTML = `
+          <div class="item">
+            <h3>Fontes oficiais (em desenvolvimento)</h3>
+            <div class="meta">Ainda não há retorno de “web/fontes oficiais” na função. Use a aba PubMed por enquanto.</div>
           </div>
         `;
+        return;
+      }
 
-        const web = Array.isArray(data.web) ? data.web : [];
-        officialBox.innerHTML = !web.length ? `
-          <div class="result">
-            <h3>Fontes oficiais</h3>
-            <p>Nenhum resultado oficial retornou (ou provedor de busca não configurado).</p>
+      webBox.innerHTML = web.map((w) => `
+        <div class="item">
+          <h3>${escapeHtml(w.title || "Fonte")}</h3>
+          <div class="meta">
+            <span>${escapeHtml(w.source || "Web")}</span>
+            ${w.url ? `<a class="a" href="${escapeHtml(w.url)}" target="_blank" rel="noopener">Abrir</a>` : ""}
           </div>
-        ` : web.map(x => `
-          <div class="result">
-            <h3>${esc(x.title || "Sem título")}</h3>
-            <p>${esc(x.snippet || "")}</p>
-            <div class="mini">
-              <span class="chip">${esc(x.source || "")}</span>
-              <a href="${esc(x.url || "#")}" target="_blank" rel="noopener noreferrer">${esc(x.url || "")}</a>
-            </div>
-          </div>
-        `).join("");
+        </div>
+      `).join("");
+    }
 
-        const pm = Array.isArray(data.pubmed) ? data.pubmed : [];
-        pubmedBox.innerHTML = !pm.length ? `
-          <div class="result">
-            <h3>PubMed</h3>
-            <p>Nenhum artigo encontrado com a janela selecionada.</p>
+    function renderPubmed(pubmed){
+      if(!Array.isArray(pubmed) || pubmed.length === 0){
+        pubmedBox.innerHTML = `
+          <div class="item">
+            <h3>Nenhum resultado no PubMed</h3>
+            <div class="meta">Tente palavras-chave em inglês e aumente a janela de anos.</div>
           </div>
-        ` : pm.map(x => `
-          <div class="result">
-            <h3>${esc(x.title || "Sem título")}</h3>
-            <p>${esc(x.journal || "")}${x.year ? " • " + esc(x.year) : ""}${x.doi ? " • DOI: " + esc(x.doi) : ""}</p>
-            <div class="mini">
-              <span class="chip">PMID: ${esc(x.pmid || "")}</span>
-              <a href="${esc(x.url || "#")}" target="_blank" rel="noopener noreferrer">${esc(x.url || "")}</a>
-            </div>
-          </div>
-        `).join("");
+        `;
+        return;
+      }
 
-        setLoading(false);
-        tabs.style.display = "";
-        refsRow.style.display = (lastCitations.length ? "" : "none");
-        setTab("answer");
+      pubmedBox.innerHTML = pubmed.map((p) => `
+        <div class="item">
+          <h3>${escapeHtml(p.title || "Sem título")}</h3>
+          <div class="meta">
+            ${p.journal ? `<span>${escapeHtml(p.journal)}</span>` : ""}
+            ${p.year ? `<span>• ${escapeHtml(p.year)}</span>` : ""}
+            ${p.doi ? `<span>• DOI: ${escapeHtml(p.doi)}</span>` : ""}
+            ${p.url ? `<a class="a" href="${escapeHtml(p.url)}" target="_blank" rel="noopener">PubMed</a>` : ""}
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderAnswer(answer){
+      const text = (answer && String(answer).trim())
+        ? String(answer).trim()
+        : "Consulta concluída. Veja a aba PubMed para os resultados.";
+
+      answerBox.className = "msg";
+      answerBox.textContent = text;
+      answerBox.style.display = "";
+    }
+
+    async function callAskFunction(q, limit, years, ai){
+      const endpoint = `${SUPABASE_URL}/functions/v1/${FUNCTION_NAME}` +
+        `?q=${encodeURIComponent(q)}` +
+        `&limit=${encodeURIComponent(limit)}` +
+        `&years=${encodeURIComponent(years)}` +
+        `&ai=${encodeURIComponent(ai)}`;
+
+      const res = await fetch(endpoint, {
+        method: "GET",
+        headers: {
+          "apikey": ANON_KEY,
+          "Authorization": `Bearer ${ANON_KEY}`, // evita "missing authorization header" quando verify_jwt=true
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      });
+
+      const text = await res.text();
+      let data = null;
+      try{ data = JSON.parse(text); } catch { data = { error: text }; }
+
+      if(!res.ok){
+        const msg = data?.error || `Erro HTTP ${res.status}`;
+        throw new Error(msg);
+      }
+
+      return data;
+    }
+
+    function clearAll(){
+      setMsg("Pronto ✅ Digite sua pergunta e toque em Buscar.", "warn");
+      answerBox.style.display = "none";
+      answerBox.textContent = "";
+      webBox.style.display = "none";
+      webBox.innerHTML = "";
+      pubmedBox.style.display = "none";
+      pubmedBox.innerHTML = "";
+      setTab("resposta");
+    }
+
+    btnLimpar.addEventListener("click", () => {
+      qEl.value = "";
+      yearsEl.value = "5";
+      limitEl.value = "6";
+      ai = 0;
+      aiSwitch.classList.remove("on");
+      aiSwitch.setAttribute("aria-checked", "false");
+      clearAll();
+      qEl.focus();
+    });
+
+    async function run(){
+      const q = (qEl.value || "").trim();
+      if(!q){
+        setMsg("Digite uma pergunta.", "bad");
+        qEl.focus();
+        return;
+      }
+
+      const years = Number(yearsEl.value || "5");
+      const limit = Number(limitEl.value || "6");
+
+      setBusy(true);
+      setMsg("Buscando…", "warn");
+      answerBox.style.display = "none";
+      webBox.style.display = "none";
+      pubmedBox.style.display = "none";
+
+      try{
+        const data = await callAskFunction(q, limit, years, ai);
+
+        // Render
+        renderAnswer(data?.answer);
+        renderWeb(data?.web);
+        renderPubmed(data?.pubmed);
+
         setMsg("Busca concluída ✅", "ok");
 
-      } catch (e) {
-        setLoading(false);
-        setMsg("Erro inesperado:\n" + String(e), "bad");
+        // Mostra a aba mais útil automaticamente
+        if(Array.isArray(data?.pubmed) && data.pubmed.length){
+          setTab("pubmed");
+        }else{
+          setTab("resposta");
+        }
+      }catch(err){
+        setMsg("Erro:\n" + (err?.message || String(err)), "bad");
+        renderAnswer(""); // mantém UI consistente
+        setTab("resposta");
+      }finally{
+        setBusy(false);
       }
     }
 
-    askBtn.addEventListener("click", ask);
-    question.addEventListener("keydown", (e) => { if (e.key === "Enter") ask(); });
+    btnBuscar.addEventListener("click", run);
+    qEl.addEventListener("keydown", (e) => { if(e.key === "Enter") run(); });
 
-    renderUser();
+    // Toggle IA
+    function toggleAi(){
+      ai = ai ? 0 : 1;
+      aiSwitch.classList.toggle("on", !!ai);
+      aiSwitch.setAttribute("aria-checked", String(!!ai));
+    }
+    aiSwitch.addEventListener("click", toggleAi);
+    aiSwitch.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        toggleAi();
+      }
+    });
+
+    // Chips
+    document.querySelectorAll(".chip[data-fill]").forEach((c) => {
+      c.addEventListener("click", () => {
+        qEl.value = c.getAttribute("data-fill") || "";
+        qEl.focus();
+      });
+    });
+
+    // Estado inicial
+    clearAll();
+  </script>
+
+  <!-- Service Worker (opcional) -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("service-worker.js")
+          .then(function (registration) {
+            console.log("Service Worker registrado:", registration.scope);
+          })
+          .catch(function (error) {
+            console.log("Falha ao registrar Service Worker:", error);
+          });
+      });
+    }
   </script>
 </body>
 </html>
