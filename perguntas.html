@@ -19,6 +19,8 @@
       --ok:#16a34a; --warn:#f59e0b; --bad:#dc2626;
       --ring:0 0 0 4px rgba(56,130,246,.18);
       --chip:#eef2ff;
+      --glass:rgba(255,255,255,.10);
+      --glassBorder:rgba(255,255,255,.18);
     }
 
     *{box-sizing:border-box}
@@ -82,7 +84,7 @@
       box-shadow: 0 10px 18px rgba(2,6,23,.22);
     }
 
-    /* ===== User bubble ===== */
+    /* ===== User bubble (sem travar carregando infinito) ===== */
     .userbox{ position:relative; min-width: 230px; display:flex; justify-content:flex-end; }
     .userbtn{
       width:100%;
@@ -94,8 +96,11 @@
       font-weight:950;
       box-shadow: 0 10px 18px rgba(2,6,23,.18);
       transition: transform .14s ease, background .14s ease;
+      outline:none;
     }
     .userbtn:hover{ background: rgba(255,255,255,.16); transform: translateY(-1px); }
+    .userbtn:focus-visible{ box-shadow: var(--ring), 0 10px 18px rgba(2,6,23,.18); }
+
     .userleft{ display:flex; align-items:center; gap:10px; min-width:0; }
     .avatar{
       width:28px;height:28px;border-radius:999px;
@@ -115,6 +120,15 @@
     }
     .caret{ opacity:.9; }
 
+    /* ✅ Em vez de “dropdown que tampa conteúdo”, vira um “sheet” no mobile */
+    .backdrop{
+      position:fixed; inset:0;
+      background: rgba(2,6,23,.45);
+      display:none;
+      z-index: 1999;
+    }
+    .backdrop.open{ display:block; }
+
     .menu{
       position:absolute; top: calc(100% + 8px); right:0;
       width:min(340px, 92vw);
@@ -124,6 +138,7 @@
       box-shadow: 0 18px 45px rgba(2,6,23,.20);
       padding:10px;
       display:none;
+      z-index: 2000;
     }
     .menu.open{ display:block; }
     .menu .item{
@@ -144,15 +159,26 @@
     .tag.ok{ background: rgba(22,163,74,.10); border-color: rgba(22,163,74,.18); color:#14532d; }
     .tag.bad{ background: rgba(220,38,38,.10); border-color: rgba(220,38,38,.18); color:#7f1d1d; }
 
-    /* ===== Layout ===== */
-    .wrap{ max-width:1100px; margin: 18px auto 60px; padding: 0 14px; }
-    .grid{ display:grid; grid-template-columns: 1.05fr .95fr; gap: 14px; align-items:start; }
     @media (max-width: 980px){
-      .grid{ grid-template-columns:1fr; }
       .nav{ display:none; }
       .userbox{ min-width:auto; width: 100%; }
       .brand{ min-width:auto; }
+
+      .menu{
+        position:fixed;
+        left: 12px;
+        right: 12px;
+        top: 74px; /* abaixo do header */
+        width: auto;
+        max-height: calc(100vh - 90px);
+        overflow:auto;
+      }
     }
+
+    /* ===== Layout ===== */
+    .wrap{ max-width:1100px; margin: 18px auto 60px; padding: 0 14px; }
+    .grid{ display:grid; grid-template-columns: 1.05fr .95fr; gap: 14px; align-items:start; }
+    @media (max-width: 980px){ .grid{ grid-template-columns:1fr; } }
 
     .card{
       background: linear-gradient(180deg,#fff, #fbfdff);
@@ -176,13 +202,6 @@
       box-shadow: 0 10px 18px rgba(11,91,211,.25);
     }
     .lead{ margin:0; color: var(--muted); line-height:1.6; font-size:14.5px; }
-
-    .pill{
-      display:inline-block; padding:8px 10px; border-radius:999px;
-      background: #edf4ff; border: 1px solid #d8e7ff;
-      color:#0b2b63; font-weight:1000; font-size:12px;
-      margin:8px 8px 0 0;
-    }
 
     .msg{
       margin-top: 10px;
@@ -224,7 +243,7 @@
       background: linear-gradient(180deg, var(--primary), var(--primary2));
       color:#fff;
       border:1px solid rgba(37,99,235,.28);
-      transition: transform .06s ease, filter .15s ease;
+      transition: transform .06s ease, filter .15s ease, box-shadow .15s ease;
     }
     .btn:hover{ filter:brightness(1.03); }
     .btn:active{ transform: translateY(1px); }
@@ -391,7 +410,7 @@
             <div class="avatar" id="avatar">?</div>
             <div class="userinfo">
               <div class="name" id="userName">Visitante</div>
-              <div class="state" id="userState">Não logado</div>
+              <div class="state" id="userState">Checando…</div>
             </div>
           </div>
           <div class="caret">▾</div>
@@ -415,6 +434,8 @@
       </div>
     </div>
   </header>
+
+  <div id="backdrop" class="backdrop" aria-hidden="true"></div>
 
   <main class="wrap">
     <div class="grid">
@@ -457,7 +478,7 @@ Valor: 2,00</textarea>
       <section class="card">
         <h2 class="title">Perguntar</h2>
         <p class="lead" id="appSubtitle">
-          Para liberar, faça login e tenha Premium ativo. Se você fizer login e não tiver premium, pode voltar ao início.
+          Para liberar, faça login e tenha Premium ativo.
         </p>
 
         <!-- Bloqueado -->
@@ -473,7 +494,7 @@ Valor: 2,00</textarea>
           </div>
 
           <div class="msg warn show" style="margin-top:10px;">
-            <b>Regra solicitada:</b> se a pessoa fizer login e não tiver Premium, ela pode ser redirecionada ao início automaticamente.
+            <b>Opcional:</b> se você quiser, ao logar sem Premium ele pode voltar ao Início automaticamente.
           </div>
 
           <div class="row" style="margin-top:10px;">
@@ -484,7 +505,7 @@ Valor: 2,00</textarea>
         <!-- Liberado -->
         <div id="appBox" style="display:none;">
           <label for="question">Pergunta</label>
-          <input id="question" class="field" type="text" placeholder="Ex.: Vacinação, curativos, protocolos COREN, farmacologia, etc." />
+          <input id="question" class="field" type="text" placeholder="Ex.: Vacinação, curativos, protocolos COREN, etc." />
 
           <div class="row">
             <div class="col">
@@ -571,7 +592,6 @@ Valor: 2,00</textarea>
     const WHATSAPP_DEFAULT_TEXT = "Olá! Segue comprovante do Pix (Premium LPP). Meu e-mail de login é: ";
 
     // Redirecionar automaticamente ao início se logar sem premium?
-    // ✅ padrão = false, você ativa pelo botão na tela
     let AUTO_HOME_IF_NOT_PREMIUM = false;
 
     // =========================
@@ -580,6 +600,7 @@ Valor: 2,00</textarea>
 
     const userBtn = $("userBtn");
     const userMenu = $("userMenu");
+    const backdrop = $("backdrop");
     const userName = $("userName");
     const userState = $("userState");
     const avatar = $("avatar");
@@ -590,7 +611,6 @@ Valor: 2,00</textarea>
     const goPremium = $("goPremium");
     const logoutBtn = $("logoutBtn");
 
-    const payBox = $("payBox");
     const statusMsg = $("statusMsg");
 
     const lockedBox = $("lockedBox");
@@ -623,6 +643,13 @@ Valor: 2,00</textarea>
     const copyPix = $("copyPix");
     const sendWhatsapp = $("sendWhatsapp");
     const pixPayload = $("pixPayload");
+
+    function isPremiumValue(v){
+      if (v === true) return true;
+      if (typeof v === "string") return ["true","1","yes","sim"].includes(v.trim().toLowerCase());
+      if (typeof v === "number") return v === 1;
+      return false;
+    }
 
     function setTopUser(label, state, isPremium){
       userName.textContent = label;
@@ -664,23 +691,27 @@ Valor: 2,00</textarea>
     function openMenu(open){
       userMenu.classList.toggle("open", !!open);
       userBtn.setAttribute("aria-expanded", String(!!open));
+      backdrop.classList.toggle("open", !!open);
+      backdrop.setAttribute("aria-hidden", String(!open));
     }
 
     userBtn.addEventListener("click", () => openMenu(!userMenu.classList.contains("open")));
+    backdrop.addEventListener("click", () => openMenu(false));
+    document.addEventListener("scroll", () => openMenu(false), { passive:true });
     document.addEventListener("click", (e) => {
       if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) openMenu(false);
     });
 
     goLogin.addEventListener("click", () => window.location.href = SITE_BASE + "login.html?mode=login");
-    goPremium.addEventListener("click", () => window.location.href = SITE_BASE + "premium.html");
+    goPremium.addEventListener("click", () => window.location.href = SITE_BASE + "premium.html?go=perguntas.html");
 
     logoutBtn.addEventListener("click", async () => {
-      await supabase.auth.signOut();
+      try{ await supabase.auth.signOut(); }catch(e){}
       window.location.href = SITE_BASE + "index.html";
     });
 
     btnLogin?.addEventListener("click", () => window.location.href = SITE_BASE + "login.html?mode=login");
-    btnPremium?.addEventListener("click", () => window.location.href = SITE_BASE + "premium.html");
+    btnPremium?.addEventListener("click", () => window.location.href = SITE_BASE + "premium.html?go=perguntas.html");
     btnHome?.addEventListener("click", () => window.location.href = SITE_BASE + "index.html");
 
     btnForceHome?.addEventListener("click", () => {
@@ -723,7 +754,12 @@ Valor: 2,00</textarea>
       pubmedBox.style.display = (name === "pubmed") ? "" : "none";
     }
 
-    document.querySelectorAll(".tab").forEach(btn => btn.addEventListener("click", () => setTab(btn.dataset.tab)));
+    function wireTabs(){
+      document.querySelectorAll(".tab").forEach(btn => {
+        btn.onclick = () => setTab(btn.dataset.tab);
+      });
+    }
+    wireTabs();
 
     clearBtn.addEventListener("click", () => {
       question.value = "";
@@ -761,7 +797,7 @@ Valor: 2,00</textarea>
     let lastCitations = [];
     let lastLinks = [];
 
-    $("copyRefs").addEventListener("click", async () => {
+    copyRefs.addEventListener("click", async () => {
       try{
         const refs = lastCitations.map((c,i) => `${i+1}. ${c.title} — ${c.source}. ${c.url}`).join("\n");
         await navigator.clipboard.writeText(refs);
@@ -771,7 +807,7 @@ Valor: 2,00</textarea>
       }
     });
 
-    $("copyLinks").addEventListener("click", async () => {
+    copyLinks.addEventListener("click", async () => {
       try{
         const links = lastLinks.join("\n");
         await navigator.clipboard.writeText(links);
@@ -859,6 +895,7 @@ Valor: 2,00</textarea>
         refsRow.style.display = (lastCitations.length ? "" : "none");
         setTab("answer");
         setMsg("Busca concluída ✅", "ok");
+
       } catch (e) {
         setLoading(false);
         setMsg("Erro inesperado:\n" + String(e), "bad");
@@ -868,37 +905,69 @@ Valor: 2,00</textarea>
     askBtn.addEventListener("click", ask);
     question.addEventListener("keydown", (e) => { if (e.key === "Enter") ask(); });
 
+    // ✅ Tenta garantir linha em profiles (evita “sou premium mas não libera” por falta de linha)
+    async function ensureProfileRow(user){
+      try{
+        await supabase.from("profiles").upsert({
+          id: user.id,
+          email: user.email || null,
+          updated_at: new Date().toISOString()
+        });
+      }catch(_e){
+        // se RLS bloquear upsert, não quebra o app; o erro real aparece no select.
+      }
+    }
+
     async function gate(){
       hideStatus();
       setTopUser("Visitante", "Checando sessão…", null);
+      lockedBox.style.display = "";
+      appBox.style.display = "none";
 
-      // getUser (mais confiável em GitHub Pages)
-      const { data: userRes, error: userErr } = await supabase.auth.getUser();
+      // ✅ Anti “carregando infinito”
+      let timedOut = false;
+      const hardTimer = setTimeout(() => {
+        timedOut = true;
+        setTopUser("Visitante", "Conexão lenta…", null);
+        setStatus(
+          "A verificação está demorando.\n\nPossíveis causas:\n- internet instável\n- RLS/policy bloqueando leitura da tabela profiles\n- cache antigo do site\n\nToque em Login/Premium e volte.",
+          "warn"
+        );
+      }, 2600);
 
-      if (userErr){
-        setTopUser("Visitante", "Erro ao ler sessão", null);
-        userMeta.textContent = "Sessão indisponível";
-        lockedBox.style.display = "";
-        appBox.style.display = "none";
-        setStatus("Erro ao verificar login. Abra Login e tente novamente.", "bad");
+      // ✅ Primeiro: session (mais rápido). Depois: user.
+      const { data: sRes } = await supabase.auth.getSession();
+      const session = sRes?.session;
+
+      if (!session){
+        clearTimeout(hardTimer);
+        if (!timedOut){
+          setTopUser("Visitante", "Não logado", null);
+          userMeta.textContent = "Acesso: visitante";
+          setStatus("Faça login para acessar (Premium).", "warn");
+        }
         return;
       }
 
-      // Sem login
-      if (!userRes?.user){
-        setTopUser("Visitante", "Não logado", null);
-        userMeta.textContent = "Acesso: visitante";
-        lockedBox.style.display = "";
-        appBox.style.display = "none";
-        setStatus("Faça login para acessar (Premium).", "warn");
+      const { data: userRes, error: userErr } = await supabase.auth.getUser();
+
+      if (userErr || !userRes?.user){
+        clearTimeout(hardTimer);
+        setTopUser("Visitante", "Sessão inválida", null);
+        userMeta.textContent = "Sessão indisponível";
+        setStatus("Erro ao verificar login. Abra Login e tente novamente.", "bad");
         return;
       }
 
       const email = userRes.user.email || "Usuário";
       userMeta.textContent = "E-mail: " + email;
+
       setTopUser(email, "Checando Premium…", null);
 
-      // Premium check
+      // ✅ garante linha do perfil (se não existir)
+      await ensureProfileRow(userRes.user);
+
+      // ✅ Premium check (robusto)
       const uid = userRes.user.id;
       const { data: prof, error: profErr } = await supabase
         .from("profiles")
@@ -906,16 +975,24 @@ Valor: 2,00</textarea>
         .eq("id", uid)
         .single();
 
+      clearTimeout(hardTimer);
+
       if (profErr){
+        // Mostra o motivo real (geralmente RLS/policy)
         setTopUser(email, "Falha ao ler profiles", null);
         lockedBox.style.display = "";
         appBox.style.display = "none";
-        setStatus("Não consegui ler profiles. Verifique trigger + RLS.", "bad");
+        setStatus(
+          "Não consegui ler a tabela profiles.\n\nErro: " + profErr.message +
+          "\n\nCausas comuns:\n- RLS sem policy SELECT para profiles\n- linha do usuário não existe (upsert bloqueado)\n\nAjuste no Supabase e toque em “Premium” para testar.",
+          "bad"
+        );
         return;
       }
 
-      // Premium ok
-      if (prof?.premium){
+      const premiumOk = isPremiumValue(prof?.premium);
+
+      if (premiumOk){
         setTopUser(email, "Premium ativo ✅", true);
         lockedBox.style.display = "none";
         appBox.style.display = "";
@@ -923,22 +1000,21 @@ Valor: 2,00</textarea>
         return;
       }
 
-      // Logado mas sem premium
       setTopUser(email, "Sem Premium", false);
       lockedBox.style.display = "";
       appBox.style.display = "none";
       setStatus("Você está logado, mas sem Premium. Pague via Pix e envie comprovante.", "warn");
 
-      // ✅ Regra solicitada: logou e não tem premium → vai para início
       if (AUTO_HOME_IF_NOT_PREMIUM){
         window.location.replace(SITE_BASE + "index.html");
       }
     }
 
-    // Reagir a mudanças de sessão
     supabase.auth.onAuthStateChange(() => gate());
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") gate();
+    });
 
-    // Iniciar
     gate();
   </script>
 </body>
