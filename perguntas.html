@@ -5,415 +5,340 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#0b3d91" />
   <title>Perguntas • Fontes Oficiais + PubMed • LPP</title>
-  <meta name="description" content="Perguntas com fontes oficiais e PubMed (acesso livre, sem login)." />
 
   <style>
     :root{
       --bg1:#0b3d91; --bg2:#0a2f73; --bg3:#0b5bd3;
-      --page:#eef2f7; --card:#fff; --text:#0f172a; --muted:#475569; --muted2:#64748b;
+      --page:#eef2f7; --card:#ffffff; --text:#0f172a;
+      --muted:#475569; --muted2:#64748b;
       --border:rgba(15,23,42,.10);
       --shadow:0 12px 30px rgba(2,6,23,.10);
       --shadow2:0 18px 45px rgba(2,6,23,.14);
       --radius:18px;
-      --ok:#16a34a; --warn:#f59e0b; --bad:#dc2626;
       --ring:0 0 0 4px rgba(56,130,246,.18);
+      --ok:#16a34a; --warn:#f59e0b; --bad:#dc2626;
       --chip:#eef2ff;
-      --glass:rgba(255,255,255,.10);
-      --glassBorder:rgba(255,255,255,.18);
     }
     *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
     body{
       margin:0;
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--text);
       background:
         radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.15), transparent 55%),
         radial-gradient(900px 500px at 90% 10%, rgba(11,61,145,.14), transparent 55%),
         var(--page);
     }
-
-    /* HEADER */
     header{
-      background: linear-gradient(180deg, var(--bg1), #0b4ab1);
+      background:linear-gradient(180deg,var(--bg1), #0b4ab1);
       color:#fff;
-      padding: 18px 14px 14px;
-      position: sticky;
+      padding:18px 14px 16px;
+      position:sticky;
       top:0;
-      z-index: 20;
-      box-shadow: 0 12px 24px rgba(2,6,23,.14);
-      border-bottom: 1px solid rgba(255,255,255,.10);
+      z-index:50;
+      box-shadow:0 12px 24px rgba(2,6,23,.14);
     }
-    .topbar{
-      max-width: 980px;
-      margin: 0 auto;
+    .top{
+      max-width:980px;
+      margin:0 auto;
       display:flex;
       align-items:center;
-      gap:12px;
       justify-content:space-between;
+      gap:12px;
     }
     .brand{
-      display:flex; gap:10px; align-items:center; min-width: 0;
+      display:flex; gap:12px; align-items:center;
+      min-width:0;
     }
     .logo{
-      width:42px;height:42px;border-radius:14px;
+      width:44px;height:44px;border-radius:14px;
       background:rgba(255,255,255,.16);
       border:1px solid rgba(255,255,255,.18);
       display:grid; place-items:center;
-      font-weight: 1000;
-      letter-spacing:.3px;
+      font-weight:1000; letter-spacing:.5px;
       flex:0 0 auto;
     }
-    .brandText{min-width:0}
-    .brandTitle{
-      font-weight: 1000;
+    .brandTxt{min-width:0}
+    .brand h1{
       margin:0;
-      font-size: 15px;
-      line-height: 1.1;
+      font-size:18px;
+      font-weight:1000;
+      letter-spacing:.2px;
+      line-height:1.1;
     }
-    .brandSub{
-      margin:3px 0 0;
-      font-size: 12px;
+    .brand p{
+      margin:4px 0 0;
       opacity:.92;
-      line-height: 1.2;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-      max-width: 62vw;
+      font-size:12px;
+      line-height:1.25;
     }
-
-    .userPill{
+    .statusPill{
       display:flex;
       align-items:center;
       gap:10px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.16);
-      box-shadow: 0 10px 18px rgba(2,6,23,.16);
-      min-width: 210px;
-      max-width: 360px;
+      padding:10px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 10px 18px rgba(2,6,23,.16);
       color:#fff;
+      font-weight:950;
+      user-select:none;
+      white-space:nowrap;
     }
-    .userIcon{
-      width:28px;height:28px;border-radius:999px;
-      background: rgba(255,255,255,.22);
-      border: 1px solid rgba(255,255,255,.18);
-      display:grid; place-items:center;
-      flex:0 0 auto;
-      font-weight: 1000;
+    .statusDot{
+      width:30px;height:30px;border-radius:999px;
+      display:grid;place-items:center;
+      background:rgba(255,255,255,.20);
+      border:1px solid rgba(255,255,255,.18);
+      font-weight:1000;
     }
-    .userTxt{min-width:0; display:flex; flex-direction:column; gap:2px}
-    .userLine1{
-      font-weight: 1000;
-      font-size: 12px;
-      opacity:.96;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-    .userLine2{
-      font-weight: 900;
-      font-size: 11px;
-      opacity:.90;
-      display:flex; align-items:center; gap:6px;
-    }
-    .badge{
-      display:inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 10.5px;
-      font-weight: 1000;
-      border: 1px solid rgba(255,255,255,.22);
-      background: rgba(255,255,255,.14);
-      color:#fff;
-      line-height: 1.4;
-    }
-    .badge.free{ background: rgba(255,255,255,.14); }
-    .badge.ok{ background: rgba(34,197,94,.18); border-color: rgba(34,197,94,.35); }
-    .badge.warn{ background: rgba(245,158,11,.16); border-color: rgba(245,158,11,.32); }
-    .badge.bad{ background: rgba(220,38,38,.16); border-color: rgba(220,38,38,.32); }
-
     main{
-      max-width: 980px;
-      margin: 18px auto 56px;
-      padding: 0 14px;
+      max-width:980px;
+      margin:18px auto 60px;
+      padding:0 14px;
     }
-
     .card{
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 16px;
-      margin: 14px 0;
+      background:linear-gradient(180deg,#fff, rgba(255,255,255,.98));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+      margin:14px 0;
     }
-    .titleRow{
+    .title{
       display:flex; align-items:center; gap:10px;
-      font-weight: 1000;
-      color:#0b2b63;
       margin:0 0 10px;
-      font-size: 18px;
+      font-size:18px;
+      font-weight:1000;
+      color:#0b2b63;
+      letter-spacing:.2px;
     }
-    .titleRow::before{
+    .title::before{
       content:"";
-      width:4px; height:22px; border-radius:999px;
-      background: var(--bg3);
-      box-shadow: 0 10px 18px rgba(11,91,211,.25);
-      display:inline-block;
+      width:4px; height:20px; border-radius:999px;
+      background:var(--bg3);
+      box-shadow:0 10px 18px rgba(11,91,211,.25);
     }
-    .hint{
-      margin: 0 0 12px;
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 14px;
-    }
-
-    label{
-      display:block;
-      margin: 10px 0 6px;
-      font-weight: 900;
-      font-size: 12px;
-      color: var(--muted2);
-    }
-    input[type="text"], select{
-      width: 100%;
-      border: 1px solid rgba(15,23,42,.12);
-      background: #fff;
-      border-radius: 14px;
-      padding: 12px 12px;
-      outline: none;
-      font-size: 15px;
-      transition: box-shadow .14s ease, border-color .14s ease;
-    }
-    input[type="text"]:focus, select:focus{
-      border-color: rgba(56,130,246,.35);
-      box-shadow: var(--ring);
-    }
+    .muted{color:var(--muted); line-height:1.55; margin:0}
     .grid{
       display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:12px;
+      margin-top:10px;
+    }
+    @media (max-width: 820px){ .grid{grid-template-columns:1fr} }
+    label{
+      display:block;
+      font-size:12px;
+      color:var(--muted2);
+      font-weight:900;
+      margin:10px 0 6px;
+    }
+    .field, select{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(15,23,42,.12);
+      background:#fff;
+      outline:none;
+      font-size:14px;
+      transition: box-shadow .14s ease, border-color .14s ease;
+    }
+    .field:focus, select:focus{
+      border-color: rgba(37,99,235,.45);
+      box-shadow: var(--ring);
+    }
+    .row2{
+      display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap:12px;
     }
-    @media (max-width: 700px){
-      .grid{ grid-template-columns:1fr; }
-      .userPill{ min-width: 170px; }
-    }
-
-    .toggleRow{
-      margin-top: 10px;
-      padding: 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: #f8fafc;
+    @media (max-width: 520px){ .row2{grid-template-columns:1fr} }
+    .toggleBox{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 10px;
+      gap:10px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(15,23,42,.10);
+      background:#fff;
+      margin-top:10px;
     }
-    .toggleText{
-      min-width:0;
-    }
-    .toggleText b{ color:#0b2b63; }
-    .toggleText p{
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.4;
-    }
+    .toggleBox .t1{font-weight:1000; color:#0b2b63}
+    .toggleBox .t2{font-size:12px; color:var(--muted); margin-top:4px; line-height:1.35}
     .switch{
-      width: 52px;
-      height: 32px;
-      border-radius: 999px;
-      background: rgba(15,23,42,.16);
-      position: relative;
-      border: 1px solid rgba(15,23,42,.10);
-      flex: 0 0 auto;
+      position:relative;
+      width:52px; height:30px;
+      border-radius:999px;
+      background:#e5e7eb;
+      border:1px solid rgba(15,23,42,.12);
       cursor:pointer;
-      transition: background .14s ease;
+      flex:0 0 auto;
     }
     .switch::after{
       content:"";
       position:absolute;
-      top: 4px;
-      left: 4px;
-      width: 24px;
-      height: 24px;
-      border-radius: 999px;
+      top:50%; left:4px;
+      width:22px; height:22px;
+      border-radius:999px;
+      transform:translateY(-50%);
       background:#fff;
-      box-shadow: 0 10px 18px rgba(2,6,23,.20);
-      transition: transform .14s ease;
+      box-shadow:0 10px 18px rgba(2,6,23,.14);
+      transition: left .16s ease;
     }
-    .switch.on{ background: rgba(34,197,94,.35); }
-    .switch.on::after{ transform: translateX(20px); }
-
+    .switch.on{background: rgba(37,99,235,.25); border-color: rgba(37,99,235,.25)}
+    .switch.on::after{left:26px}
     .btnRow{
       display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 12px;
-      margin-top: 12px;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:12px;
     }
-    @media (max-width: 700px){
-      .btnRow{ grid-template-columns: 1fr; }
-    }
-
-    .btn{
+    @media (max-width: 520px){ .btnRow{grid-template-columns:1fr} }
+    button{
       border:none;
-      border-radius: 14px;
-      padding: 12px 12px;
+      border-radius:14px;
+      padding:12px 12px;
+      font-weight:1000;
       cursor:pointer;
-      font-weight: 1000;
-      font-size: 15px;
+      font-size:14px;
       transition: transform .05s ease, filter .15s ease;
     }
-    .btn:active{ transform: translateY(1px); }
-    .btn.primary{
-      background: linear-gradient(180deg, #2563eb, #1d4ed8);
+    button:active{transform:translateY(1px)}
+    .btnPrimary{
+      background:linear-gradient(180deg,#2563eb,#1d4ed8);
       color:#fff;
-      box-shadow: 0 14px 26px rgba(37,99,235,.22);
+      box-shadow:0 16px 30px rgba(2,6,23,.12);
     }
-    .btn.secondary{
+    .btnGhost{
       background:#fff;
+      border:1px solid rgba(37,99,235,.25);
       color:#1d4ed8;
-      border: 1px solid rgba(37,99,235,.25);
     }
-    .btn:disabled{ opacity:.65; cursor:not-allowed; }
-
     .chips{
       display:flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 12px;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
     }
     .chip{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: var(--chip);
-      border: 1px solid rgba(37,99,235,.14);
+      border:1px solid rgba(15,23,42,.10);
+      background:var(--chip);
       color:#0b2b63;
-      font-weight: 1000;
-      font-size: 12px;
+      border-radius:999px;
+      padding:8px 10px;
+      font-weight:950;
+      font-size:12px;
+      cursor:pointer;
+      user-select:none;
     }
-
     .tabs{
       display:flex;
-      gap: 8px;
-      margin-top: 10px;
-      flex-wrap: wrap;
+      gap:8px;
+      margin-top:12px;
+      flex-wrap:wrap;
     }
     .tab{
-      flex: 1 1 170px;
-      border: 1px solid rgba(15,23,42,.10);
+      flex:1 1 180px;
+      border:1px solid rgba(15,23,42,.10);
       background:#fff;
-      padding: 10px 12px;
-      border-radius: 999px;
+      padding:10px 12px;
+      border-radius:999px;
       cursor:pointer;
-      font-weight: 1000;
-      font-size: 13px;
-      color: var(--muted);
-      transition: background .14s ease, transform .14s ease, border-color .14s ease;
+      font-weight:1000;
+      color:var(--muted);
+      text-align:center;
     }
-    .tab.active{
+    .tab[aria-selected="true"]{
       border-color: rgba(37,99,235,.35);
       background: rgba(37,99,235,.08);
       color:#1d4ed8;
     }
-
-    .panel{ margin-top: 12px; }
-    .msg{
-      padding: 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(15,23,42,.10);
+    .panel{display:none; margin-top:12px}
+    .panel.show{display:block}
+    .box{
+      border:1px solid rgba(15,23,42,.10);
       background:#fff;
-      color: var(--muted);
-      font-size: 13.5px;
-      line-height: 1.5;
-      white-space: pre-wrap;
+      border-radius:16px;
+      padding:12px;
+      box-shadow:0 14px 26px rgba(2,6,23,.07);
     }
-    .msg.ok{ border-color: rgba(22,163,74,.25); background: rgba(22,163,74,.08); color:#14532d; }
-    .msg.warn{ border-color: rgba(245,158,11,.30); background: rgba(245,158,11,.10); color:#7c2d12; }
-    .msg.bad{ border-color: rgba(220,38,38,.25); background: rgba(220,38,38,.08); color:#7f1d1d; }
-
+    .msg{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(15,23,42,.10);
+      background:#fff;
+      color:var(--muted);
+      font-size:13px;
+      white-space:pre-wrap;
+    }
+    .msg.ok{border-color:rgba(22,163,74,.30); background:rgba(22,163,74,.08); color:#14532d}
+    .msg.warn{border-color:rgba(245,158,11,.35); background:rgba(245,158,11,.10); color:#7c2d12}
+    .msg.bad{border-color:rgba(220,38,38,.30); background:rgba(220,38,38,.08); color:#7f1d1d}
     .list{
       display:flex;
       flex-direction:column;
-      gap: 10px;
-      margin-top: 10px;
+      gap:10px;
+      margin-top:10px;
     }
     .item{
-      border: 1px solid rgba(15,23,42,.10);
+      border:1px solid rgba(15,23,42,.10);
+      border-radius:14px;
+      padding:12px;
       background:#fff;
-      border-radius: 14px;
-      padding: 12px;
-      box-shadow: 0 12px 22px rgba(2,6,23,.06);
+      box-shadow:0 12px 22px rgba(2,6,23,.06);
     }
-    .item h3{
-      margin:0 0 6px;
-      font-size: 14.5px;
-      color:#0b2b63;
-      line-height: 1.35;
-    }
-    .meta{
-      display:flex; flex-wrap:wrap; gap:8px; align-items:center;
-      color: var(--muted);
-      font-size: 12.5px;
-    }
-    .a{
-      color:#1d4ed8;
-      font-weight: 900;
-      text-decoration: underline;
-    }
-
+    .item h3{margin:0 0 6px; font-size:14px; color:#0b2b63}
+    .item p{margin:0; color:var(--muted); font-size:13px; line-height:1.45}
+    .item a{color:#1d4ed8; font-weight:950; text-decoration:none}
+    .item a:hover{text-decoration:underline}
     footer{
       text-align:center;
       color:#64748b;
-      font-size: 13px;
-      padding: 18px 10px 30px;
+      font-size:13px;
+      padding:18px 10px 30px;
     }
   </style>
 </head>
 
 <body>
   <header>
-    <div class="topbar">
+    <div class="top">
       <div class="brand">
         <div class="logo">LPP</div>
-        <div class="brandText">
-          <p class="brandTitle" style="margin:0;">Perguntas com Fontes Oficiais</p>
-          <p class="brandSub">gov.br • COREN-SP • OMS/OPAS • PubMed</p>
+        <div class="brandTxt">
+          <h1>Perguntas com Fontes Oficiais</h1>
+          <p>gov.br • COREN-SP • OMS/OPAS • PubMed</p>
         </div>
       </div>
 
-      <!-- Acesso livre (sem dropdown para evitar “tela escura”) -->
-      <div class="userPill" aria-label="Status de acesso">
-        <div class="userIcon">V</div>
-        <div class="userTxt">
-          <div class="userLine1">Visitante</div>
-          <div class="userLine2">Acesso livre <span class="badge free">Free</span></div>
+      <div class="statusPill" title="Acesso livre">
+        <div class="statusDot">V</div>
+        <div>
+          <div style="font-weight:1000; line-height:1.05;">Visitante</div>
+          <div style="opacity:.9; font-size:12px; font-weight:900;">Acesso livre</div>
         </div>
       </div>
     </div>
   </header>
 
   <main>
-    <section class="card" aria-label="Perguntar">
-      <h2 class="titleRow">Perguntar</h2>
-      <p class="hint">
-        Acesso livre. Você pode pesquisar e ver as fontes (PubMed) sem login.
-        <br><b>Importante:</b> esta página depende da Edge Function <code>/functions/v1/ask</code>.
+    <section class="card">
+      <h2 class="title">Perguntar</h2>
+      <p class="muted">
+        Acesso livre. Você pode pesquisar e ver as fontes (oficiais e PubMed) sem login.
       </p>
 
       <label for="q">Pergunta</label>
-      <input id="q" type="text" placeholder="Ex.: qual agulha usar para vacina no deltoide?" />
+      <input id="q" class="field" type="text" placeholder="Ex.: Como prevenir lesão por pressão em pacientes acamados?" />
 
-      <div class="grid">
+      <div class="row2">
         <div>
           <label for="years">Janela (anos)</label>
           <select id="years">
-            <option value="1">Último 1 ano</option>
             <option value="3">Últimos 3 anos</option>
             <option value="5" selected>Últimos 5 anos</option>
             <option value="10">Últimos 10 anos</option>
@@ -432,38 +357,51 @@
         </div>
       </div>
 
-      <div class="toggleRow" role="group" aria-label="Modo IA">
-        <div class="toggleText">
-          <b>Modo IA (síntese)</b>
-          <p>Se estiver ativado, a função retorna um texto de síntese (baseado nos títulos do PubMed).</p>
+      <div class="toggleBox">
+        <div>
+          <div class="t1">Modo IA (síntese)</div>
+          <div class="t2">Se ativado, a função retorna um texto de síntese (baseado nos títulos do PubMed).</div>
         </div>
         <div id="aiSwitch" class="switch" role="switch" aria-checked="false" tabindex="0"></div>
       </div>
 
       <div class="btnRow">
-        <button id="btnBuscar" class="btn primary" type="button">Buscar</button>
-        <button id="btnLimpar" class="btn secondary" type="button">Limpar</button>
+        <button id="btnAsk" class="btnPrimary" type="button">Buscar</button>
+        <button id="btnClear" class="btnGhost" type="button">Limpar</button>
       </div>
 
-      <div class="chips" aria-label="Atalhos de busca">
-        <span class="chip" data-fill="lesão por pressão prevenção">lesão por pressão • prevenção</span>
-        <span class="chip" data-fill="pressure injury staging">pressure injury • staging</span>
-        <span class="chip" data-fill="intradermal vaccine needle deltoid">vacina • agulha • deltoide</span>
-        <span class="chip" data-fill="skin barrier moisture associated skin damage">umidade • barreira • pele</span>
+      <div class="chips">
+        <span class="chip" data-q="lesão por pressão prevenção">lesão por pressão • prevenção</span>
+        <span class="chip" data-q="pressure injury staging">pressure injury • staging</span>
+        <span class="chip" data-q="vacina deltoide agulha calibre">vacina • agulha • deltoide</span>
       </div>
 
-      <div class="tabs" aria-label="Abas de resultados">
-        <button class="tab active" id="tabResposta" type="button">Resposta</button>
-        <button class="tab" id="tabOficiais" type="button">Fontes oficiais</button>
-        <button class="tab" id="tabPubmed" type="button">PubMed</button>
+      <div class="tabs" role="tablist" aria-label="Resultados">
+        <button class="tab" id="tabAnswer" type="button" role="tab" aria-selected="true">Resposta</button>
+        <button class="tab" id="tabWeb" type="button" role="tab" aria-selected="false">Fontes oficiais</button>
+        <button class="tab" id="tabPubmed" type="button" role="tab" aria-selected="false">PubMed</button>
       </div>
 
-      <div class="panel" id="panel">
-        <div id="status" class="msg warn">Pronto ✅ Digite sua pergunta e toque em Buscar.</div>
-        <div id="answerBox" class="msg" style="display:none;"></div>
+      <div id="panelAnswer" class="panel show" role="tabpanel">
+        <div class="box">
+          <div id="answerBox" class="muted">Digite uma pergunta e clique em <b>Buscar</b>.</div>
+          <div id="msg" class="msg warn" style="display:none"></div>
+        </div>
+      </div>
 
-        <div id="webBox" class="list" style="display:none;"></div>
-        <div id="pubmedBox" class="list" style="display:none;"></div>
+      <div id="panelWeb" class="panel" role="tabpanel">
+        <div class="box">
+          <p class="muted" style="margin:0">
+            Nesta versão pública, a aba “Fontes oficiais” pode ficar vazia se o backend ainda não estiver implementando web/gov.br.
+          </p>
+          <div id="webList" class="list"></div>
+        </div>
+      </div>
+
+      <div id="panelPubmed" class="panel" role="tabpanel">
+        <div class="box">
+          <div id="pubmedList" class="list"></div>
+        </div>
       </div>
     </section>
   </main>
@@ -471,11 +409,8 @@
   <footer>© 2026 • Projeto Integrador</footer>
 
   <script>
-    // ====== CONFIG (PRODUÇÃO) ======
-    const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
-    const ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
-    const FUNCTION_NAME = "ask"; // /functions/v1/ask
-    // ==============================
+    // ✅ endpoint público da sua Edge Function (depois do deploy com --no-verify-jwt)
+    const FUNCTION_URL = "https://owpswekkfaleauwjmahc.supabase.co/functions/v1/ask";
 
     const el = (id) => document.getElementById(id);
 
@@ -483,51 +418,75 @@
     const yearsEl = el("years");
     const limitEl = el("limit");
 
+    const btnAsk = el("btnAsk");
+    const btnClear = el("btnClear");
+
+    const tabAnswer = el("tabAnswer");
+    const tabWeb = el("tabWeb");
+    const tabPubmed = el("tabPubmed");
+
+    const panelAnswer = el("panelAnswer");
+    const panelWeb = el("panelWeb");
+    const panelPubmed = el("panelPubmed");
+
+    const answerBox = el("answerBox");
+    const pubmedList = el("pubmedList");
+    const webList = el("webList");
+    const msg = el("msg");
+
     const aiSwitch = el("aiSwitch");
     let ai = 0;
 
-    const btnBuscar = el("btnBuscar");
-    const btnLimpar = el("btnLimpar");
-
-    const tabResposta = el("tabResposta");
-    const tabOficiais = el("tabOficiais");
-    const tabPubmed = el("tabPubmed");
-
-    const status = el("status");
-    const answerBox = el("answerBox");
-    const webBox = el("webBox");
-    const pubmedBox = el("pubmedBox");
-
-    let activeTab = "resposta"; // resposta | oficiais | pubmed
-
-    function setTab(name){
-      activeTab = name;
-      tabResposta.classList.toggle("active", name === "resposta");
-      tabOficiais.classList.toggle("active", name === "oficiais");
-      tabPubmed.classList.toggle("active", name === "pubmed");
-
-      answerBox.style.display = (name === "resposta") ? "" : "none";
-      webBox.style.display = (name === "oficiais") ? "" : "none";
-      pubmedBox.style.display = (name === "pubmed") ? "" : "none";
+    function setMsg(text, type="warn"){
+      msg.style.display = "block";
+      msg.className = "msg " + type;
+      msg.textContent = text;
+    }
+    function clearMsg(){
+      msg.style.display = "none";
+      msg.textContent = "";
+      msg.className = "msg";
     }
 
-    tabResposta.addEventListener("click", () => setTab("resposta"));
-    tabOficiais.addEventListener("click", () => setTab("oficiais"));
+    function setTab(which){
+      const map = {
+        answer: [tabAnswer, panelAnswer],
+        web:    [tabWeb, panelWeb],
+        pubmed: [tabPubmed, panelPubmed],
+      };
+
+      Object.entries(map).forEach(([k, [t, p]]) => {
+        const on = k === which;
+        t.setAttribute("aria-selected", String(on));
+        p.classList.toggle("show", on);
+      });
+    }
+
+    tabAnswer.addEventListener("click", () => setTab("answer"));
+    tabWeb.addEventListener("click", () => setTab("web"));
     tabPubmed.addEventListener("click", () => setTab("pubmed"));
 
-    function setMsg(text, type="warn"){
-      status.className = "msg " + type;
-      status.textContent = text;
-      status.style.display = "";
+    // Switch IA
+    function setAi(next){
+      ai = next ? 1 : 0;
+      aiSwitch.classList.toggle("on", !!ai);
+      aiSwitch.setAttribute("aria-checked", String(!!ai));
     }
+    aiSwitch.addEventListener("click", () => setAi(!ai));
+    aiSwitch.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        setAi(!ai);
+      }
+    });
 
-    function setBusy(b){
-      btnBuscar.disabled = !!b;
-      btnLimpar.disabled = !!b;
-      qEl.disabled = !!b;
-      yearsEl.disabled = !!b;
-      limitEl.disabled = !!b;
-    }
+    // Chips
+    document.querySelectorAll(".chip[data-q]").forEach(ch => {
+      ch.addEventListener("click", () => {
+        qEl.value = ch.getAttribute("data-q") || "";
+        qEl.focus();
+      });
+    });
 
     function escapeHtml(str){
       return String(str ?? "").replace(/[&<>"']/g, m => ({
@@ -535,198 +494,125 @@
       }[m]));
     }
 
-    function renderWeb(web){
-      // Por enquanto a função devolve web: []
-      if(!Array.isArray(web) || web.length === 0){
-        webBox.innerHTML = `
-          <div class="item">
-            <h3>Fontes oficiais (em desenvolvimento)</h3>
-            <div class="meta">Ainda não há retorno de “web/fontes oficiais” na função. Use a aba PubMed por enquanto.</div>
-          </div>
-        `;
+    function renderWeb(items){
+      webList.innerHTML = "";
+      if(!Array.isArray(items) || items.length === 0){
+        webList.innerHTML = `<div class="item"><h3>Sem resultados</h3><p>Nenhuma fonte oficial retornada pelo backend.</p></div>`;
         return;
       }
-
-      webBox.innerHTML = web.map((w) => `
-        <div class="item">
-          <h3>${escapeHtml(w.title || "Fonte")}</h3>
-          <div class="meta">
-            <span>${escapeHtml(w.source || "Web")}</span>
-            ${w.url ? `<a class="a" href="${escapeHtml(w.url)}" target="_blank" rel="noopener">Abrir</a>` : ""}
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function renderPubmed(pubmed){
-      if(!Array.isArray(pubmed) || pubmed.length === 0){
-        pubmedBox.innerHTML = `
+      items.forEach((it) => {
+        const title = escapeHtml(it?.title || "Fonte");
+        const url = escapeHtml(it?.url || "#");
+        const source = escapeHtml(it?.source || "");
+        webList.insertAdjacentHTML("beforeend", `
           <div class="item">
-            <h3>Nenhum resultado no PubMed</h3>
-            <div class="meta">Tente palavras-chave em inglês e aumente a janela de anos.</div>
+            <h3>${title}</h3>
+            <p>${source ? source + " • " : ""}<a href="${url}" target="_blank" rel="noopener">Abrir</a></p>
           </div>
-        `;
-        return;
-      }
-
-      pubmedBox.innerHTML = pubmed.map((p) => `
-        <div class="item">
-          <h3>${escapeHtml(p.title || "Sem título")}</h3>
-          <div class="meta">
-            ${p.journal ? `<span>${escapeHtml(p.journal)}</span>` : ""}
-            ${p.year ? `<span>• ${escapeHtml(p.year)}</span>` : ""}
-            ${p.doi ? `<span>• DOI: ${escapeHtml(p.doi)}</span>` : ""}
-            ${p.url ? `<a class="a" href="${escapeHtml(p.url)}" target="_blank" rel="noopener">PubMed</a>` : ""}
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function renderAnswer(answer){
-      const text = (answer && String(answer).trim())
-        ? String(answer).trim()
-        : "Consulta concluída. Veja a aba PubMed para os resultados.";
-
-      answerBox.className = "msg";
-      answerBox.textContent = text;
-      answerBox.style.display = "";
-    }
-
-    async function callAskFunction(q, limit, years, ai){
-      const endpoint = `${SUPABASE_URL}/functions/v1/${FUNCTION_NAME}` +
-        `?q=${encodeURIComponent(q)}` +
-        `&limit=${encodeURIComponent(limit)}` +
-        `&years=${encodeURIComponent(years)}` +
-        `&ai=${encodeURIComponent(ai)}`;
-
-      const res = await fetch(endpoint, {
-        method: "GET",
-        headers: {
-          "apikey": ANON_KEY,
-          "Authorization": `Bearer ${ANON_KEY}`, // evita "missing authorization header" quando verify_jwt=true
-          "Content-Type": "application/json",
-        },
-        cache: "no-store",
+        `);
       });
+    }
 
-      const text = await res.text();
-      let data = null;
-      try{ data = JSON.parse(text); } catch { data = { error: text }; }
+    function renderPubmed(items){
+      pubmedList.innerHTML = "";
+      if(!Array.isArray(items) || items.length === 0){
+        pubmedList.innerHTML = `<div class="item"><h3>Sem resultados</h3><p>Tente outras palavras-chave ou aumente a janela de anos.</p></div>`;
+        return;
+      }
+      items.forEach((it) => {
+        const title = escapeHtml(it?.title || "Sem título");
+        const journal = escapeHtml(it?.journal || "");
+        const year = it?.year ? ` • ${escapeHtml(it.year)}` : "";
+        const pmid = escapeHtml(it?.pmid || "");
+        const url = escapeHtml(it?.url || (pmid ? `https://pubmed.ncbi.nlm.nih.gov/${pmid}/` : "#"));
+        const doi = escapeHtml(it?.doi || "");
+        pubmedList.insertAdjacentHTML("beforeend", `
+          <div class="item">
+            <h3>${title}</h3>
+            <p>${journal}${year}${doi ? " • DOI: " + doi : ""}</p>
+            <p><a href="${url}" target="_blank" rel="noopener">Abrir no PubMed</a></p>
+          </div>
+        `);
+      });
+    }
 
-      if(!res.ok){
-        const msg = data?.error || `Erro HTTP ${res.status}`;
-        throw new Error(msg);
+    async function ask(){
+      clearMsg();
+      const q = (qEl.value || "").trim();
+      const years = Number(yearsEl.value || 5);
+      const limit = Number(limitEl.value || 6);
+
+      if(!q){
+        setMsg("Digite uma pergunta antes de buscar.", "bad");
+        setTab("answer");
+        return;
       }
 
-      return data;
+      btnAsk.disabled = true;
+      btnAsk.textContent = "Buscando…";
+      answerBox.textContent = "Consultando…";
+
+      try{
+        const url = new URL(FUNCTION_URL);
+        url.searchParams.set("q", q);
+        url.searchParams.set("years", String(years));
+        url.searchParams.set("limit", String(limit));
+        url.searchParams.set("ai", String(ai));
+
+        // ✅ SEM Authorization, SEM apikey
+        const res = await fetch(url.toString(), { method:"GET", cache:"no-store" });
+
+        if(!res.ok){
+          const txt = await res.text().catch(() => "");
+          throw new Error(`Erro HTTP ${res.status}\n${txt}`);
+        }
+
+        const data = await res.json();
+
+        // Resposta
+        const answer = data?.answer || "Consulta concluída. Veja a aba PubMed para os resultados.";
+        answerBox.textContent = answer;
+
+        // Web / PubMed
+        renderWeb(data?.web || data?.citations || []);
+        renderPubmed(data?.pubmed || []);
+
+        setMsg("Busca concluída ✅", "ok");
+        setTab("answer");
+
+      }catch(err){
+        answerBox.textContent = "Não foi possível obter a resposta.";
+        setMsg(String(err?.message || err), "bad");
+        setTab("answer");
+      }finally{
+        btnAsk.disabled = false;
+        btnAsk.textContent = "Buscar";
+      }
     }
 
-    function clearAll(){
-      setMsg("Pronto ✅ Digite sua pergunta e toque em Buscar.", "warn");
-      answerBox.style.display = "none";
-      answerBox.textContent = "";
-      webBox.style.display = "none";
-      webBox.innerHTML = "";
-      pubmedBox.style.display = "none";
-      pubmedBox.innerHTML = "";
-      setTab("resposta");
-    }
+    btnAsk.addEventListener("click", ask);
 
-    btnLimpar.addEventListener("click", () => {
+    btnClear.addEventListener("click", () => {
       qEl.value = "";
-      yearsEl.value = "5";
-      limitEl.value = "6";
-      ai = 0;
-      aiSwitch.classList.remove("on");
-      aiSwitch.setAttribute("aria-checked", "false");
-      clearAll();
+      answerBox.innerHTML = 'Digite uma pergunta e clique em <b>Buscar</b>.';
+      pubmedList.innerHTML = "";
+      webList.innerHTML = "";
+      clearMsg();
+      setTab("answer");
       qEl.focus();
     });
 
-    async function run(){
-      const q = (qEl.value || "").trim();
-      if(!q){
-        setMsg("Digite uma pergunta.", "bad");
-        qEl.focus();
-        return;
-      }
-
-      const years = Number(yearsEl.value || "5");
-      const limit = Number(limitEl.value || "6");
-
-      setBusy(true);
-      setMsg("Buscando…", "warn");
-      answerBox.style.display = "none";
-      webBox.style.display = "none";
-      pubmedBox.style.display = "none";
-
-      try{
-        const data = await callAskFunction(q, limit, years, ai);
-
-        // Render
-        renderAnswer(data?.answer);
-        renderWeb(data?.web);
-        renderPubmed(data?.pubmed);
-
-        setMsg("Busca concluída ✅", "ok");
-
-        // Mostra a aba mais útil automaticamente
-        if(Array.isArray(data?.pubmed) && data.pubmed.length){
-          setTab("pubmed");
-        }else{
-          setTab("resposta");
-        }
-      }catch(err){
-        setMsg("Erro:\n" + (err?.message || String(err)), "bad");
-        renderAnswer(""); // mantém UI consistente
-        setTab("resposta");
-      }finally{
-        setBusy(false);
-      }
-    }
-
-    btnBuscar.addEventListener("click", run);
-    qEl.addEventListener("keydown", (e) => { if(e.key === "Enter") run(); });
-
-    // Toggle IA
-    function toggleAi(){
-      ai = ai ? 0 : 1;
-      aiSwitch.classList.toggle("on", !!ai);
-      aiSwitch.setAttribute("aria-checked", String(!!ai));
-    }
-    aiSwitch.addEventListener("click", toggleAi);
-    aiSwitch.addEventListener("keydown", (e) => {
-      if(e.key === "Enter" || e.key === " "){
+    // Enter para buscar
+    qEl.addEventListener("keydown", (e) => {
+      if(e.key === "Enter"){
         e.preventDefault();
-        toggleAi();
+        ask();
       }
     });
 
-    // Chips
-    document.querySelectorAll(".chip[data-fill]").forEach((c) => {
-      c.addEventListener("click", () => {
-        qEl.value = c.getAttribute("data-fill") || "";
-        qEl.focus();
-      });
-    });
-
-    // Estado inicial
-    clearAll();
-  </script>
-
-  <!-- Service Worker (opcional) -->
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("service-worker.js")
-          .then(function (registration) {
-            console.log("Service Worker registrado:", registration.scope);
-          })
-          .catch(function (error) {
-            console.log("Falha ao registrar Service Worker:", error);
-          });
-      });
-    }
+    // estado inicial
+    setAi(false);
+    setTab("answer");
   </script>
 </body>
 </html>
