@@ -5,12 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#0b3d91" />
   <meta name="description" content="Lesão por Pressão - Projeto Integrador. Conteúdo educativo em formato instalável (PWA)." />
+
+  <!-- ✅ Manifest (na raiz) -->
   <link rel="manifest" href="manifest.webmanifest" />
 
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
+  <!-- ✅ ÍCONES NA RAIZ (corrigido) -->
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png" />
 
-  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <!-- ✅ iOS -->
+  <link rel="apple-touch-icon" href="icon-192.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="LPP" />
@@ -249,7 +253,6 @@
 
     .caret{ opacity:.9; font-size: 12px; margin-left:auto; }
 
-    /* ✅ Dropdown melhor (não cobre tudo) */
     .dropdown{
       position:absolute;
       top: calc(100% + 10px);
@@ -321,7 +324,6 @@
     .drop-muted{ font-size: 12px; color: var(--lpp-muted); font-weight: 850; }
     .drop-sep{ height:1px; background: rgba(15,23,42,.10); margin:10px 4px; }
 
-    /* ✅ MOBILE: vira “bottom sheet” */
     @media (max-width: 640px){
       .dropdown{
         position: fixed;
@@ -338,7 +340,6 @@
       .dropdown.open{ transform: translateY(0); }
     }
 
-    /* CONTEÚDO */
     .lpp-main{
       max-width: var(--lpp-max);
       margin: 22px auto 60px;
@@ -422,7 +423,6 @@
       transform: scale(1.03);
     }
 
-    /* FAQ */
     .lpp-search{
       display:flex;
       gap: 10px;
@@ -546,7 +546,6 @@
       *{ transition:none !important; animation:none !important; }
     }
 
-    /* PWA MODAL */
     .pwa-modal{
       position: fixed;
       inset: 0;
@@ -616,7 +615,6 @@
       box-shadow: 0 0 0 4px rgba(56, 130, 246, .20);
     }
 
-    /* ✅ skeleton login */
     .skeleton{
       display:inline-block;
       width: 160px;
@@ -761,6 +759,7 @@
       <div class="lpp-results" id="resultsBox" aria-live="polite"></div>
 
       <div class="lpp-faq" id="faqList">
+        <!-- (mantive seu FAQ igual) -->
         <details class="lpp-qa" data-tags="vermelho pele início">
           <summary>1) Pele vermelha já é lesão por pressão?</summary>
           <div class="lpp-answer">
@@ -768,7 +767,6 @@
             Evite massagear e procure orientação de um profissional de saúde.
           </div>
         </details>
-
         <details class="lpp-qa" data-tags="troca posição decúbito 2 horas">
           <summary>2) De quanto em quanto tempo devo mudar a posição?</summary>
           <div class="lpp-answer">
@@ -776,7 +774,6 @@
             mas pode variar conforme tolerância, risco e orientação da equipe.
           </div>
         </details>
-
         <details class="lpp-qa" data-tags="umidade fralda higiene barreira">
           <summary>3) O que fazer quando a pele fica úmida por fralda/suor?</summary>
           <div class="lpp-answer">
@@ -784,7 +781,6 @@
             Trocar fraldas/roupas sempre que necessário.
           </div>
         </details>
-
         <details class="lpp-qa" data-tags="dor infecção febre pus cheiro">
           <summary>4) Quando devo procurar ajuda urgente?</summary>
           <div class="lpp-answer">
@@ -792,7 +788,6 @@
             pele muito quente/vermelha ao redor, ou piora do estado geral.
           </div>
         </details>
-
         <details class="lpp-qa" data-tags="curativo casa produto">
           <summary>5) Posso escolher curativo sozinho(a) em casa?</summary>
           <div class="lpp-answer">
@@ -800,7 +795,6 @@
             deve ser orientada por profissional.
           </div>
         </details>
-
         <details class="lpp-qa" data-tags="estágio classificação grau 1 2 3 4">
           <summary>6) Quais são os estágios (graus) da lesão por pressão?</summary>
           <div class="lpp-answer">
@@ -809,7 +803,6 @@
             Há ainda lesão tissular profunda e lesão não classificável.
           </div>
         </details>
-
         <details class="lpp-qa" data-tags="calcanhar sacro trocânter cotovelo occipital local comum">
           <summary>7) Quais locais do corpo têm mais risco de lesão por pressão?</summary>
           <div class="lpp-answer">
@@ -817,7 +810,6 @@
             maléolos (tornozelo), cotovelos e occipital, dependendo da posição.
           </div>
         </details>
-
         <details class="lpp-qa" data-tags="colchão caixa de ovo pneumático superfície suporte">
           <summary>8) Colchão “caixa de ovo” evita lesão por pressão?</summary>
           <div class="lpp-answer">
@@ -825,7 +817,6 @@
             controle de umidade e avaliação de risco. Para alto risco, podem ser indicadas superfícies específicas.
           </div>
         </details>
-
         <details class="lpp-qa" data-tags="massagem vermelhidão esfregar risco">
           <summary>9) Posso massagear a pele avermelhada para “ativar a circulação”?</summary>
           <div class="lpp-answer">
@@ -833,7 +824,6 @@
             O mais importante é aliviar pressão e proteger a pele.
           </div>
         </details>
-
         <details class="lpp-qa" data-tags="umidade maceração barreira creme zinco">
           <summary>10) Qual creme ajuda quando há risco de maceração?</summary>
           <div class="lpp-answer">
@@ -841,7 +831,6 @@
             conforme protocolo e avaliação. O essencial é reduzir umidade e evitar fricção.
           </div>
         </details>
-
         <details class="lpp-qa" data-tags="sinais infecção pus febre odor calor">
           <summary>11) Quais sinais podem indicar infecção na ferida?</summary>
           <div class="lpp-answer">
@@ -849,7 +838,6 @@
             aumento do tamanho da lesão ou piora do estado geral. Procure avaliação profissional.
           </div>
         </details>
-
         <details class="lpp-qa" data-tags="limpeza soro fisiológico sabonete água">
           <summary>12) Como fazer higiene/limpeza da pele e da região em risco?</summary>
           <div class="lpp-answer">
@@ -857,7 +845,6 @@
             Evitar fricção intensa. Para feridas, seguir protocolo/orientação profissional.
           </div>
         </details>
-
         <details class="lpp-qa" data-tags="nutrição proteína água cicatrização">
           <summary>13) Alimentação influencia na prevenção e cicatrização?</summary>
           <div class="lpp-answer">
@@ -865,7 +852,6 @@
             Em pacientes de risco, pode ser necessária avaliação nutricional.
           </div>
         </details>
-
         <details class="lpp-qa" data-tags="fricção cisalhamento arrastar lençol transferência">
           <summary>14) O que é fricção e cisalhamento e por que pioram a lesão?</summary>
           <div class="lpp-answer">
@@ -873,7 +859,6 @@
             lesionando tecidos mais profundos. Reduz-se com técnica correta de mobilização e suporte.
           </div>
         </details>
-
         <details class="lpp-qa" data-tags="curativo troca frequência exsudato">
           <summary>15) Com que frequência trocar o curativo?</summary>
           <div class="lpp-answer">
@@ -901,7 +886,7 @@
     </div>
   </div>
 
-  <!-- FAQ busca (com debounce, limite e scroll) -->
+  <!-- FAQ busca -->
   <script>
     const input = document.getElementById('searchInput');
     const resultsBox = document.getElementById('resultsBox');
@@ -911,7 +896,7 @@
     let t = null;
 
     function escapeHtml(str){
-      return str.replace(/[&<>"']/g, m => ({
+      return String(str || "").replace(/[&<>"']/g, m => ({
         '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
       }[m]));
     }
@@ -968,11 +953,9 @@
         </div>
       ` : '');
 
-      // abre os 2 primeiros
       faqs.forEach(d => d.open = false);
       limited.forEach((d, i) => d.open = i < 2);
 
-      // scroll suave até os resultados
       resultsBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
@@ -993,17 +976,16 @@
     });
   </script>
 
-  <!-- Service Worker -->
+  <!-- ✅ Service Worker (escopo correto) -->
   <script>
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("service-worker.js")
-          .then(function (registration) {
-            console.log("Service Worker registrado:", registration.scope);
-          })
-          .catch(function (error) {
-            console.log("Falha ao registrar Service Worker:", error);
-          });
+      window.addEventListener("load", async () => {
+        try {
+          const reg = await navigator.serviceWorker.register("./service-worker.js", { scope: "./" });
+          console.log("Service Worker registrado:", reg.scope);
+        } catch (e) {
+          console.log("Falha ao registrar Service Worker:", e);
+        }
       });
     }
   </script>
@@ -1061,7 +1043,7 @@
     modal?.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
   </script>
 
-  <!-- MENU DO USUÁRIO (Supabase) - ✅ anti-skeleton infinito -->
+  <!-- MENU DO USUÁRIO (Supabase) -->
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
@@ -1145,7 +1127,7 @@
         }else{
           userStatus.innerHTML = `Conta ativa <span class="badge">Free</span>`;
         }
-      }catch(err){
+      }catch(_err){
         userStatus.innerHTML = `Conta ativa <span class="badge">Free</span>`;
       }
     }
@@ -1184,7 +1166,7 @@
         if(!user) return setLoggedOut();
         return await setLoggedIn(user);
 
-      }catch(err){
+      }catch(_err){
         clearTimeout(hardFallback);
         return setLoggedOut();
       }
@@ -1198,6 +1180,25 @@
 
     supabase.auth.onAuthStateChange(() => renderStateSafe());
     renderStateSafe();
+  </script>
+
+  <!-- ✅ Hard refresh opcional (pra quando PWA grudar em cache antigo) -->
+  <script>
+    async function lppHardRefresh(){
+      try{
+        if ("serviceWorker" in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(r => r.unregister()));
+        }
+        if ("caches" in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        }
+      } finally {
+        location.href = location.href.split("#")[0];
+      }
+    }
+    window.lppHardRefresh = lppHardRefresh;
   </script>
 
 </body>
