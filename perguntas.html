@@ -35,7 +35,6 @@
         var(--page);
     }
 
-    /* ===== Top header ===== */
     .top{
       position:sticky; top:0; z-index:1000;
       background: linear-gradient(180deg, var(--bg1), var(--bg2));
@@ -84,7 +83,6 @@
       box-shadow: 0 10px 18px rgba(2,6,23,.22);
     }
 
-    /* ===== User bubble (sem travar carregando infinito) ===== */
     .userbox{ position:relative; min-width: 230px; display:flex; justify-content:flex-end; }
     .userbtn{
       width:100%;
@@ -120,7 +118,6 @@
     }
     .caret{ opacity:.9; }
 
-    /* ✅ Em vez de “dropdown que tampa conteúdo”, vira um “sheet” no mobile */
     .backdrop{
       position:fixed; inset:0;
       background: rgba(2,6,23,.45);
@@ -168,14 +165,13 @@
         position:fixed;
         left: 12px;
         right: 12px;
-        top: 74px; /* abaixo do header */
+        top: 74px;
         width: auto;
         max-height: calc(100vh - 90px);
         overflow:auto;
       }
     }
 
-    /* ===== Layout ===== */
     .wrap{ max-width:1100px; margin: 18px auto 60px; padding: 0 14px; }
     .grid{ display:grid; grid-template-columns: 1.05fr .95fr; gap: 14px; align-items:start; }
     @media (max-width: 980px){ .grid{ grid-template-columns:1fr; } }
@@ -439,7 +435,6 @@
 
   <main class="wrap">
     <div class="grid">
-      <!-- Coluna esquerda -->
       <section class="card">
         <h2 class="title">Acesso Premium e pagamento</h2>
         <p class="lead">
@@ -474,14 +469,12 @@ Valor: 2,00</textarea>
         </div>
       </section>
 
-      <!-- Coluna direita -->
       <section class="card">
         <h2 class="title">Perguntar</h2>
         <p class="lead" id="appSubtitle">
           Para liberar, faça login e tenha Premium ativo.
         </p>
 
-        <!-- Bloqueado -->
         <div id="lockedBox" style="display:none;">
           <div class="msg warn show">
             Área <b>Premium</b>. Faça login e tenha <code>premium=true</code> em <code>profiles</code>.
@@ -502,7 +495,6 @@ Valor: 2,00</textarea>
           </div>
         </div>
 
-        <!-- Liberado -->
         <div id="appBox" style="display:none;">
           <label for="question">Pergunta</label>
           <input id="question" class="field" type="text" placeholder="Ex.: Vacinação, curativos, protocolos COREN, etc." />
@@ -584,17 +576,14 @@ Valor: 2,00</textarea>
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
 
-    // ✅ TROQUE para o seu Worker:
-    const ASK_API_BASE = "https://SEU-WORKER-AQUI.workers.dev";
+    // ✅ Agora usando Supabase Edge Function (sem Cloudflare)
+    const ASK_API_BASE = "https://owpswekkfaleauwjmahc.supabase.co/functions/v1";
 
-    // WhatsApp para comprovante:
     const WHATSAPP_PHONE = "5515988119989";
     const WHATSAPP_DEFAULT_TEXT = "Olá! Segue comprovante do Pix (Premium LPP). Meu e-mail de login é: ";
 
-    // Redirecionar automaticamente ao início se logar sem premium?
     let AUTO_HOME_IF_NOT_PREMIUM = false;
 
-    // =========================
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const $ = (id) => document.getElementById(id);
 
@@ -821,20 +810,26 @@ Valor: 2,00</textarea>
       clearMsg();
       const q = question.value.trim();
       if (!q) return setMsg("Digite uma pergunta.", "bad");
-      if (ASK_API_BASE.includes("SEU-WORKER-AQUI")) {
-        return setMsg("Configure o ASK_API_BASE com a URL do seu Worker (backend).", "bad");
-      }
 
       setLoading(true);
 
       try{
+        // /functions/v1 + /ask
         const url = new URL(ASK_API_BASE.replace(/\/$/,"") + "/ask");
         url.searchParams.set("q", q);
         url.searchParams.set("limit", limit.value);
         url.searchParams.set("years", years.value);
         url.searchParams.set("ai", aiEnabled ? "1" : "0");
 
-        const r = await fetch(url.toString(), { method:"GET" });
+        // ✅ headers para Edge Function (mais confiável)
+        const r = await fetch(url.toString(), {
+          method: "GET",
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          }
+        });
+
         const data = await r.json();
 
         if (!r.ok) {
@@ -905,7 +900,6 @@ Valor: 2,00</textarea>
     askBtn.addEventListener("click", ask);
     question.addEventListener("keydown", (e) => { if (e.key === "Enter") ask(); });
 
-    // ✅ Tenta garantir linha em profiles (evita “sou premium mas não libera” por falta de linha)
     async function ensureProfileRow(user){
       try{
         await supabase.from("profiles").upsert({
@@ -913,9 +907,7 @@ Valor: 2,00</textarea>
           email: user.email || null,
           updated_at: new Date().toISOString()
         });
-      }catch(_e){
-        // se RLS bloquear upsert, não quebra o app; o erro real aparece no select.
-      }
+      }catch(_e){}
     }
 
     async function gate(){
@@ -924,7 +916,6 @@ Valor: 2,00</textarea>
       lockedBox.style.display = "";
       appBox.style.display = "none";
 
-      // ✅ Anti “carregando infinito”
       let timedOut = false;
       const hardTimer = setTimeout(() => {
         timedOut = true;
@@ -935,7 +926,6 @@ Valor: 2,00</textarea>
         );
       }, 2600);
 
-      // ✅ Primeiro: session (mais rápido). Depois: user.
       const { data: sRes } = await supabase.auth.getSession();
       const session = sRes?.session;
 
@@ -961,13 +951,10 @@ Valor: 2,00</textarea>
 
       const email = userRes.user.email || "Usuário";
       userMeta.textContent = "E-mail: " + email;
-
       setTopUser(email, "Checando Premium…", null);
 
-      // ✅ garante linha do perfil (se não existir)
       await ensureProfileRow(userRes.user);
 
-      // ✅ Premium check (robusto)
       const uid = userRes.user.id;
       const { data: prof, error: profErr } = await supabase
         .from("profiles")
@@ -978,7 +965,6 @@ Valor: 2,00</textarea>
       clearTimeout(hardTimer);
 
       if (profErr){
-        // Mostra o motivo real (geralmente RLS/policy)
         setTopUser(email, "Falha ao ler profiles", null);
         lockedBox.style.display = "";
         appBox.style.display = "none";
