@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Confirmando acesso… • LPP</title>
+  <style>
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:#0b3d91;color:#fff;display:grid;place-items:center;height:100vh;padding:16px}
+    .card{max-width:520px;width:100%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+      border-radius:16px;padding:16px;backdrop-filter: blur(10px)}
+    .muted{opacity:.9;white-space:pre-wrap;line-height:1.5}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2 style="margin:0 0 6px">Confirmando acesso…</h2>
+    <div id="t" class="muted">Aguarde.</div>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+    const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+    const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const t = document.getElementById("t");
+
+    function goUrl(){
+      const go = localStorage.getItem("lpp_go_after_auth") || "index.html";
+      if (/^https?:\/\//i.test(go)) return go;
+      return SITE_BASE + go.replace(/^\//,"");
+    }
+
+    try{
+      // ✅ Isso finaliza login/confirm/recovery quando o Supabase volta com tokens na URL
+      const { data, error } = await supabase.auth.getSession();
+      if (error) throw error;
+
+      // Se já tem sessão, ótimo. Se não, tenta processar callback (depende do fluxo)
+      // A lib do supabase-js já trata o hash/callback internamente com getSession em vários casos.
+
+      t.textContent = "Sessão atualizada ✅\nRedirecionando…";
+      setTimeout(() => location.replace(goUrl()), 600);
+
+    }catch(e){
+      t.textContent =
+        "Não consegui confirmar automaticamente.\n\n" +
+        "Volte para o Login e tente novamente.\n\nErro: " + String(e?.message || e);
+      setTimeout(() => location.replace(SITE_BASE + "login.html"), 1800);
+    }
+  </script>
+</body>
+</html>
