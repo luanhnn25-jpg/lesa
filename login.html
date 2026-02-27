@@ -102,7 +102,6 @@
       font-weight:900; font-size:12px;
     }
     .price{font-size:34px; font-weight:1000; letter-spacing:.2px; margin:6px 0 0}
-    .pay p{margin:10px 0 0; opacity:.95; font-size:13px; line-height:1.45}
     .pixBox{
       margin-top:10px;
       background:rgba(255,255,255,.12);
@@ -275,7 +274,6 @@
 <body>
   <div class="wrap">
 
-    <!-- ESQUERDA: Premium + Pix + WhatsApp -->
     <section class="glass" aria-label="Premium e pagamento">
       <div class="brand">
         <div class="logo">LPP</div>
@@ -315,12 +313,11 @@
       </div>
     </section>
 
-    <!-- DIREITA: Login / Cadastro -->
     <main class="card" aria-label="Login e cadastro">
       <h3>Entrar / Criar conta</h3>
       <p class="hint">
-        Se você criou a conta agora, confirme o e-mail antes de tentar entrar.
-        Se não receber, o problema é configuração de URL/SMTP no Supabase.
+        Se você criar uma conta e o Supabase estiver com <b>confirmação por e-mail</b> ativa, você vai receber um e-mail.
+        O link abre <b>confirm.html</b> e finaliza a sessão automaticamente.
       </p>
 
       <div class="tabs" role="tablist" aria-label="Alternar modo">
@@ -359,11 +356,15 @@
     const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
 
     const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
-    const EMAIL_REDIRECT_TO = SITE_BASE + "login.html"; // deve estar permitido no Supabase
-    const GO_IF_PREMIUM = SITE_BASE + "selecao-produtos.html";
+
+    // ✅ o e-mail do Supabase DEVE redirecionar para confirm.html (não para login.html)
+    const CONFIRM_URL = SITE_BASE + "confirm.html";
+
+    // destinos
+    const DEFAULT_GO = "selecao-produtos.html";
     const GO_IF_NOT_PREMIUM = SITE_BASE + "index.html";
 
-    const WHATS_NUMBER = "5515988119989"; // +55 15 98811-9989
+    const WHATS_NUMBER = "5515988119989";
     // =====================
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -376,8 +377,20 @@
     const tabSignup = el("tabSignup");
     const modeHint = el("modeHint");
 
-    let mode = "login"; // "login" | "signup"
+    let mode = "login";
     let cooldownUntil = 0;
+
+    // ✅ parâmetro go (ex.: login.html?go=perguntas.html)
+    const params = new URLSearchParams(location.search);
+    const goParam = params.get("go") || DEFAULT_GO;
+    localStorage.setItem("lpp_go_after_auth", goParam);
+
+    function getGoUrl(){
+      const go = localStorage.getItem("lpp_go_after_auth") || DEFAULT_GO;
+      // se vier "perguntas.html", monta URL completa
+      if (/^https?:\/\//i.test(go)) return go;
+      return SITE_BASE + go.replace(/^\//,"");
+    }
 
     function setMsg(text, type="warn"){
       msgBox.textContent = text;
@@ -426,7 +439,6 @@
 
     el("btnGoHome").addEventListener("click", () => window.location.href = SITE_BASE + "index.html");
 
-    // Mostrar/ocultar senha
     el("btnTogglePw").addEventListener("click", () => {
       const pw = el("password");
       const isPw = pw.type === "password";
@@ -434,7 +446,6 @@
       el("btnTogglePw").textContent = isPw ? "🙈" : "👁";
     });
 
-    // Copiar Pix
     el("btnCopyPix").addEventListener("click", async () => {
       const val = el("pixPayload").value.trim();
       try{
@@ -445,9 +456,7 @@
       }
     });
 
-    // WhatsApp (mensagem pré-pronta)
     el("btnWhats").addEventListener("click", async () => {
-      // tenta pegar email/uid se já existir sessão
       let email = el("email").value.trim();
       let uid = "";
       try{
@@ -467,7 +476,6 @@
     });
 
     async function checkPremiumAndRedirect(){
-      // timeout para não travar infinito
       const timeoutMs = 10000;
       const t = setTimeout(() => {
         setBusy(false);
@@ -497,10 +505,10 @@
 
         if (error) {
           setMsg(
-            "Não consegui consultar o Premium.\n" +
-            "Motivos comuns:\n" +
-            "- Trigger não criou linha em profiles\n" +
-            "- RLS/Policy impedindo select\n\n" +
+            "Não consegui consultar o Premium.\n\n" +
+            "⚠️ Isso normalmente é:\n" +
+            "- RLS/Policy bloqueando SELECT em profiles\n" +
+            "- Linha do usuário não existe em profiles\n\n" +
             "Erro: " + error.message,
             "bad"
           );
@@ -508,8 +516,8 @@
         }
 
         if (data?.premium) {
-          setMsg("Premium ✅ Liberado. Indo para Seleção de Produtos…", "ok");
-          window.location.href = GO_IF_PREMIUM;
+          setMsg("Premium ✅ Liberado. Redirecionando…", "ok");
+          window.location.href = getGoUrl();
           return;
         }
 
@@ -530,7 +538,21 @@
 
       if (error) {
         setBusy(false);
-        setMsg("Erro no login:\n" + error.message, "bad");
+
+        // mensagem amigável para casos comuns
+        const msg = String(error.message || "");
+        if (msg.toLowerCase().includes("email not confirmed") || msg.toLowerCase().includes("confirm")) {
+          setMsg(
+            "Seu e-mail ainda não foi confirmado.\n\n" +
+            "1) Abra sua caixa de entrada e o SPAM.\n" +
+            "2) Clique no link de confirmação.\n" +
+            "3) O link abrirá confirm.html e finalizará seu acesso.",
+            "warn"
+          );
+        } else {
+          setMsg("Erro no login:\n" + error.message, "bad");
+        }
+
         startCooldown(2500);
         return;
       }
@@ -545,7 +567,7 @@
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: EMAIL_REDIRECT_TO }
+        options: { emailRedirectTo: CONFIRM_URL }
       });
 
       setBusy(false);
@@ -560,24 +582,21 @@
         return;
       }
 
-      // Se confirmação por e-mail estiver ativa, normalmente NÃO vem sessão
+      // confirmação ligada: geralmente NÃO há session
       if (!data?.session) {
         setMsg(
           "Conta criada ✅\n\n" +
           "Agora confirme o e-mail:\n" +
           "1) Veja a caixa de entrada e o SPAM.\n" +
-          "2) Clique no link de confirmação.\n" +
-          "3) Volte e faça login.\n\n" +
-          "Se não chegar, revise no Supabase:\n" +
-          "- Authentication → URL Configuration\n" +
-          "- SMTP",
+          "2) Clique no link.\n" +
+          "3) O link abrirá confirm.html e te levará ao destino.\n\n" +
+          "Se não chegar: é configuração do Supabase (Auth → URL/SMTP).",
           "ok"
         );
         startCooldown(4000);
         return;
       }
 
-      // Caso confirmação esteja OFF
       setMsg("Conta criada e logada ✅ Verificando Premium…", "ok");
       await checkPremiumAndRedirect();
     }
@@ -607,7 +626,7 @@
       setMsg("Enviando link de recuperação...", "warn");
 
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: EMAIL_REDIRECT_TO
+        redirectTo: CONFIRM_URL
       });
 
       setBusy(false);
@@ -623,7 +642,6 @@
     });
 
     // Param opcional: login.html?mode=signup
-    const params = new URLSearchParams(location.search);
     const m = params.get("mode");
     if (m === "signup") setMode("signup"); else setMode("login");
 
