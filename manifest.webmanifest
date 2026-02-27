@@ -1,8 +1,9 @@
 {
+  "id": "/lesa/",
   "name": "Lesão por Pressão - Projeto Integrador",
   "short_name": "LPP",
   "description": "Conteúdo educativo sobre lesão por pressão em formato instalável (PWA).",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#eef2f7",
