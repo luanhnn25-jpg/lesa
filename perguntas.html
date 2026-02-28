@@ -9,8 +9,6 @@
   <style>
     :root{
       --bg:#0a0a0b;
-      --panel:rgba(255,255,255,.04);
-      --panel2:rgba(255,255,255,.06);
       --stroke:rgba(255,255,255,.10);
       --text:rgba(255,255,255,.92);
       --muted:rgba(255,255,255,.62);
@@ -20,7 +18,7 @@
       --radius:18px;
       --ring: 0 0 0 4px rgba(255,255,255,.10);
       --ring2: 0 0 0 3px rgba(255,255,255,.08);
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -46,7 +44,7 @@
     .top{
       max-width:1000px;
       margin:0 auto;
-      padding:14px 14px;
+      padding:14px;
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -528,7 +526,7 @@
                 Dica rápida
               </div>
               <div style="margin-top:10px; color:rgba(255,255,255,.70); font-weight:800; font-size:12.8px; line-height:1.55">
-                Faça perguntas objetivas (população, contexto, conduta). Ex.: “Quais medidas X para Y em Z?”.
+                Perguntas mais específicas tendem a trazer fontes mais relevantes (ex.: população, contexto e conduta).
               </div>
             </div>
           </div>
@@ -546,10 +544,15 @@
   </div>
 
 <script>
+  // ============================
+  // CONFIG
+  // ============================
   const PROJECT_REF = "owpswekkfaleauwjmahc";
   const FUNCTION_URL = `https://${PROJECT_REF}.supabase.co/functions/v1/ask`;
-  const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
 
+  // ============================
+  // Helpers
+  // ============================
   const el = (id) => document.getElementById(id);
 
   const qEl = el("q");
@@ -572,8 +575,8 @@
   let lastQuestion = "";
   let toastTimer = null;
 
-  const HISTORY_KEY = "pi_history_v1";
-  const HISTORY_MAX = 10;
+  const HISTORY_KEY = "pi_history_v2";
+  const HISTORY_MAX = 12;
 
   function escapeHtml(str){
     return String(str ?? "").replace(/[&<>"']/g, m => ({
@@ -589,6 +592,15 @@
     toastTimer = setTimeout(() => toast.classList.remove("show"), 2800);
   }
   toastBtn.addEventListener("click", () => toast.classList.remove("show"));
+
+  function normalizePayload(data){
+    return {
+      version: data?.version ?? "",
+      answer: data?.answer ?? "",
+      sources: data?.sources ?? data?.web ?? data?.citations ?? [],
+      cached: !!data?.cached,
+    };
+  }
 
   function renderWeb(items){
     webList.innerHTML = "";
@@ -614,19 +626,11 @@
     });
   }
 
-  function setMeta(payload){
+  function setMeta(norm){
     const now = new Date();
-    metaTime.textContent = `Atualizado: ${now.toLocaleString("pt-BR")}`;
-    const n = (payload?.sources?.length ?? 0);
-    metaSources.textContent = `${n} fonte(s) listada(s)`;
+    metaTime.textContent = `Atualizado: ${now.toLocaleString("pt-BR")}${norm.cached ? " • cache" : ""}`;
+    metaSources.textContent = `${(norm.sources?.length ?? 0)} fonte(s) listada(s)`;
     metaLine.style.display = "flex";
-  }
-
-  function normalizePayload(data){
-    const answer = data?.answer ?? "";
-    const sources = data?.sources ?? data?.web ?? data?.citations ?? [];
-    const version = data?.version ?? "";
-    return { answer, sources, version };
   }
 
   function saveHistory(q){
@@ -693,7 +697,6 @@
       return `<li><b>${org}</b><br>${title}<br><span style="word-break:break-word">${url}</span></li>`;
     }).join("");
 
-    // ✅ IMPORTANTE: usar <\/script> para não quebrar o <script> principal desta página.
     return `
       <html>
       <head>
@@ -758,11 +761,7 @@
     try{
       const res = await fetch(FUNCTION_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SUPABASE_ANON_KEY,
-          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: q }),
         cache: "no-store",
       });
@@ -780,7 +779,7 @@
 
       answerBox.textContent = norm.answer || "Consulta concluída.";
       renderWeb(norm.sources);
-      setMeta({ sources: norm.sources });
+      setMeta(norm);
 
       saveHistory(q);
       showToast("Busca concluída", "Resposta e fontes atualizadas.");
@@ -792,7 +791,7 @@
           <strong>Falha na consulta</strong>
           <div class="t">${escapeHtml(msg)}</div>
         </div>`;
-      showToast("Erro", "Veja a mensagem em 'Fontes utilizadas'.");
+      showToast("Erro", "Veja a mensagem em ‘Fontes utilizadas’.");
     }
   }
 
