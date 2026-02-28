@@ -12,7 +12,6 @@
       --panel:rgba(255,255,255,.04);
       --panel2:rgba(255,255,255,.06);
       --stroke:rgba(255,255,255,.10);
-      --stroke2:rgba(255,255,255,.14);
       --text:rgba(255,255,255,.92);
       --muted:rgba(255,255,255,.62);
       --muted2:rgba(255,255,255,.44);
@@ -23,7 +22,6 @@
       --ring2: 0 0 0 3px rgba(255,255,255,.08);
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
-
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -54,20 +52,16 @@
       justify-content:space-between;
       gap:12px;
     }
-    .brand{
-      display:flex; align-items:center; gap:12px; min-width:0;
-    }
+    .brand{display:flex; align-items:center; gap:12px; min-width:0;}
     .logo{
       width:42px; height:42px;
       border-radius:14px;
       display:grid; place-items:center;
-      background:#fff;
-      color:#000;
+      background:#fff; color:#000;
       font-weight:950;
-      letter-spacing:-.3px;
       box-shadow: 0 18px 40px rgba(0,0,0,.35);
-      flex:0 0 auto;
       user-select:none;
+      flex:0 0 auto;
     }
     .brandText{min-width:0}
     .brandText h1{
@@ -306,6 +300,8 @@
       font-weight:800;
       font-size:12.5px;
       line-height:1.45;
+      white-space:pre-wrap;
+      word-break:break-word;
     }
     .item a{
       display:block;
@@ -550,18 +546,10 @@
   </div>
 
 <script>
-  // ============================
-  // CONFIG
-  // ============================
   const PROJECT_REF = "owpswekkfaleauwjmahc";
   const FUNCTION_URL = `https://${PROJECT_REF}.supabase.co/functions/v1/ask`;
-
-  // ✅ Sua chave publicável (pode ficar no frontend)
   const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
 
-  // ============================
-  // Helpers
-  // ============================
   const el = (id) => document.getElementById(id);
 
   const qEl = el("q");
@@ -629,7 +617,7 @@
   function setMeta(payload){
     const now = new Date();
     metaTime.textContent = `Atualizado: ${now.toLocaleString("pt-BR")}`;
-    const n = (payload?.sources?.length ?? payload?.web?.length ?? payload?.citations?.length ?? 0);
+    const n = (payload?.sources?.length ?? 0);
     metaSources.textContent = `${n} fonte(s) listada(s)`;
     metaLine.style.display = "flex";
   }
@@ -705,6 +693,7 @@
       return `<li><b>${org}</b><br>${title}<br><span style="word-break:break-word">${url}</span></li>`;
     }).join("");
 
+    // ✅ IMPORTANTE: usar <\/script> para não quebrar o <script> principal desta página.
     return `
       <html>
       <head>
@@ -746,7 +735,7 @@
 
         <script>
           setTimeout(() => window.print(), 350);
-        </script>
+        <\/script>
       </body>
       </html>
     `;
@@ -796,13 +785,14 @@
       saveHistory(q);
       showToast("Busca concluída", "Resposta e fontes atualizadas.");
     }catch(err){
+      const msg = String(err?.message || err);
       answerBox.textContent = "Não foi possível obter a resposta.";
       webList.innerHTML = `
         <div class="item">
           <strong>Falha na consulta</strong>
-          <div class="t">${escapeHtml(String(err?.message || err))}</div>
+          <div class="t">${escapeHtml(msg)}</div>
         </div>`;
-      showToast("Erro", "Se persistir, verifique logs da Edge Function.");
+      showToast("Erro", "Veja a mensagem em 'Fontes utilizadas'.");
     }
   }
 
@@ -843,7 +833,6 @@
     }
   }
 
-  // Eventos
   el("btnAsk").addEventListener("click", ask);
   el("btnRetry").addEventListener("click", () => {
     if(lastQuestion){ qEl.value = lastQuestion; ask(); }
@@ -890,7 +879,6 @@
     }
   });
 
-  // Init
   (function init(){
     renderHistory();
     const u = new URL(window.location.href);
