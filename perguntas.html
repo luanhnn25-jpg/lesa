@@ -1,210 +1,437 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Projeto Integrador • Pesquisa Oficial</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b0b0c" />
+  <title>Projeto Integrador • Pesquisa (Fontes Oficiais BR)</title>
 
-<style>
-:root{
-  --bg:#0d0d0d;
-  --card:#171717;
-  --border:#2a2a2a;
-  --text:#f5f5f5;
-  --muted:#a3a3a3;
-  --accent:#ffffff;
-  --shadow:0 10px 30px rgba(0,0,0,.5);
-  --radius:18px;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  background:var(--bg);
-  color:var(--text);
-}
-header{
-  padding:18px;
-  border-bottom:1px solid var(--border);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-header h1{
-  margin:0;
-  font-size:18px;
-  font-weight:700;
-}
-.badge{
-  background:#1f1f1f;
-  border:1px solid var(--border);
-  padding:6px 12px;
-  border-radius:999px;
-  font-size:12px;
-  color:var(--muted);
-}
-main{
-  max-width:900px;
-  margin:30px auto;
-  padding:0 20px 80px;
-}
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:20px;
-  box-shadow:var(--shadow);
-}
-input{
-  width:100%;
-  padding:16px;
-  border-radius:14px;
-  border:1px solid var(--border);
-  background:#111;
-  color:var(--text);
-  font-size:15px;
-}
-input:focus{
-  outline:none;
-  border-color:#444;
-}
-.controls{
-  margin-top:15px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-button{
-  padding:12px 18px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:#1c1c1c;
-  color:var(--text);
-  cursor:pointer;
-  transition:.15s;
-  font-weight:600;
-}
-button:hover{background:#222}
-button.primary{
-  background:#fff;
-  color:#000;
-  border:none;
-}
-button.primary:hover{opacity:.9}
-.output{
-  margin-top:20px;
-  white-space:pre-wrap;
-  line-height:1.6;
-  font-size:14px;
-}
-.refs{
-  margin-top:20px;
-}
-.refs a{
-  display:block;
-  color:#ccc;
-  margin-bottom:6px;
-  text-decoration:none;
-}
-.refs a:hover{color:#fff}
-footer{
-  text-align:center;
-  margin-top:60px;
-  color:var(--muted);
-  font-size:13px;
-}
-</style>
+  <style>
+    :root{
+      --bg:#0b0b0c;
+      --panel:#111113;
+      --card:#141416;
+      --border:#232326;
+      --text:#f4f4f5;
+      --muted:#a1a1aa;
+      --muted2:#71717a;
+      --shadow: 0 20px 50px rgba(0,0,0,.55);
+      --radius:18px;
+      --ring: 0 0 0 4px rgba(255,255,255,.10);
+      --btn:#1f1f23;
+      --btn2:#232329;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background: radial-gradient(900px 500px at 50% -10%, rgba(255,255,255,.06), transparent 60%), var(--bg);
+      color:var(--text);
+    }
+    header{
+      position:sticky; top:0; z-index:50;
+      background: rgba(11,11,12,.78);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--border);
+    }
+    .top{
+      max-width:980px; margin:0 auto;
+      padding:14px 14px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .brand{display:flex; align-items:center; gap:12px; min-width:0}
+    .logo{
+      width:40px; height:40px; border-radius:14px;
+      display:grid; place-items:center;
+      background:#fff; color:#000;
+      font-weight:900;
+      flex:0 0 auto;
+    }
+    .brand h1{
+      margin:0; font-size:15px; font-weight:900; letter-spacing:.2px;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      max-width:64vw;
+    }
+    .brand p{margin:4px 0 0; color:var(--muted); font-size:12px; font-weight:700}
+    .pill{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      padding:8px 12px;
+      border-radius:999px;
+      color:var(--muted);
+      font-weight:800;
+      font-size:12px;
+      white-space:nowrap;
+    }
+
+    main{max-width:980px; margin:18px auto 70px; padding:0 14px;}
+    .card{
+      background: linear-gradient(180deg, rgba(20,20,22,.96), rgba(20,20,22,.90));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:16px;
+    }
+
+    .title{margin:0 0 10px; font-size:16px; font-weight:900}
+    .sub{margin:0 0 12px; color:var(--muted); line-height:1.5; font-weight:700; font-size:13px}
+
+    .search{
+      display:flex; gap:10px; align-items:center;
+      padding:12px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      box-shadow: 0 16px 30px rgba(0,0,0,.35);
+      transition: box-shadow .15s ease, border-color .15s ease;
+    }
+    .search:focus-within{border-color: rgba(255,255,255,.18); box-shadow: var(--shadow), var(--ring);}
+    .searchIcon{
+      width:38px;height:38px;border-radius:14px;
+      display:grid;place-items:center;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.10);
+      color:#fff;
+      font-weight:900;
+      flex:0 0 auto;
+    }
+    input{
+      width:100%;
+      border:none;
+      outline:none;
+      background:transparent;
+      color:var(--text);
+      font-size:15px;
+      font-weight:800;
+    }
+    input::placeholder{color:rgba(244,244,245,.55)}
+
+    .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    button{
+      border:none;
+      background: var(--btn);
+      color: var(--text);
+      font-weight:900;
+      padding:12px 14px;
+      border-radius:14px;
+      cursor:pointer;
+      transition: filter .15s ease, transform .05s ease;
+      border:1px solid var(--border);
+    }
+    button:hover{filter: brightness(1.08)}
+    button:active{transform: translateY(1px)}
+    .primary{
+      background:#fff; color:#000;
+      border:none;
+    }
+    .ghost{background: var(--btn2)}
+    .warn{background: rgba(245,158,11,.10); border-color: rgba(245,158,11,.25); color:#f59e0b}
+
+    .msg{
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-weight:800;
+      white-space:pre-wrap;
+      display:none;
+    }
+    .msg.ok{border-color: rgba(34,197,94,.35); color: #86efac; background: rgba(34,197,94,.08)}
+    .msg.bad{border-color: rgba(239,68,68,.35); color: #fca5a5; background: rgba(239,68,68,.08)}
+    .msg.warn{border-color: rgba(245,158,11,.35); color: #fcd34d; background: rgba(245,158,11,.08)}
+
+    .split{display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px}
+    @media(max-width:820px){.split{grid-template-columns:1fr}}
+
+    .box{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      border-radius:16px;
+      padding:12px;
+    }
+    .box h3{margin:0 0 8px; font-size:13px; font-weight:900; color:var(--muted)}
+    .answer{
+      white-space:pre-wrap;
+      line-height:1.6;
+      font-weight:750;
+      color: rgba(244,244,245,.95);
+      font-size:13px;
+    }
+    .list{display:flex; flex-direction:column; gap:10px}
+    .item{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      border-radius:16px;
+      padding:12px;
+    }
+    .item strong{display:block; font-size:13px}
+    .item a{color:#e4e4e7; font-weight:900; text-decoration:none; word-break:break-word}
+    .item a:hover{text-decoration:underline}
+    footer{
+      text-align:center;
+      color:var(--muted2);
+      font-weight:800;
+      font-size:12px;
+      padding:18px 10px 30px;
+    }
+  </style>
 </head>
+
 <body>
-
-<header>
-  <h1>Projeto Integrador • Pesquisa Oficial</h1>
-  <div class="badge">Modo IA ativo</div>
-</header>
-
-<main>
-  <div class="card">
-    <input id="q" placeholder="Digite sua pergunta para pesquisa em fontes oficiais brasileiras..." />
-
-    <div class="controls">
-      <button class="primary" id="buscar">Pesquisar</button>
-      <button id="pdf">Baixar PDF</button>
-      <button id="share">Compartilhar</button>
-      <button id="clear">Limpar</button>
+  <header>
+    <div class="top">
+      <div class="brand">
+        <div class="logo">PI</div>
+        <div style="min-width:0">
+          <h1>Pesquisa Oficial • Brasil</h1>
+          <p>Ministério da Saúde • BVS MS • COFEN • COREN-SP • OPAS Brasil</p>
+        </div>
+      </div>
+      <div class="pill">Modo IA • Ativo</div>
     </div>
+  </header>
 
-    <div id="resultado" class="output"></div>
+  <main>
+    <section class="card">
+      <h2 class="title">Pesquisar</h2>
+      <p class="sub">
+        Respostas geradas exclusivamente a partir de <b>fontes institucionais brasileiras</b>.
+        Você pode gerar um relatório e salvar como PDF para estudo.
+      </p>
 
-    <div id="referencias" class="refs"></div>
-  </div>
+      <div class="search">
+        <div class="searchIcon">⌕</div>
+        <input id="q" type="text" placeholder="Ex.: Como prevenir lesão por pressão em pacientes acamados?" />
+      </div>
 
-  <footer>
-    © 2026 Projeto Integrador • Ministério da Saúde • COFEN • COREN • OPAS Brasil
-  </footer>
-</main>
+      <div class="row">
+        <button id="btnAsk" class="primary" type="button">Pesquisar</button>
+        <button id="btnPdf" class="ghost" type="button">Baixar PDF</button>
+        <button id="btnShare" class="ghost" type="button">Compartilhar</button>
+        <button id="btnClear" class="warn" type="button">Limpar</button>
+      </div>
+
+      <div id="msg" class="msg"></div>
+
+      <div class="split">
+        <div class="box">
+          <h3>Resposta (modo IA)</h3>
+          <div id="answerBox" class="answer">Digite uma pergunta e clique em <b>Pesquisar</b>.</div>
+        </div>
+
+        <div class="box">
+          <h3>Fontes utilizadas (Brasil)</h3>
+          <div id="webList" class="list"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2026 • Projeto Integrador</footer>
 
 <script>
-const FUNCTION_URL="https://owpswekkfaleauwjmahc.functions.supabase.co/ask";
-const qEl=document.getElementById("q");
-const resultado=document.getElementById("resultado");
-const refs=document.getElementById("referencias");
+  // ✅ Use SEMPRE o mesmo endpoint que você testou no navegador
+  const FUNCTION_URL = "https://owpswekkfaleauwjmahc.functions.supabase.co/ask";
 
-async function buscar(){
-  const q=qEl.value.trim();
-  if(!q){
-    resultado.textContent="Digite uma pergunta.";
-    return;
+  const el = (id) => document.getElementById(id);
+  const qEl = el("q");
+  const answerBox = el("answerBox");
+  const webList = el("webList");
+  const msg = el("msg");
+
+  let lastPayload = null;
+
+  function setMsg(text, type="warn"){
+    msg.style.display = "block";
+    msg.className = "msg " + type;
+    msg.textContent = text;
+  }
+  function clearMsg(){
+    msg.style.display = "none";
+    msg.textContent = "";
+    msg.className = "msg";
   }
 
-  resultado.textContent="Consultando fontes oficiais...";
-  refs.innerHTML="";
+  function escapeHtml(str){
+    return String(str ?? "").replace(/[&<>"']/g, m => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+    }[m]));
+  }
 
-  try{
-    const url=new URL(FUNCTION_URL);
-    url.searchParams.set("q",q);
-    url.searchParams.set("ai","1");
-
-    const res=await fetch(url);
-    const data=await res.json();
-
-    resultado.textContent=data.answer||"Sem resposta.";
-
-    (data.web||[]).forEach(r=>{
-      const a=document.createElement("a");
-      a.href=r.url;
-      a.target="_blank";
-      a.textContent=r.source+" • "+r.url;
-      refs.appendChild(a);
+  function renderWeb(items){
+    webList.innerHTML = "";
+    if(!Array.isArray(items) || items.length === 0){
+      webList.innerHTML = `<div class="item"><strong>Sem fontes</strong><div style="color:#a1a1aa;font-weight:800">Nenhuma referência retornada.</div></div>`;
+      return;
+    }
+    items.forEach(it => {
+      const title = escapeHtml(it?.title || "Referência");
+      const source = escapeHtml(it?.source || "");
+      const url = escapeHtml(it?.url || "#");
+      webList.insertAdjacentHTML("beforeend", `
+        <div class="item">
+          <strong>${source}</strong>
+          <div style="color:#a1a1aa;font-weight:800;margin-top:6px">${title}</div>
+          <div style="margin-top:8px"><a href="${url}" target="_blank" rel="noopener">${url}</a></div>
+        </div>
+      `);
     });
-
-  }catch(e){
-    resultado.textContent="Erro ao consultar.";
   }
-}
 
-document.getElementById("buscar").onclick=buscar;
+  async function ask(){
+    clearMsg();
+    const q = (qEl.value || "").trim();
+    if(!q){
+      setMsg("Digite uma pergunta antes de pesquisar.", "bad");
+      return;
+    }
 
-document.getElementById("clear").onclick=()=>{
-  qEl.value="";
-  resultado.textContent="";
-  refs.innerHTML="";
-};
+    answerBox.textContent = "Consultando fontes oficiais…";
+    renderWeb([]);
 
-document.getElementById("share").onclick=()=>{
-  const link=window.location.origin+window.location.pathname+"?q="+encodeURIComponent(qEl.value);
-  navigator.clipboard.writeText(link);
-  alert("Link copiado.");
-};
+    try{
+      const url = new URL(FUNCTION_URL);
+      url.searchParams.set("q", q);
+      url.searchParams.set("ai", "1");
 
-document.getElementById("pdf").onclick=()=>{
-  const content="Pergunta:\n"+qEl.value+"\n\n"+resultado.textContent;
-  const blob=new Blob([content],{type:"application/pdf"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url;
-  a.download="pesquisa.pdf";
-  a.click();
-};
+      const res = await fetch(url.toString(), { method:"GET", cache:"no-store" });
+      if(!res.ok){
+        const t = await res.text().catch(()=>"");
+        throw new Error(`HTTP ${res.status}\n${t}`);
+      }
+
+      const data = await res.json();
+      lastPayload = data;
+
+      // ✅ Garantia: se backend antigo ainda estiver no ar, vamos esconder “PubMed” no front
+      const txt = String(data?.answer || "");
+      const cleaned = txt.replace(/PubMed[\s\S]*?Recomenda-se/gi, "Recomenda-se"); // fallback
+      answerBox.textContent = cleaned || "Consulta concluída.";
+
+      renderWeb(data?.web || data?.citations || []);
+      setMsg("Busca concluída ✅", "ok");
+
+    } catch(err){
+      answerBox.textContent = "Não foi possível obter a resposta.";
+      setMsg(String(err?.message || err), "bad");
+    }
+  }
+
+  function buildReportHtml(){
+    const q = (qEl.value || "").trim();
+    const when = new Date().toLocaleString("pt-BR");
+    const version = lastPayload?.version ? String(lastPayload.version) : "";
+    const answer = lastPayload?.answer ? String(lastPayload.answer) : answerBox.textContent;
+    const refs = (lastPayload?.web || lastPayload?.citations || []);
+
+    const refsHtml = (Array.isArray(refs) ? refs : []).map(r => {
+      const source = escapeHtml(r?.source || "Fonte");
+      const url = escapeHtml(r?.url || "");
+      const title = escapeHtml(r?.title || "");
+      return `<li><b>${source}</b><br>${title}<br><span style="word-break:break-word">${url}</span></li>`;
+    }).join("");
+
+    return `
+      <html>
+      <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1"/>
+        <title>Relatório • Projeto Integrador</title>
+        <style>
+          body{font-family:Arial, sans-serif; padding:24px; color:#111}
+          h1{margin:0 0 6px; font-size:18px}
+          .muted{color:#555; font-size:12px; margin:0 0 16px}
+          .box{border:1px solid #ddd; border-radius:12px; padding:14px; margin-top:14px}
+          pre{white-space:pre-wrap; line-height:1.55; margin:0}
+          ul{margin:10px 0 0; padding-left:18px}
+          li{margin:0 0 10px}
+        </style>
+      </head>
+      <body>
+        <h1>Relatório de Pesquisa • Projeto Integrador</h1>
+        <p class="muted">Gerado em: ${escapeHtml(when)} ${version ? " • Versão: " + escapeHtml(version) : ""}</p>
+
+        <div class="box">
+          <b>Pergunta</b>
+          <pre>${escapeHtml(q)}</pre>
+        </div>
+
+        <div class="box">
+          <b>Resposta (modo IA)</b>
+          <pre>${escapeHtml(answer)}</pre>
+        </div>
+
+        <div class="box">
+          <b>Fontes utilizadas (Brasil)</b>
+          <ul>${refsHtml || "<li>Sem fontes.</li>"}</ul>
+        </div>
+
+        <p class="muted" style="margin-top:18px">
+          Observação: este relatório lista links institucionais brasileiros para consulta. Verifique data, versão e escopo dos documentos.
+        </p>
+
+        <script>
+          // abre a caixa de impressão automaticamente
+          setTimeout(() => window.print(), 350);
+        </script>
+      </body>
+      </html>
+    `;
+  }
+
+  function downloadPdf(){
+    if(!lastPayload){
+      setMsg("Faça uma pesquisa antes de gerar o PDF.", "warn");
+      return;
+    }
+    const html = buildReportHtml();
+    const w = window.open("", "_blank");
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+  }
+
+  function share(){
+    const base = new URL(window.location.href);
+    base.searchParams.set("q", qEl.value || "");
+    navigator.clipboard.writeText(base.toString());
+    setMsg("Link copiado ✅", "ok");
+  }
+
+  el("btnAsk").addEventListener("click", ask);
+  el("btnPdf").addEventListener("click", downloadPdf);
+  el("btnShare").addEventListener("click", share);
+
+  el("btnClear").addEventListener("click", () => {
+    qEl.value = "";
+    answerBox.innerHTML = 'Digite uma pergunta e clique em <b>Pesquisar</b>.';
+    webList.innerHTML = "";
+    lastPayload = null;
+    clearMsg();
+    qEl.focus();
+  });
+
+  qEl.addEventListener("keydown", (e) => {
+    if(e.key === "Enter"){
+      e.preventDefault();
+      ask();
+    }
+  });
+
+  // Auto-run se vier com ?q=
+  (function init(){
+    const u = new URL(window.location.href);
+    const q = u.searchParams.get("q");
+    if(q){
+      qEl.value = q;
+      setTimeout(ask, 120);
+    }
+  })();
 </script>
 
 </body>
