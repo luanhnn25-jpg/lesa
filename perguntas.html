@@ -1,1427 +1,211 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#f7b7cf" />
-  <title>Perguntas • Fontes Oficiais + PubMed • Projeto Integrador</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Projeto Integrador • Pesquisa Oficial</title>
 
-  <style>
-    :root{
-      --bg:#fff7fb;
-      --card:#ffffff;
-      --card2: rgba(255,255,255,.92);
-      --text:#0f172a;
-      --muted:#475569;
-      --muted2:#64748b;
-      --border: rgba(15,23,42,.10);
-
-      --pink1:#f7b7cf;
-      --pink2:#fce1ec;
-      --pink3:#ff5fa2;
-      --pink4:#ff2d86;
-
-      --shadow: 0 18px 45px rgba(2,6,23,.10);
-      --shadow2: 0 22px 60px rgba(2,6,23,.14);
-      --ring: 0 0 0 4px rgba(255,95,162,.18);
-      --radius: 20px;
-
-      --ok:#16a34a;
-      --warn:#f59e0b;
-      --bad:#dc2626;
-
-      --chip:#fff0f6;
-    }
-
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(1000px 650px at 10% -10%, rgba(255,95,162,.14), transparent 55%),
-        radial-gradient(950px 550px at 95% 10%, rgba(247,183,207,.22), transparent 55%),
-        radial-gradient(900px 600px at 50% 115%, rgba(255,45,134,.10), transparent 55%),
-        var(--bg);
-      overflow-x:hidden;
-    }
-
-    /* Marca d’água */
-    body::before{
-      content:"PROJETO INTEGRADOR • PROJETO INTEGRADOR • PROJETO INTEGRADOR • PROJETO INTEGRADOR • PROJETO INTEGRADOR • ";
-      position:fixed;
-      inset:-30% -20%;
-      transform: rotate(-18deg);
-      font-weight:900;
-      letter-spacing:.28em;
-      font-size:34px;
-      color: rgba(255,45,134,.06);
-      z-index:-1;
-      white-space:nowrap;
-      pointer-events:none;
-      user-select:none;
-    }
-    body::after{
-      content:"PROJETO INTEGRADOR • PROJETO INTEGRADOR • PROJETO INTEGRADOR • PROJETO INTEGRADOR • ";
-      position:fixed;
-      inset:-10% -20%;
-      transform: rotate(-18deg);
-      font-weight:900;
-      letter-spacing:.28em;
-      font-size:34px;
-      color: rgba(2,6,23,.04);
-      z-index:-1;
-      white-space:nowrap;
-      pointer-events:none;
-      user-select:none;
-    }
-
-    header{
-      position:sticky;
-      top:0;
-      z-index:50;
-      padding:16px 14px 14px;
-      backdrop-filter: blur(10px);
-      background: linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,255,255,.66));
-      border-bottom: 1px solid rgba(15,23,42,.08);
-    }
-
-    .top{
-      max-width:1040px;
-      margin:0 auto;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
-
-    .brand{
-      display:flex; align-items:center; gap:12px;
-      min-width:0;
-    }
-    .logo{
-      width:46px;height:46px;border-radius:16px;
-      display:grid;place-items:center;
-      font-weight:1000;
-      color:#fff;
-      background: linear-gradient(180deg, var(--pink3), var(--pink4));
-      box-shadow: 0 18px 35px rgba(255,45,134,.25);
-      border: 1px solid rgba(255,255,255,.35);
-      flex:0 0 auto;
-    }
-    .brandTxt{min-width:0}
-    .brand h1{
-      margin:0;
-      font-size:16px;
-      letter-spacing:.2px;
-      font-weight:1000;
-      line-height:1.1;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      max-width:62vw;
-    }
-    .brand p{
-      margin:5px 0 0;
-      font-size:12px;
-      color: var(--muted);
-      font-weight:800;
-      line-height:1.2;
-    }
-
-    .pill{
-      display:flex; align-items:center; gap:10px;
-      padding:10px 12px;
-      border-radius:999px;
-      background: rgba(255,255,255,.86);
-      border: 1px solid rgba(15,23,42,.10);
-      box-shadow: 0 14px 28px rgba(2,6,23,.10);
-      white-space:nowrap;
-      user-select:none;
-    }
-    .pillDot{
-      width:30px;height:30px;border-radius:999px;
-      display:grid;place-items:center;
-      color:#fff; font-weight:1000;
-      background: linear-gradient(180deg, var(--pink3), var(--pink4));
-      box-shadow: 0 14px 28px rgba(255,45,134,.22);
-    }
-    .pill strong{display:block; font-size:12px}
-    .pill span{display:block; font-size:12px; color:var(--muted); font-weight:800}
-
-    main{
-      max-width:1040px;
-      margin:18px auto 70px;
-      padding:0 14px;
-    }
-
-    .card{
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.90));
-      border: 1px solid rgba(15,23,42,.10);
-      box-shadow: var(--shadow);
-      padding:16px;
-    }
-
-    .hero{
-      display:grid;
-      grid-template-columns: 1.25fr .75fr;
-      gap:14px;
-      align-items:start;
-    }
-    @media (max-width: 900px){
-      .hero{grid-template-columns:1fr}
-    }
-
-    .sectionTitle{
-      margin:0 0 10px;
-      display:flex; align-items:center; gap:10px;
-      font-size:18px; font-weight:1000;
-      color:#3b0a2a;
-      letter-spacing:.2px;
-    }
-    .sectionTitle::before{
-      content:"";
-      width:10px; height:10px; border-radius:999px;
-      background: linear-gradient(180deg, var(--pink3), var(--pink4));
-      box-shadow: 0 14px 28px rgba(255,45,134,.25);
-    }
-
-    .muted{color:var(--muted); margin:0; line-height:1.6}
-    .tiny{color:var(--muted2); margin:8px 0 0; font-size:12px; line-height:1.45}
-
-    /* Search box premium */
-    .searchWrap{
-      position:relative;
-      margin-top:12px;
-    }
-    .searchBox{
-      display:flex; gap:10px; align-items:center;
-      padding:12px 12px;
-      border-radius: 18px;
-      border: 1px solid rgba(15,23,42,.12);
-      background: rgba(255,255,255,.92);
-      box-shadow: 0 18px 36px rgba(2,6,23,.08);
-      transition: box-shadow .15s ease, border-color .15s ease, transform .06s ease;
-    }
-    .searchBox:focus-within{
-      border-color: rgba(255,45,134,.35);
-      box-shadow: var(--shadow2), var(--ring);
-      transform: translateY(-1px);
-    }
-    .icon{
-      width:42px;height:42px;border-radius:14px;
-      display:grid;place-items:center;
-      color:#fff; font-weight:1000;
-      background: linear-gradient(180deg, var(--pink3), var(--pink4));
-      box-shadow: 0 14px 28px rgba(255,45,134,.18);
-      flex:0 0 auto;
-    }
-    input[type="text"]{
-      width:100%;
-      border:none;
-      outline:none;
-      background:transparent;
-      font-size:15px;
-      font-weight:800;
-      color:var(--text);
-    }
-    input::placeholder{color: rgba(71,85,105,.75); font-weight:700}
-
-    .subRow{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-
-    .select, .btn, .chip{
-      border-radius: 999px;
-      border: 1px solid rgba(15,23,42,.12);
-      background: rgba(255,255,255,.90);
-      padding:10px 12px;
-      font-weight:900;
-      color: #3b0a2a;
-      cursor:pointer;
-      transition: transform .05s ease, filter .15s ease, box-shadow .15s ease, border-color .15s ease;
-      user-select:none;
-    }
-    .select{
-      padding:10px 12px;
-      font-weight:900;
-      color: var(--text);
-    }
-    select.select{
-      appearance:none;
-      outline:none;
-    }
-
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 14px;
-      border-color: rgba(255,45,134,.20);
-      box-shadow: 0 14px 28px rgba(2,6,23,.08);
-    }
-    .btn:active{transform: translateY(1px)}
-    .btnPrimary{
-      color:#fff;
-      border:none;
-      background: linear-gradient(180deg, var(--pink3), var(--pink4));
-      box-shadow: 0 18px 35px rgba(255,45,134,.22);
-    }
-    .btnGhost{
-      background: rgba(255,255,255,.90);
-      border: 1px solid rgba(255,45,134,.22);
-      color: #b30051;
-    }
-    .btnWarn{
-      background: rgba(245,158,11,.12);
-      border-color: rgba(245,158,11,.25);
-      color:#7c2d12;
-    }
-
-    .chip{
-      background: var(--chip);
-      border-color: rgba(255,45,134,.16);
-      color:#b30051;
-      font-size:12px;
-      padding:8px 10px;
-    }
-    .chip:hover{filter: brightness(.98)}
-    .chipRow{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
-
-    /* Right panel */
-    .sideCard{
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(255,255,255,.94), rgba(255,255,255,.88));
-      border: 1px solid rgba(15,23,42,.10);
-      box-shadow: var(--shadow);
-      padding:14px;
-    }
-    .sideTitle{
-      margin:0 0 10px;
-      font-weight:1000;
-      color:#3b0a2a;
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px;
-    }
-    .sideTitle small{color:var(--muted2); font-weight:900}
-    .toggle{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:12px;
-      border-radius: 18px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.92);
-      box-shadow: 0 14px 26px rgba(2,6,23,.06);
-      margin-top:10px;
-    }
-    .toggle .t1{font-weight:1000}
-    .toggle .t2{font-size:12px; color:var(--muted); font-weight:800; margin-top:4px; line-height:1.35}
-    .switch{
-      width:52px; height:30px;
-      border-radius:999px;
-      background:#e5e7eb;
-      border:1px solid rgba(15,23,42,.12);
-      position:relative;
-      cursor:pointer;
-      flex:0 0 auto;
-    }
-    .switch::after{
-      content:"";
-      width:22px;height:22px;border-radius:999px;
-      position:absolute;
-      top:50%; left:4px;
-      transform:translateY(-50%);
-      background:#fff;
-      box-shadow:0 12px 22px rgba(2,6,23,.14);
-      transition:left .16s ease;
-    }
-    .switch.on{background: rgba(255,45,134,.22); border-color: rgba(255,45,134,.22)}
-    .switch.on::after{left:26px}
-
-    /* Tabs */
-    .tabs{
-      display:flex;
-      gap:8px;
-      margin-top:16px;
-      flex-wrap:wrap;
-    }
-    .tab{
-      flex: 1 1 160px;
-      border-radius: 999px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.90);
-      padding:10px 12px;
-      font-weight:1000;
-      color: var(--muted);
-      cursor:pointer;
-      text-align:center;
-      box-shadow: 0 12px 22px rgba(2,6,23,.06);
-    }
-    .tab[aria-selected="true"]{
-      color:#b30051;
-      border-color: rgba(255,45,134,.30);
-      background: rgba(255,45,134,.08);
-      box-shadow: 0 18px 35px rgba(255,45,134,.10);
-    }
-    .panel{display:none; margin-top:12px}
-    .panel.show{display:block}
-
-    .box{
-      border-radius: 18px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.92);
-      box-shadow: 0 14px 26px rgba(2,6,23,.06);
-      padding:12px;
-    }
-
-    .msg{
-      margin-top:10px;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid rgba(15,23,42,.10);
-      background:#fff;
-      color:var(--muted);
-      font-size:13px;
-      white-space:pre-wrap;
-      font-weight:800;
-    }
-    .msg.ok{border-color:rgba(22,163,74,.30); background:rgba(22,163,74,.08); color:#14532d}
-    .msg.warn{border-color:rgba(245,158,11,.35); background:rgba(245,158,11,.10); color:#7c2d12}
-    .msg.bad{border-color:rgba(220,38,38,.30); background:rgba(220,38,38,.08); color:#7f1d1d}
-
-    /* Lists */
-    .list{display:flex; flex-direction:column; gap:10px; margin-top:10px}
-    .item{
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 18px;
-      padding:12px;
-      background: rgba(255,255,255,.94);
-      box-shadow: 0 12px 22px rgba(2,6,23,.06);
-      transition: transform .08s ease, box-shadow .15s ease;
-    }
-    .item:hover{transform: translateY(-1px); box-shadow: 0 18px 35px rgba(2,6,23,.09)}
-    .item h3{margin:0 0 6px; font-size:14px; color:#3b0a2a; font-weight:1000; line-height:1.35}
-    .item p{margin:0; color:var(--muted); font-size:13px; line-height:1.45; font-weight:800}
-    .rowMeta{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
-    .badge{
-      font-size:11px;
-      font-weight:1000;
-      padding:6px 8px;
-      border-radius:999px;
-      border:1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.85);
-      color: #3b0a2a;
-    }
-    a.link{
-      color:#b30051;
-      font-weight:1000;
-      text-decoration:none;
-    }
-    a.link:hover{text-decoration:underline}
-
-    .itemActions{
-      display:flex; gap:8px; flex-wrap:wrap; margin-top:10px
-    }
-    .miniBtn{
-      border-radius: 999px;
-      border: 1px solid rgba(255,45,134,.20);
-      background: rgba(255,255,255,.92);
-      padding:8px 10px;
-      font-weight:1000;
-      font-size:12px;
-      color:#b30051;
-      cursor:pointer;
-      user-select:none;
-      transition: transform .05s ease, filter .15s ease;
-    }
-    .miniBtn:active{transform:translateY(1px)}
-    .miniBtn.primary{
-      color:#fff;
-      border:none;
-      background: linear-gradient(180deg, var(--pink3), var(--pink4));
-      box-shadow: 0 14px 28px rgba(255,45,134,.18);
-    }
-
-    /* Suggestion dropdown */
-    .suggest{
-      position:absolute;
-      left:0; right:0;
-      top: calc(100% + 8px);
-      background: rgba(255,255,255,.96);
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      display:none;
-      z-index:20;
-    }
-    .suggest.show{display:block}
-    .suggest .sHead{
-      padding:10px 12px;
-      border-bottom: 1px solid rgba(15,23,42,.08);
-      display:flex; justify-content:space-between; align-items:center;
-    }
-    .suggest .sHead strong{font-size:12px; color:#3b0a2a}
-    .suggest .sHead button{
-      border:none; background:transparent; color:#b30051;
-      font-weight:1000; cursor:pointer;
-    }
-    .suggest .sItem{
-      padding:10px 12px;
-      cursor:pointer;
-      font-weight:900;
-      color:var(--text);
-      border-bottom: 1px solid rgba(15,23,42,.06);
-    }
-    .suggest .sItem:last-child{border-bottom:none}
-    .suggest .sItem:hover{background: rgba(255,45,134,.06)}
-
-    /* Skeleton */
-    .skel{
-      border-radius: 16px;
-      border: 1px solid rgba(15,23,42,.08);
-      background: linear-gradient(90deg, rgba(255,255,255,.90), rgba(255,255,255,.70), rgba(255,255,255,.90));
-      background-size: 200% 100%;
-      animation: shimmer 1.1s infinite linear;
-      height: 84px;
-    }
-    @keyframes shimmer{
-      0%{background-position: 0% 0}
-      100%{background-position: 200% 0}
-    }
-
-    footer{
-      text-align:center;
-      color: rgba(71,85,105,.95);
-      font-size:13px;
-      font-weight:900;
-      padding:18px 10px 34px;
-    }
-  </style>
+<style>
+:root{
+  --bg:#0d0d0d;
+  --card:#171717;
+  --border:#2a2a2a;
+  --text:#f5f5f5;
+  --muted:#a3a3a3;
+  --accent:#ffffff;
+  --shadow:0 10px 30px rgba(0,0,0,.5);
+  --radius:18px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:var(--bg);
+  color:var(--text);
+}
+header{
+  padding:18px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+header h1{
+  margin:0;
+  font-size:18px;
+  font-weight:700;
+}
+.badge{
+  background:#1f1f1f;
+  border:1px solid var(--border);
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  color:var(--muted);
+}
+main{
+  max-width:900px;
+  margin:30px auto;
+  padding:0 20px 80px;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px;
+  box-shadow:var(--shadow);
+}
+input{
+  width:100%;
+  padding:16px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:#111;
+  color:var(--text);
+  font-size:15px;
+}
+input:focus{
+  outline:none;
+  border-color:#444;
+}
+.controls{
+  margin-top:15px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+button{
+  padding:12px 18px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:#1c1c1c;
+  color:var(--text);
+  cursor:pointer;
+  transition:.15s;
+  font-weight:600;
+}
+button:hover{background:#222}
+button.primary{
+  background:#fff;
+  color:#000;
+  border:none;
+}
+button.primary:hover{opacity:.9}
+.output{
+  margin-top:20px;
+  white-space:pre-wrap;
+  line-height:1.6;
+  font-size:14px;
+}
+.refs{
+  margin-top:20px;
+}
+.refs a{
+  display:block;
+  color:#ccc;
+  margin-bottom:6px;
+  text-decoration:none;
+}
+.refs a:hover{color:#fff}
+footer{
+  text-align:center;
+  margin-top:60px;
+  color:var(--muted);
+  font-size:13px;
+}
+</style>
 </head>
-
 <body>
-  <header>
-    <div class="top">
-      <div class="brand">
-        <div class="logo">PI</div>
-        <div class="brandTxt">
-          <h1>Perguntas com Fontes Oficiais + PubMed</h1>
-          <p>gov.br • OPAS/OMS • WHO • COFEN • PubMed</p>
-        </div>
-      </div>
-      <div class="pill" title="Acesso livre">
-        <div class="pillDot">V</div>
-        <div>
-          <strong>Visitante</strong>
-          <span>Acesso livre</span>
-        </div>
-      </div>
+
+<header>
+  <h1>Projeto Integrador • Pesquisa Oficial</h1>
+  <div class="badge">Modo IA ativo</div>
+</header>
+
+<main>
+  <div class="card">
+    <input id="q" placeholder="Digite sua pergunta para pesquisa em fontes oficiais brasileiras..." />
+
+    <div class="controls">
+      <button class="primary" id="buscar">Pesquisar</button>
+      <button id="pdf">Baixar PDF</button>
+      <button id="share">Compartilhar</button>
+      <button id="clear">Limpar</button>
     </div>
-  </header>
 
-  <main>
-    <section class="card">
-      <div class="hero">
-        <div>
-          <h2 class="sectionTitle">Pesquisar</h2>
-          <p class="muted">
-            Pesquise em <b>fontes oficiais</b> e no <b>PubMed</b>. Interface premium, feita para celular, com favoritos e referências.
-          </p>
+    <div id="resultado" class="output"></div>
 
-          <div class="searchWrap">
-            <div class="searchBox" id="searchBox">
-              <div class="icon">⌕</div>
-              <input id="q" type="text" placeholder="Ex.: Como prevenir lesão por pressão em pacientes acamados?" autocomplete="off" />
-            </div>
+    <div id="referencias" class="refs"></div>
+  </div>
 
-            <!-- Sugestões -->
-            <div id="suggest" class="suggest" aria-label="Sugestões">
-              <div class="sHead">
-                <strong>Sugestões e histórico</strong>
-                <button id="clearHistory" type="button">Limpar</button>
-              </div>
-              <div id="suggestList"></div>
-            </div>
-          </div>
+  <footer>
+    © 2026 Projeto Integrador • Ministério da Saúde • COFEN • COREN • OPAS Brasil
+  </footer>
+</main>
 
-          <div class="subRow" style="margin-top:12px">
-            <select id="years" class="select" title="Janela de anos">
-              <option value="3">Últimos 3 anos</option>
-              <option value="5" selected>Últimos 5 anos</option>
-              <option value="10">Últimos 10 anos</option>
-              <option value="20">Últimos 20 anos</option>
-            </select>
+<script>
+const FUNCTION_URL="https://owpswekkfaleauwjmahc.functions.supabase.co/ask";
+const qEl=document.getElementById("q");
+const resultado=document.getElementById("resultado");
+const refs=document.getElementById("referencias");
 
-            <select id="limit" class="select" title="Quantidade">
-              <option value="4">4 resultados</option>
-              <option value="6" selected>6 resultados</option>
-              <option value="8">8 resultados</option>
-              <option value="10">10 resultados</option>
-            </select>
+async function buscar(){
+  const q=qEl.value.trim();
+  if(!q){
+    resultado.textContent="Digite uma pergunta.";
+    return;
+  }
 
-            <select id="studyType" class="select" title="Tipo de estudo (refina a busca)">
-              <option value="">Tipo de estudo (opcional)</option>
-              <option value="systematic">Revisão sistemática / Meta-análise</option>
-              <option value="guideline">Diretriz / Guideline</option>
-              <option value="rct">Ensaio clínico randomizado</option>
-              <option value="observational">Observacional / Coorte</option>
-              <option value="qualitative">Qualitativo</option>
-            </select>
+  resultado.textContent="Consultando fontes oficiais...";
+  refs.innerHTML="";
 
-            <select id="population" class="select" title="População (opcional)">
-              <option value="">População (opcional)</option>
-              <option value="older">Idosos (≥65)</option>
-              <option value="icu">UTI / crítico</option>
-              <option value="peds">Pediatria</option>
-              <option value="nursinghome">Instituição / ILPI</option>
-            </select>
+  try{
+    const url=new URL(FUNCTION_URL);
+    url.searchParams.set("q",q);
+    url.searchParams.set("ai","1");
 
-            <select id="context" class="select" title="Contexto (opcional)">
-              <option value="">Contexto (opcional)</option>
-              <option value="hospital">Hospital</option>
-              <option value="home">Domicílio</option>
-              <option value="surgery">Perioperatório / Cirurgia</option>
-              <option value="device">Dispositivo médico (MDRPI)</option>
-            </select>
-          </div>
+    const res=await fetch(url);
+    const data=await res.json();
 
-          <div class="subRow" style="margin-top:10px">
-            <button id="btnAsk" class="btn btnPrimary" type="button">Buscar</button>
-            <button id="btnClear" class="btn btnGhost" type="button">Limpar</button>
-            <button id="btnShare" class="btn btnGhost" type="button">Compartilhar link</button>
-            <button id="btnCopyAllRefs" class="btn btnGhost" type="button">Copiar referências</button>
-            <button id="btnReport" class="btn btnWarn" type="button" style="display:none">Relatar problema</button>
-          </div>
+    resultado.textContent=data.answer||"Sem resposta.";
 
-          <div class="chipRow">
-            <span class="chip" data-q="Como prevenir lesão por pressão">LPP • prevenção</span>
-            <span class="chip" data-q="pressure injury staging NPIAP">LPP • estadiamento</span>
-            <span class="chip" data-q="dispositivo médico lesão por pressão prevenção">MDRPI • prevenção</span>
-            <span class="chip" data-q="escala Braden avaliação risco lesão por pressão">Braden • risco</span>
-            <span class="chip" data-q="reposicionamento a cada 2 horas lesão por pressão">Reposicionamento</span>
-          </div>
-
-          <p class="tiny" id="searchHint" style="display:none"></p>
-        </div>
-
-        <aside class="sideCard">
-          <div class="sideTitle">
-            <span>Modo IA (síntese)</span>
-            <small id="vBadge"></small>
-          </div>
-
-          <p class="muted" style="margin:0">
-            Quando ativado, a função retorna uma síntese (com orientação de leitura crítica) e lista as fontes.
-          </p>
-
-          <div class="toggle">
-            <div>
-              <div class="t1">Ativar síntese</div>
-              <div class="t2">Use para estudo rápido. Para prática clínica, priorize diretrizes e leitura completa.</div>
-            </div>
-            <div id="aiSwitch" class="switch" role="switch" aria-checked="false" tabindex="0"></div>
-          </div>
-
-          <div class="toggle">
-            <div>
-              <div class="t1">Debug</div>
-              <div class="t2">Oculto por padrão. Ative com <b>?debug=1</b> na URL.</div>
-            </div>
-            <div id="dbgSwitch" class="switch" role="switch" aria-checked="false" tabindex="0"></div>
-          </div>
-
-          <p class="tiny" style="margin-top:12px">
-            Dica: perguntas “humanas” são convertidas automaticamente para termos científicos na busca do PubMed.
-          </p>
-        </aside>
-      </div>
-
-      <div class="tabs" role="tablist" aria-label="Resultados">
-        <button class="tab" id="tabAnswer" type="button" role="tab" aria-selected="true">Resposta</button>
-        <button class="tab" id="tabWeb" type="button" role="tab" aria-selected="false">Fontes oficiais</button>
-        <button class="tab" id="tabPubmed" type="button" role="tab" aria-selected="false">PubMed</button>
-        <button class="tab" id="tabRefs" type="button" role="tab" aria-selected="false">Referências</button>
-        <button class="tab" id="tabFavs" type="button" role="tab" aria-selected="false">Favoritos ⭐</button>
-      </div>
-
-      <div id="panelAnswer" class="panel show" role="tabpanel">
-        <div class="box">
-          <div id="answerBox" class="muted" style="font-weight:800">
-            Digite uma pergunta e clique em <b>Buscar</b>.
-          </div>
-          <div id="msg" class="msg warn" style="display:none"></div>
-
-          <div id="debugBox" class="msg" style="display:none; margin-top:12px"></div>
-        </div>
-      </div>
-
-      <div id="panelWeb" class="panel" role="tabpanel">
-        <div class="box">
-          <p class="muted" style="margin:0; font-weight:900">
-            Fontes institucionais (para diretrizes, manuais e recomendações oficiais).
-          </p>
-          <div id="webList" class="list"></div>
-        </div>
-      </div>
-
-      <div id="panelPubmed" class="panel" role="tabpanel">
-        <div class="box">
-          <p class="muted" style="margin:0; font-weight:900">
-            PubMed (NCBI). Priorize revisão sistemática e diretrizes quando disponíveis.
-          </p>
-          <div id="pubmedList" class="list"></div>
-        </div>
-      </div>
-
-      <div id="panelRefs" class="panel" role="tabpanel">
-        <div class="box">
-          <p class="muted" style="margin:0; font-weight:900">
-            Referências prontas para copiar. (Formato simplificado: título, periódico, ano, DOI/URL.)
-          </p>
-          <div id="refsList" class="list"></div>
-        </div>
-      </div>
-
-      <div id="panelFavs" class="panel" role="tabpanel">
-        <div class="box">
-          <p class="muted" style="margin:0; font-weight:900">
-            Seus artigos salvos (armazenados no seu celular/navegador).
-          </p>
-          <div id="favsList" class="list"></div>
-        </div>
-      </div>
-
-    </section>
-  </main>
-
-  <footer>© 2026 • Projeto Integrador</footer>
-
-  <script>
-    // ✅ Endpoint público da sua Edge Function
-    const FUNCTION_URL = "https://owpswekkfaleauwjmahc.supabase.co/functions/v1/ask";
-
-    // Storage keys
-    const KEY_HISTORY = "pi_search_history_v1";
-    const KEY_FAVS = "pi_favs_v1";
-
-    // Utilities
-    const el = (id) => document.getElementById(id);
-    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-    function escapeHtml(str){
-      return String(str ?? "").replace(/[&<>"']/g, m => ({
-        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
-      }[m]));
-    }
-
-    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
-
-    function parseBool(v){ return v === "1" || v === "true" || v === "yes"; }
-
-    function copyToClipboard(text){
-      return navigator.clipboard?.writeText(text).catch(() => {
-        const ta = document.createElement("textarea");
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand("copy");
-        ta.remove();
-      });
-    }
-
-    function getHistory(){
-      try{ return JSON.parse(localStorage.getItem(KEY_HISTORY) || "[]"); }
-      catch{ return []; }
-    }
-    function setHistory(arr){
-      localStorage.setItem(KEY_HISTORY, JSON.stringify(arr.slice(0, 12)));
-    }
-    function pushHistory(q){
-      if(!q) return;
-      const h = getHistory().filter(x => x !== q);
-      h.unshift(q);
-      setHistory(h);
-    }
-
-    function getFavs(){
-      try{ return JSON.parse(localStorage.getItem(KEY_FAVS) || "[]"); }
-      catch{ return []; }
-    }
-    function setFavs(arr){
-      localStorage.setItem(KEY_FAVS, JSON.stringify(arr));
-    }
-    function isFav(pmid){
-      return getFavs().some(x => x?.pmid === pmid);
-    }
-    function toggleFav(item){
-      const favs = getFavs();
-      const idx = favs.findIndex(x => x?.pmid === item?.pmid);
-      if(idx >= 0) favs.splice(idx, 1);
-      else favs.unshift(item);
-      setFavs(favs);
-      renderFavs();
-    }
-
-    // Heurística: classificar tipo de estudo (para badge visual)
-    function classifyStudy(title=""){
-      const t = title.toLowerCase();
-      if(t.includes("systematic review") || t.includes("meta-analysis") || t.includes("metaanalysis")) return "Revisão sistemática";
-      if(t.includes("guideline") || t.includes("practice guideline") || t.includes("consensus")) return "Diretriz";
-      if(t.includes("randomized") || t.includes("randomised") || t.includes("trial")) return "Ensaio clínico";
-      if(t.includes("cohort") || t.includes("case-control") || t.includes("cross-sectional") || t.includes("observational")) return "Observacional";
-      if(t.includes("qualitative") || t.includes("phenomenolog") || t.includes("interviews")) return "Qualitativo";
-      if(t.includes("case report")) return "Relato de caso";
-      return "Artigo";
-    }
-
-    // Montar query refinada com filtros (ajuda PubMed)
-    function enhanceQuery(userQ, studyType, population, context){
-      let extra = [];
-
-      // tipo de estudo
-      if(studyType === "systematic") extra.push('"systematic review" OR "meta-analysis"');
-      if(studyType === "guideline") extra.push('guideline OR "practice guideline" OR consensus');
-      if(studyType === "rct") extra.push('"randomized controlled trial" OR randomized OR trial');
-      if(studyType === "observational") extra.push('cohort OR observational OR "case-control" OR "cross-sectional"');
-      if(studyType === "qualitative") extra.push('qualitative OR interviews OR thematic');
-
-      // população
-      if(population === "older") extra.push('"older adults" OR elderly OR geriatric OR "aged 65"');
-      if(population === "icu") extra.push('ICU OR "intensive care" OR critical');
-      if(population === "peds") extra.push('pediatric OR children OR infant');
-      if(population === "nursinghome") extra.push('"nursing home" OR "long-term care" OR LTC');
-
-      // contexto
-      if(context === "hospital") extra.push('hospital OR inpatient');
-      if(context === "home") extra.push('home care OR domiciliary OR community');
-      if(context === "surgery") extra.push('perioperative OR surgery OR operating room');
-      if(context === "device") extra.push('"medical device-related" OR MDRPI OR device');
-
-      const base = String(userQ || "").trim();
-      if(!base) return { q: "", hint: "" };
-
-      if(extra.length === 0) return { q: base, hint: "" };
-
-      const hint = "Refinando busca com filtros selecionados.";
-      const q = `${base} AND (${extra.join(" AND ")})`;
-      return { q, hint };
-    }
-
-    // Elements
-    const qEl = el("q");
-    const yearsEl = el("years");
-    const limitEl = el("limit");
-    const studyTypeEl = el("studyType");
-    const populationEl = el("population");
-    const contextEl = el("context");
-
-    const btnAsk = el("btnAsk");
-    const btnClear = el("btnClear");
-    const btnShare = el("btnShare");
-    const btnCopyAllRefs = el("btnCopyAllRefs");
-    const btnReport = el("btnReport");
-
-    const tabAnswer = el("tabAnswer");
-    const tabWeb = el("tabWeb");
-    const tabPubmed = el("tabPubmed");
-    const tabRefs = el("tabRefs");
-    const tabFavs = el("tabFavs");
-
-    const panelAnswer = el("panelAnswer");
-    const panelWeb = el("panelWeb");
-    const panelPubmed = el("panelPubmed");
-    const panelRefs = el("panelRefs");
-    const panelFavs = el("panelFavs");
-
-    const answerBox = el("answerBox");
-    const webList = el("webList");
-    const pubmedList = el("pubmedList");
-    const refsList = el("refsList");
-    const favsList = el("favsList");
-
-    const msg = el("msg");
-    const debugBox = el("debugBox");
-    const vBadge = el("vBadge");
-    const searchHint = el("searchHint");
-
-    const aiSwitch = el("aiSwitch");
-    const dbgSwitch = el("dbgSwitch");
-
-    const suggest = el("suggest");
-    const suggestList = el("suggestList");
-    const clearHistoryBtn = el("clearHistory");
-
-    let ai = 0;
-    let debugEnabled = false;
-
-    let lastResponse = null;
-
-    function setMsg(text, type="warn"){
-      msg.style.display = "block";
-      msg.className = "msg " + type;
-      msg.textContent = text;
-    }
-    function clearMsg(){
-      msg.style.display = "none";
-      msg.textContent = "";
-      msg.className = "msg";
-    }
-
-    function setTab(which){
-      const map = {
-        answer: [tabAnswer, panelAnswer],
-        web: [tabWeb, panelWeb],
-        pubmed: [tabPubmed, panelPubmed],
-        refs: [tabRefs, panelRefs],
-        favs: [tabFavs, panelFavs],
-      };
-      Object.entries(map).forEach(([k, pair]) => {
-        const [t,p] = pair;
-        const on = (k === which);
-        t.setAttribute("aria-selected", String(on));
-        p.classList.toggle("show", on);
-      });
-    }
-
-    tabAnswer.addEventListener("click", () => setTab("answer"));
-    tabWeb.addEventListener("click", () => setTab("web"));
-    tabPubmed.addEventListener("click", () => setTab("pubmed"));
-    tabRefs.addEventListener("click", () => setTab("refs"));
-    tabFavs.addEventListener("click", () => setTab("favs"));
-
-    function setAi(next){
-      ai = next ? 1 : 0;
-      aiSwitch.classList.toggle("on", !!ai);
-      aiSwitch.setAttribute("aria-checked", String(!!ai));
-    }
-    function setDebug(next){
-      debugEnabled = !!next;
-      dbgSwitch.classList.toggle("on", debugEnabled);
-      dbgSwitch.setAttribute("aria-checked", String(debugEnabled));
-      // debugBox só aparece quando tiver resposta + debugEnabled
-      if(!debugEnabled) debugBox.style.display = "none";
-      btnReport.style.display = debugEnabled ? "inline-flex" : "none";
-    }
-
-    aiSwitch.addEventListener("click", () => setAi(!ai));
-    aiSwitch.addEventListener("keydown", (e) => {
-      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); setAi(!ai); }
+    (data.web||[]).forEach(r=>{
+      const a=document.createElement("a");
+      a.href=r.url;
+      a.target="_blank";
+      a.textContent=r.source+" • "+r.url;
+      refs.appendChild(a);
     });
 
-    dbgSwitch.addEventListener("click", () => setDebug(!debugEnabled));
-    dbgSwitch.addEventListener("keydown", (e) => {
-      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); setDebug(!debugEnabled); }
-    });
+  }catch(e){
+    resultado.textContent="Erro ao consultar.";
+  }
+}
 
-    // Chips
-    document.querySelectorAll(".chip[data-q]").forEach(ch => {
-      ch.addEventListener("click", () => {
-        qEl.value = ch.getAttribute("data-q") || "";
-        qEl.focus();
-        hideSuggest();
-      });
-    });
+document.getElementById("buscar").onclick=buscar;
 
-    // Suggestions
-    const fixedSuggestions = [
-      "Como prevenir lesão por pressão em pacientes acamados?",
-      "Escala de Braden: como avaliar risco de lesão por pressão?",
-      "Reposicionamento: qual frequência reduz lesão por pressão?",
-      "Lesão por pressão relacionada a dispositivo médico: prevenção",
-      "Coberturas (curativos) na prevenção de lesão por pressão",
-      "Pressure injury staging NPIAP"
-    ];
+document.getElementById("clear").onclick=()=>{
+  qEl.value="";
+  resultado.textContent="";
+  refs.innerHTML="";
+};
 
-    function showSuggest(items){
-      suggestList.innerHTML = "";
-      if(items.length === 0){
-        suggestList.innerHTML = `<div class="sItem" style="opacity:.75; cursor:default">Sem sugestões.</div>`;
-      } else {
-        items.forEach(txt => {
-          const div = document.createElement("div");
-          div.className = "sItem";
-          div.textContent = txt;
-          div.addEventListener("click", () => {
-            qEl.value = txt;
-            qEl.focus();
-            hideSuggest();
-          });
-          suggestList.appendChild(div);
-        });
-      }
-      suggest.classList.add("show");
-    }
-    function hideSuggest(){ suggest.classList.remove("show"); }
+document.getElementById("share").onclick=()=>{
+  const link=window.location.origin+window.location.pathname+"?q="+encodeURIComponent(qEl.value);
+  navigator.clipboard.writeText(link);
+  alert("Link copiado.");
+};
 
-    function buildSuggestList(){
-      const q = (qEl.value || "").trim().toLowerCase();
-      const history = getHistory();
-      const list = [];
+document.getElementById("pdf").onclick=()=>{
+  const content="Pergunta:\n"+qEl.value+"\n\n"+resultado.textContent;
+  const blob=new Blob([content],{type:"application/pdf"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="pesquisa.pdf";
+  a.click();
+};
+</script>
 
-      // histórico (primeiro)
-      history.forEach(h => {
-        if(!q || h.toLowerCase().includes(q)) list.push(h);
-      });
-
-      // sugestões fixas
-      fixedSuggestions.forEach(s => {
-        if(list.includes(s)) return;
-        if(!q || s.toLowerCase().includes(q)) list.push(s);
-      });
-
-      return list.slice(0, 10);
-    }
-
-    qEl.addEventListener("focus", () => showSuggest(buildSuggestList()));
-    qEl.addEventListener("input", () => showSuggest(buildSuggestList()));
-    document.addEventListener("click", (e) => {
-      const wrap = document.querySelector(".searchWrap");
-      if(!wrap.contains(e.target)) hideSuggest();
-    });
-
-    clearHistoryBtn.addEventListener("click", () => {
-      localStorage.removeItem(KEY_HISTORY);
-      showSuggest(buildSuggestList());
-      setMsg("Histórico limpo ✅", "ok");
-      setTimeout(clearMsg, 1200);
-    });
-
-    // Renderers
-    function renderWeb(items){
-      webList.innerHTML = "";
-      if(!Array.isArray(items) || items.length === 0){
-        webList.innerHTML = `<div class="item"><h3>Sem resultados</h3><p>Nenhuma fonte oficial retornada pelo backend.</p></div>`;
-        return;
-      }
-      items.forEach((it) => {
-        const title = escapeHtml(it?.title || "Fonte");
-        const url = escapeHtml(it?.url || "#");
-        const source = escapeHtml(it?.source || "");
-        webList.insertAdjacentHTML("beforeend", `
-          <div class="item">
-            <h3>${title}</h3>
-            <p>${source ? source + " • " : ""}<a class="link" href="${url}" target="_blank" rel="noopener">Abrir</a></p>
-          </div>
-        `);
-      });
-    }
-
-    function renderPubmed(items){
-      pubmedList.innerHTML = "";
-      if(!Array.isArray(items) || items.length === 0){
-        pubmedList.innerHTML = `<div class="item"><h3>Sem resultados</h3><p>Tente aumentar a janela de anos ou refinar com filtros.</p></div>`;
-        return;
-      }
-
-      items.forEach((it) => {
-        const title = escapeHtml(it?.title || "Sem título");
-        const journal = escapeHtml(it?.journal || "");
-        const year = it?.year ? ` • ${escapeHtml(it.year)}` : "";
-        const pmid = escapeHtml(it?.pmid || "");
-        const url = escapeHtml(it?.url || (pmid ? `https://pubmed.ncbi.nlm.nih.gov/${pmid}/` : "#"));
-        const doi = escapeHtml(it?.doi || "");
-        const st = classifyStudy(it?.title || "");
-        const fav = isFav(it?.pmid);
-
-        pubmedList.insertAdjacentHTML("beforeend", `
-          <div class="item">
-            <h3>${title}</h3>
-            <div class="rowMeta">
-              <span class="badge">${escapeHtml(st)}</span>
-              ${journal ? `<span class="badge">${journal}${year}</span>` : ""}
-              ${doi ? `<span class="badge">DOI: ${doi}</span>` : ""}
-              ${pmid ? `<span class="badge">PMID: ${pmid}</span>` : ""}
-            </div>
-            <div class="itemActions">
-              <a class="miniBtn primary" href="${url}" target="_blank" rel="noopener">Abrir no PubMed</a>
-              ${doi ? `<button class="miniBtn" data-copy="doi:${doi}" type="button">Copiar DOI</button>` : ""}
-              <button class="miniBtn" data-fav="${pmid}" type="button">${fav ? "★ Salvo" : "☆ Favoritar"}</button>
-              <button class="miniBtn" data-ref="${pmid}" type="button">Copiar referência</button>
-            </div>
-          </div>
-        `);
-      });
-
-      // bind actions
-      pubmedList.querySelectorAll('button[data-copy^="doi:"]').forEach(b => {
-        b.addEventListener("click", async () => {
-          const doi = (b.getAttribute("data-copy") || "").replace("doi:", "");
-          await copyToClipboard(doi);
-          setMsg("DOI copiado ✅", "ok");
-          setTimeout(clearMsg, 900);
-        });
-      });
-
-      pubmedList.querySelectorAll('button[data-fav]').forEach(b => {
-        b.addEventListener("click", () => {
-          const pmid = b.getAttribute("data-fav");
-          const item = (lastResponse?.pubmed || []).find(x => String(x?.pmid) === String(pmid));
-          if(item) toggleFav(item);
-          renderPubmed(lastResponse?.pubmed || []);
-        });
-      });
-
-      pubmedList.querySelectorAll('button[data-ref]').forEach(b => {
-        b.addEventListener("click", async () => {
-          const pmid = b.getAttribute("data-ref");
-          const item = (lastResponse?.pubmed || []).find(x => String(x?.pmid) === String(pmid));
-          if(!item) return;
-          const text = buildRefsText([item]);
-          await copyToClipboard(text);
-          setMsg("Referência copiada ✅", "ok");
-          setTimeout(clearMsg, 900);
-        });
-      });
-    }
-
-    function refVancouver(it){
-      // Simplificado (sem autores, pois não vêm no seu payload)
-      const title = it?.title ? String(it.title).trim() : "Sem título";
-      const journal = it?.journal ? String(it.journal).trim() : "";
-      const year = it?.year ? String(it.year).trim() : "";
-      const doi = it?.doi ? ` doi:${String(it.doi).trim()}` : "";
-      const url = it?.url ? ` Disponível em: ${String(it.url).trim()}` : "";
-      return `${title}. ${journal}${year ? ". " + year : ""}.${doi}${url}`;
-    }
-
-    function refABNT(it){
-      // Simplificado ABNT (sem autores)
-      const title = it?.title ? String(it.title).trim() : "SEM TÍTULO";
-      const journal = it?.journal ? String(it.journal).trim() : "";
-      const year = it?.year ? String(it.year).trim() : "";
-      const doi = it?.doi ? ` DOI: ${String(it.doi).trim()}.` : "";
-      const url = it?.url ? ` Disponível em: ${String(it.url).trim()}.` : "";
-      return `${title}. ${journal}${year ? ", " + year : ""}.${doi}${url}`;
-    }
-
-    function buildRefsText(items){
-      const lines = [];
-      lines.push("Vancouver (simplificado):");
-      items.forEach(it => lines.push("- " + refVancouver(it)));
-      lines.push("");
-      lines.push("ABNT (simplificado):");
-      items.forEach(it => lines.push("- " + refABNT(it)));
-      return lines.join("\n");
-    }
-
-    function renderRefs(items){
-      refsList.innerHTML = "";
-      if(!Array.isArray(items) || items.length === 0){
-        refsList.innerHTML = `<div class="item"><h3>Sem referências</h3><p>Faça uma busca para gerar referências.</p></div>`;
-        return;
-      }
-
-      items.forEach((it) => {
-        const van = escapeHtml(refVancouver(it));
-        const abn = escapeHtml(refABNT(it));
-        const pmid = escapeHtml(it?.pmid || "");
-        refsList.insertAdjacentHTML("beforeend", `
-          <div class="item">
-            <h3>${escapeHtml(it?.title || "Sem título")}</h3>
-            <p><b>Vancouver:</b><br>${van}</p>
-            <p style="margin-top:8px"><b>ABNT:</b><br>${abn}</p>
-            <div class="itemActions">
-              <button class="miniBtn" data-copyref="${pmid}" type="button">Copiar (Vancouver + ABNT)</button>
-              <a class="miniBtn primary" href="${escapeHtml(it?.url || "#")}" target="_blank" rel="noopener">Abrir</a>
-            </div>
-          </div>
-        `);
-      });
-
-      refsList.querySelectorAll('button[data-copyref]').forEach(b => {
-        b.addEventListener("click", async () => {
-          const pmid = b.getAttribute("data-copyref");
-          const item = (lastResponse?.pubmed || []).find(x => String(x?.pmid) === String(pmid));
-          if(!item) return;
-          await copyToClipboard(buildRefsText([item]));
-          setMsg("Referência copiada ✅", "ok");
-          setTimeout(clearMsg, 900);
-        });
-      });
-    }
-
-    function renderFavs(){
-      const favs = getFavs();
-      favsList.innerHTML = "";
-      if(!favs.length){
-        favsList.innerHTML = `<div class="item"><h3>Nenhum favorito</h3><p>Use ☆ Favoritar nos resultados do PubMed.</p></div>`;
-        return;
-      }
-      favs.forEach((it) => {
-        favsList.insertAdjacentHTML("beforeend", `
-          <div class="item">
-            <h3>${escapeHtml(it?.title || "Sem título")}</h3>
-            <div class="rowMeta">
-              ${it?.journal ? `<span class="badge">${escapeHtml(it.journal)}${it?.year ? " • " + escapeHtml(it.year) : ""}</span>` : ""}
-              ${it?.doi ? `<span class="badge">DOI: ${escapeHtml(it.doi)}</span>` : ""}
-              ${it?.pmid ? `<span class="badge">PMID: ${escapeHtml(it.pmid)}</span>` : ""}
-            </div>
-            <div class="itemActions">
-              <a class="miniBtn primary" href="${escapeHtml(it?.url || "#")}" target="_blank" rel="noopener">Abrir</a>
-              <button class="miniBtn" data-unfav="${escapeHtml(it?.pmid || "")}" type="button">Remover</button>
-              <button class="miniBtn" data-ref="${escapeHtml(it?.pmid || "")}" type="button">Copiar referência</button>
-            </div>
-          </div>
-        `);
-      });
-
-      favsList.querySelectorAll('button[data-unfav]').forEach(b => {
-        b.addEventListener("click", () => {
-          const pmid = b.getAttribute("data-unfav");
-          const favs = getFavs().filter(x => String(x?.pmid) !== String(pmid));
-          setFavs(favs);
-          renderFavs();
-          setMsg("Removido dos favoritos ✅", "ok");
-          setTimeout(clearMsg, 900);
-        });
-      });
-
-      favsList.querySelectorAll('button[data-ref]').forEach(b => {
-        b.addEventListener("click", async () => {
-          const pmid = b.getAttribute("data-ref");
-          const item = getFavs().find(x => String(x?.pmid) === String(pmid));
-          if(!item) return;
-          await copyToClipboard(buildRefsText([item]));
-          setMsg("Referência copiada ✅", "ok");
-          setTimeout(clearMsg, 900);
-        });
-      });
-    }
-
-    // Loading skeleton
-    function showLoading(){
-      webList.innerHTML = `<div class="skel"></div><div class="skel"></div>`;
-      pubmedList.innerHTML = `<div class="skel"></div><div class="skel"></div><div class="skel"></div>`;
-      refsList.innerHTML = `<div class="skel"></div><div class="skel"></div>`;
-      answerBox.textContent = "Consultando…";
-    }
-
-    // Debounce (para evitar spam)
-    let debounceTimer = null;
-    function debounce(fn, ms){
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(fn, ms);
-    }
-
-    async function ask(){
-      clearMsg();
-      hideSuggest();
-
-      const userQ = (qEl.value || "").trim();
-      const years = Number(yearsEl.value || 5);
-      const limit = Number(limitEl.value || 6);
-      const studyType = studyTypeEl.value || "";
-      const population = populationEl.value || "";
-      const context = contextEl.value || "";
-
-      if(!userQ){
-        setMsg("Digite uma pergunta antes de buscar.", "bad");
-        setTab("answer");
-        return;
-      }
-
-      const refined = enhanceQuery(userQ, studyType, population, context);
-      const finalQ = refined.q;
-
-      searchHint.style.display = refined.hint ? "block" : "none";
-      searchHint.textContent = refined.hint ? `🔎 ${refined.hint}` : "";
-
-      btnAsk.disabled = true;
-      btnAsk.textContent = "Buscando…";
-      showLoading();
-
-      try{
-        const url = new URL(FUNCTION_URL);
-        url.searchParams.set("q", finalQ);
-        url.searchParams.set("years", String(clamp(isFinite(years) ? years : 5, 1, 20)));
-        url.searchParams.set("limit", String(clamp(isFinite(limit) ? limit : 6, 1, 10)));
-        url.searchParams.set("ai", String(ai));
-
-        // ✅ SEM Authorization, SEM apikey
-        const res = await fetch(url.toString(), { method:"GET", cache:"no-store" });
-        if(!res.ok){
-          const txt = await res.text().catch(() => "");
-          throw new Error(`Erro HTTP ${res.status}\n${txt}`);
-        }
-
-        const data = await res.json();
-        lastResponse = data;
-
-        // version badge
-        vBadge.textContent = data?.version ? data.version : "";
-
-        // resposta
-        answerBox.textContent = data?.answer || "Consulta concluída. Veja as abas PubMed e Fontes oficiais.";
-
-        // lists
-        renderWeb(data?.web || []);
-        renderPubmed(data?.pubmed || []);
-        renderRefs(data?.pubmed || []);
-        renderFavs();
-
-        // debug (oculto por padrão)
-        if(debugEnabled && data?.debug_pubmed){
-          const d = data.debug_pubmed;
-          debugBox.style.display = "block";
-          debugBox.textContent =
-            `DEBUG (PubMed)\n` +
-            `term_used: ${d.term_used}\n` +
-            `normalized: ${d.normalized}\n` +
-            `cleaned: ${d.cleaned}\n` +
-            `janela: ${d.minYear}–${d.maxYear}\n` +
-            `gerado_em: ${data.generated_at || ""}`;
-        } else {
-          debugBox.style.display = "none";
-        }
-
-        // histórico
-        pushHistory(userQ);
-
-        setMsg("Busca concluída ✅", "ok");
-        setTab("answer");
-      }catch(err){
-        answerBox.textContent = "Não foi possível obter a resposta.";
-        setMsg(String(err?.message || err), "bad");
-        setTab("answer");
-      }finally{
-        btnAsk.disabled = false;
-        btnAsk.textContent = "Buscar";
-      }
-    }
-
-    btnAsk.addEventListener("click", ask);
-
-    btnClear.addEventListener("click", () => {
-      qEl.value = "";
-      answerBox.innerHTML = 'Digite uma pergunta e clique em <b>Buscar</b>.';
-      webList.innerHTML = "";
-      pubmedList.innerHTML = "";
-      refsList.innerHTML = "";
-      clearMsg();
-      hideSuggest();
-      searchHint.style.display = "none";
-      searchHint.textContent = "";
-      setTab("answer");
-      qEl.focus();
-    });
-
-    // Enter para buscar
-    qEl.addEventListener("keydown", (e) => {
-      if(e.key === "Enter"){
-        e.preventDefault();
-        ask();
-      }
-      if(e.key === "Escape"){
-        hideSuggest();
-      }
-    });
-
-    // Compartilhar link (com parâmetros)
-    function buildShareUrl(){
-      const base = new URL(window.location.href);
-      base.searchParams.set("q", qEl.value || "");
-      base.searchParams.set("years", yearsEl.value || "5");
-      base.searchParams.set("limit", limitEl.value || "6");
-      base.searchParams.set("ai", String(ai));
-      if(studyTypeEl.value) base.searchParams.set("study", studyTypeEl.value);
-      else base.searchParams.delete("study");
-      if(populationEl.value) base.searchParams.set("pop", populationEl.value);
-      else base.searchParams.delete("pop");
-      if(contextEl.value) base.searchParams.set("ctx", contextEl.value);
-      else base.searchParams.delete("ctx");
-      if(debugEnabled) base.searchParams.set("debug", "1");
-      else base.searchParams.delete("debug");
-      base.searchParams.set("run", "1"); // auto rodar
-      return base.toString();
-    }
-
-    btnShare.addEventListener("click", async () => {
-      const url = buildShareUrl();
-      try{
-        if(navigator.share){
-          await navigator.share({ title: "Projeto Integrador • Pesquisa", text: "Consulta com fontes oficiais + PubMed", url });
-          setMsg("Compartilhado ✅", "ok");
-        } else {
-          await copyToClipboard(url);
-          setMsg("Link copiado ✅", "ok");
-        }
-      } catch {
-        await copyToClipboard(url);
-        setMsg("Link copiado ✅", "ok");
-      }
-      setTimeout(clearMsg, 1000);
-    });
-
-    btnCopyAllRefs.addEventListener("click", async () => {
-      const items = lastResponse?.pubmed || [];
-      if(!items.length){
-        setMsg("Sem referências para copiar. Faça uma busca.", "warn");
-        return;
-      }
-      await copyToClipboard(buildRefsText(items));
-      setMsg("Todas as referências copiadas ✅", "ok");
-      setTimeout(clearMsg, 1100);
-    });
-
-    btnReport.addEventListener("click", async () => {
-      if(!lastResponse?.debug_pubmed){
-        setMsg("Sem debug disponível. Ative debug e faça uma busca.", "warn");
-        return;
-      }
-      const d = lastResponse.debug_pubmed;
-      const report =
-        `RELATO DE PROBLEMA (Projeto Integrador)\n` +
-        `Pergunta (usuário): ${qEl.value || ""}\n` +
-        `Termo enviado ao PubMed: ${d.term_used}\n` +
-        `Janela: ${d.minYear}–${d.maxYear}\n` +
-        `Gerado em: ${lastResponse.generated_at || ""}\n` +
-        `Versão: ${lastResponse.version || ""}\n`;
-      await copyToClipboard(report);
-      setMsg("Relatório copiado ✅ (cole para enviar)", "ok");
-      setTimeout(clearMsg, 1300);
-    });
-
-    // URL params auto-run
-    function applyParams(){
-      const u = new URL(window.location.href);
-      const q = u.searchParams.get("q");
-      const years = u.searchParams.get("years");
-      const limit = u.searchParams.get("limit");
-      const aiP = u.searchParams.get("ai");
-      const study = u.searchParams.get("study");
-      const pop = u.searchParams.get("pop");
-      const ctx = u.searchParams.get("ctx");
-      const dbg = u.searchParams.get("debug");
-      const run = u.searchParams.get("run");
-
-      if(q) qEl.value = q;
-      if(years) yearsEl.value = years;
-      if(limit) limitEl.value = limit;
-      if(aiP) setAi(parseBool(aiP));
-      if(study) studyTypeEl.value = study;
-      if(pop) populationEl.value = pop;
-      if(ctx) contextEl.value = ctx;
-
-      // debug só se ?debug=1
-      setDebug(parseBool(dbg));
-
-      // run auto
-      if(parseBool(run) && (qEl.value || "").trim()){
-        // pequena pausa para UI montar
-        setTimeout(() => ask(), 120);
-      }
-    }
-
-    // Estado inicial
-    setAi(false);
-    setTab("answer");
-    renderFavs();
-    applyParams();
-  </script>
 </body>
 </html>
