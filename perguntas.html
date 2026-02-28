@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#0b0b0c" />
-  <title>Projeto Integrador • Pesquisa (Fontes Oficiais BR)</title>
+  <title>Projeto Integrador • Pesquisa Oficial (Brasil)</title>
 
   <style>
     :root{
@@ -192,7 +192,7 @@
           <p>Ministério da Saúde • BVS MS • COFEN • COREN-SP • OPAS Brasil</p>
         </div>
       </div>
-      <div class="pill">Modo IA • Ativo</div>
+      <div class="pill" id="verPill">Modo IA</div>
     </div>
   </header>
 
@@ -200,8 +200,8 @@
     <section class="card">
       <h2 class="title">Pesquisar</h2>
       <p class="sub">
-        Respostas geradas exclusivamente a partir de <b>fontes institucionais brasileiras</b>.
-        Você pode gerar um relatório e salvar como PDF para estudo.
+        A resposta lista <b>quais sites oficiais brasileiros</b> foram usados como referência.
+        Use <b>Baixar PDF</b> para gerar relatório (Imprimir → Salvar como PDF).
       </p>
 
       <div class="search">
@@ -235,7 +235,6 @@
   <footer>© 2026 • Projeto Integrador</footer>
 
 <script>
-  // ✅ Use SEMPRE o mesmo endpoint que você testou no navegador
   const FUNCTION_URL = "https://owpswekkfaleauwjmahc.functions.supabase.co/ask";
 
   const el = (id) => document.getElementById(id);
@@ -243,6 +242,7 @@
   const answerBox = el("answerBox");
   const webList = el("webList");
   const msg = el("msg");
+  const verPill = el("verPill");
 
   let lastPayload = null;
 
@@ -298,6 +298,7 @@
       const url = new URL(FUNCTION_URL);
       url.searchParams.set("q", q);
       url.searchParams.set("ai", "1");
+      url.searchParams.set("_t", String(Date.now())); // anti-cache
 
       const res = await fetch(url.toString(), { method:"GET", cache:"no-store" });
       if(!res.ok){
@@ -308,14 +309,11 @@
       const data = await res.json();
       lastPayload = data;
 
-      // ✅ Garantia: se backend antigo ainda estiver no ar, vamos esconder “PubMed” no front
-      const txt = String(data?.answer || "");
-      const cleaned = txt.replace(/PubMed[\s\S]*?Recomenda-se/gi, "Recomenda-se"); // fallback
-      answerBox.textContent = cleaned || "Consulta concluída.";
-
+      if(data?.version) verPill.textContent = `Modo IA • ${data.version}`;
+      answerBox.textContent = String(data?.answer || "Consulta concluída.");
       renderWeb(data?.web || data?.citations || []);
-      setMsg("Busca concluída ✅", "ok");
 
+      setMsg("Busca concluída ✅", "ok");
     } catch(err){
       answerBox.textContent = "Não foi possível obter a resposta.";
       setMsg(String(err?.message || err), "bad");
@@ -376,7 +374,6 @@
         </p>
 
         <script>
-          // abre a caixa de impressão automaticamente
           setTimeout(() => window.print(), 350);
         </script>
       </body>
@@ -412,6 +409,7 @@
     answerBox.innerHTML = 'Digite uma pergunta e clique em <b>Pesquisar</b>.';
     webList.innerHTML = "";
     lastPayload = null;
+    verPill.textContent = "Modo IA";
     clearMsg();
     qEl.focus();
   });
