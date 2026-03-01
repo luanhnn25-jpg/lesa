@@ -19,6 +19,9 @@
       --ring: 0 0 0 4px rgba(255,255,255,.10);
       --ring2: 0 0 0 3px rgba(255,255,255,.08);
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --ok: rgba(120,255,180,.18);
+      --warn: rgba(255,210,120,.14);
+      --bad: rgba(255,120,120,.16);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -42,7 +45,7 @@
       border-bottom:1px solid var(--stroke);
     }
     .top{
-      max-width:1000px;
+      max-width:1100px;
       margin:0 auto;
       padding:14px;
       display:flex;
@@ -82,17 +85,6 @@
       max-width:62vw;
     }
     .right{display:flex; align-items:center; gap:10px;}
-    .pill{
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
-      background: rgba(255,255,255,.04);
-      color:var(--muted);
-      font-weight:850;
-      font-size:12px;
-      white-space:nowrap;
-      user-select:none;
-    }
     .kbd{
       font-family:var(--mono);
       font-size:11px;
@@ -107,7 +99,7 @@
     @media(min-width:860px){ .kbd{display:inline-flex} }
 
     main{
-      max-width:1000px;
+      max-width:1100px;
       margin:18px auto 80px;
       padding:0 14px;
     }
@@ -159,17 +151,21 @@
       user-select:none;
       flex:0 0 auto;
     }
-    input{
+    textarea{
       width:100%;
       border:none;
       outline:none;
+      resize:none;
+      min-height:44px;
+      max-height:160px;
       background:transparent;
       color:var(--text);
       font-size:15px;
       font-weight:850;
       letter-spacing:.2px;
+      line-height:1.35;
     }
-    input::placeholder{ color: rgba(255,255,255,.48); font-weight:750; }
+    textarea::placeholder{ color: rgba(255,255,255,.48); font-weight:750; }
 
     .chips{display:flex; gap:8px; flex-wrap:wrap;}
     .chip{
@@ -195,7 +191,7 @@
       font-weight:950;
       letter-spacing:.2px;
       cursor:pointer;
-      transition: transform .06s ease, filter .15s ease, box-shadow .15s ease, opacity .15s ease;
+      transition: transform .06s ease, filter .15s ease, box-shadow .15s ease;
       border:1px solid var(--stroke);
       background: rgba(255,255,255,.04);
       color: var(--text);
@@ -203,65 +199,16 @@
     button:hover{ filter: brightness(1.10); }
     button:active{ transform: translateY(1px); }
     button:focus-visible{ outline:none; box-shadow: var(--ring2); }
-    button[disabled]{ opacity:.55; cursor:not-allowed; transform:none; }
     .primary{ background:#fff; color:#000; border:none; box-shadow: 0 14px 30px rgba(255,255,255,.08); }
     .mini{ padding:10px 12px; border-radius:12px; font-size:12px; font-weight:900; }
 
-    /* controles de qualidade */
-    .opts{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      border:1px solid var(--stroke);
-      background: rgba(255,255,255,.02);
-      border-radius:16px;
-      padding:10px 12px;
-      box-shadow: 0 12px 28px rgba(0,0,0,.25);
-    }
-    .opt{
-      display:flex; align-items:center; gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.02);
-    }
-    .opt label{
-      font-size:12px;
-      font-weight:900;
-      color: rgba(255,255,255,.78);
-      user-select:none;
-      white-space:nowrap;
-    }
-    select{
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
-      color: rgba(255,255,255,.90);
-      font-weight:900;
-      border-radius:12px;
-      padding:8px 10px;
-      outline:none;
-      cursor:pointer;
-    }
-    select:focus-visible{ box-shadow: var(--ring2); }
-    .smallNote{
-      color: rgba(255,255,255,.55);
-      font-weight:850;
-      font-size:12px;
-      margin-left:auto;
-      white-space:nowrap;
-    }
-    @media(max-width:860px){
-      .smallNote{ width:100%; margin-left:0; }
-    }
-
     .split{
       display:grid;
-      grid-template-columns: 1.25fr .75fr;
+      grid-template-columns: 1.35fr .65fr;
       gap:12px;
       margin-top:14px;
     }
-    @media(max-width:860px){ .split{grid-template-columns:1fr} }
+    @media(max-width:980px){ .split{grid-template-columns:1fr} }
 
     .box{
       border:1px solid var(--stroke);
@@ -286,7 +233,7 @@
     .boxBody{padding:12px;}
 
     /* Chat */
-    .chat{display:flex; flex-direction:column; gap:10px; max-height:52vh; overflow:auto; padding-right:4px;}
+    .chat{display:flex; flex-direction:column; gap:10px; max-height:56vh; overflow:auto; padding-right:4px;}
     .bubble{
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.02);
@@ -376,19 +323,19 @@
     }
     .item a:hover{ text-decoration: underline; }
 
-    .history{
+    .sideCard{
       border:1px solid var(--stroke);
       background: rgba(255,255,255,.02);
       border-radius: 18px;
       overflow:hidden;
     }
-    .historyHead{
+    .sideHead{
       padding:12px;
       border-bottom:1px solid var(--stroke);
       display:flex; align-items:center; justify-content:space-between; gap:10px;
       background: rgba(255,255,255,.03);
     }
-    .historyHead h3{
+    .sideHead h3{
       margin:0;
       font-size:12px;
       font-weight:950;
@@ -396,7 +343,27 @@
       letter-spacing:.25px;
       text-transform: uppercase;
     }
-    .historyList{display:flex; flex-direction:column; gap:8px; padding:12px;}
+    .sideBody{padding:12px; display:flex; flex-direction:column; gap:10px;}
+    .pillNote{
+      display:flex; gap:8px; align-items:flex-start;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      padding:10px;
+      background: rgba(255,255,255,.02);
+    }
+    .badge{
+      width:28px;height:28px;border-radius:10px;
+      display:grid;place-items:center;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      font-weight:950;
+      user-select:none;
+      flex:0 0 auto;
+    }
+    .pillNote b{display:block; font-size:12px}
+    .pillNote span{display:block; margin-top:3px; color: rgba(255,255,255,.70); font-weight:780; font-size:12.6px; line-height:1.45;}
+
+    .historyList{display:flex; flex-direction:column; gap:8px;}
     .hItem{
       display:flex; gap:10px; align-items:flex-start; justify-content:space-between;
       border:1px solid rgba(255,255,255,.08);
@@ -434,7 +401,7 @@
       bottom:18px;
       transform: translateX(-50%);
       max-width: 92vw;
-      width: 520px;
+      width: 560px;
       background: rgba(20,20,22,.82);
       border: 1px solid var(--stroke);
       border-radius: 16px;
@@ -478,8 +445,33 @@
       user-select:none;
     }
 
-    footer{text-align:center; color: var(--muted2); font-weight:800; font-size:12px; padding:18px 10px 30px;}
-    @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
+    footer{
+      text-align:center;
+      color: var(--muted2);
+      font-weight:800;
+      font-size:12px;
+      padding:18px 10px 30px;
+    }
+
+    /* Subtle “alive” pulse while working */
+    .pulseDot{
+      display:inline-block;
+      width:7px;height:7px;border-radius:99px;
+      background: rgba(255,255,255,.70);
+      box-shadow: 0 0 0 0 rgba(255,255,255,.25);
+      animation: pulse 1.2s infinite;
+      vertical-align:middle;
+      margin-left:8px;
+    }
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(255,255,255,.22); opacity:.9 }
+      70%{ box-shadow: 0 0 0 10px rgba(255,255,255,0); opacity:.6 }
+      100%{ box-shadow: 0 0 0 0 rgba(255,255,255,0); opacity:.9 }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
+    }
   </style>
 </head>
 
@@ -487,15 +479,14 @@
   <header>
     <div class="top">
       <div class="brand">
-        <div class="logo">PI</div>
+        <div class="logo">PB</div>
         <div class="brandText">
           <h1>Pesquisa Oficial • Brasil</h1>
-          <p>MS/ANVISA (gov.br) • COFEN • COREN-SP • OPAS/PAHO • OMS/WHO</p>
+          <p>MS • ANVISA • COFEN/COREN • OPAS/OMS — com referências</p>
         </div>
       </div>
       <div class="right">
         <span class="kbd">Ctrl K</span>
-        <div class="pill" id="verPill">Modo IA</div>
       </div>
     </div>
   </header>
@@ -503,10 +494,10 @@
   <main>
     <section class="card" aria-label="Pesquisa">
       <div class="cardHead">
-        <h2 class="title">Pergunte e receba uma resposta com fontes oficiais</h2>
+        <h2 class="title">Consulta com referências institucionais</h2>
         <p class="sub">
-          A resposta é organizada em linguagem técnico-científica e lista as <b>fontes oficiais</b> utilizadas.
-          Use <b>Baixar PDF</b> para gerar um relatório (Imprimir → Salvar como PDF).
+          Digite sua pergunta e receba um texto estruturado com <b>fontes oficiais</b> ao final.
+          Você pode <b>Baixar PDF</b> (Imprimir → Salvar como PDF).
         </p>
       </div>
 
@@ -514,45 +505,21 @@
         <div class="searchWrap">
           <div class="search" role="search">
             <div class="icon" aria-hidden="true">⌕</div>
-            <input id="q" type="text" autocomplete="off"
-              placeholder="Ex.: Quais condutas de enfermagem na administração segura de medicamentos?"
-              aria-label="Digite sua pergunta" />
-          </div>
-
-          <!-- NOVO: controles de “resposta grande” -->
-          <div class="opts" aria-label="Configurações da resposta">
-            <div class="opt">
-              <label for="detailSel">Detalhamento</label>
-              <select id="detailSel" aria-label="Nível de detalhamento">
-                <option value="standard">Padrão</option>
-                <option value="full" selected>Completa</option>
-                <option value="max">Máxima</option>
-              </select>
-            </div>
-
-            <div class="opt">
-              <label for="refsSel">Fontes no texto</label>
-              <select id="refsSel" aria-label="Modo de referências">
-                <option value="end" selected>Ao final</option>
-                <option value="inline">No corpo + final</option>
-              </select>
-            </div>
-
-            <div class="smallNote" id="lenNote">Pronto para respostas longas.</div>
+            <textarea id="q" autocomplete="off"
+              placeholder="Ex.: Técnica e cuidados de enfermagem na administração intramuscular em adulto (inclua riscos e registros)."
+              aria-label="Digite sua pergunta"></textarea>
           </div>
 
           <div class="chips" aria-label="Sugestões">
-            <button class="chip" type="button" data-q="O que é SAE e quais são as etapas do Processo de Enfermagem?">SAE / Processo</button>
-            <button class="chip" type="button" data-q="Quais medidas de segurança do paciente são recomendadas na assistência hospitalar?">Segurança do paciente</button>
-            <button class="chip" type="button" data-q="Como registrar e documentar cuidados de enfermagem de forma adequada (aspectos ético-legais)?">Registros</button>
-            <button class="chip" type="button" data-q="Quais condutas de enfermagem na administração segura de medicamentos e prevenção de erros?">Medicamentos</button>
+            <button class="chip" type="button" data-q="Como registrar e documentar cuidados de enfermagem (SAE/Processo) de forma adequada?">Registros</button>
+            <button class="chip" type="button" data-q="Quais práticas de segurança do paciente reduzem eventos adversos na administração de medicamentos?">Medicação segura</button>
+            <button class="chip" type="button" data-q="Administração intramuscular em adulto: critérios, cuidados, riscos e documentação em enfermagem.">Intramuscular</button>
+            <button class="chip" type="button" data-q="Quais medidas gerais de prevenção de infecções relacionadas à assistência (precauções padrão) e implicações para enfermagem?">Prevenção IRAS</button>
           </div>
 
           <div class="row">
             <button id="btnAsk" class="primary" type="button">Pesquisar</button>
-            <button id="btnStop" type="button" title="Cancelar requisição em andamento" disabled>Parar</button>
-            <button id="btnCopy" type="button">Copiar resposta</button>
-            <button id="btnCopyAll" type="button">Copiar com fontes</button>
+            <button id="btnCopy" type="button">Copiar</button>
             <button id="btnPdf" type="button">Baixar PDF</button>
             <button id="btnShare" type="button">Compartilhar</button>
             <button id="btnClear" type="button">Limpar</button>
@@ -562,9 +529,9 @@
         <div class="split">
           <div class="box">
             <div class="boxHead">
-              <h3>Resposta</h3>
+              <h3>Resultado</h3>
               <div class="row" style="gap:8px">
-                <button id="btnRetry" class="mini" type="button" title="Repetir busca">Repetir</button>
+                <button id="btnRetry" class="mini" type="button" title="Repetir consulta">Repetir</button>
               </div>
             </div>
 
@@ -572,10 +539,10 @@
               <div id="chatBox" class="chat" aria-label="Conversa">
                 <div class="bubble assistant">
                   <div class="bHead">
-                    <span class="role">Assistente</span>
+                    <span class="role">Painel</span>
                     <span class="stamp" id="helloStamp"></span>
                   </div>
-                  Digite uma pergunta e clique em <b>Pesquisar</b>.
+                  Escreva uma pergunta e clique em <b>Pesquisar</b>. O resultado virá estruturado e com referências.
                 </div>
               </div>
 
@@ -588,29 +555,47 @@
 
             <details id="sourcesDetails">
               <summary>
-                Fontes utilizadas
+                Referências consultadas
                 <span class="caret" aria-hidden="true"></span>
               </summary>
               <div id="webList" class="list"></div>
             </details>
           </div>
 
-          <div>
-            <div class="history" aria-label="Histórico">
-              <div class="historyHead">
-                <h3>Histórico</h3>
-                <button id="btnClearHist" class="mini" type="button">Limpar</button>
+          <div class="sideCard" aria-label="Painel lateral">
+            <div class="sideHead">
+              <h3>Atalhos</h3>
+              <button id="btnClearHist" class="mini" type="button">Limpar</button>
+            </div>
+            <div class="sideBody">
+              <div class="pillNote">
+                <div class="badge">✓</div>
+                <div>
+                  <b>Para respostas melhores</b>
+                  <span>Inclua população, via/conduta, cenário e objetivo (ex.: “adulto”, “IM”, “atenção primária”, “registro”).</span>
+                </div>
+              </div>
+
+              <div class="pillNote">
+                <div class="badge">↵</div>
+                <div>
+                  <b>Atalhos</b>
+                  <span><b>Enter</b> envia • <b>Shift+Enter</b> quebra linha • <b>Ctrl+K</b> foca no campo.</span>
+                </div>
+              </div>
+
+              <div class="pillNote">
+                <div class="badge">⎙</div>
+                <div>
+                  <b>Relatório em PDF</b>
+                  <span>“Baixar PDF” abre um relatório pronto para impressão/salvar como PDF (com referências).</span>
+                </div>
+              </div>
+
+              <div style="margin-top:4px; font-weight:950; font-size:12px; color:rgba(255,255,255,.72); letter-spacing:.25px; text-transform:uppercase;">
+                Histórico
               </div>
               <div id="historyList" class="historyList"></div>
-            </div>
-
-            <div style="margin-top:12px; padding:12px; border:1px solid var(--stroke); border-radius:18px; background:rgba(255,255,255,.02)">
-              <div style="font-weight:950; font-size:12px; color:rgba(255,255,255,.72); letter-spacing:.25px; text-transform:uppercase">
-                Dica rápida
-              </div>
-              <div style="margin-top:10px; color:rgba(255,255,255,.70); font-weight:800; font-size:12.8px; line-height:1.55">
-                Para respostas mais fortes, inclua: população, cenário, intervenção/conduta, objetivo (ex.: “em UTI adulto”, “na APS”, “em gestantes”, “em pós-operatório”).
-              </div>
             </div>
           </div>
         </div>
@@ -628,23 +613,29 @@
 
 <script>
   // ============================
-  // CONFIG
+  // CONFIG (mantido simples)
   // ============================
   const PROJECT_REF = "owpswekkfaleauwjmahc";
   const FUNCTION_URL = `https://${PROJECT_REF}.supabase.co/functions/v1/ask`;
 
-  // Se sua Function exigir autorização, use a ANON key do Supabase (pública) aqui.
-  // const SUPABASE_ANON_KEY = "COLE_SUA_ANON_KEY_SE_PRECISAR";
-  // const AUTH_HEADERS = SUPABASE_ANON_KEY ? { "Authorization": `Bearer ${SUPABASE_ANON_KEY}` } : {};
+  // IMPORTANTE: nunca coloque chave secreta aqui.
+  // Se precisar Authorization, use ANON key do Supabase (pública) e só se sua function exigir.
   const AUTH_HEADERS = {};
 
-  // Instruções do lado do cliente (enviadas como contexto; o backend pode ignorar sem quebrar)
+  // Pedimos resposta completa sem “mostrar IA”
+  const DEFAULT_DETAIL_LEVEL = "max";          // standard | full | max
+  const DEFAULT_REFERENCES_MODE = "end";       // end | inline
+
+  // Instruções de estilo para o backend (não aparece na tela)
   const SYSTEM_INSTRUCTIONS = `
-Você é um assistente técnico-científico em enfermagem e saúde pública.
-Responda em português do Brasil, com linguagem formal científica, estruturada, aprofundada e aplicável à prática clínica.
-Priorize órgãos e organizações oficiais: Ministério da Saúde e ANVISA (gov.br), COFEN/COREN, OPAS/PAHO e OMS/WHO.
-Se a evidência não sustentar uma afirmação, declare a limitação. Não invente portarias, resoluções ou números.
-Entregue uma resposta completa, com recomendações práticas e seção de referências oficiais.
+Você deve responder em português (Brasil), com linguagem formal técnico-científica, estruturada e aplicada à prática.
+Se a pergunta for sobre procedimentos (ex.: administração de medicamentos), responda de forma operacional:
+- resposta direta;
+- recomendações;
+- checklist passo a passo;
+- riscos/alertas e segurança do paciente;
+- documentação e registros (SAE/Processo).
+Liste referências institucionais ao final. Não invente normas/datas/números: se faltar evidência, explicite.
 `.trim();
 
   // ============================
@@ -655,32 +646,22 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
   const qEl = el("q");
   const chatBox = el("chatBox");
   const webList = el("webList");
-  const verPill = el("verPill");
   const metaLine = el("metaLine");
   const metaTime = el("metaTime");
   const metaSources = el("metaSources");
   const sourcesDetails = el("sourcesDetails");
-  const lenNote = el("lenNote");
-
-  const detailSel = el("detailSel");
-  const refsSel = el("refsSel");
-
-  const btnAsk = el("btnAsk");
-  const btnStop = el("btnStop");
 
   const toast = el("toast");
   const toastText = el("toastText");
   const toastSub = el("toastSub");
   const toastBtn = el("toastBtn");
-
   const historyList = el("historyList");
 
   let lastPayload = null;
   let lastQuestion = "";
   let toastTimer = null;
-  let inFlight = null; // AbortController
 
-  const HISTORY_KEY = "pi_history_v4";
+  const HISTORY_KEY = "pb_history_v1";
   const HISTORY_MAX = 12;
 
   function escapeHtml(str){
@@ -688,11 +669,17 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
       '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
     }[m]));
   }
+
   function nowStamp(){
     const d = new Date();
     const hh = String(d.getHours()).padStart(2,"0");
     const mm = String(d.getMinutes()).padStart(2,"0");
     return `${hh}:${mm}`;
+  }
+
+  function autosizeTextarea(){
+    qEl.style.height = "auto";
+    qEl.style.height = Math.min(qEl.scrollHeight, 160) + "px";
   }
 
   function showToast(title, sub=""){
@@ -718,14 +705,14 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
     if(!Array.isArray(items) || items.length === 0){
       webList.innerHTML = `
         <div class="item">
-          <strong>Sem fontes retornadas</strong>
-          <div class="t">Tente reformular a pergunta com termos mais específicos (população, cenário, conduta, objetivo).</div>
+          <strong>Sem referências retornadas</strong>
+          <div class="t">Tente detalhar a pergunta (população, via/conduta, cenário e objetivo).</div>
         </div>`;
       return;
     }
     items.forEach((it) => {
       const title = escapeHtml(it?.title || it?.name || "Referência");
-      const org = escapeHtml(it?.org || it?.source || it?.publisher || "Fonte oficial");
+      const org = escapeHtml(it?.org || it?.source || it?.publisher || "Fonte institucional");
       const url = escapeHtml(it?.url || it?.link || "#");
       webList.insertAdjacentHTML("beforeend", `
         <div class="item">
@@ -740,11 +727,8 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
   function setMeta(norm){
     const now = new Date();
     metaTime.textContent = `Atualizado: ${now.toLocaleString("pt-BR")}${norm.cached ? " • cache" : ""}`;
-    metaSources.textContent = `${(norm.sources?.length ?? 0)} fonte(s) listada(s)`;
+    metaSources.textContent = `${(norm.sources?.length ?? 0)} referência(s) listada(s)`;
     metaLine.style.display = "flex";
-
-    const answerLen = (norm.answer || "").length;
-    lenNote.textContent = answerLen ? `Resposta: ${answerLen.toLocaleString("pt-BR")} caracteres.` : "Pronto para respostas longas.";
   }
 
   function addBubble(role, text, opts={}){
@@ -755,10 +739,10 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
     div.className = `bubble ${role}`;
     div.innerHTML = `
       <div class="bHead">
-        <span class="role">${role === "user" ? "Usuário" : "Assistente"}</span>
+        <span class="role">${role === "user" ? "Pergunta" : "Resultado"}</span>
         <span class="stamp">${escapeHtml(stamp)}</span>
       </div>
-      <div class="${opts.typing ? "typing" : ""}">${safe}</div>
+      <div class="${opts.typing ? "typing" : ""}">${safe}${opts.typing ? '<span class="pulseDot" aria-hidden="true"></span>' : ''}</div>
     `;
     chatBox.appendChild(div);
     chatBox.scrollTop = chatBox.scrollHeight;
@@ -791,7 +775,7 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
     if(!arr.length){
       historyList.innerHTML = `
         <div style="color:rgba(255,255,255,.55); font-weight:850; font-size:12.8px; line-height:1.55">
-          Sem histórico ainda. Faça uma pergunta para salvar aqui.
+          Sem histórico ainda.
         </div>`;
       return;
     }
@@ -811,11 +795,12 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
 
     [...historyList.querySelectorAll(".hItem")].forEach((node, idx) => {
       const q = arr[idx].q;
-      node.addEventListener("click", () => { qEl.value = q; ask(); });
+      node.addEventListener("click", () => { qEl.value = q; autosizeTextarea(); ask(); });
       node.addEventListener("keydown", (e) => {
         if(e.key === "Enter" || e.key === " "){
           e.preventDefault();
           qEl.value = q;
+          autosizeTextarea();
           ask();
         }
       });
@@ -827,32 +812,18 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
     if(!bubbles.length) return "";
     const last = bubbles[bubbles.length - 1];
     const inner = last.querySelector("div:last-child");
-    return inner ? inner.innerText.trim() : "";
-  }
-
-  function buildRefsText(payload){
-    const norm = normalizePayload(payload || {});
-    const refs = Array.isArray(norm.sources) ? norm.sources : [];
-    if(!refs.length) return "";
-    const lines = refs.map((r, i) => {
-      const org = r?.org || r?.source || r?.publisher || "Fonte oficial";
-      const title = r?.title || r?.name || "Referência";
-      const url = r?.url || r?.link || "";
-      return `${i+1}. ${org} — ${title}\n${url}`.trim();
-    });
-    return lines.join("\n\n");
+    return inner ? inner.innerText.replace(/\s+$/,"").trim() : "";
   }
 
   function buildReportHtml(){
     const q = (qEl.value || "").trim();
     const when = new Date().toLocaleString("pt-BR");
     const norm = normalizePayload(lastPayload || {});
-    const version = norm?.version ? String(norm.version) : "";
     const answer = norm?.answer ? String(norm.answer) : "";
     const refs = norm?.sources || [];
 
     const refsHtml = (Array.isArray(refs) ? refs : []).map(r => {
-      const org = escapeHtml(r?.org || r?.source || r?.publisher || "Fonte oficial");
+      const org = escapeHtml(r?.org || r?.source || r?.publisher || "Fonte institucional");
       const url = escapeHtml(r?.url || r?.link || "");
       const title = escapeHtml(r?.title || r?.name || "");
       return `<li><b>${org}</b><br>${title}<br><span style="word-break:break-word">${url}</span></li>`;
@@ -863,7 +834,7 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
       <head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width,initial-scale=1"/>
-        <title>Relatório • Projeto Integrador</title>
+        <title>Relatório • Pesquisa Oficial</title>
         <style>
           body{font-family:Arial, sans-serif; padding:24px; color:#111}
           h1{margin:0 0 6px; font-size:18px}
@@ -875,18 +846,18 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
         </style>
       </head>
       <body>
-        <h1>Relatório de Pesquisa • Projeto Integrador</h1>
-        <p class="muted">Gerado em: ${escapeHtml(when)} ${version ? " • Versão: " + escapeHtml(version) : ""}</p>
+        <h1>Relatório de Pesquisa • Brasil</h1>
+        <p class="muted">Gerado em: ${escapeHtml(when)}</p>
 
         <div class="box"><b>Pergunta</b><pre>${escapeHtml(q)}</pre></div>
-        <div class="box"><b>Resposta</b><pre>${escapeHtml(answer)}</pre></div>
+        <div class="box"><b>Resultado</b><pre>${escapeHtml(answer)}</pre></div>
 
         <div class="box">
-          <b>Fontes utilizadas (oficiais)</b>
-          <ul>${refsHtml || "<li>Sem fontes.</li>"}</ul>
+          <b>Referências consultadas</b>
+          <ul>${refsHtml || "<li>Sem referências retornadas.</li>"}</ul>
         </div>
 
-        <p class="muted" style="margin-top:18px">Observação: verifique data/versão e escopo das publicações oficiais.</p>
+        <p class="muted" style="margin-top:18px">Observação: confira escopo/atualização das publicações nas páginas oficiais.</p>
 
         <script>setTimeout(() => window.print(), 350);<\/script>
       </body>
@@ -894,52 +865,22 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
     `;
   }
 
-  function setBusy(isBusy){
-    btnAsk.disabled = isBusy;
-    btnStop.disabled = !isBusy;
-    qEl.disabled = isBusy;
-    detailSel.disabled = isBusy;
-    refsSel.disabled = isBusy;
-  }
-
-  function mapDetailToHints(detail){
-    // Esses “hints” podem ser ignorados pelo backend sem quebrar.
-    // Se o backend suportar, você já tem o controle pronto no front.
-    if(detail === "max") return { maxOutputTokensHint: 2400, depth: "max", sections: "extended" };
-    if(detail === "full") return { maxOutputTokensHint: 1800, depth: "full", sections: "standard" };
-    return { maxOutputTokensHint: 1100, depth: "standard", sections: "standard" };
-  }
-
   async function ask(){
     const q = (qEl.value || "").trim();
     if(!q){
-      showToast("Digite uma pergunta", "Ex.: “Quais condutas de enfermagem…?”");
+      showToast("Digite uma pergunta", "Ex.: “Administração intramuscular em adulto…”");
       qEl.focus();
       return;
-    }
-
-    // aborta requisição anterior se existir
-    if(inFlight){
-      try{ inFlight.abort(); }catch{}
-      inFlight = null;
     }
 
     lastQuestion = q;
 
     addBubble("user", q);
-    const typingBubble = addBubble("assistant", "Consultando fontes oficiais e elaborando resposta completa…", { typing:true });
+    const typingBubble = addBubble("assistant", "Consultando e organizando o conteúdo…", { typing:true });
 
     renderWeb([]);
-    sourcesDetails.open = true;
+    sourcesDetails.open = false;
     metaLine.style.display = "none";
-    setBusy(true);
-
-    const controller = new AbortController();
-    inFlight = controller;
-
-    const detail = detailSel.value || "full";
-    const refsMode = refsSel.value || "end";
-    const hints = mapDetailToHints(detail);
 
     try{
       const res = await fetch(FUNCTION_URL, {
@@ -947,20 +888,12 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
         headers: { "Content-Type": "application/json", ...AUTH_HEADERS },
         body: JSON.stringify({
           question: q,
-
-          // compatível mesmo se o backend ignorar
           system: SYSTEM_INSTRUCTIONS,
-          locale: "pt-BR",
-
-          // NOVO: “hints” para respostas grandes
-          detailLevel: detail,             // standard | full | max
-          referencesMode: refsMode,        // end | inline
-          maxOutputTokensHint: hints.maxOutputTokensHint,
-          depth: hints.depth,
-          sections: hints.sections,
+          detailLevel: DEFAULT_DETAIL_LEVEL,
+          referencesMode: DEFAULT_REFERENCES_MODE,
+          locale: "pt-BR"
         }),
         cache: "no-store",
-        signal: controller.signal,
       });
 
       if(!res.ok){
@@ -972,44 +905,28 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
       lastPayload = data;
 
       const norm = normalizePayload(data);
-      verPill.textContent = norm.version ? `Modo IA • ${norm.version}` : "Modo IA";
 
       replaceBubbleText(typingBubble, norm.answer || "Consulta concluída.");
       renderWeb(norm.sources);
       setMeta(norm);
 
+      // abre referências automaticamente só se vierem 0 (para mostrar o “por quê”)
+      if((norm.sources?.length ?? 0) === 0){
+        sourcesDetails.open = true;
+      }
+
       saveHistory(q);
-      showToast("Busca concluída", "Resposta e fontes atualizadas.");
+      showToast("Concluído", "Resultado atualizado.");
     }catch(err){
-      const msg = (err?.name === "AbortError")
-        ? "Requisição cancelada."
-        : String(err?.message || err);
-
-      replaceBubbleText(
-        typingBubble,
-        err?.name === "AbortError"
-          ? "Requisição cancelada."
-          : "Não foi possível obter a resposta. Veja detalhes em “Fontes utilizadas”."
-      );
-
+      const msg = String(err?.message || err);
+      replaceBubbleText(typingBubble, "Não foi possível concluir a consulta. Abra “Referências consultadas” para ver detalhes.");
       webList.innerHTML = `
         <div class="item">
-          <strong>${err?.name === "AbortError" ? "Cancelado" : "Falha na consulta"}</strong>
+          <strong>Falha na consulta</strong>
           <div class="t">${escapeHtml(msg)}</div>
         </div>`;
-      showToast(err?.name === "AbortError" ? "Cancelado" : "Erro", "Veja a mensagem em ‘Fontes utilizadas’.");
-    }finally{
-      if(inFlight === controller) inFlight = null;
-      setBusy(false);
-    }
-  }
-
-  function stop(){
-    if(inFlight){
-      try{ inFlight.abort(); }catch{}
-      inFlight = null;
-      showToast("Parando…", "Cancelando requisição em andamento.");
-      setBusy(false);
+      sourcesDetails.open = true;
+      showToast("Erro", "Confira as referências/detalhes.");
     }
   }
 
@@ -1021,26 +938,7 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
     }
     try{
       await navigator.clipboard.writeText(text);
-      showToast("Copiado ✅", "Última resposta copiada.");
-    }catch{
-      showToast("Não foi possível copiar", "Seu navegador bloqueou a área de transferência.");
-    }
-  }
-
-  async function copyAnswerWithSources(){
-    const ans = getLastAssistantText();
-    if(!ans){
-      showToast("Nada para copiar", "Faça uma pesquisa primeiro.");
-      return;
-    }
-    const refs = buildRefsText(lastPayload);
-    const pack = refs
-      ? `${ans}\n\nReferências (fontes oficiais)\n\n${refs}`
-      : ans;
-
-    try{
-      await navigator.clipboard.writeText(pack);
-      showToast("Copiado ✅", refs ? "Resposta + fontes copiadas." : "Resposta copiada.");
+      showToast("Copiado ✅", "Último resultado copiado.");
     }catch{
       showToast("Não foi possível copiar", "Seu navegador bloqueou a área de transferência.");
     }
@@ -1048,7 +946,7 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
 
   function downloadPdf(){
     if(!lastPayload){
-      showToast("Faça uma pesquisa antes", "Depois gere o relatório em PDF.");
+      showToast("Faça uma pesquisa antes", "Depois gere o PDF.");
       return;
     }
     const html = buildReportHtml();
@@ -1069,40 +967,39 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
     }
   }
 
-  el("btnAsk").addEventListener("click", ask);
-  el("btnStop").addEventListener("click", stop);
-
-  el("btnRetry").addEventListener("click", () => {
-    if(lastQuestion){ qEl.value = lastQuestion; ask(); }
-    else showToast("Nada para repetir", "Faça uma pesquisa primeiro.");
-  });
-  el("btnPdf").addEventListener("click", downloadPdf);
-  el("btnShare").addEventListener("click", share);
-  el("btnCopy").addEventListener("click", copyAnswer);
-  el("btnCopyAll").addEventListener("click", copyAnswerWithSources);
-
-  el("btnClear").addEventListener("click", () => {
-    stop();
+  function clearAll(){
     qEl.value = "";
+    autosizeTextarea();
     chatBox.innerHTML = `
       <div class="bubble assistant">
         <div class="bHead">
-          <span class="role">Assistente</span>
+          <span class="role">Painel</span>
           <span class="stamp">${escapeHtml(nowStamp())}</span>
         </div>
-        Digite uma pergunta e clique em <b>Pesquisar</b>.
+        Escreva uma pergunta e clique em <b>Pesquisar</b>. O resultado virá estruturado e com referências.
       </div>
     `;
     webList.innerHTML = "";
     lastPayload = null;
     lastQuestion = "";
-    verPill.textContent = "Modo IA";
     metaLine.style.display = "none";
     sourcesDetails.open = false;
-    lenNote.textContent = "Pronto para respostas longas.";
     showToast("Limpo", "Campo e resultados zerados.");
     qEl.focus();
+  }
+
+  // ============================
+  // Events
+  // ============================
+  el("btnAsk").addEventListener("click", ask);
+  el("btnRetry").addEventListener("click", () => {
+    if(lastQuestion){ qEl.value = lastQuestion; autosizeTextarea(); ask(); }
+    else showToast("Nada para repetir", "Faça uma pesquisa primeiro.");
   });
+  el("btnPdf").addEventListener("click", downloadPdf);
+  el("btnShare").addEventListener("click", share);
+  el("btnCopy").addEventListener("click", copyAnswer);
+  el("btnClear").addEventListener("click", clearAll);
 
   el("btnClearHist").addEventListener("click", () => {
     localStorage.removeItem(HISTORY_KEY);
@@ -1113,32 +1010,38 @@ Entregue uma resposta completa, com recomendações práticas e seção de refer
   document.querySelectorAll(".chip").forEach(btn => {
     btn.addEventListener("click", () => {
       qEl.value = btn.getAttribute("data-q") || "";
+      autosizeTextarea();
       ask();
     });
   });
 
+  // Enter envia; Shift+Enter quebra linha
   qEl.addEventListener("keydown", (e) => {
-    if(e.key === "Enter"){ e.preventDefault(); ask(); }
-    if(e.key === "Escape"){ stop(); }
+    if(e.key === "Enter" && !e.shiftKey){
+      e.preventDefault();
+      ask();
+    }
   });
+  qEl.addEventListener("input", autosizeTextarea);
 
+  // Ctrl+K foca
   window.addEventListener("keydown", (e) => {
     if((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === "k")){
       e.preventDefault();
       qEl.focus();
     }
-    if(e.key === "Escape"){ stop(); }
   });
 
   (function init(){
-    const helloStamp = el("helloStamp");
-    if(helloStamp) helloStamp.textContent = nowStamp();
-
+    el("helloStamp").textContent = nowStamp();
     renderHistory();
+    autosizeTextarea();
+
     const u = new URL(window.location.href);
     const q = u.searchParams.get("q");
     if(q){
       qEl.value = q;
+      autosizeTextarea();
       setTimeout(ask, 120);
     }else{
       qEl.focus();
