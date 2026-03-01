@@ -19,9 +19,10 @@
       --ring: 0 0 0 4px rgba(255,255,255,.10);
       --ring2: 0 0 0 3px rgba(255,255,255,.08);
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      --ok: rgba(120,255,180,.18);
-      --warn: rgba(255,210,120,.14);
-      --bad: rgba(255,120,120,.16);
+
+      /* tamanho texto respostas */
+      --ansFont: 14px;
+      --ansLine: 1.72;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -40,12 +41,12 @@
 
     header{
       position:sticky; top:0; z-index:60;
-      background: rgba(10,10,11,.72);
+      background: rgba(10,10,11,.78);
       backdrop-filter: blur(14px);
       border-bottom:1px solid var(--stroke);
     }
     .top{
-      max-width:1100px;
+      max-width:1200px;
       margin:0 auto;
       padding:14px;
       display:flex;
@@ -85,6 +86,17 @@
       max-width:62vw;
     }
     .right{display:flex; align-items:center; gap:10px;}
+    .pill{
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      color:rgba(255,255,255,.78);
+      font-weight:850;
+      font-size:12px;
+      white-space:nowrap;
+      user-select:none;
+    }
     .kbd{
       font-family:var(--mono);
       font-size:11px;
@@ -99,8 +111,8 @@
     @media(min-width:860px){ .kbd{display:inline-flex} }
 
     main{
-      max-width:1100px;
-      margin:18px auto 80px;
+      max-width:1200px;
+      margin:16px auto 70px;
       padding:0 14px;
     }
     .card{
@@ -151,21 +163,17 @@
       user-select:none;
       flex:0 0 auto;
     }
-    textarea{
+    input{
       width:100%;
       border:none;
       outline:none;
-      resize:none;
-      min-height:44px;
-      max-height:160px;
       background:transparent;
       color:var(--text);
       font-size:15px;
       font-weight:850;
       letter-spacing:.2px;
-      line-height:1.35;
     }
-    textarea::placeholder{ color: rgba(255,255,255,.48); font-weight:750; }
+    input::placeholder{ color: rgba(255,255,255,.48); font-weight:750; }
 
     .chips{display:flex; gap:8px; flex-wrap:wrap;}
     .chip{
@@ -201,10 +209,11 @@
     button:focus-visible{ outline:none; box-shadow: var(--ring2); }
     .primary{ background:#fff; color:#000; border:none; box-shadow: 0 14px 30px rgba(255,255,255,.08); }
     .mini{ padding:10px 12px; border-radius:12px; font-size:12px; font-weight:900; }
+    .danger{ border-color: rgba(255,255,255,.12); background: rgba(255,80,80,.08); }
 
     .split{
       display:grid;
-      grid-template-columns: 1.35fr .65fr;
+      grid-template-columns: 1.55fr .85fr; /* resposta maior */
       gap:12px;
       margin-top:14px;
     }
@@ -215,9 +224,10 @@
       background: rgba(255,255,255,.02);
       border-radius: 18px;
       overflow:hidden;
+      min-height: 62vh; /* aumenta área */
     }
     .boxHead{
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
       padding:12px;
       border-bottom:1px solid var(--stroke);
       background: rgba(255,255,255,.03);
@@ -230,10 +240,21 @@
       letter-spacing:.25px;
       text-transform: uppercase;
     }
-    .boxBody{padding:12px;}
+    .tools{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
+    .boxBody{padding:12px; padding-bottom:14px;}
 
     /* Chat */
-    .chat{display:flex; flex-direction:column; gap:10px; max-height:56vh; overflow:auto; padding-right:4px;}
+    .chat{
+      display:flex; flex-direction:column; gap:10px;
+      height: calc(62vh - 58px);
+      overflow:auto;
+      padding-right:6px;
+      scroll-behavior:smooth;
+    }
+    @media(max-width:980px){
+      .box{min-height:64vh}
+      .chat{height: calc(64vh - 58px);}
+    }
     .bubble{
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.02);
@@ -242,11 +263,11 @@
       box-shadow: 0 12px 28px rgba(0,0,0,.30);
       white-space:pre-wrap;
       word-break:break-word;
-      line-height:1.65;
+      line-height:var(--ansLine);
       font-weight:780;
-      font-size:13.2px;
+      font-size: var(--ansFont);
     }
-    .bubble.user{ margin-left:14%; background: rgba(255,255,255,.03); }
+    .bubble.user{ margin-left:18%; background: rgba(255,255,255,.03); }
     .bubble.assistant{ margin-right:10%; }
     .bHead{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px;}
     .role{font-size:11px; font-weight:950; letter-spacing:.25px; text-transform:uppercase; color: rgba(255,255,255,.72);}
@@ -323,19 +344,19 @@
     }
     .item a:hover{ text-decoration: underline; }
 
-    .sideCard{
+    .history{
       border:1px solid var(--stroke);
       background: rgba(255,255,255,.02);
       border-radius: 18px;
       overflow:hidden;
     }
-    .sideHead{
+    .historyHead{
       padding:12px;
       border-bottom:1px solid var(--stroke);
       display:flex; align-items:center; justify-content:space-between; gap:10px;
       background: rgba(255,255,255,.03);
     }
-    .sideHead h3{
+    .historyHead h3{
       margin:0;
       font-size:12px;
       font-weight:950;
@@ -343,27 +364,7 @@
       letter-spacing:.25px;
       text-transform: uppercase;
     }
-    .sideBody{padding:12px; display:flex; flex-direction:column; gap:10px;}
-    .pillNote{
-      display:flex; gap:8px; align-items:flex-start;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:14px;
-      padding:10px;
-      background: rgba(255,255,255,.02);
-    }
-    .badge{
-      width:28px;height:28px;border-radius:10px;
-      display:grid;place-items:center;
-      background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.10);
-      font-weight:950;
-      user-select:none;
-      flex:0 0 auto;
-    }
-    .pillNote b{display:block; font-size:12px}
-    .pillNote span{display:block; margin-top:3px; color: rgba(255,255,255,.70); font-weight:780; font-size:12.6px; line-height:1.45;}
-
-    .historyList{display:flex; flex-direction:column; gap:8px;}
+    .historyList{display:flex; flex-direction:column; gap:8px; padding:12px;}
     .hItem{
       display:flex; gap:10px; align-items:flex-start; justify-content:space-between;
       border:1px solid rgba(255,255,255,.08);
@@ -393,6 +394,28 @@
       font-family: var(--mono);
       flex:0 0 auto;
       margin-left:8px;
+    }
+
+    .panel{
+      margin-top:12px;
+      padding:12px;
+      border:1px solid var(--stroke);
+      border-radius:18px;
+      background:rgba(255,255,255,.02)
+    }
+    .panel .cap{
+      font-weight:950;
+      font-size:12px;
+      color:rgba(255,255,255,.72);
+      letter-spacing:.25px;
+      text-transform:uppercase
+    }
+    .panel .txt{
+      margin-top:10px;
+      color:rgba(255,255,255,.70);
+      font-weight:800;
+      font-size:12.8px;
+      line-height:1.55
     }
 
     .toast{
@@ -445,33 +468,46 @@
       user-select:none;
     }
 
-    footer{
-      text-align:center;
-      color: var(--muted2);
-      font-weight:800;
-      font-size:12px;
-      padding:18px 10px 30px;
+    /* Fullscreen modal (só resposta) */
+    .modal{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.62);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:14px;
+      z-index:200;
+    }
+    .modal.show{display:flex;}
+    .modalCard{
+      width:min(1100px, 96vw);
+      height:min(84vh, 96vh);
+      border:1px solid var(--stroke);
+      background: rgba(12,12,14,.92);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+    .modalHead{
+      padding:12px;
+      border-bottom:1px solid var(--stroke);
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+      background: rgba(255,255,255,.03);
+    }
+    .modalHead strong{font-size:12px; letter-spacing:.25px; text-transform:uppercase; color: rgba(255,255,255,.72);}
+    .modalBody{
+      padding:12px;
+      overflow:auto;
+      white-space:pre-wrap;
+      font-size: calc(var(--ansFont) + 1px);
+      line-height: var(--ansLine);
+      font-weight: 800;
     }
 
-    /* Subtle “alive” pulse while working */
-    .pulseDot{
-      display:inline-block;
-      width:7px;height:7px;border-radius:99px;
-      background: rgba(255,255,255,.70);
-      box-shadow: 0 0 0 0 rgba(255,255,255,.25);
-      animation: pulse 1.2s infinite;
-      vertical-align:middle;
-      margin-left:8px;
-    }
-    @keyframes pulse{
-      0%{ box-shadow: 0 0 0 0 rgba(255,255,255,.22); opacity:.9 }
-      70%{ box-shadow: 0 0 0 10px rgba(255,255,255,0); opacity:.6 }
-      100%{ box-shadow: 0 0 0 0 rgba(255,255,255,0); opacity:.9 }
-    }
-
-    @media (prefers-reduced-motion: reduce){
-      *{ animation:none !important; transition:none !important; }
-    }
+    footer{text-align:center; color: var(--muted2); font-weight:800; font-size:12px; padding:18px 10px 30px;}
+    @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
   </style>
 </head>
 
@@ -479,14 +515,15 @@
   <header>
     <div class="top">
       <div class="brand">
-        <div class="logo">PB</div>
+        <div class="logo">PI</div>
         <div class="brandText">
           <h1>Pesquisa Oficial • Brasil</h1>
-          <p>MS • ANVISA • COFEN/COREN • OPAS/OMS — com referências</p>
+          <p>MS/ANVISA • BVS-MS • COFEN/COREN-SP • OPAS/OMS • Fiocruz • INCA • EBSERH</p>
         </div>
       </div>
       <div class="right">
         <span class="kbd">Ctrl K</span>
+        <div class="pill" id="statusPill">Pronto</div>
       </div>
     </div>
   </header>
@@ -494,10 +531,10 @@
   <main>
     <section class="card" aria-label="Pesquisa">
       <div class="cardHead">
-        <h2 class="title">Consulta com referências institucionais</h2>
+        <h2 class="title">Pergunte e obtenha resposta com referências institucionais</h2>
         <p class="sub">
-          Digite sua pergunta e receba um texto estruturado com <b>fontes oficiais</b> ao final.
-          Você pode <b>Baixar PDF</b> (Imprimir → Salvar como PDF).
+          O resultado é estruturado para prática e estudo, com checklist e referências.
+          Use <b>Baixar PDF</b> para gerar relatório (Imprimir → Salvar como PDF).
         </p>
       </div>
 
@@ -505,23 +542,23 @@
         <div class="searchWrap">
           <div class="search" role="search">
             <div class="icon" aria-hidden="true">⌕</div>
-            <textarea id="q" autocomplete="off"
-              placeholder="Ex.: Técnica e cuidados de enfermagem na administração intramuscular em adulto (inclua riscos e registros)."
-              aria-label="Digite sua pergunta"></textarea>
+            <input id="q" type="text" autocomplete="off"
+              placeholder="Ex.: Qual agulha é indicada para aplicação intramuscular em adulto?"
+              aria-label="Digite sua pergunta" />
           </div>
 
           <div class="chips" aria-label="Sugestões">
-            <button class="chip" type="button" data-q="Como registrar e documentar cuidados de enfermagem (SAE/Processo) de forma adequada?">Registros</button>
-            <button class="chip" type="button" data-q="Quais práticas de segurança do paciente reduzem eventos adversos na administração de medicamentos?">Medicação segura</button>
-            <button class="chip" type="button" data-q="Administração intramuscular em adulto: critérios, cuidados, riscos e documentação em enfermagem.">Intramuscular</button>
-            <button class="chip" type="button" data-q="Quais medidas gerais de prevenção de infecções relacionadas à assistência (precauções padrão) e implicações para enfermagem?">Prevenção IRAS</button>
+            <button class="chip" type="button" data-q="Qual agulha (calibre e comprimento) é geralmente indicada para aplicação intramuscular em adulto e quais cuidados de enfermagem?">IM (agulha e técnica)</button>
+            <button class="chip" type="button" data-q="Quais são as boas práticas na preparação e administração de medicamentos injetáveis?">Medicação segura</button>
+            <button class="chip" type="button" data-q="Quais são as medidas de prevenção e controle de infecções relacionadas à assistência à saúde em enfermagem?">IRAS / Precauções</button>
+            <button class="chip" type="button" data-q="Como realizar e registrar o Processo de Enfermagem (SAE) corretamente?">SAE / Registros</button>
           </div>
 
           <div class="row">
             <button id="btnAsk" class="primary" type="button">Pesquisar</button>
-            <button id="btnCopy" type="button">Copiar</button>
+            <button id="btnCopy" type="button">Copiar última resposta</button>
             <button id="btnPdf" type="button">Baixar PDF</button>
-            <button id="btnShare" type="button">Compartilhar</button>
+            <button id="btnShare" type="button">Copiar link</button>
             <button id="btnClear" type="button">Limpar</button>
           </div>
         </div>
@@ -529,9 +566,12 @@
         <div class="split">
           <div class="box">
             <div class="boxHead">
-              <h3>Resultado</h3>
-              <div class="row" style="gap:8px">
-                <button id="btnRetry" class="mini" type="button" title="Repetir consulta">Repetir</button>
+              <h3>Resposta</h3>
+              <div class="tools">
+                <button id="btnRetry" class="mini" type="button" title="Repetir">Repetir</button>
+                <button id="btnZoomIn" class="mini" type="button" title="Aumentar fonte">A+</button>
+                <button id="btnZoomOut" class="mini" type="button" title="Diminuir fonte">A−</button>
+                <button id="btnFull" class="mini" type="button" title="Tela cheia">Tela cheia</button>
               </div>
             </div>
 
@@ -539,11 +579,16 @@
               <div id="chatBox" class="chat" aria-label="Conversa">
                 <div class="bubble assistant">
                   <div class="bHead">
-                    <span class="role">Painel</span>
+                    <span class="role">Sistema</span>
                     <span class="stamp" id="helloStamp"></span>
                   </div>
-                  Escreva uma pergunta e clique em <b>Pesquisar</b>. O resultado virá estruturado e com referências.
+                  Digite sua pergunta e clique em <b>Pesquisar</b>.
                 </div>
+              </div>
+
+              <div class="row" style="margin-top:10px">
+                <button id="btnUp" class="mini" type="button">Ajudou</button>
+                <button id="btnDown" class="mini danger" type="button">Não ajudou</button>
               </div>
 
               <div class="metaLine" id="metaLine">
@@ -555,47 +600,34 @@
 
             <details id="sourcesDetails">
               <summary>
-                Referências consultadas
+                Referências utilizadas
                 <span class="caret" aria-hidden="true"></span>
               </summary>
               <div id="webList" class="list"></div>
             </details>
           </div>
 
-          <div class="sideCard" aria-label="Painel lateral">
-            <div class="sideHead">
-              <h3>Atalhos</h3>
-              <button id="btnClearHist" class="mini" type="button">Limpar</button>
-            </div>
-            <div class="sideBody">
-              <div class="pillNote">
-                <div class="badge">✓</div>
-                <div>
-                  <b>Para respostas melhores</b>
-                  <span>Inclua população, via/conduta, cenário e objetivo (ex.: “adulto”, “IM”, “atenção primária”, “registro”).</span>
-                </div>
-              </div>
-
-              <div class="pillNote">
-                <div class="badge">↵</div>
-                <div>
-                  <b>Atalhos</b>
-                  <span><b>Enter</b> envia • <b>Shift+Enter</b> quebra linha • <b>Ctrl+K</b> foca no campo.</span>
-                </div>
-              </div>
-
-              <div class="pillNote">
-                <div class="badge">⎙</div>
-                <div>
-                  <b>Relatório em PDF</b>
-                  <span>“Baixar PDF” abre um relatório pronto para impressão/salvar como PDF (com referências).</span>
-                </div>
-              </div>
-
-              <div style="margin-top:4px; font-weight:950; font-size:12px; color:rgba(255,255,255,.72); letter-spacing:.25px; text-transform:uppercase;">
-                Histórico
+          <div>
+            <div class="history" aria-label="Histórico">
+              <div class="historyHead">
+                <h3>Histórico</h3>
+                <button id="btnClearHist" class="mini" type="button">Limpar</button>
               </div>
               <div id="historyList" class="historyList"></div>
+            </div>
+
+            <div class="panel">
+              <div class="cap">Dica rápida</div>
+              <div class="txt">
+                Se a pergunta for técnica (ex.: “agulha”, “IM/SC/ID”, “diluição”), inclua: população (adulto/criança), via e local anatômico. Isso melhora a precisão.
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="cap">Privacidade</div>
+              <div class="txt">
+                Não informe dados pessoais. O sistema registra apenas a pergunta, o resultado e sua avaliação para melhorar a qualidade.
+              </div>
             </div>
           </div>
         </div>
@@ -611,32 +643,39 @@
     <button class="toastBtn" id="toastBtn" type="button">Fechar</button>
   </div>
 
+  <!-- Modal tela cheia -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Resposta em tela cheia">
+    <div class="modalCard">
+      <div class="modalHead">
+        <strong>Resposta</strong>
+        <div class="row" style="gap:8px">
+          <button id="modalCopy" class="mini" type="button">Copiar</button>
+          <button id="modalClose" class="mini" type="button">Fechar</button>
+        </div>
+      </div>
+      <div id="modalBody" class="modalBody"></div>
+    </div>
+  </div>
+
 <script>
   // ============================
-  // CONFIG (mantido simples)
+  // CONFIG
   // ============================
   const PROJECT_REF = "owpswekkfaleauwjmahc";
   const FUNCTION_URL = `https://${PROJECT_REF}.supabase.co/functions/v1/ask`;
 
-  // IMPORTANTE: nunca coloque chave secreta aqui.
-  // Se precisar Authorization, use ANON key do Supabase (pública) e só se sua function exigir.
+  // Se sua Function exigir autorização, use a ANON key do Supabase (pública) aqui.
+  // const SUPABASE_ANON_KEY = "COLE_SUA_ANON_KEY_SE_PRECISAR";
+  // const AUTH_HEADERS = SUPABASE_ANON_KEY ? { "Authorization": `Bearer ${SUPABASE_ANON_KEY}` } : {};
   const AUTH_HEADERS = {};
 
-  // Pedimos resposta completa sem “mostrar IA”
-  const DEFAULT_DETAIL_LEVEL = "max";          // standard | full | max
-  const DEFAULT_REFERENCES_MODE = "end";       // end | inline
-
-  // Instruções de estilo para o backend (não aparece na tela)
+  // Instruções de estilo para respostas (sem mencionar IA)
   const SYSTEM_INSTRUCTIONS = `
-Você deve responder em português (Brasil), com linguagem formal técnico-científica, estruturada e aplicada à prática.
-Se a pergunta for sobre procedimentos (ex.: administração de medicamentos), responda de forma operacional:
-- resposta direta;
-- recomendações;
-- checklist passo a passo;
-- riscos/alertas e segurança do paciente;
-- documentação e registros (SAE/Processo).
-Liste referências institucionais ao final. Não invente normas/datas/números: se faltar evidência, explicite.
-`.trim();
+Você deve responder em português do Brasil, linguagem formal técnico-científica.
+Priorize fontes institucionais e organismos oficiais (MS/ANVISA, BVS-MS, COFEN/COREN, OPAS/OMS, Fiocruz, INCA, EBSERH).
+Estruture de forma completa e operacional, com checklist, riscos/alertas e registro.
+Não invente dados. Se faltarem evidências, declare explicitamente a limitação.
+  `.trim();
 
   // ============================
   // Helpers
@@ -646,6 +685,7 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
   const qEl = el("q");
   const chatBox = el("chatBox");
   const webList = el("webList");
+  const statusPill = el("statusPill");
   const metaLine = el("metaLine");
   const metaTime = el("metaTime");
   const metaSources = el("metaSources");
@@ -655,31 +695,32 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
   const toastText = el("toastText");
   const toastSub = el("toastSub");
   const toastBtn = el("toastBtn");
+
   const historyList = el("historyList");
+
+  const modal = el("modal");
+  const modalBody = el("modalBody");
+  const modalClose = el("modalClose");
+  const modalCopy = el("modalCopy");
 
   let lastPayload = null;
   let lastQuestion = "";
+  let lastRunId = null;
   let toastTimer = null;
 
-  const HISTORY_KEY = "pb_history_v1";
-  const HISTORY_MAX = 12;
+  const HISTORY_KEY = "pi_history_v10";
+  const HISTORY_MAX = 14;
 
   function escapeHtml(str){
     return String(str ?? "").replace(/[&<>"']/g, m => ({
       '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
     }[m]));
   }
-
   function nowStamp(){
     const d = new Date();
     const hh = String(d.getHours()).padStart(2,"0");
     const mm = String(d.getMinutes()).padStart(2,"0");
     return `${hh}:${mm}`;
-  }
-
-  function autosizeTextarea(){
-    qEl.style.height = "auto";
-    qEl.style.height = Math.min(qEl.scrollHeight, 160) + "px";
   }
 
   function showToast(title, sub=""){
@@ -697,6 +738,7 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
       answer: data?.answer ?? data?.text ?? data?.output ?? "",
       sources: data?.sources ?? data?.web ?? data?.citations ?? data?.references ?? [],
       cached: !!data?.cached,
+      run_id: data?.run_id ?? null,
     };
   }
 
@@ -706,13 +748,13 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
       webList.innerHTML = `
         <div class="item">
           <strong>Sem referências retornadas</strong>
-          <div class="t">Tente detalhar a pergunta (população, via/conduta, cenário e objetivo).</div>
+          <div class="t">Tente incluir termos como: manual, protocolo, nota técnica, POP, segurança do paciente.</div>
         </div>`;
       return;
     }
     items.forEach((it) => {
       const title = escapeHtml(it?.title || it?.name || "Referência");
-      const org = escapeHtml(it?.org || it?.source || it?.publisher || "Fonte institucional");
+      const org = escapeHtml(it?.org || it?.source || it?.publisher || "Instituição");
       const url = escapeHtml(it?.url || it?.link || "#");
       webList.insertAdjacentHTML("beforeend", `
         <div class="item">
@@ -739,10 +781,10 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
     div.className = `bubble ${role}`;
     div.innerHTML = `
       <div class="bHead">
-        <span class="role">${role === "user" ? "Pergunta" : "Resultado"}</span>
+        <span class="role">${role === "user" ? "Pergunta" : "Resposta"}</span>
         <span class="stamp">${escapeHtml(stamp)}</span>
       </div>
-      <div class="${opts.typing ? "typing" : ""}">${safe}${opts.typing ? '<span class="pulseDot" aria-hidden="true"></span>' : ''}</div>
+      <div class="${opts.typing ? "typing" : ""}">${safe}</div>
     `;
     chatBox.appendChild(div);
     chatBox.scrollTop = chatBox.scrollHeight;
@@ -755,6 +797,14 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
     inner.classList.remove("typing");
     inner.textContent = text ?? "";
     chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  function getLastAssistantText(){
+    const bubbles = [...chatBox.querySelectorAll(".bubble.assistant")];
+    if(!bubbles.length) return "";
+    const last = bubbles[bubbles.length - 1];
+    const inner = last.querySelector("div:last-child");
+    return inner ? inner.innerText.trim() : "";
   }
 
   function saveHistory(q){
@@ -775,7 +825,7 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
     if(!arr.length){
       historyList.innerHTML = `
         <div style="color:rgba(255,255,255,.55); font-weight:850; font-size:12.8px; line-height:1.55">
-          Sem histórico ainda.
+          Sem histórico ainda. Faça uma pergunta para salvar aqui.
         </div>`;
       return;
     }
@@ -795,35 +845,27 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
 
     [...historyList.querySelectorAll(".hItem")].forEach((node, idx) => {
       const q = arr[idx].q;
-      node.addEventListener("click", () => { qEl.value = q; autosizeTextarea(); ask(); });
+      node.addEventListener("click", () => { qEl.value = q; ask(); });
       node.addEventListener("keydown", (e) => {
         if(e.key === "Enter" || e.key === " "){
           e.preventDefault();
           qEl.value = q;
-          autosizeTextarea();
           ask();
         }
       });
     });
   }
 
-  function getLastAssistantText(){
-    const bubbles = [...chatBox.querySelectorAll(".bubble.assistant")];
-    if(!bubbles.length) return "";
-    const last = bubbles[bubbles.length - 1];
-    const inner = last.querySelector("div:last-child");
-    return inner ? inner.innerText.replace(/\s+$/,"").trim() : "";
-  }
-
   function buildReportHtml(){
     const q = (qEl.value || "").trim();
     const when = new Date().toLocaleString("pt-BR");
     const norm = normalizePayload(lastPayload || {});
+    const version = norm?.version ? String(norm.version) : "";
     const answer = norm?.answer ? String(norm.answer) : "";
     const refs = norm?.sources || [];
 
     const refsHtml = (Array.isArray(refs) ? refs : []).map(r => {
-      const org = escapeHtml(r?.org || r?.source || r?.publisher || "Fonte institucional");
+      const org = escapeHtml(r?.org || r?.source || r?.publisher || "Instituição");
       const url = escapeHtml(r?.url || r?.link || "");
       const title = escapeHtml(r?.title || r?.name || "");
       return `<li><b>${org}</b><br>${title}<br><span style="word-break:break-word">${url}</span></li>`;
@@ -834,7 +876,7 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
       <head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width,initial-scale=1"/>
-        <title>Relatório • Pesquisa Oficial</title>
+        <title>Relatório • Projeto Integrador</title>
         <style>
           body{font-family:Arial, sans-serif; padding:24px; color:#111}
           h1{margin:0 0 6px; font-size:18px}
@@ -846,18 +888,20 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
         </style>
       </head>
       <body>
-        <h1>Relatório de Pesquisa • Brasil</h1>
-        <p class="muted">Gerado em: ${escapeHtml(when)}</p>
+        <h1>Relatório de Pesquisa • Projeto Integrador</h1>
+        <p class="muted">Gerado em: ${escapeHtml(when)} ${version ? " • Versão: " + escapeHtml(version) : ""}</p>
 
         <div class="box"><b>Pergunta</b><pre>${escapeHtml(q)}</pre></div>
-        <div class="box"><b>Resultado</b><pre>${escapeHtml(answer)}</pre></div>
+        <div class="box"><b>Resposta</b><pre>${escapeHtml(answer)}</pre></div>
 
         <div class="box">
-          <b>Referências consultadas</b>
-          <ul>${refsHtml || "<li>Sem referências retornadas.</li>"}</ul>
+          <b>Referências (institucionais)</b>
+          <ul>${refsHtml || "<li>Sem referências.</li>"}</ul>
         </div>
 
-        <p class="muted" style="margin-top:18px">Observação: confira escopo/atualização das publicações nas páginas oficiais.</p>
+        <p class="muted" style="margin-top:18px">
+          Observação: verifique data/versão e escopo das publicações institucionais.
+        </p>
 
         <script>setTimeout(() => window.print(), 350);<\/script>
       </body>
@@ -868,18 +912,19 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
   async function ask(){
     const q = (qEl.value || "").trim();
     if(!q){
-      showToast("Digite uma pergunta", "Ex.: “Administração intramuscular em adulto…”");
+      showToast("Digite uma pergunta", "Ex.: “Qual agulha para IM em adulto…?”");
       qEl.focus();
       return;
     }
 
     lastQuestion = q;
+    statusPill.textContent = "Consultando…";
 
     addBubble("user", q);
-    const typingBubble = addBubble("assistant", "Consultando e organizando o conteúdo…", { typing:true });
+    const typingBubble = addBubble("assistant", "Consultando referências institucionais…", { typing:true });
 
     renderWeb([]);
-    sourcesDetails.open = false;
+    sourcesDetails.open = true;
     metaLine.style.display = "none";
 
     try{
@@ -889,9 +934,9 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
         body: JSON.stringify({
           question: q,
           system: SYSTEM_INSTRUCTIONS,
-          detailLevel: DEFAULT_DETAIL_LEVEL,
-          referencesMode: DEFAULT_REFERENCES_MODE,
-          locale: "pt-BR"
+          locale: "pt-BR",
+          detailLevel: "max",
+          referencesMode: "inline"
         }),
         cache: "no-store",
       });
@@ -905,28 +950,26 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
       lastPayload = data;
 
       const norm = normalizePayload(data);
+      lastRunId = norm.run_id || null;
+
+      statusPill.textContent = "Atualizado";
 
       replaceBubbleText(typingBubble, norm.answer || "Consulta concluída.");
       renderWeb(norm.sources);
       setMeta(norm);
 
-      // abre referências automaticamente só se vierem 0 (para mostrar o “por quê”)
-      if((norm.sources?.length ?? 0) === 0){
-        sourcesDetails.open = true;
-      }
-
       saveHistory(q);
-      showToast("Concluído", "Resultado atualizado.");
+      showToast("Concluído", "Resposta e referências atualizadas.");
     }catch(err){
       const msg = String(err?.message || err);
-      replaceBubbleText(typingBubble, "Não foi possível concluir a consulta. Abra “Referências consultadas” para ver detalhes.");
+      statusPill.textContent = "Erro";
+      replaceBubbleText(typingBubble, "Não foi possível obter a resposta. Veja detalhes em “Referências utilizadas”.");
       webList.innerHTML = `
         <div class="item">
           <strong>Falha na consulta</strong>
           <div class="t">${escapeHtml(msg)}</div>
         </div>`;
-      sourcesDetails.open = true;
-      showToast("Erro", "Confira as referências/detalhes.");
+      showToast("Erro", "Veja o detalhe em ‘Referências’.");
     }
   }
 
@@ -938,7 +981,7 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
     }
     try{
       await navigator.clipboard.writeText(text);
-      showToast("Copiado ✅", "Último resultado copiado.");
+      showToast("Copiado ✅", "Última resposta copiada.");
     }catch{
       showToast("Não foi possível copiar", "Seu navegador bloqueou a área de transferência.");
     }
@@ -946,7 +989,7 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
 
   function downloadPdf(){
     if(!lastPayload){
-      showToast("Faça uma pesquisa antes", "Depois gere o PDF.");
+      showToast("Faça uma pesquisa antes", "Depois gere o relatório em PDF.");
       return;
     }
     const html = buildReportHtml();
@@ -963,43 +1006,112 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
       await navigator.clipboard.writeText(base.toString());
       showToast("Link copiado ✅", "Envie para compartilhar a pergunta.");
     }catch{
-      showToast("Falha ao copiar link", "Copie manualmente na barra do navegador.");
+      showToast("Falha ao copiar", "Copie manualmente na barra do navegador.");
     }
   }
 
-  function clearAll(){
-    qEl.value = "";
-    autosizeTextarea();
-    chatBox.innerHTML = `
-      <div class="bubble assistant">
-        <div class="bHead">
-          <span class="role">Painel</span>
-          <span class="stamp">${escapeHtml(nowStamp())}</span>
-        </div>
-        Escreva uma pergunta e clique em <b>Pesquisar</b>. O resultado virá estruturado e com referências.
-      </div>
-    `;
-    webList.innerHTML = "";
-    lastPayload = null;
-    lastQuestion = "";
-    metaLine.style.display = "none";
-    sourcesDetails.open = false;
-    showToast("Limpo", "Campo e resultados zerados.");
-    qEl.focus();
+  async function sendFeedback(vote, reason_codes=[], comment=""){
+    if(!lastRunId){
+      showToast("Sem consulta anterior", "Faça uma pesquisa antes de avaliar.");
+      return;
+    }
+    try{
+      const res = await fetch(FUNCTION_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...AUTH_HEADERS },
+        body: JSON.stringify({
+          mode: "feedback",
+          run_id: lastRunId,
+          vote,
+          reason_codes,
+          comment
+        }),
+        cache: "no-store",
+      });
+      if(!res.ok) throw new Error(await res.text());
+      showToast("Obrigado", "Avaliação registrada.");
+    }catch{
+      showToast("Falha ao registrar", "Tente novamente.");
+    }
   }
 
-  // ============================
-  // Events
-  // ============================
+  // Zoom fonte
+  function setFont(px){
+    const v = Math.max(12, Math.min(18, px));
+    document.documentElement.style.setProperty("--ansFont", v + "px");
+    localStorage.setItem("pi_ans_font", String(v));
+  }
+  function loadFont(){
+    const v = parseInt(localStorage.getItem("pi_ans_font") || "14", 10);
+    if(!isNaN(v)) setFont(v);
+  }
+
+  // Modal tela cheia
+  function openModal(){
+    const txt = getLastAssistantText();
+    if(!txt){ showToast("Sem resposta", "Faça uma pesquisa primeiro."); return; }
+    modalBody.textContent = txt;
+    modal.classList.add("show");
+  }
+  function closeModal(){ modal.classList.remove("show"); }
+  modalClose.addEventListener("click", closeModal);
+  modal.addEventListener("click", (e) => { if(e.target === modal) closeModal(); });
+  modalCopy.addEventListener("click", async () => {
+    try{
+      await navigator.clipboard.writeText(modalBody.innerText || "");
+      showToast("Copiado ✅", "Resposta copiada.");
+    }catch{
+      showToast("Falha ao copiar", "Permissão negada.");
+    }
+  });
+
+  // Buttons
   el("btnAsk").addEventListener("click", ask);
   el("btnRetry").addEventListener("click", () => {
-    if(lastQuestion){ qEl.value = lastQuestion; autosizeTextarea(); ask(); }
+    if(lastQuestion){ qEl.value = lastQuestion; ask(); }
     else showToast("Nada para repetir", "Faça uma pesquisa primeiro.");
   });
   el("btnPdf").addEventListener("click", downloadPdf);
   el("btnShare").addEventListener("click", share);
   el("btnCopy").addEventListener("click", copyAnswer);
-  el("btnClear").addEventListener("click", clearAll);
+
+  el("btnZoomIn").addEventListener("click", () => {
+    const cur = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--ansFont")) || 14;
+    setFont(cur + 1);
+  });
+  el("btnZoomOut").addEventListener("click", () => {
+    const cur = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--ansFont")) || 14;
+    setFont(cur - 1);
+  });
+  el("btnFull").addEventListener("click", openModal);
+
+  el("btnUp").addEventListener("click", () => sendFeedback("up"));
+  el("btnDown").addEventListener("click", () => {
+    // motivos padrão (sem perguntar)
+    sendFeedback("down", ["faltou_detalhe_tecnico","faltou_passo_a_passo","faltou_fontes"]);
+  });
+
+  el("btnClear").addEventListener("click", () => {
+    qEl.value = "";
+    chatBox.innerHTML = `
+      <div class="bubble assistant">
+        <div class="bHead">
+          <span class="role">Sistema</span>
+          <span class="stamp">${escapeHtml(nowStamp())}</span>
+        </div>
+        Digite sua pergunta e clique em <b>Pesquisar</b>.
+      </div>
+    `;
+    webList.innerHTML = "";
+    lastPayload = null;
+    lastQuestion = "";
+    lastRunId = null;
+    statusPill.textContent = "Pronto";
+    metaLine.style.display = "none";
+    sourcesDetails.open = false;
+    showToast("Limpo", "Campo e resultados zerados.");
+    qEl.focus();
+  });
 
   el("btnClearHist").addEventListener("click", () => {
     localStorage.removeItem(HISTORY_KEY);
@@ -1010,38 +1122,34 @@ Liste referências institucionais ao final. Não invente normas/datas/números: 
   document.querySelectorAll(".chip").forEach(btn => {
     btn.addEventListener("click", () => {
       qEl.value = btn.getAttribute("data-q") || "";
-      autosizeTextarea();
       ask();
     });
   });
 
-  // Enter envia; Shift+Enter quebra linha
   qEl.addEventListener("keydown", (e) => {
-    if(e.key === "Enter" && !e.shiftKey){
-      e.preventDefault();
-      ask();
-    }
+    if(e.key === "Enter"){ e.preventDefault(); ask(); }
   });
-  qEl.addEventListener("input", autosizeTextarea);
 
-  // Ctrl+K foca
   window.addEventListener("keydown", (e) => {
     if((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === "k")){
       e.preventDefault();
       qEl.focus();
     }
+    if(e.key === "Escape"){
+      closeModal();
+    }
   });
 
   (function init(){
-    el("helloStamp").textContent = nowStamp();
-    renderHistory();
-    autosizeTextarea();
+    loadFont();
+    const helloStamp = el("helloStamp");
+    if(helloStamp) helloStamp.textContent = nowStamp();
 
+    renderHistory();
     const u = new URL(window.location.href);
     const q = u.searchParams.get("q");
     if(q){
       qEl.value = q;
-      autosizeTextarea();
       setTimeout(ask, 120);
     }else{
       qEl.focus();
