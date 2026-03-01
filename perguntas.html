@@ -195,7 +195,7 @@
       font-weight:950;
       letter-spacing:.2px;
       cursor:pointer;
-      transition: transform .06s ease, filter .15s ease, box-shadow .15s ease;
+      transition: transform .06s ease, filter .15s ease, box-shadow .15s ease, opacity .15s ease;
       border:1px solid var(--stroke);
       background: rgba(255,255,255,.04);
       color: var(--text);
@@ -203,8 +203,57 @@
     button:hover{ filter: brightness(1.10); }
     button:active{ transform: translateY(1px); }
     button:focus-visible{ outline:none; box-shadow: var(--ring2); }
+    button[disabled]{ opacity:.55; cursor:not-allowed; transform:none; }
     .primary{ background:#fff; color:#000; border:none; box-shadow: 0 14px 30px rgba(255,255,255,.08); }
     .mini{ padding:10px 12px; border-radius:12px; font-size:12px; font-weight:900; }
+
+    /* controles de qualidade */
+    .opts{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.02);
+      border-radius:16px;
+      padding:10px 12px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.25);
+    }
+    .opt{
+      display:flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.02);
+    }
+    .opt label{
+      font-size:12px;
+      font-weight:900;
+      color: rgba(255,255,255,.78);
+      user-select:none;
+      white-space:nowrap;
+    }
+    select{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: rgba(255,255,255,.90);
+      font-weight:900;
+      border-radius:12px;
+      padding:8px 10px;
+      outline:none;
+      cursor:pointer;
+    }
+    select:focus-visible{ box-shadow: var(--ring2); }
+    .smallNote{
+      color: rgba(255,255,255,.55);
+      font-weight:850;
+      font-size:12px;
+      margin-left:auto;
+      white-space:nowrap;
+    }
+    @media(max-width:860px){
+      .smallNote{ width:100%; margin-left:0; }
+    }
 
     .split{
       display:grid;
@@ -441,7 +490,7 @@
         <div class="logo">PI</div>
         <div class="brandText">
           <h1>Pesquisa Oficial • Brasil</h1>
-          <p>MS/ANVISA (gov.br) • COFEN • COREN-SP • OPAS/PAHO Brasil</p>
+          <p>MS/ANVISA (gov.br) • COFEN • COREN-SP • OPAS/PAHO • OMS/WHO</p>
         </div>
       </div>
       <div class="right">
@@ -466,20 +515,44 @@
           <div class="search" role="search">
             <div class="icon" aria-hidden="true">⌕</div>
             <input id="q" type="text" autocomplete="off"
-              placeholder="Ex.: Quais cuidados de enfermagem na prevenção de lesão por pressão?"
+              placeholder="Ex.: Quais condutas de enfermagem na administração segura de medicamentos?"
               aria-label="Digite sua pergunta" />
+          </div>
+
+          <!-- NOVO: controles de “resposta grande” -->
+          <div class="opts" aria-label="Configurações da resposta">
+            <div class="opt">
+              <label for="detailSel">Detalhamento</label>
+              <select id="detailSel" aria-label="Nível de detalhamento">
+                <option value="standard">Padrão</option>
+                <option value="full" selected>Completa</option>
+                <option value="max">Máxima</option>
+              </select>
+            </div>
+
+            <div class="opt">
+              <label for="refsSel">Fontes no texto</label>
+              <select id="refsSel" aria-label="Modo de referências">
+                <option value="end" selected>Ao final</option>
+                <option value="inline">No corpo + final</option>
+              </select>
+            </div>
+
+            <div class="smallNote" id="lenNote">Pronto para respostas longas.</div>
           </div>
 
           <div class="chips" aria-label="Sugestões">
             <button class="chip" type="button" data-q="O que é SAE e quais são as etapas do Processo de Enfermagem?">SAE / Processo</button>
-            <button class="chip" type="button" data-q="Quais medidas de segurança do paciente reduzem risco de lesão por pressão?">Segurança do paciente</button>
-            <button class="chip" type="button" data-q="Como registrar e documentar cuidados de enfermagem de forma adequada?">Registros</button>
-            <button class="chip" type="button" data-q="Quais cuidados com pele e umidade para prevenção de lesões cutâneas?">Pele e umidade</button>
+            <button class="chip" type="button" data-q="Quais medidas de segurança do paciente são recomendadas na assistência hospitalar?">Segurança do paciente</button>
+            <button class="chip" type="button" data-q="Como registrar e documentar cuidados de enfermagem de forma adequada (aspectos ético-legais)?">Registros</button>
+            <button class="chip" type="button" data-q="Quais condutas de enfermagem na administração segura de medicamentos e prevenção de erros?">Medicamentos</button>
           </div>
 
           <div class="row">
             <button id="btnAsk" class="primary" type="button">Pesquisar</button>
+            <button id="btnStop" type="button" title="Cancelar requisição em andamento" disabled>Parar</button>
             <button id="btnCopy" type="button">Copiar resposta</button>
+            <button id="btnCopyAll" type="button">Copiar com fontes</button>
             <button id="btnPdf" type="button">Baixar PDF</button>
             <button id="btnShare" type="button">Compartilhar</button>
             <button id="btnClear" type="button">Limpar</button>
@@ -536,7 +609,7 @@
                 Dica rápida
               </div>
               <div style="margin-top:10px; color:rgba(255,255,255,.70); font-weight:800; font-size:12.8px; line-height:1.55">
-                Perguntas mais específicas tendem a trazer fontes mais relevantes (ex.: população, contexto e conduta).
+                Para respostas mais fortes, inclua: população, cenário, intervenção/conduta, objetivo (ex.: “em UTI adulto”, “na APS”, “em gestantes”, “em pós-operatório”).
               </div>
             </div>
           </div>
@@ -561,19 +634,18 @@
   const FUNCTION_URL = `https://${PROJECT_REF}.supabase.co/functions/v1/ask`;
 
   // Se sua Function exigir autorização, use a ANON key do Supabase (pública) aqui.
-  // Não use chave secreta.
   // const SUPABASE_ANON_KEY = "COLE_SUA_ANON_KEY_SE_PRECISAR";
   // const AUTH_HEADERS = SUPABASE_ANON_KEY ? { "Authorization": `Bearer ${SUPABASE_ANON_KEY}` } : {};
   const AUTH_HEADERS = {};
 
+  // Instruções do lado do cliente (enviadas como contexto; o backend pode ignorar sem quebrar)
   const SYSTEM_INSTRUCTIONS = `
 Você é um assistente técnico-científico em enfermagem e saúde pública.
-Responda em português do Brasil, com linguagem formal científica, estruturada, objetiva e prática para assistência.
-Priorize informações de organizações e órgãos oficiais (MS/ANVISA, COFEN/COREN, OPAS/PAHO, OMS/WHO).
-Inclua recomendações baseadas em evidência e deixe explícitas limitações quando faltarem dados.
-Sempre liste as fontes oficiais usadas como referências (título + órgão + link).
-Não invente documentos, portarias ou números. Se não houver fonte oficial, diga claramente.
-  `.trim();
+Responda em português do Brasil, com linguagem formal científica, estruturada, aprofundada e aplicável à prática clínica.
+Priorize órgãos e organizações oficiais: Ministério da Saúde e ANVISA (gov.br), COFEN/COREN, OPAS/PAHO e OMS/WHO.
+Se a evidência não sustentar uma afirmação, declare a limitação. Não invente portarias, resoluções ou números.
+Entregue uma resposta completa, com recomendações práticas e seção de referências oficiais.
+`.trim();
 
   // ============================
   // Helpers
@@ -588,6 +660,13 @@ Não invente documentos, portarias ou números. Se não houver fonte oficial, di
   const metaTime = el("metaTime");
   const metaSources = el("metaSources");
   const sourcesDetails = el("sourcesDetails");
+  const lenNote = el("lenNote");
+
+  const detailSel = el("detailSel");
+  const refsSel = el("refsSel");
+
+  const btnAsk = el("btnAsk");
+  const btnStop = el("btnStop");
 
   const toast = el("toast");
   const toastText = el("toastText");
@@ -599,8 +678,9 @@ Não invente documentos, portarias ou números. Se não houver fonte oficial, di
   let lastPayload = null;
   let lastQuestion = "";
   let toastTimer = null;
+  let inFlight = null; // AbortController
 
-  const HISTORY_KEY = "pi_history_v3";
+  const HISTORY_KEY = "pi_history_v4";
   const HISTORY_MAX = 12;
 
   function escapeHtml(str){
@@ -639,7 +719,7 @@ Não invente documentos, portarias ou números. Se não houver fonte oficial, di
       webList.innerHTML = `
         <div class="item">
           <strong>Sem fontes retornadas</strong>
-          <div class="t">Tente reformular a pergunta com termos mais específicos (população, cenário e conduta).</div>
+          <div class="t">Tente reformular a pergunta com termos mais específicos (população, cenário, conduta, objetivo).</div>
         </div>`;
       return;
     }
@@ -662,6 +742,9 @@ Não invente documentos, portarias ou números. Se não houver fonte oficial, di
     metaTime.textContent = `Atualizado: ${now.toLocaleString("pt-BR")}${norm.cached ? " • cache" : ""}`;
     metaSources.textContent = `${(norm.sources?.length ?? 0)} fonte(s) listada(s)`;
     metaLine.style.display = "flex";
+
+    const answerLen = (norm.answer || "").length;
+    lenNote.textContent = answerLen ? `Resposta: ${answerLen.toLocaleString("pt-BR")} caracteres.` : "Pronto para respostas longas.";
   }
 
   function addBubble(role, text, opts={}){
@@ -747,6 +830,19 @@ Não invente documentos, portarias ou números. Se não houver fonte oficial, di
     return inner ? inner.innerText.trim() : "";
   }
 
+  function buildRefsText(payload){
+    const norm = normalizePayload(payload || {});
+    const refs = Array.isArray(norm.sources) ? norm.sources : [];
+    if(!refs.length) return "";
+    const lines = refs.map((r, i) => {
+      const org = r?.org || r?.source || r?.publisher || "Fonte oficial";
+      const title = r?.title || r?.name || "Referência";
+      const url = r?.url || r?.link || "";
+      return `${i+1}. ${org} — ${title}\n${url}`.trim();
+    });
+    return lines.join("\n\n");
+  }
+
   function buildReportHtml(){
     const q = (qEl.value || "").trim();
     const when = new Date().toLocaleString("pt-BR");
@@ -798,22 +894,52 @@ Não invente documentos, portarias ou números. Se não houver fonte oficial, di
     `;
   }
 
+  function setBusy(isBusy){
+    btnAsk.disabled = isBusy;
+    btnStop.disabled = !isBusy;
+    qEl.disabled = isBusy;
+    detailSel.disabled = isBusy;
+    refsSel.disabled = isBusy;
+  }
+
+  function mapDetailToHints(detail){
+    // Esses “hints” podem ser ignorados pelo backend sem quebrar.
+    // Se o backend suportar, você já tem o controle pronto no front.
+    if(detail === "max") return { maxOutputTokensHint: 2400, depth: "max", sections: "extended" };
+    if(detail === "full") return { maxOutputTokensHint: 1800, depth: "full", sections: "standard" };
+    return { maxOutputTokensHint: 1100, depth: "standard", sections: "standard" };
+  }
+
   async function ask(){
     const q = (qEl.value || "").trim();
     if(!q){
-      showToast("Digite uma pergunta", "Ex.: “Quais cuidados de enfermagem…?”");
+      showToast("Digite uma pergunta", "Ex.: “Quais condutas de enfermagem…?”");
       qEl.focus();
       return;
+    }
+
+    // aborta requisição anterior se existir
+    if(inFlight){
+      try{ inFlight.abort(); }catch{}
+      inFlight = null;
     }
 
     lastQuestion = q;
 
     addBubble("user", q);
-    const typingBubble = addBubble("assistant", "Consultando fontes oficiais…", { typing:true });
+    const typingBubble = addBubble("assistant", "Consultando fontes oficiais e elaborando resposta completa…", { typing:true });
 
     renderWeb([]);
     sourcesDetails.open = true;
     metaLine.style.display = "none";
+    setBusy(true);
+
+    const controller = new AbortController();
+    inFlight = controller;
+
+    const detail = detailSel.value || "full";
+    const refsMode = refsSel.value || "end";
+    const hints = mapDetailToHints(detail);
 
     try{
       const res = await fetch(FUNCTION_URL, {
@@ -821,10 +947,20 @@ Não invente documentos, portarias ou números. Se não houver fonte oficial, di
         headers: { "Content-Type": "application/json", ...AUTH_HEADERS },
         body: JSON.stringify({
           question: q,
+
+          // compatível mesmo se o backend ignorar
           system: SYSTEM_INSTRUCTIONS,
-          locale: "pt-BR"
+          locale: "pt-BR",
+
+          // NOVO: “hints” para respostas grandes
+          detailLevel: detail,             // standard | full | max
+          referencesMode: refsMode,        // end | inline
+          maxOutputTokensHint: hints.maxOutputTokensHint,
+          depth: hints.depth,
+          sections: hints.sections,
         }),
         cache: "no-store",
+        signal: controller.signal,
       });
 
       if(!res.ok){
@@ -845,14 +981,35 @@ Não invente documentos, portarias ou números. Se não houver fonte oficial, di
       saveHistory(q);
       showToast("Busca concluída", "Resposta e fontes atualizadas.");
     }catch(err){
-      const msg = String(err?.message || err);
-      replaceBubbleText(typingBubble, "Não foi possível obter a resposta. Veja detalhes em “Fontes utilizadas”.");
+      const msg = (err?.name === "AbortError")
+        ? "Requisição cancelada."
+        : String(err?.message || err);
+
+      replaceBubbleText(
+        typingBubble,
+        err?.name === "AbortError"
+          ? "Requisição cancelada."
+          : "Não foi possível obter a resposta. Veja detalhes em “Fontes utilizadas”."
+      );
+
       webList.innerHTML = `
         <div class="item">
-          <strong>Falha na consulta</strong>
+          <strong>${err?.name === "AbortError" ? "Cancelado" : "Falha na consulta"}</strong>
           <div class="t">${escapeHtml(msg)}</div>
         </div>`;
-      showToast("Erro", "Veja a mensagem em ‘Fontes utilizadas’.");
+      showToast(err?.name === "AbortError" ? "Cancelado" : "Erro", "Veja a mensagem em ‘Fontes utilizadas’.");
+    }finally{
+      if(inFlight === controller) inFlight = null;
+      setBusy(false);
+    }
+  }
+
+  function stop(){
+    if(inFlight){
+      try{ inFlight.abort(); }catch{}
+      inFlight = null;
+      showToast("Parando…", "Cancelando requisição em andamento.");
+      setBusy(false);
     }
   }
 
@@ -865,6 +1022,25 @@ Não invente documentos, portarias ou números. Se não houver fonte oficial, di
     try{
       await navigator.clipboard.writeText(text);
       showToast("Copiado ✅", "Última resposta copiada.");
+    }catch{
+      showToast("Não foi possível copiar", "Seu navegador bloqueou a área de transferência.");
+    }
+  }
+
+  async function copyAnswerWithSources(){
+    const ans = getLastAssistantText();
+    if(!ans){
+      showToast("Nada para copiar", "Faça uma pesquisa primeiro.");
+      return;
+    }
+    const refs = buildRefsText(lastPayload);
+    const pack = refs
+      ? `${ans}\n\nReferências (fontes oficiais)\n\n${refs}`
+      : ans;
+
+    try{
+      await navigator.clipboard.writeText(pack);
+      showToast("Copiado ✅", refs ? "Resposta + fontes copiadas." : "Resposta copiada.");
     }catch{
       showToast("Não foi possível copiar", "Seu navegador bloqueou a área de transferência.");
     }
@@ -894,6 +1070,8 @@ Não invente documentos, portarias ou números. Se não houver fonte oficial, di
   }
 
   el("btnAsk").addEventListener("click", ask);
+  el("btnStop").addEventListener("click", stop);
+
   el("btnRetry").addEventListener("click", () => {
     if(lastQuestion){ qEl.value = lastQuestion; ask(); }
     else showToast("Nada para repetir", "Faça uma pesquisa primeiro.");
@@ -901,8 +1079,10 @@ Não invente documentos, portarias ou números. Se não houver fonte oficial, di
   el("btnPdf").addEventListener("click", downloadPdf);
   el("btnShare").addEventListener("click", share);
   el("btnCopy").addEventListener("click", copyAnswer);
+  el("btnCopyAll").addEventListener("click", copyAnswerWithSources);
 
   el("btnClear").addEventListener("click", () => {
+    stop();
     qEl.value = "";
     chatBox.innerHTML = `
       <div class="bubble assistant">
@@ -919,6 +1099,7 @@ Não invente documentos, portarias ou números. Se não houver fonte oficial, di
     verPill.textContent = "Modo IA";
     metaLine.style.display = "none";
     sourcesDetails.open = false;
+    lenNote.textContent = "Pronto para respostas longas.";
     showToast("Limpo", "Campo e resultados zerados.");
     qEl.focus();
   });
@@ -938,6 +1119,7 @@ Não invente documentos, portarias ou números. Se não houver fonte oficial, di
 
   qEl.addEventListener("keydown", (e) => {
     if(e.key === "Enter"){ e.preventDefault(); ask(); }
+    if(e.key === "Escape"){ stop(); }
   });
 
   window.addEventListener("keydown", (e) => {
@@ -945,6 +1127,7 @@ Não invente documentos, portarias ou números. Se não houver fonte oficial, di
       e.preventDefault();
       qEl.focus();
     }
+    if(e.key === "Escape"){ stop(); }
   });
 
   (function init(){
