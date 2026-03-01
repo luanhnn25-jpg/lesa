@@ -235,13 +235,28 @@
       text-transform: uppercase;
     }
     .boxBody{padding:12px;}
-    .answer{
+
+    /* Chat */
+    .chat{display:flex; flex-direction:column; gap:10px; max-height:52vh; overflow:auto; padding-right:4px;}
+    .bubble{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.02);
+      border-radius:16px;
+      padding:12px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.30);
       white-space:pre-wrap;
-      line-height:1.7;
-      font-weight:760;
+      word-break:break-word;
+      line-height:1.65;
+      font-weight:780;
       font-size:13.2px;
-      color: rgba(255,255,255,.92);
     }
+    .bubble.user{ margin-left:14%; background: rgba(255,255,255,.03); }
+    .bubble.assistant{ margin-right:10%; }
+    .bHead{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px;}
+    .role{font-size:11px; font-weight:950; letter-spacing:.25px; text-transform:uppercase; color: rgba(255,255,255,.72);}
+    .stamp{font-family: var(--mono); font-size:11px; font-weight:900; color: rgba(255,255,255,.45); flex:0 0 auto;}
+    .typing{opacity:.85; font-weight:850; color: rgba(255,255,255,.78);}
+
     .metaLine{
       margin-top:10px;
       color: var(--muted2);
@@ -332,15 +347,9 @@
       letter-spacing:.25px;
       text-transform: uppercase;
     }
-    .historyList{
-      display:flex; flex-direction:column; gap:8px;
-      padding:12px;
-    }
+    .historyList{display:flex; flex-direction:column; gap:8px; padding:12px;}
     .hItem{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      justify-content:space-between;
+      display:flex; gap:10px; align-items:flex-start; justify-content:space-between;
       border:1px solid rgba(255,255,255,.08);
       background: rgba(255,255,255,.02);
       border-radius: 14px;
@@ -420,17 +429,8 @@
       user-select:none;
     }
 
-    footer{
-      text-align:center;
-      color: var(--muted2);
-      font-weight:800;
-      font-size:12px;
-      padding:18px 10px 30px;
-    }
-
-    @media (prefers-reduced-motion: reduce){
-      *{ animation:none !important; transition:none !important; }
-    }
+    footer{text-align:center; color: var(--muted2); font-weight:800; font-size:12px; padding:18px 10px 30px;}
+    @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
   </style>
 </head>
 
@@ -494,8 +494,18 @@
                 <button id="btnRetry" class="mini" type="button" title="Repetir busca">Repetir</button>
               </div>
             </div>
+
             <div class="boxBody">
-              <div id="answerBox" class="answer">Digite uma pergunta e clique em <b>Pesquisar</b>.</div>
+              <div id="chatBox" class="chat" aria-label="Conversa">
+                <div class="bubble assistant">
+                  <div class="bHead">
+                    <span class="role">Assistente</span>
+                    <span class="stamp" id="helloStamp"></span>
+                  </div>
+                  Digite uma pergunta e clique em <b>Pesquisar</b>.
+                </div>
+              </div>
+
               <div class="metaLine" id="metaLine">
                 <span id="metaTime"></span>
                 <span class="dot" aria-hidden="true"></span>
@@ -550,13 +560,28 @@
   const PROJECT_REF = "owpswekkfaleauwjmahc";
   const FUNCTION_URL = `https://${PROJECT_REF}.supabase.co/functions/v1/ask`;
 
+  // Se sua Function exigir autorização, use a ANON key do Supabase (pública) aqui.
+  // Não use chave secreta.
+  // const SUPABASE_ANON_KEY = "COLE_SUA_ANON_KEY_SE_PRECISAR";
+  // const AUTH_HEADERS = SUPABASE_ANON_KEY ? { "Authorization": `Bearer ${SUPABASE_ANON_KEY}` } : {};
+  const AUTH_HEADERS = {};
+
+  const SYSTEM_INSTRUCTIONS = `
+Você é um assistente técnico-científico em enfermagem e saúde pública.
+Responda em português do Brasil, com linguagem formal científica, estruturada, objetiva e prática para assistência.
+Priorize informações de organizações e órgãos oficiais (MS/ANVISA, COFEN/COREN, OPAS/PAHO, OMS/WHO).
+Inclua recomendações baseadas em evidência e deixe explícitas limitações quando faltarem dados.
+Sempre liste as fontes oficiais usadas como referências (título + órgão + link).
+Não invente documentos, portarias ou números. Se não houver fonte oficial, diga claramente.
+  `.trim();
+
   // ============================
   // Helpers
   // ============================
   const el = (id) => document.getElementById(id);
 
   const qEl = el("q");
-  const answerBox = el("answerBox");
+  const chatBox = el("chatBox");
   const webList = el("webList");
   const verPill = el("verPill");
   const metaLine = el("metaLine");
@@ -575,13 +600,19 @@
   let lastQuestion = "";
   let toastTimer = null;
 
-  const HISTORY_KEY = "pi_history_v2";
+  const HISTORY_KEY = "pi_history_v3";
   const HISTORY_MAX = 12;
 
   function escapeHtml(str){
     return String(str ?? "").replace(/[&<>"']/g, m => ({
       '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
     }[m]));
+  }
+  function nowStamp(){
+    const d = new Date();
+    const hh = String(d.getHours()).padStart(2,"0");
+    const mm = String(d.getMinutes()).padStart(2,"0");
+    return `${hh}:${mm}`;
   }
 
   function showToast(title, sub=""){
@@ -595,9 +626,9 @@
 
   function normalizePayload(data){
     return {
-      version: data?.version ?? "",
-      answer: data?.answer ?? "",
-      sources: data?.sources ?? data?.web ?? data?.citations ?? [],
+      version: data?.version ?? data?.model ?? "",
+      answer: data?.answer ?? data?.text ?? data?.output ?? "",
+      sources: data?.sources ?? data?.web ?? data?.citations ?? data?.references ?? [],
       cached: !!data?.cached,
     };
   }
@@ -608,14 +639,14 @@
       webList.innerHTML = `
         <div class="item">
           <strong>Sem fontes retornadas</strong>
-          <div class="t">Tente reformular a pergunta com termos mais específicos.</div>
+          <div class="t">Tente reformular a pergunta com termos mais específicos (população, cenário e conduta).</div>
         </div>`;
       return;
     }
     items.forEach((it) => {
-      const title = escapeHtml(it?.title || "Referência");
-      const org = escapeHtml(it?.org || it?.source || "Fonte oficial");
-      const url = escapeHtml(it?.url || "#");
+      const title = escapeHtml(it?.title || it?.name || "Referência");
+      const org = escapeHtml(it?.org || it?.source || it?.publisher || "Fonte oficial");
+      const url = escapeHtml(it?.url || it?.link || "#");
       webList.insertAdjacentHTML("beforeend", `
         <div class="item">
           <strong>${org}</strong>
@@ -631,6 +662,32 @@
     metaTime.textContent = `Atualizado: ${now.toLocaleString("pt-BR")}${norm.cached ? " • cache" : ""}`;
     metaSources.textContent = `${(norm.sources?.length ?? 0)} fonte(s) listada(s)`;
     metaLine.style.display = "flex";
+  }
+
+  function addBubble(role, text, opts={}){
+    const stamp = opts.stamp ?? nowStamp();
+    const safe = (opts.html === true) ? text : escapeHtml(text);
+
+    const div = document.createElement("div");
+    div.className = `bubble ${role}`;
+    div.innerHTML = `
+      <div class="bHead">
+        <span class="role">${role === "user" ? "Usuário" : "Assistente"}</span>
+        <span class="stamp">${escapeHtml(stamp)}</span>
+      </div>
+      <div class="${opts.typing ? "typing" : ""}">${safe}</div>
+    `;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+    return div;
+  }
+
+  function replaceBubbleText(bubble, text){
+    const inner = bubble?.querySelector("div:last-child");
+    if(!inner) return;
+    inner.classList.remove("typing");
+    inner.textContent = text ?? "";
+    chatBox.scrollTop = chatBox.scrollHeight;
   }
 
   function saveHistory(q){
@@ -682,6 +739,14 @@
     });
   }
 
+  function getLastAssistantText(){
+    const bubbles = [...chatBox.querySelectorAll(".bubble.assistant")];
+    if(!bubbles.length) return "";
+    const last = bubbles[bubbles.length - 1];
+    const inner = last.querySelector("div:last-child");
+    return inner ? inner.innerText.trim() : "";
+  }
+
   function buildReportHtml(){
     const q = (qEl.value || "").trim();
     const when = new Date().toLocaleString("pt-BR");
@@ -691,9 +756,9 @@
     const refs = norm?.sources || [];
 
     const refsHtml = (Array.isArray(refs) ? refs : []).map(r => {
-      const org = escapeHtml(r?.org || r?.source || "Fonte oficial");
-      const url = escapeHtml(r?.url || "");
-      const title = escapeHtml(r?.title || "");
+      const org = escapeHtml(r?.org || r?.source || r?.publisher || "Fonte oficial");
+      const url = escapeHtml(r?.url || r?.link || "");
+      const title = escapeHtml(r?.title || r?.name || "");
       return `<li><b>${org}</b><br>${title}<br><span style="word-break:break-word">${url}</span></li>`;
     }).join("");
 
@@ -717,28 +782,17 @@
         <h1>Relatório de Pesquisa • Projeto Integrador</h1>
         <p class="muted">Gerado em: ${escapeHtml(when)} ${version ? " • Versão: " + escapeHtml(version) : ""}</p>
 
-        <div class="box">
-          <b>Pergunta</b>
-          <pre>${escapeHtml(q)}</pre>
-        </div>
-
-        <div class="box">
-          <b>Resposta</b>
-          <pre>${escapeHtml(answer)}</pre>
-        </div>
+        <div class="box"><b>Pergunta</b><pre>${escapeHtml(q)}</pre></div>
+        <div class="box"><b>Resposta</b><pre>${escapeHtml(answer)}</pre></div>
 
         <div class="box">
           <b>Fontes utilizadas (oficiais)</b>
           <ul>${refsHtml || "<li>Sem fontes.</li>"}</ul>
         </div>
 
-        <p class="muted" style="margin-top:18px">
-          Observação: verifique data/versão e escopo das publicações oficiais.
-        </p>
+        <p class="muted" style="margin-top:18px">Observação: verifique data/versão e escopo das publicações oficiais.</p>
 
-        <script>
-          setTimeout(() => window.print(), 350);
-        <\/script>
+        <script>setTimeout(() => window.print(), 350);<\/script>
       </body>
       </html>
     `;
@@ -753,7 +807,10 @@
     }
 
     lastQuestion = q;
-    answerBox.textContent = "Consultando fontes oficiais…";
+
+    addBubble("user", q);
+    const typingBubble = addBubble("assistant", "Consultando fontes oficiais…", { typing:true });
+
     renderWeb([]);
     sourcesDetails.open = true;
     metaLine.style.display = "none";
@@ -761,8 +818,12 @@
     try{
       const res = await fetch(FUNCTION_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: q }),
+        headers: { "Content-Type": "application/json", ...AUTH_HEADERS },
+        body: JSON.stringify({
+          question: q,
+          system: SYSTEM_INSTRUCTIONS,
+          locale: "pt-BR"
+        }),
         cache: "no-store",
       });
 
@@ -777,7 +838,7 @@
       const norm = normalizePayload(data);
       verPill.textContent = norm.version ? `Modo IA • ${norm.version}` : "Modo IA";
 
-      answerBox.textContent = norm.answer || "Consulta concluída.";
+      replaceBubbleText(typingBubble, norm.answer || "Consulta concluída.");
       renderWeb(norm.sources);
       setMeta(norm);
 
@@ -785,7 +846,7 @@
       showToast("Busca concluída", "Resposta e fontes atualizadas.");
     }catch(err){
       const msg = String(err?.message || err);
-      answerBox.textContent = "Não foi possível obter a resposta.";
+      replaceBubbleText(typingBubble, "Não foi possível obter a resposta. Veja detalhes em “Fontes utilizadas”.");
       webList.innerHTML = `
         <div class="item">
           <strong>Falha na consulta</strong>
@@ -796,14 +857,14 @@
   }
 
   async function copyAnswer(){
-    const text = answerBox.innerText?.trim() || "";
-    if(!text || text.includes("Digite uma pergunta")){
+    const text = getLastAssistantText();
+    if(!text){
       showToast("Nada para copiar", "Faça uma pesquisa primeiro.");
       return;
     }
     try{
       await navigator.clipboard.writeText(text);
-      showToast("Copiado ✅", "Resposta copiada para a área de transferência.");
+      showToast("Copiado ✅", "Última resposta copiada.");
     }catch{
       showToast("Não foi possível copiar", "Seu navegador bloqueou a área de transferência.");
     }
@@ -843,7 +904,15 @@
 
   el("btnClear").addEventListener("click", () => {
     qEl.value = "";
-    answerBox.innerHTML = 'Digite uma pergunta e clique em <b>Pesquisar</b>.';
+    chatBox.innerHTML = `
+      <div class="bubble assistant">
+        <div class="bHead">
+          <span class="role">Assistente</span>
+          <span class="stamp">${escapeHtml(nowStamp())}</span>
+        </div>
+        Digite uma pergunta e clique em <b>Pesquisar</b>.
+      </div>
+    `;
     webList.innerHTML = "";
     lastPayload = null;
     lastQuestion = "";
@@ -879,6 +948,9 @@
   });
 
   (function init(){
+    const helloStamp = el("helloStamp");
+    if(helloStamp) helloStamp.textContent = nowStamp();
+
     renderHistory();
     const u = new URL(window.location.href);
     const q = u.searchParams.get("q");
