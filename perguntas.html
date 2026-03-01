@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#0a0a0b" />
-  <title>Pesquisa Oficial • Brasil</title>
+  <title>Perguntas • Pesquisa Oficial</title>
 
   <style>
     :root{
@@ -19,10 +19,6 @@
       --ring: 0 0 0 4px rgba(255,255,255,.10);
       --ring2: 0 0 0 3px rgba(255,255,255,.08);
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-
-      /* tamanho texto respostas */
-      --ansFont: 14px;
-      --ansLine: 1.72;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -38,15 +34,14 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
-
     header{
       position:sticky; top:0; z-index:60;
-      background: rgba(10,10,11,.78);
+      background: rgba(10,10,11,.72);
       backdrop-filter: blur(14px);
       border-bottom:1px solid var(--stroke);
     }
     .top{
-      max-width:1200px;
+      max-width:1100px;
       margin:0 auto;
       padding:14px;
       display:flex;
@@ -91,7 +86,7 @@
       border-radius:999px;
       border:1px solid var(--stroke);
       background: rgba(255,255,255,.04);
-      color:rgba(255,255,255,.78);
+      color:var(--muted);
       font-weight:850;
       font-size:12px;
       white-space:nowrap;
@@ -110,11 +105,7 @@
     }
     @media(min-width:860px){ .kbd{display:inline-flex} }
 
-    main{
-      max-width:1200px;
-      margin:16px auto 70px;
-      padding:0 14px;
-    }
+    main{ max-width:1100px; margin:18px auto 80px; padding:0 14px; }
     .card{
       border-radius: var(--radius);
       border:1px solid var(--stroke);
@@ -209,25 +200,23 @@
     button:focus-visible{ outline:none; box-shadow: var(--ring2); }
     .primary{ background:#fff; color:#000; border:none; box-shadow: 0 14px 30px rgba(255,255,255,.08); }
     .mini{ padding:10px 12px; border-radius:12px; font-size:12px; font-weight:900; }
-    .danger{ border-color: rgba(255,255,255,.12); background: rgba(255,80,80,.08); }
 
     .split{
       display:grid;
-      grid-template-columns: 1.55fr .85fr; /* resposta maior */
+      grid-template-columns: 1.35fr .65fr;
       gap:12px;
       margin-top:14px;
     }
-    @media(max-width:980px){ .split{grid-template-columns:1fr} }
+    @media(max-width:860px){ .split{grid-template-columns:1fr} }
 
     .box{
       border:1px solid var(--stroke);
       background: rgba(255,255,255,.02);
       border-radius: 18px;
       overflow:hidden;
-      min-height: 62vh; /* aumenta área */
     }
     .boxHead{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
       padding:12px;
       border-bottom:1px solid var(--stroke);
       background: rgba(255,255,255,.03);
@@ -240,20 +229,18 @@
       letter-spacing:.25px;
       text-transform: uppercase;
     }
-    .tools{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
-    .boxBody{padding:12px; padding-bottom:14px;}
+    .boxBody{padding:12px;}
 
-    /* Chat */
+    /* Área de resposta MAIOR */
     .chat{
-      display:flex; flex-direction:column; gap:10px;
-      height: calc(62vh - 58px);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      height:66vh;
+      max-height:66vh;
       overflow:auto;
       padding-right:6px;
       scroll-behavior:smooth;
-    }
-    @media(max-width:980px){
-      .box{min-height:64vh}
-      .chat{height: calc(64vh - 58px);}
     }
     .bubble{
       border:1px solid rgba(255,255,255,.10);
@@ -263,11 +250,11 @@
       box-shadow: 0 12px 28px rgba(0,0,0,.30);
       white-space:pre-wrap;
       word-break:break-word;
-      line-height:var(--ansLine);
+      line-height:1.65;
       font-weight:780;
-      font-size: var(--ansFont);
+      font-size:13.4px;
     }
-    .bubble.user{ margin-left:18%; background: rgba(255,255,255,.03); }
+    .bubble.user{ margin-left:14%; background: rgba(255,255,255,.03); }
     .bubble.assistant{ margin-right:10%; }
     .bHead{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px;}
     .role{font-size:11px; font-weight:950; letter-spacing:.25px; text-transform:uppercase; color: rgba(255,255,255,.72);}
@@ -396,28 +383,6 @@
       margin-left:8px;
     }
 
-    .panel{
-      margin-top:12px;
-      padding:12px;
-      border:1px solid var(--stroke);
-      border-radius:18px;
-      background:rgba(255,255,255,.02)
-    }
-    .panel .cap{
-      font-weight:950;
-      font-size:12px;
-      color:rgba(255,255,255,.72);
-      letter-spacing:.25px;
-      text-transform:uppercase
-    }
-    .panel .txt{
-      margin-top:10px;
-      color:rgba(255,255,255,.70);
-      font-weight:800;
-      font-size:12.8px;
-      line-height:1.55
-    }
-
     .toast{
       position:fixed;
       left:50%;
@@ -468,44 +433,6 @@
       user-select:none;
     }
 
-    /* Fullscreen modal (só resposta) */
-    .modal{
-      position:fixed; inset:0;
-      background: rgba(0,0,0,.62);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:14px;
-      z-index:200;
-    }
-    .modal.show{display:flex;}
-    .modalCard{
-      width:min(1100px, 96vw);
-      height:min(84vh, 96vh);
-      border:1px solid var(--stroke);
-      background: rgba(12,12,14,.92);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-    }
-    .modalHead{
-      padding:12px;
-      border-bottom:1px solid var(--stroke);
-      display:flex; gap:10px; align-items:center; justify-content:space-between;
-      background: rgba(255,255,255,.03);
-    }
-    .modalHead strong{font-size:12px; letter-spacing:.25px; text-transform:uppercase; color: rgba(255,255,255,.72);}
-    .modalBody{
-      padding:12px;
-      overflow:auto;
-      white-space:pre-wrap;
-      font-size: calc(var(--ansFont) + 1px);
-      line-height: var(--ansLine);
-      font-weight: 800;
-    }
-
     footer{text-align:center; color: var(--muted2); font-weight:800; font-size:12px; padding:18px 10px 30px;}
     @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
   </style>
@@ -517,13 +444,13 @@
       <div class="brand">
         <div class="logo">PI</div>
         <div class="brandText">
-          <h1>Pesquisa Oficial • Brasil</h1>
-          <p>MS/ANVISA • BVS-MS • COFEN/COREN-SP • OPAS/OMS • Fiocruz • INCA • EBSERH</p>
+          <h1>Perguntas • Pesquisa Oficial</h1>
+          <p>Fontes: gov.br • ANVISA • BVS • COFEN/COREN • Fiocruz • OPAS/OMS • CDC</p>
         </div>
       </div>
       <div class="right">
         <span class="kbd">Ctrl K</span>
-        <div class="pill" id="statusPill">Pronto</div>
+        <div class="pill" id="verPill">Pesquisa</div>
       </div>
     </div>
   </header>
@@ -531,10 +458,10 @@
   <main>
     <section class="card" aria-label="Pesquisa">
       <div class="cardHead">
-        <h2 class="title">Pergunte e obtenha resposta com referências institucionais</h2>
+        <h2 class="title">Faça uma pergunta e receba uma resposta com referências</h2>
         <p class="sub">
-          O resultado é estruturado para prática e estudo, com checklist e referências.
-          Use <b>Baixar PDF</b> para gerar relatório (Imprimir → Salvar como PDF).
+          Respostas estruturadas em linguagem técnico-científica e com <b>referências oficiais</b>.
+          Use <b>Baixar PDF</b> para gerar um relatório (Imprimir → Salvar como PDF).
         </p>
       </div>
 
@@ -548,17 +475,17 @@
           </div>
 
           <div class="chips" aria-label="Sugestões">
-            <button class="chip" type="button" data-q="Qual agulha (calibre e comprimento) é geralmente indicada para aplicação intramuscular em adulto e quais cuidados de enfermagem?">IM (agulha e técnica)</button>
-            <button class="chip" type="button" data-q="Quais são as boas práticas na preparação e administração de medicamentos injetáveis?">Medicação segura</button>
-            <button class="chip" type="button" data-q="Quais são as medidas de prevenção e controle de infecções relacionadas à assistência à saúde em enfermagem?">IRAS / Precauções</button>
-            <button class="chip" type="button" data-q="Como realizar e registrar o Processo de Enfermagem (SAE) corretamente?">SAE / Registros</button>
+            <button class="chip" type="button" data-q="Qual agulha é indicada para aplicação intramuscular em adulto e quais critérios de escolha conforme biotipo e sítio?">Agulha IM</button>
+            <button class="chip" type="button" data-q="Quais são os passos de administração segura de medicamentos e os 'certos' da medicação?">Segurança na medicação</button>
+            <button class="chip" type="button" data-q="Quais medidas de prevenção e controle de infecção devem ser adotadas em procedimentos invasivos?">Prevenção de infecção</button>
+            <button class="chip" type="button" data-q="Como registrar e documentar cuidados de enfermagem de forma adequada no prontuário?">Registros</button>
           </div>
 
           <div class="row">
             <button id="btnAsk" class="primary" type="button">Pesquisar</button>
             <button id="btnCopy" type="button">Copiar última resposta</button>
             <button id="btnPdf" type="button">Baixar PDF</button>
-            <button id="btnShare" type="button">Copiar link</button>
+            <button id="btnShare" type="button">Compartilhar</button>
             <button id="btnClear" type="button">Limpar</button>
           </div>
         </div>
@@ -567,11 +494,8 @@
           <div class="box">
             <div class="boxHead">
               <h3>Resposta</h3>
-              <div class="tools">
+              <div class="row" style="gap:8px">
                 <button id="btnRetry" class="mini" type="button" title="Repetir">Repetir</button>
-                <button id="btnZoomIn" class="mini" type="button" title="Aumentar fonte">A+</button>
-                <button id="btnZoomOut" class="mini" type="button" title="Diminuir fonte">A−</button>
-                <button id="btnFull" class="mini" type="button" title="Tela cheia">Tela cheia</button>
               </div>
             </div>
 
@@ -582,13 +506,8 @@
                     <span class="role">Sistema</span>
                     <span class="stamp" id="helloStamp"></span>
                   </div>
-                  Digite sua pergunta e clique em <b>Pesquisar</b>.
+                  Digite uma pergunta e clique em <b>Pesquisar</b>.
                 </div>
-              </div>
-
-              <div class="row" style="margin-top:10px">
-                <button id="btnUp" class="mini" type="button">Ajudou</button>
-                <button id="btnDown" class="mini danger" type="button">Não ajudou</button>
               </div>
 
               <div class="metaLine" id="metaLine">
@@ -616,19 +535,15 @@
               <div id="historyList" class="historyList"></div>
             </div>
 
-            <div class="panel">
-              <div class="cap">Dica rápida</div>
-              <div class="txt">
-                Se a pergunta for técnica (ex.: “agulha”, “IM/SC/ID”, “diluição”), inclua: população (adulto/criança), via e local anatômico. Isso melhora a precisão.
+            <div style="margin-top:12px; padding:12px; border:1px solid var(--stroke); border-radius:18px; background:rgba(255,255,255,.02)">
+              <div style="font-weight:950; font-size:12px; color:rgba(255,255,255,.72); letter-spacing:.25px; text-transform:uppercase">
+                Dica rápida
+              </div>
+              <div style="margin-top:10px; color:rgba(255,255,255,.70); font-weight:800; font-size:12.8px; line-height:1.55">
+                Para perguntas técnicas, inclua: sítio (deltoide/ventroglúteo), biotipo, volume e viscosidade.
               </div>
             </div>
 
-            <div class="panel">
-              <div class="cap">Privacidade</div>
-              <div class="txt">
-                Não informe dados pessoais. O sistema registra apenas a pergunta, o resultado e sua avaliação para melhorar a qualidade.
-              </div>
-            </div>
           </div>
         </div>
 
@@ -643,49 +558,25 @@
     <button class="toastBtn" id="toastBtn" type="button">Fechar</button>
   </div>
 
-  <!-- Modal tela cheia -->
-  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Resposta em tela cheia">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>Resposta</strong>
-        <div class="row" style="gap:8px">
-          <button id="modalCopy" class="mini" type="button">Copiar</button>
-          <button id="modalClose" class="mini" type="button">Fechar</button>
-        </div>
-      </div>
-      <div id="modalBody" class="modalBody"></div>
-    </div>
-  </div>
-
 <script>
   // ============================
   // CONFIG
   // ============================
-  const PROJECT_REF = "owpswekkfaleauwjmahc";
-  const FUNCTION_URL = `https://${PROJECT_REF}.supabase.co/functions/v1/ask`;
+  const FUNCTION_URL = "https://owpswekkfaleauwjmahc.supabase.co/functions/v1/ask";
 
-  // Se sua Function exigir autorização, use a ANON key do Supabase (pública) aqui.
-  // const SUPABASE_ANON_KEY = "COLE_SUA_ANON_KEY_SE_PRECISAR";
+  // Se sua Function exigir Authorization, use a ANON key (pública) aqui.
+  // const SUPABASE_ANON_KEY = "COLE_SUA_ANON_KEY";
   // const AUTH_HEADERS = SUPABASE_ANON_KEY ? { "Authorization": `Bearer ${SUPABASE_ANON_KEY}` } : {};
   const AUTH_HEADERS = {};
-
-  // Instruções de estilo para respostas (sem mencionar IA)
-  const SYSTEM_INSTRUCTIONS = `
-Você deve responder em português do Brasil, linguagem formal técnico-científica.
-Priorize fontes institucionais e organismos oficiais (MS/ANVISA, BVS-MS, COFEN/COREN, OPAS/OMS, Fiocruz, INCA, EBSERH).
-Estruture de forma completa e operacional, com checklist, riscos/alertas e registro.
-Não invente dados. Se faltarem evidências, declare explicitamente a limitação.
-  `.trim();
 
   // ============================
   // Helpers
   // ============================
   const el = (id) => document.getElementById(id);
-
   const qEl = el("q");
   const chatBox = el("chatBox");
   const webList = el("webList");
-  const statusPill = el("statusPill");
+  const verPill = el("verPill");
   const metaLine = el("metaLine");
   const metaTime = el("metaTime");
   const metaSources = el("metaSources");
@@ -698,18 +589,12 @@ Não invente dados. Se faltarem evidências, declare explicitamente a limitaçã
 
   const historyList = el("historyList");
 
-  const modal = el("modal");
-  const modalBody = el("modalBody");
-  const modalClose = el("modalClose");
-  const modalCopy = el("modalCopy");
-
   let lastPayload = null;
   let lastQuestion = "";
-  let lastRunId = null;
   let toastTimer = null;
 
-  const HISTORY_KEY = "pi_history_v10";
-  const HISTORY_MAX = 14;
+  const HISTORY_KEY = "pi_history_perguntas_v1";
+  const HISTORY_MAX = 12;
 
   function escapeHtml(str){
     return String(str ?? "").replace(/[&<>"']/g, m => ({
@@ -734,11 +619,11 @@ Não invente dados. Se faltarem evidências, declare explicitamente a limitaçã
 
   function normalizePayload(data){
     return {
-      version: data?.version ?? data?.model ?? "",
-      answer: data?.answer ?? data?.text ?? data?.output ?? "",
-      sources: data?.sources ?? data?.web ?? data?.citations ?? data?.references ?? [],
+      version: data?.version ?? "",
+      answer: data?.answer ?? "",
+      sources: data?.sources ?? [],
       cached: !!data?.cached,
-      run_id: data?.run_id ?? null,
+      model: data?.model ?? ""
     };
   }
 
@@ -748,14 +633,14 @@ Não invente dados. Se faltarem evidências, declare explicitamente a limitaçã
       webList.innerHTML = `
         <div class="item">
           <strong>Sem referências retornadas</strong>
-          <div class="t">Tente incluir termos como: manual, protocolo, nota técnica, POP, segurança do paciente.</div>
+          <div class="t">Tente reformular com termos técnicos (sítio, biotipo, procedimento, manual).</div>
         </div>`;
       return;
     }
     items.forEach((it) => {
-      const title = escapeHtml(it?.title || it?.name || "Referência");
-      const org = escapeHtml(it?.org || it?.source || it?.publisher || "Instituição");
-      const url = escapeHtml(it?.url || it?.link || "#");
+      const title = escapeHtml(it?.title || "Referência");
+      const org = escapeHtml(it?.org || "Fonte");
+      const url = escapeHtml(it?.url || "#");
       webList.insertAdjacentHTML("beforeend", `
         <div class="item">
           <strong>${org}</strong>
@@ -769,8 +654,9 @@ Não invente dados. Se faltarem evidências, declare explicitamente a limitaçã
   function setMeta(norm){
     const now = new Date();
     metaTime.textContent = `Atualizado: ${now.toLocaleString("pt-BR")}${norm.cached ? " • cache" : ""}`;
-    metaSources.textContent = `${(norm.sources?.length ?? 0)} referência(s) listada(s)`;
+    metaSources.textContent = `${(norm.sources?.length ?? 0)} referência(s)`;
     metaLine.style.display = "flex";
+    verPill.textContent = norm.version ? `Pesquisa • ${norm.version}` : "Pesquisa";
   }
 
   function addBubble(role, text, opts={}){
@@ -781,7 +667,7 @@ Não invente dados. Se faltarem evidências, declare explicitamente a limitaçã
     div.className = `bubble ${role}`;
     div.innerHTML = `
       <div class="bHead">
-        <span class="role">${role === "user" ? "Pergunta" : "Resposta"}</span>
+        <span class="role">${role === "user" ? "Usuário" : "Resposta"}</span>
         <span class="stamp">${escapeHtml(stamp)}</span>
       </div>
       <div class="${opts.typing ? "typing" : ""}">${safe}</div>
@@ -797,14 +683,6 @@ Não invente dados. Se faltarem evidências, declare explicitamente a limitaçã
     inner.classList.remove("typing");
     inner.textContent = text ?? "";
     chatBox.scrollTop = chatBox.scrollHeight;
-  }
-
-  function getLastAssistantText(){
-    const bubbles = [...chatBox.querySelectorAll(".bubble.assistant")];
-    if(!bubbles.length) return "";
-    const last = bubbles[bubbles.length - 1];
-    const inner = last.querySelector("div:last-child");
-    return inner ? inner.innerText.trim() : "";
   }
 
   function saveHistory(q){
@@ -856,18 +734,25 @@ Não invente dados. Se faltarem evidências, declare explicitamente a limitaçã
     });
   }
 
+  function getLastAssistantText(){
+    const bubbles = [...chatBox.querySelectorAll(".bubble.assistant")];
+    if(!bubbles.length) return "";
+    const last = bubbles[bubbles.length - 1];
+    const inner = last.querySelector("div:last-child");
+    return inner ? inner.innerText.trim() : "";
+  }
+
   function buildReportHtml(){
     const q = (qEl.value || "").trim();
     const when = new Date().toLocaleString("pt-BR");
     const norm = normalizePayload(lastPayload || {});
-    const version = norm?.version ? String(norm.version) : "";
     const answer = norm?.answer ? String(norm.answer) : "";
     const refs = norm?.sources || [];
 
     const refsHtml = (Array.isArray(refs) ? refs : []).map(r => {
-      const org = escapeHtml(r?.org || r?.source || r?.publisher || "Instituição");
-      const url = escapeHtml(r?.url || r?.link || "");
-      const title = escapeHtml(r?.title || r?.name || "");
+      const org = escapeHtml(r?.org || "Fonte");
+      const url = escapeHtml(r?.url || "");
+      const title = escapeHtml(r?.title || "");
       return `<li><b>${org}</b><br>${title}<br><span style="word-break:break-word">${url}</span></li>`;
     }).join("");
 
@@ -889,20 +774,11 @@ Não invente dados. Se faltarem evidências, declare explicitamente a limitaçã
       </head>
       <body>
         <h1>Relatório de Pesquisa • Projeto Integrador</h1>
-        <p class="muted">Gerado em: ${escapeHtml(when)} ${version ? " • Versão: " + escapeHtml(version) : ""}</p>
-
+        <p class="muted">Gerado em: ${escapeHtml(when)}</p>
         <div class="box"><b>Pergunta</b><pre>${escapeHtml(q)}</pre></div>
         <div class="box"><b>Resposta</b><pre>${escapeHtml(answer)}</pre></div>
-
-        <div class="box">
-          <b>Referências (institucionais)</b>
-          <ul>${refsHtml || "<li>Sem referências.</li>"}</ul>
-        </div>
-
-        <p class="muted" style="margin-top:18px">
-          Observação: verifique data/versão e escopo das publicações institucionais.
-        </p>
-
+        <div class="box"><b>Referências</b><ul>${refsHtml || "<li>Sem referências.</li>"}</ul></div>
+        <p class="muted" style="margin-top:18px">Observação: confirme a versão e data dos documentos oficiais.</p>
         <script>setTimeout(() => window.print(), 350);<\/script>
       </body>
       </html>
@@ -912,16 +788,14 @@ Não invente dados. Se faltarem evidências, declare explicitamente a limitaçã
   async function ask(){
     const q = (qEl.value || "").trim();
     if(!q){
-      showToast("Digite uma pergunta", "Ex.: “Qual agulha para IM em adulto…?”");
+      showToast("Digite uma pergunta", "Ex.: “Qual agulha é indicada…?”");
       qEl.focus();
       return;
     }
 
     lastQuestion = q;
-    statusPill.textContent = "Consultando…";
-
     addBubble("user", q);
-    const typingBubble = addBubble("assistant", "Consultando referências institucionais…", { typing:true });
+    const typingBubble = addBubble("assistant", "Consultando referências oficiais…", { typing:true });
 
     renderWeb([]);
     sourcesDetails.open = true;
@@ -931,13 +805,7 @@ Não invente dados. Se faltarem evidências, declare explicitamente a limitaçã
       const res = await fetch(FUNCTION_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json", ...AUTH_HEADERS },
-        body: JSON.stringify({
-          question: q,
-          system: SYSTEM_INSTRUCTIONS,
-          locale: "pt-BR",
-          detailLevel: "max",
-          referencesMode: "inline"
-        }),
+        body: JSON.stringify({ question: q }),
         cache: "no-store",
       });
 
@@ -950,26 +818,21 @@ Não invente dados. Se faltarem evidências, declare explicitamente a limitaçã
       lastPayload = data;
 
       const norm = normalizePayload(data);
-      lastRunId = norm.run_id || null;
-
-      statusPill.textContent = "Atualizado";
-
       replaceBubbleText(typingBubble, norm.answer || "Consulta concluída.");
       renderWeb(norm.sources);
       setMeta(norm);
 
       saveHistory(q);
-      showToast("Concluído", "Resposta e referências atualizadas.");
+      showToast("Concluído", "Resposta atualizada com referências.");
     }catch(err){
       const msg = String(err?.message || err);
-      statusPill.textContent = "Erro";
       replaceBubbleText(typingBubble, "Não foi possível obter a resposta. Veja detalhes em “Referências utilizadas”.");
       webList.innerHTML = `
         <div class="item">
           <strong>Falha na consulta</strong>
           <div class="t">${escapeHtml(msg)}</div>
         </div>`;
-      showToast("Erro", "Veja o detalhe em ‘Referências’.");
+      showToast("Erro", "Veja a mensagem em ‘Referências utilizadas’.");
     }
   }
 
@@ -1006,66 +869,10 @@ Não invente dados. Se faltarem evidências, declare explicitamente a limitaçã
       await navigator.clipboard.writeText(base.toString());
       showToast("Link copiado ✅", "Envie para compartilhar a pergunta.");
     }catch{
-      showToast("Falha ao copiar", "Copie manualmente na barra do navegador.");
+      showToast("Falha ao copiar link", "Copie manualmente na barra do navegador.");
     }
   }
 
-  async function sendFeedback(vote, reason_codes=[], comment=""){
-    if(!lastRunId){
-      showToast("Sem consulta anterior", "Faça uma pesquisa antes de avaliar.");
-      return;
-    }
-    try{
-      const res = await fetch(FUNCTION_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", ...AUTH_HEADERS },
-        body: JSON.stringify({
-          mode: "feedback",
-          run_id: lastRunId,
-          vote,
-          reason_codes,
-          comment
-        }),
-        cache: "no-store",
-      });
-      if(!res.ok) throw new Error(await res.text());
-      showToast("Obrigado", "Avaliação registrada.");
-    }catch{
-      showToast("Falha ao registrar", "Tente novamente.");
-    }
-  }
-
-  // Zoom fonte
-  function setFont(px){
-    const v = Math.max(12, Math.min(18, px));
-    document.documentElement.style.setProperty("--ansFont", v + "px");
-    localStorage.setItem("pi_ans_font", String(v));
-  }
-  function loadFont(){
-    const v = parseInt(localStorage.getItem("pi_ans_font") || "14", 10);
-    if(!isNaN(v)) setFont(v);
-  }
-
-  // Modal tela cheia
-  function openModal(){
-    const txt = getLastAssistantText();
-    if(!txt){ showToast("Sem resposta", "Faça uma pesquisa primeiro."); return; }
-    modalBody.textContent = txt;
-    modal.classList.add("show");
-  }
-  function closeModal(){ modal.classList.remove("show"); }
-  modalClose.addEventListener("click", closeModal);
-  modal.addEventListener("click", (e) => { if(e.target === modal) closeModal(); });
-  modalCopy.addEventListener("click", async () => {
-    try{
-      await navigator.clipboard.writeText(modalBody.innerText || "");
-      showToast("Copiado ✅", "Resposta copiada.");
-    }catch{
-      showToast("Falha ao copiar", "Permissão negada.");
-    }
-  });
-
-  // Buttons
   el("btnAsk").addEventListener("click", ask);
   el("btnRetry").addEventListener("click", () => {
     if(lastQuestion){ qEl.value = lastQuestion; ask(); }
@@ -1075,22 +882,6 @@ Não invente dados. Se faltarem evidências, declare explicitamente a limitaçã
   el("btnShare").addEventListener("click", share);
   el("btnCopy").addEventListener("click", copyAnswer);
 
-  el("btnZoomIn").addEventListener("click", () => {
-    const cur = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--ansFont")) || 14;
-    setFont(cur + 1);
-  });
-  el("btnZoomOut").addEventListener("click", () => {
-    const cur = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--ansFont")) || 14;
-    setFont(cur - 1);
-  });
-  el("btnFull").addEventListener("click", openModal);
-
-  el("btnUp").addEventListener("click", () => sendFeedback("up"));
-  el("btnDown").addEventListener("click", () => {
-    // motivos padrão (sem perguntar)
-    sendFeedback("down", ["faltou_detalhe_tecnico","faltou_passo_a_passo","faltou_fontes"]);
-  });
-
   el("btnClear").addEventListener("click", () => {
     qEl.value = "";
     chatBox.innerHTML = `
@@ -1099,14 +890,13 @@ Não invente dados. Se faltarem evidências, declare explicitamente a limitaçã
           <span class="role">Sistema</span>
           <span class="stamp">${escapeHtml(nowStamp())}</span>
         </div>
-        Digite sua pergunta e clique em <b>Pesquisar</b>.
+        Digite uma pergunta e clique em <b>Pesquisar</b>.
       </div>
     `;
     webList.innerHTML = "";
     lastPayload = null;
     lastQuestion = "";
-    lastRunId = null;
-    statusPill.textContent = "Pronto";
+    verPill.textContent = "Pesquisa";
     metaLine.style.display = "none";
     sourcesDetails.open = false;
     showToast("Limpo", "Campo e resultados zerados.");
@@ -1135,13 +925,9 @@ Não invente dados. Se faltarem evidências, declare explicitamente a limitaçã
       e.preventDefault();
       qEl.focus();
     }
-    if(e.key === "Escape"){
-      closeModal();
-    }
   });
 
   (function init(){
-    loadFont();
     const helloStamp = el("helloStamp");
     if(helloStamp) helloStamp.textContent = nowStamp();
 
