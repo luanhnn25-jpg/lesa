@@ -5,204 +5,258 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Impacto Econômico - Lesão por Pressão</title>
 
-  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
   <style>
-    /* =========================
-       RESET (tira a faixa branca)
-       ========================= */
     html, body{
       margin:0 !important;
       padding:0 !important;
     }
 
-    /* =========================
-       ISOLAMENTO (só IMPACTO)
-       ========================= */
+    :root{
+      --i-blue-1:#0b3d91;
+      --i-blue-2:#0f5bd3;
+      --i-blue-3:#0b5bd3;
+      --i-navy:#082c63;
+      --i-gold:#f0b400;
+
+      --i-card:#ffffff;
+      --i-muted:#475569;
+      --i-text:#0f172a;
+
+      --i-radius:20px;
+
+      --i-shadow:0 12px 30px rgba(2,6,23,.10);
+      --i-shadow-2:0 22px 60px rgba(2,6,23,.16);
+      --i-soft:0 10px 24px rgba(2,6,23,.08);
+
+      --i-glow:0 0 0 4px rgba(56,130,246,.16), 0 18px 42px rgba(15,91,211,.18);
+      --i-border:rgba(15,23,42,.10);
+
+      --i-grad:linear-gradient(135deg, rgba(15,91,211,.55), rgba(11,61,145,.20), rgba(240,180,0,.22));
+    }
+
     body.impacto{
       margin:0 !important;
       padding:0 !important;
       overflow-x:hidden;
-
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:#0f172a;
-
-      /* fundo com vida */
+      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--i-text);
       background:
         radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.16), transparent 55%),
         radial-gradient(900px 520px at 90% 10%, rgba(11,61,145,.14), transparent 55%),
         radial-gradient(900px 520px at 50% 110%, rgba(240,180,0,.08), transparent 55%),
         #eef2f6;
-
-      --i-blue-1:#0b3d91;
-      --i-blue-2:#0f5bd3;
-      --i-blue-3:#0b5bd3;
-      --i-navy:#082c63;
-
-      --i-card:#ffffff;
-      --i-muted:#475569;
-
-      --i-radius: 20px;
-
-      --i-shadow: 0 12px 30px rgba(2,6,23,.10);
-      --i-shadow-2: 0 22px 60px rgba(2,6,23,.16);
-      --i-soft: 0 10px 24px rgba(2,6,23,.08);
-
-      --i-glow: 0 0 0 4px rgba(56,130,246,.16), 0 18px 42px rgba(15,91,211,.18);
-      --i-border: rgba(15,23,42,.10);
-
-      /* borda gradiente “premium” */
-      --i-grad: linear-gradient(135deg, rgba(15,91,211,.55), rgba(11,61,145,.20), rgba(240,180,0,.22));
     }
 
     body.impacto *{ box-sizing:border-box; }
     body.impacto a{ -webkit-tap-highlight-color: transparent; }
 
-    /* =========================
-       HEADER
-       ========================= */
     body.impacto header{
       margin:0 !important;
-      background: linear-gradient(90deg, var(--i-blue-1), var(--i-blue-2));
+      background:
+        radial-gradient(circle at top center, rgba(255,255,255,.18), transparent 40%),
+        linear-gradient(90deg, var(--i-blue-1), var(--i-blue-2));
       color:#fff;
       text-align:center;
-      padding: 48px 16px 28px;
-      box-shadow: 0 18px 42px rgba(2,6,23,.18);
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      position: relative;
+      padding:50px 16px 30px;
+      box-shadow:0 18px 42px rgba(2,6,23,.18);
+      border-bottom:1px solid rgba(255,255,255,.10);
+      position:relative;
       overflow:hidden;
     }
 
-    /* brilho interno (não vira “faixa”) */
     body.impacto header::after{
       content:"";
       position:absolute;
       inset:-120px -120px auto -120px;
-      height: 220px;
-      background: radial-gradient(circle at 50% 65%, rgba(255,255,255,.14), transparent 62%);
+      height:220px;
+      background:radial-gradient(circle at 50% 65%, rgba(255,255,255,.14), transparent 62%);
       pointer-events:none;
     }
 
     body.impacto header h1{
       margin:0;
-      font-size: clamp(24px, 3.6vw, 34px);
-      font-weight: 950;
-      letter-spacing: -0.4px;
-      line-height: 1.15;
-      text-shadow: 0 10px 24px rgba(2,6,23,.18);
-      position: relative;
-    }
-    body.impacto header p{
-      margin: 10px 0 0;
-      font-size: 15px;
-      opacity: 0.95;
-      position: relative;
+      font-size:clamp(26px, 3.8vw, 38px);
+      font-weight:1000;
+      letter-spacing:-0.4px;
+      line-height:1.15;
+      text-shadow:0 10px 24px rgba(2,6,23,.18);
+      position:relative;
     }
 
-    /* =========================
-       MENU
-       ========================= */
+    body.impacto header p{
+      margin:10px 0 0;
+      font-size:15px;
+      opacity:.95;
+      position:relative;
+      font-weight:700;
+    }
+
     body.impacto .topnav{
-      background: var(--i-navy);
-      position: sticky;
+      background:rgba(8,44,99,.94);
+      backdrop-filter:blur(10px);
+      position:sticky;
       top:0;
-      z-index: 999;
+      z-index:999;
       display:flex;
       justify-content:center;
-      gap: 14px;
-      padding: 10px 12px;
-      box-shadow: 0 12px 24px rgba(2,6,23,.12);
-      flex-wrap: wrap;
-      border-bottom: 1px solid rgba(255,255,255,.08);
+      gap:14px;
+      padding:10px 12px;
+      box-shadow:0 12px 24px rgba(2,6,23,.12);
+      flex-wrap:wrap;
+      border-bottom:1px solid rgba(255,255,255,.08);
     }
+
     body.impacto .topnav a{
       color:#fff !important;
       text-decoration:none;
       font-weight:900;
       font-size:14px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
-      white-space: nowrap;
+      padding:10px 12px;
+      border-radius:12px;
+      transition:transform .15s ease, background .15s ease, box-shadow .15s ease;
+      white-space:nowrap;
       outline:none;
-    }
-    body.impacto .topnav a:hover{
-      background: rgba(255,255,255,0.14);
-      transform: translateY(-1px);
-      box-shadow: 0 12px 24px rgba(2,6,23,.18);
-    }
-    body.impacto .topnav a:focus-visible{
-      background: rgba(255,255,255,0.14);
-      box-shadow: var(--i-glow);
-    }
-    body.impacto .topnav a[aria-current="page"]{
-      background: rgba(255,255,255,0.18);
-      outline: 1px solid rgba(255,255,255,0.16);
+      background:rgba(255,255,255,.04);
     }
 
-    /* =========================
-       MAIN
-       ========================= */
+    body.impacto .topnav a:hover{
+      background:rgba(255,255,255,0.14);
+      transform:translateY(-1px);
+      box-shadow:0 12px 24px rgba(2,6,23,.18);
+    }
+
+    body.impacto .topnav a:focus-visible{
+      background:rgba(255,255,255,0.14);
+      box-shadow:var(--i-glow);
+    }
+
+    body.impacto .topnav a[aria-current="page"]{
+      background:rgba(255,255,255,0.18);
+      outline:1px solid rgba(255,255,255,0.16);
+    }
+
     body.impacto main{
-      max-width: 1100px;
-      margin: 18px auto;
-      padding: 0 16px 46px;
+      max-width:1100px;
+      margin:20px auto;
+      padding:0 16px 46px;
+    }
+
+    body.impacto .hero{
+      background:linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
+      border-radius:24px;
+      padding:26px 24px;
+      margin:14px 0 18px;
+      box-shadow:var(--i-shadow-2);
+      border:1px solid var(--i-border);
+      position:relative;
+      overflow:hidden;
+    }
+
+    body.impacto .hero::before{
+      content:"";
+      position:absolute;
+      inset:auto -80px -80px auto;
+      width:260px;
+      height:260px;
+      border-radius:50%;
+      background:radial-gradient(circle at center, rgba(11,91,211,.10), transparent 65%);
+      pointer-events:none;
+    }
+
+    body.impacto .hero h2{
+      margin:0 0 10px;
+      font-size:clamp(24px, 3vw, 34px);
+      line-height:1.1;
+      color:#0b2b63;
+      font-weight:1000;
+      letter-spacing:-0.3px;
+      position:relative;
+      z-index:1;
+    }
+
+    body.impacto .hero p{
+      margin:0;
+      color:#334155;
+      font-size:16px;
+      line-height:1.7;
+      max-width:76ch;
+      position:relative;
+      z-index:1;
+    }
+
+    body.impacto .hero-badges{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+      position:relative;
+      z-index:1;
+    }
+
+    body.impacto .hero-badge{
+      padding:9px 13px;
+      border-radius:999px;
+      background:#eff6ff;
+      border:1px solid #dbeafe;
+      color:#0b3d91;
+      font-size:13px;
+      font-weight:900;
+      box-shadow:var(--i-soft);
     }
 
     body.impacto .section-title{
-      font-size: 22px;
-      font-weight: 950;
-      margin: 18px 0 12px;
-      letter-spacing: -0.2px;
+      font-size:22px;
+      font-weight:950;
+      margin:18px 0 12px;
+      letter-spacing:-0.2px;
       color:#0b2b63;
       display:flex;
       align-items:center;
-      gap: 10px;
+      gap:10px;
+      position:relative;
+      z-index:1;
     }
+
     body.impacto .section-title::before{
       content:"";
       width:4px;
       height:22px;
       border-radius:999px;
-      background: var(--i-blue-3);
-      box-shadow: 0 10px 18px rgba(11,91,211,.25);
+      background:var(--i-blue-3);
+      box-shadow:0 10px 18px rgba(11,91,211,.25);
     }
 
-    /* =========================
-       CARDS (mais vivos)
-       ========================= */
     body.impacto .card{
-      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
-      border-radius: var(--i-radius);
-      padding: 20px 22px;
-      margin: 14px 0;
-      box-shadow: var(--i-shadow);
-      border: 1px solid var(--i-border);
-      position: relative;
+      background:linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
+      border-radius:var(--i-radius);
+      padding:20px 22px;
+      margin:14px 0;
+      box-shadow:var(--i-shadow);
+      border:1px solid var(--i-border);
+      position:relative;
       overflow:hidden;
-      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-      will-change: transform;
+      transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+      will-change:transform;
     }
 
-    /* borda gradiente “premium” */
     body.impacto .card::after{
       content:"";
       position:absolute;
       inset:0;
       padding:1px;
-      border-radius: inherit;
-      background: var(--i-grad);
+      border-radius:inherit;
+      background:var(--i-grad);
       -webkit-mask:
         linear-gradient(#000 0 0) content-box,
         linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
       opacity:.55;
       pointer-events:none;
     }
 
-    /* brilho interno no hover */
     body.impacto .card::before{
       content:"";
       position:absolute;
@@ -210,180 +264,224 @@
       background:
         radial-gradient(700px 260px at 20% 0%, rgba(11,91,211,.12), transparent 55%),
         radial-gradient(520px 240px at 90% 20%, rgba(240,180,0,.10), transparent 60%);
-      opacity: 0;
-      transition: opacity .18s ease;
+      opacity:0;
+      transition:opacity .18s ease;
       pointer-events:none;
     }
 
     body.impacto .card:hover{
-      transform: translateY(-4px);
-      box-shadow: var(--i-shadow-2);
-      border-color: rgba(11,91,211,.22);
+      transform:translateY(-4px);
+      box-shadow:var(--i-shadow-2);
+      border-color:rgba(11,91,211,.22);
     }
+
     body.impacto .card:hover::before{ opacity: 1; }
-    body.impacto .card:focus-within{
-      box-shadow: var(--i-shadow-2), var(--i-glow);
-      border-color: rgba(11,91,211,.30);
-    }
 
     body.impacto .muted{
-      color: var(--i-muted);
-      font-size: 14px;
-      line-height: 1.6;
-      margin-top: 6px;
+      color:var(--i-muted);
+      font-size:14px;
+      line-height:1.65;
+      margin-top:6px;
+      position:relative;
+      z-index:1;
     }
 
-    /* =========================
-       TABELA
-       ========================= */
     body.impacto .table-wrap{
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      border-radius: 16px;
-      margin-top: 10px;
-      box-shadow: var(--i-soft);
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      border-radius:16px;
+      margin-top:10px;
+      box-shadow:var(--i-soft);
+      position:relative;
+      z-index:1;
     }
+
     body.impacto table{
       width:100%;
-      min-width: 920px;
-      border-collapse: collapse;
+      min-width:920px;
+      border-collapse:collapse;
       background:#fff;
-      border-radius: 16px;
-      overflow: hidden;
-      border: 1px solid rgba(15,23,42,.10);
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid rgba(15,23,42,.10);
     }
+
     body.impacto th, body.impacto td{
-      padding: 12px 12px;
-      border-bottom: 1px solid #ececec;
-      vertical-align: top;
-      font-size: 14px;
-      line-height: 1.5;
+      padding:12px 12px;
+      border-bottom:1px solid #ececec;
+      vertical-align:top;
+      font-size:14px;
+      line-height:1.55;
       color:#243042;
     }
+
     body.impacto th{
-      background: linear-gradient(180deg, var(--i-blue-1), #0b4ab1);
+      background:linear-gradient(180deg, var(--i-blue-1), #0b4ab1);
       color:#fff;
-      font-weight: 950;
-      font-size: 14px;
+      font-weight:950;
+      font-size:14px;
     }
-    body.impacto tr:last-child td{ border-bottom: none; }
+
+    body.impacto tr:last-child td{ border-bottom:none; }
     body.impacto td strong{ color:#0b3d91; }
 
-    /* =========================
-       GRÁFICO
-       ========================= */
     body.impacto .chart-box{
       background:#fff;
-      border-radius: 16px;
-      padding: 14px 14px 8px;
-      border: 1px solid rgba(15,23,42,.10);
-      overflow: hidden;
-      box-shadow: var(--i-soft);
-    }
-    body.impacto .chart-wrap{
-      position: relative;
-      width: 100%;
-      height: 360px;
+      border-radius:16px;
+      padding:14px 14px 8px;
+      border:1px solid rgba(15,23,42,.10);
+      overflow:hidden;
+      box-shadow:var(--i-soft);
+      position:relative;
+      z-index:1;
     }
 
-    /* =========================
-       PREVENÇÃO X TRATAMENTO
-       ========================= */
-    body.impacto .two-cols{
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 10px;
+    body.impacto .chart-wrap{
+      position:relative;
+      width:100%;
+      height:360px;
     }
+
+    body.impacto .two-cols{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-top:10px;
+      position:relative;
+      z-index:1;
+    }
+
     body.impacto .mini{
       background:#fff;
-      border-radius: 16px;
-      padding: 14px 16px;
-      border: 1px solid rgba(15,23,42,.10);
-      box-shadow: var(--i-soft);
-      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
-      position: relative;
+      border-radius:16px;
+      padding:14px 16px;
+      border:1px solid rgba(15,23,42,.10);
+      box-shadow:var(--i-soft);
+      transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+      position:relative;
       overflow:hidden;
     }
+
     body.impacto .mini::before{
       content:"";
       position:absolute;
       inset:-2px;
       background: radial-gradient(520px 220px at 20% 10%, rgba(11,91,211,.10), transparent 60%);
       opacity:0;
-      transition: opacity .16s ease;
+      transition:opacity .16s ease;
       pointer-events:none;
     }
+
     body.impacto .mini:hover{
-      transform: translateY(-3px);
-      box-shadow: 0 22px 44px rgba(2,6,23,.12);
-      border-color: rgba(11,91,211,.18);
+      transform:translateY(-3px);
+      box-shadow:0 22px 44px rgba(2,6,23,.12);
+      border-color:rgba(11,91,211,.18);
     }
+
     body.impacto .mini:hover::before{ opacity:1; }
 
     body.impacto .mini h3{
       margin:0 0 8px;
-      font-size: 16px;
-      font-weight: 950;
+      font-size:16px;
+      font-weight:950;
       color:#0b2b63;
+      position:relative;
+      z-index:1;
     }
 
     body.impacto ul{
-      margin: 8px 0 0;
-      padding-left: 18px;
+      margin:8px 0 0;
+      padding-left:18px;
+      position:relative;
+      z-index:1;
     }
+
     body.impacto li{
-      font-size: 14px;
-      line-height: 1.55;
+      font-size:14px;
+      line-height:1.6;
       color:#243042;
+      margin:6px 0;
     }
 
-    /* =========================
-       REFERÊNCIAS (links bonitos)
-       ========================= */
     body.impacto .refs{
-      margin: 10px 0 0;
-      padding-left: 18px;
-    }
-    body.impacto .refs li{
-      margin: 10px 0;
-    }
-    body.impacto .refs a{
-      color: var(--i-blue-2);
-      font-weight: 900;
-      text-decoration: none;
-      border-bottom: 1px dashed rgba(15,91,211,.45);
-      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
-      border-radius: 8px;
-      padding: 0 2px;
-      outline: none;
-      word-break: break-word;
-    }
-    body.impacto .refs a:hover{
-      background: rgba(15,91,211,.08);
-      box-shadow: 0 10px 22px rgba(2,6,23,.08);
-    }
-    body.impacto .refs a:focus-visible{
-      box-shadow: var(--i-glow);
-      background: rgba(15,91,211,.10);
+      margin:10px 0 0;
+      padding-left:18px;
+      position:relative;
+      z-index:1;
     }
 
-    /* FOOTER */
+    body.impacto .refs li{
+      margin:10px 0;
+    }
+
+    body.impacto .refs a{
+      color:var(--i-blue-2);
+      font-weight:900;
+      text-decoration:none;
+      border-bottom:1px dashed rgba(15,91,211,.45);
+      transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+      border-radius:8px;
+      padding:0 2px;
+      outline:none;
+      word-break:break-word;
+    }
+
+    body.impacto .refs a:hover{
+      background:rgba(15,91,211,.08);
+      box-shadow:0 10px 22px rgba(2,6,23,.08);
+    }
+
+    body.impacto .refs a:focus-visible{
+      box-shadow:var(--i-glow);
+      background:rgba(15,91,211,.10);
+    }
+
+    body.impacto .stamp{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-radius:999px;
+      background:#eff6ff;
+      border:1px solid #dbeafe;
+      color:#0b3d91;
+      font-size:12px;
+      font-weight:900;
+      margin-top:10px;
+      position:relative;
+      z-index:1;
+    }
+
     body.impacto footer{
       text-align:center;
       color:#475569;
-      padding: 22px 12px;
-      font-size: 13px;
-      opacity: 0.95;
+      padding:22px 12px;
+      font-size:13px;
+      opacity:.95;
     }
 
-    /* MOBILE */
     @media (max-width: 900px){
       body.impacto header h1{ font-size: 26px; }
       body.impacto header p{ font-size: 14px; }
       body.impacto .chart-wrap{ height: 320px; }
       body.impacto .two-cols{ grid-template-columns: 1fr; }
       body.impacto .section-title{ font-size: 20px; }
+    }
+
+    @media (max-width: 820px){
+      body.impacto .topnav{
+        justify-content:flex-start;
+        flex-wrap:nowrap;
+        overflow-x:auto;
+        scrollbar-width:none;
+        -webkit-overflow-scrolling:touch;
+      }
+
+      body.impacto .topnav::-webkit-scrollbar{ display:none; }
+
+      body.impacto .topnav a{
+        flex:0 0 auto;
+      }
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -396,7 +494,7 @@
 
   <header>
     <h1>Impacto Econômico Hospitalar</h1>
-    <p>Custos estimados associados à Lesão por Pressão (LPP)</p>
+    <p>Custos estimados associados à lesão por pressão no contexto assistencial</p>
   </header>
 
   <nav class="topnav">
@@ -411,9 +509,28 @@
 
   <main>
 
+    <section class="hero">
+      <h2>O impacto financeiro da lesão por pressão vai além do curativo</h2>
+      <p>
+        A lesão por pressão está associada ao aumento do tempo de internação, maior consumo de materiais,
+        necessidade de assistência multiprofissional e elevação do custo hospitalar. Em situações avançadas
+        ou complexas, o tratamento pode atingir valores muito expressivos.
+      </p>
+
+      <div class="hero-badges">
+        <span class="hero-badge">Internação prolongada</span>
+        <span class="hero-badge">Maior uso de insumos</span>
+        <span class="hero-badge">Mais tempo assistencial</span>
+        <span class="hero-badge">Prevenção reduz custo</span>
+      </div>
+    </section>
+
     <div class="card">
       <div class="section-title">Dados de custo</div>
-      <div class="muted"></div>
+      <div class="muted">
+        Os valores abaixo sintetizam estimativas encontradas em diferentes contextos de assistência e pesquisa.
+        A comparação deve considerar a unidade de medida utilizada em cada estudo.
+      </div>
 
       <div class="table-wrap">
         <table>
@@ -427,40 +544,40 @@
           </thead>
           <tbody>
             <tr>
-              <td><strong>Custos diretos de curativos (todos estágios)</strong></td>
+              <td><strong>Custos diretos de curativos (todos os estágios)</strong></td>
               <td>Por procedimento</td>
               <td><strong>R$ 16,41 a R$ 260,18</strong></td>
-              <td>Materiais + mão de obra diretamente no procedimento.</td>
+              <td>Inclui materiais e mão de obra diretamente relacionados ao procedimento.</td>
             </tr>
             <tr>
-              <td><strong>Custo total de tratamento (hospitalar)</strong></td>
+              <td><strong>Custo total de tratamento hospitalar</strong></td>
               <td>Por paciente / 6 meses</td>
               <td><strong>R$ 1.886,00</strong></td>
-              <td>Média por paciente ao longo de 6 meses (inclui materiais e alguns profissionais).</td>
+              <td>Média por paciente ao longo de seis meses, conforme o estudo citado.</td>
             </tr>
             <tr>
-              <td><strong>LPP estágios avançados (III–IV)</strong></td>
+              <td><strong>LPP em estágios avançados (III–IV)</strong></td>
               <td>Total / 104 curativos</td>
               <td><strong>R$ 6.828,27</strong></td>
-              <td>Materiais consumidos (tempo médio de internação: 92 dias).</td>
+              <td>Estimativa com base em materiais consumidos em internação prolongada.</td>
             </tr>
             <tr>
-              <td><strong>LPP estágios avançados (III–IV)</strong></td>
+              <td><strong>LPP em estágios avançados (III–IV)</strong></td>
               <td>Média diária</td>
               <td><strong>R$ 74,22 por dia</strong></td>
-              <td>Estimativa média diária reportada no contexto.</td>
+              <td>Valor médio diário relatado no contexto assistencial estudado.</td>
             </tr>
             <tr>
-              <td><strong>Caso de alta complexidade (exemplo)</strong></td>
+              <td><strong>Caso de alta complexidade</strong></td>
               <td>Total / 189 dias</td>
               <td><strong>R$ 111.254,85</strong></td>
-              <td>Inclui internação prolongada, profissionais e materiais.</td>
+              <td>Inclui internação prolongada, recursos humanos e materiais utilizados.</td>
             </tr>
             <tr>
-              <td><strong>Caso de alta complexidade (exemplo)</strong></td>
+              <td><strong>Caso de alta complexidade</strong></td>
               <td>Média diária</td>
               <td><strong>R$ 588,65 por dia</strong></td>
-              <td>Média diária estimada no estudo de caso.</td>
+              <td>Média diária calculada no estudo de caso apresentado.</td>
             </tr>
           </tbody>
         </table>
@@ -468,10 +585,10 @@
     </div>
 
     <div class="card">
-      <div class="section-title">Comparação visual (gráfico)</div>
+      <div class="section-title">Comparação visual</div>
       <div class="muted">
-        O gráfico compara os principais valores apresentados. Como as unidades diferem
-        (procedimento vs dia vs 6 meses vs total), a leitura deve focar na amplitude do impacto financeiro.
+        O gráfico permite observar a amplitude do impacto econômico. Como as unidades diferem entre os estudos,
+        a leitura deve ser interpretada com cautela e foco comparativo.
       </div>
 
       <div class="chart-box" style="margin-top:12px;">
@@ -482,63 +599,64 @@
     </div>
 
     <div class="card">
-      <div class="section-title">Interpretação didática: prevenção × tratamento</div>
+      <div class="section-title">Prevenção versus tratamento</div>
 
       <div class="two-cols">
         <div class="mini">
-          <h3>Prevenção (reduz risco e custo indireto)</h3>
+          <h3>Prevenção</h3>
           <ul>
-            <li>Avaliação de risco e inspeção diária da pele</li>
-            <li>Reposicionamento e redução de fricção/cisalhamento</li>
-            <li>Controle de umidade e barreira cutânea</li>
-            <li>Superfícies de redistribuição de pressão quando indicadas</li>
+            <li>Avaliação de risco e inspeção diária da pele.</li>
+            <li>Reposicionamento programado.</li>
+            <li>Controle de umidade e proteção cutânea.</li>
+            <li>Uso de superfícies de redistribuição de pressão quando indicado.</li>
+            <li>Potencial para reduzir custos assistenciais e tempo de internação.</li>
           </ul>
         </div>
 
         <div class="mini">
-          <h3>Tratamento (tende a elevar custo)</h3>
+          <h3>Tratamento</h3>
           <ul>
-            <li>Curativos seriados (custos por procedimento)</li>
-            <li>Internação prolongada em estágios avançados</li>
-            <li>Maior consumo de materiais e assistência profissional</li>
-            <li>Casos complexos podem atingir valores muito elevados</li>
+            <li>Necessidade de curativos seriados e maior consumo de materiais.</li>
+            <li>Possibilidade de internação prolongada em estágios avançados.</li>
+            <li>Maior demanda de assistência multiprofissional.</li>
+            <li>Casos complexos podem alcançar valores financeiros muito elevados.</li>
+            <li>Impacto clínico e econômico mais expressivo que a prevenção.</li>
           </ul>
         </div>
       </div>
     </div>
 
-    <!-- ✅ REFERÊNCIAS (substitui seu card antigo) -->
     <div class="card" id="referencias">
       <div class="section-title">Referências</div>
 
-      <p class="muted" style="margin-top:0;">
-        <strong>Data/hora da consulta:</strong>
+      <div class="stamp">
+        <span>Consulta realizada em</span>
         <span id="dataHoraConsulta">—</span>
-      </p>
+      </div>
 
       <ol class="refs">
         <li>
-          PubMed. Custos diretos de curativos (estágios I–IV).
+          PubMed. Custos diretos de curativos em lesão por pressão.
           <a href="https://pubmed.ncbi.nlm.nih.gov/27384210/" target="_blank" rel="noopener noreferrer">
             https://pubmed.ncbi.nlm.nih.gov/27384210/
           </a>
         </li>
         <li>
-          Revista Enfermagem Atual. Custo total de tratamento hospitalar de LPP (média em 6 meses).
+          Revista Enfermagem Atual. Custo total do tratamento hospitalar de LPP.
           <a href="https://revistaenfermagematual.com.br/index.php/revista/article/view/93?utm_source=chatgpt.com"
              target="_blank" rel="noopener noreferrer">
             https://revistaenfermagematual.com.br/index.php/revista/article/view/93
           </a>
         </li>
         <li>
-          UFMA (Repositório). Estudo em hospital público: materiais consumidos em curativos de LPP.
+          Universidade Federal do Maranhão. Materiais consumidos em curativos de LPP.
           <a href="https://monografias.ufma.br/jspui/handle/123456789/5950?utm_source=chatgpt.com"
              target="_blank" rel="noopener noreferrer">
             https://monografias.ufma.br/jspui/handle/123456789/5950
           </a>
         </li>
         <li>
-          Anais SOBEST. Estimativa de caso complexo (LPP + comorbidades): custo total em internação prolongada.
+          Anais SOBEST. Caso complexo com internação prolongada.
           <a href="https://anais.sobest.com.br/cpe/article/view/1007?utm_source=chatgpt.com"
              target="_blank" rel="noopener noreferrer">
             https://anais.sobest.com.br/cpe/article/view/1007
@@ -547,14 +665,13 @@
       </ol>
 
       <p class="muted" style="margin-bottom:0;">
-        Nota metodológica: valores podem variar por protocolo institucional, mix de materiais, tempo de internação,
-        gravidade clínica e contexto assistencial.
+        Nota metodológica: os valores podem variar conforme protocolo institucional, gravidade clínica,
+        perfil do paciente, tempo de internação e recursos utilizados no serviço.
       </p>
     </div>
 
   </main>
 
-  <!-- ✅ FOOTER com carimbo também -->
   <footer>
     © 2026 - Projeto Integrador · <span id="dataHoraRodape">—</span>
   </footer>
@@ -570,12 +687,12 @@
     };
 
     const labels = [
-      'Curativo (mín) por procedimento',
-      'Curativo (máx) por procedimento',
-      'Tratamento (média) 6 meses / paciente',
-      'Estágio avançado (média) por dia',
-      'Caso complexo (média) por dia',
-      'Caso complexo (total)'
+      'Curativo mínimo',
+      'Curativo máximo',
+      'Tratamento em 6 meses',
+      'Estágio avançado por dia',
+      'Caso complexo por dia',
+      'Caso complexo total'
     ];
 
     const valores = [
@@ -632,11 +749,10 @@
     } else {
       const box = document.querySelector('.chart-box');
       if (box) {
-        box.innerHTML = '<p style="margin:0; padding:12px; font-weight:900; color:#0b2b63;">Gráfico indisponível (Chart.js não carregou). Verifique sua conexão.</p>';
+        box.innerHTML = '<p style="margin:0; padding:12px; font-weight:900; color:#0b2b63;">Gráfico indisponível. Verifique a conexão com a biblioteca Chart.js.</p>';
       }
     }
 
-    // ✅ Carimbo automático (São Paulo)
     (function () {
       const alvo1 = document.getElementById("dataHoraConsulta");
       const alvo2 = document.getElementById("dataHoraRodape");
@@ -655,7 +771,7 @@
         }
       };
 
-      const texto = "Atualizado em " + formatar();
+      const texto = formatar();
       if (alvo1) alvo1.textContent = texto;
       if (alvo2) alvo2.textContent = texto;
     })();
