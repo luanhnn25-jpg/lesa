@@ -52,13 +52,6 @@
         var(--lpp-bg);
     }
 
-    .container{
-      max-width:var(--lpp-max);
-      margin:0 auto;
-      padding:0 16px;
-    }
-
-    /* HEADER */
     .lpp-header{
       background:
         radial-gradient(circle at top center, rgba(255,255,255,.18), transparent 36%),
@@ -134,7 +127,6 @@
       box-shadow:0 16px 28px rgba(2,6,23,.10);
     }
 
-    /* NAV */
     .lpp-nav{
       background:rgba(10,47,115,.92);
       backdrop-filter:blur(10px);
@@ -146,7 +138,7 @@
     }
 
     .lpp-nav-inner{
-      max-width:var(--lpp-max);
+      max-width:1180px;
       margin:0 auto;
       padding:10px 16px;
       display:grid;
@@ -394,16 +386,16 @@
     .drop-sep{height:1px;background:rgba(15,23,42,.10);margin:10px 4px}
 
     .lpp-main{
-      max-width:var(--lpp-max);
+      max-width:1180px;
       margin:24px auto 64px;
       padding:0 16px;
     }
 
     .hero-intro{
       display:grid;
-      grid-template-columns:1.1fr .9fr;
+      grid-template-columns:1.08fr .92fr;
       gap:18px;
-      margin-bottom:8px;
+      margin-bottom:10px;
     }
 
     .lpp-card{
@@ -461,7 +453,7 @@
 
     .hero-points{
       display:grid;
-      grid-template-columns:repeat(2, minmax(0,1fr));
+      grid-template-columns:repeat(3, minmax(0,1fr));
       gap:10px;
       margin-top:16px;
     }
@@ -475,6 +467,9 @@
       color:#0b2b63;
       font-size:13px;
       font-weight:850;
+      min-height:72px;
+      display:flex;
+      align-items:center;
     }
 
     .stats-card{
@@ -495,6 +490,10 @@
       background:linear-gradient(180deg, #0b3d91, #0a2f73);
       color:#fff;
       box-shadow:var(--lpp-shadow-soft);
+      min-height:110px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
     }
 
     .stat-box .k{
@@ -507,6 +506,7 @@
       margin-top:6px;
       font-size:22px;
       font-weight:1000;
+      line-height:1.15;
     }
 
     .stat-box.light{
@@ -578,6 +578,41 @@
 
     .lpp-card:hover .lpp-figure img{
       transform:scale(1.02);
+    }
+
+    .risk-section{
+      display:grid;
+      grid-template-columns:.95fr 1.05fr;
+      gap:16px;
+      align-items:stretch;
+    }
+
+    .risk-highlight{
+      background:
+        radial-gradient(circle at top left, rgba(11,91,211,.12), transparent 45%),
+        linear-gradient(180deg, #ffffff, #f8fbff);
+      border:1px solid #dbeafe;
+    }
+
+    .risk-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .risk-pill{
+      background:#fff;
+      border:1px solid #e5eaf3;
+      border-radius:14px;
+      padding:12px;
+      box-shadow:var(--lpp-shadow-soft);
+      color:#0b2b63;
+      font-weight:800;
+      font-size:14px;
+      min-height:72px;
+      display:flex;
+      align-items:center;
     }
 
     .info-grid{
@@ -809,7 +844,8 @@
 
     @media (max-width: 980px){
       .hero-intro,
-      .info-grid{
+      .info-grid,
+      .risk-section{
         grid-template-columns:1fr;
       }
 
@@ -828,6 +864,10 @@
 
       .menu-shell::after{
         width:36px;
+      }
+
+      .hero-points{
+        grid-template-columns:1fr 1fr;
       }
     }
 
@@ -848,7 +888,8 @@
       .dropdown.open{transform:translateY(0)}
 
       .hero-points,
-      .stats-grid{
+      .stats-grid,
+      .risk-grid{
         grid-template-columns:1fr;
       }
 
@@ -960,15 +1001,14 @@
         <span class="hero-label">Conteúdo educativo premium</span>
         <h2 class="hero-heading">Prevenção, avaliação e orientação sobre lesão por pressão</h2>
         <p class="hero-text">
-          Plataforma educativa com conteúdo organizado, visual profissional e navegação simplificada para estudo,
-          consulta rápida e apoio à aprendizagem em saúde.
+          Plataforma educativa com conteúdo organizado, visual profissional e navegação simplificada
+          para estudo, consulta rápida e apoio à aprendizagem em saúde.
         </p>
 
         <div class="hero-points">
-          <div class="hero-point">Conteúdo visual e responsivo</div>
-          <div class="hero-point">Acesso premium a materiais selecionados</div>
-          <div class="hero-point">FAQ com busca inteligente</div>
           <div class="hero-point">Instalação como aplicativo</div>
+          <div class="hero-point">Acesso premium a materiais selecionados</div>
+          <div class="hero-point">Conteúdo visual e didático</div>
         </div>
       </article>
 
@@ -979,16 +1019,16 @@
             <div class="v">LPP</div>
           </div>
           <div class="stat-box light">
-            <div class="k">Formato</div>
-            <div class="v">PWA</div>
-          </div>
-          <div class="stat-box light">
             <div class="k">Acesso</div>
             <div class="v">Free + Premium</div>
           </div>
           <div class="stat-box">
             <div class="k">Foco</div>
             <div class="v">Educação em saúde</div>
+          </div>
+          <div class="stat-box light">
+            <div class="k">Experiência</div>
+            <div class="v">Didática e objetiva</div>
           </div>
         </div>
       </aside>
@@ -1006,25 +1046,38 @@
       </div>
     </section>
 
-    <section class="info-grid">
-      <section class="lpp-card" id="fatores">
+    <section class="risk-section">
+      <section class="lpp-card risk-highlight" id="fatores">
         <h2 class="lpp-title">Fatores de risco</h2>
-        <ul class="lpp-list">
-          <li>Imobilidade prolongada</li>
-          <li>Desnutrição e desidratação</li>
-          <li>Incontinência urinária e fecal</li>
-          <li>Idade avançada</li>
-          <li>Doenças crônicas, como diabetes e insuficiência vascular</li>
-          <li>Redução da sensibilidade</li>
-        </ul>
+        <p class="lpp-text">
+          A identificação precoce dos fatores de risco é essencial para prevenir lesões por pressão,
+          especialmente em pacientes com mobilidade reduzida, alterações nutricionais e exposição
+          prolongada à umidade e ao cisalhamento.
+        </p>
+
+        <div class="risk-grid">
+          <div class="risk-pill">Imobilidade prolongada</div>
+          <div class="risk-pill">Desnutrição e desidratação</div>
+          <div class="risk-pill">Incontinência urinária e fecal</div>
+          <div class="risk-pill">Idade avançada</div>
+          <div class="risk-pill">Doenças crônicas, como diabetes e insuficiência vascular</div>
+          <div class="risk-pill">Redução da sensibilidade</div>
+        </div>
       </section>
 
       <section class="lpp-card" id="prevencao">
         <h2 class="lpp-title">Prevenção</h2>
         <p class="lpp-text">
-          A prevenção envolve avaliação de risco, mudança de decúbito, uso de superfícies de suporte
-          e cuidados adequados com a pele, com atenção à umidade, fricção e cisalhamento.
+          A prevenção envolve avaliação de risco, mudança de decúbito, uso de superfícies de suporte,
+          inspeção frequente da pele e cuidados adequados com umidade, fricção e cisalhamento.
         </p>
+        <ul class="lpp-list">
+          <li>Reposicionamento programado</li>
+          <li>Inspeção diária da pele</li>
+          <li>Controle da umidade</li>
+          <li>Uso de superfícies de suporte</li>
+          <li>Avaliação clínica contínua</li>
+        </ul>
       </section>
     </section>
 
