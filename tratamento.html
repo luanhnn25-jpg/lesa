@@ -5,18 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tratamento - Lesão por Pressão</title>
 
-  <!-- Mantém seu CSS geral, mas esta página fica isolada com body.tratamento -->
   <link rel="stylesheet" href="style.css" />
 
   <style>
-    /* =========================
-       ISOLAMENTO (só tratamento)
-       ========================= */
     body.tratamento{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:#0f172a;
-
       background:
         radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.14), transparent 55%),
         radial-gradient(900px 500px at 90% 10%, rgba(11,61,145,.12), transparent 55%),
@@ -39,126 +34,164 @@
     }
 
     body.tratamento *{ box-sizing:border-box; }
-    body.tratamento html{ scroll-behavior:smooth; }
 
-    /* HEADER */
     body.tratamento header{
-      background: linear-gradient(90deg, var(--t-blue-1), var(--t-blue-2));
+      background:
+        radial-gradient(circle at top center, rgba(255,255,255,.18), transparent 40%),
+        linear-gradient(90deg, var(--t-blue-1), var(--t-blue-2));
       color:#fff;
       text-align:center;
-      padding: 42px 16px 28px;
+      padding: 44px 16px 30px;
       position: relative;
       overflow:hidden;
       box-shadow: 0 14px 28px rgba(2,6,23,.18);
       border-bottom: 1px solid rgba(255,255,255,.10);
     }
+
     body.tratamento header::after{
       content:"";
       position:absolute;
       inset:-40px -120px auto -120px;
-      height: 160px;
-      background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.22), transparent 60%);
+      height: 180px;
+      background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.20), transparent 60%);
       transform: rotate(-2deg);
       pointer-events:none;
     }
+
     body.tratamento header h1{
       margin:0;
-      font-size: clamp(24px, 3.6vw, 38px);
-      font-weight: 900;
-      letter-spacing: -0.4px;
+      font-size: clamp(26px, 3.8vw, 40px);
+      font-weight: 1000;
+      letter-spacing: -.4px;
       line-height: 1.15;
       text-shadow: 0 10px 24px rgba(2,6,23,.18);
+      position:relative;
+      z-index:1;
     }
+
     body.tratamento header p{
       margin: 10px 0 0;
       font-size: 15px;
-      opacity: 0.95;
+      opacity: .95;
+      position:relative;
+      z-index:1;
+      font-weight:700;
     }
 
-    /* TOPNAV (entre páginas) */
     body.tratamento .topnav{
-      background: var(--t-navy);
+      background: rgba(8,44,99,.94);
+      backdrop-filter: blur(10px);
       position: sticky;
       top:0;
       z-index: 999;
       display:flex;
       justify-content:center;
       gap: 12px;
-      padding: 10px 12px;
+      padding: 12px 14px;
       box-shadow: 0 12px 24px rgba(2,6,23,.12);
       border-bottom: 1px solid rgba(255,255,255,.08);
       flex-wrap: wrap;
     }
+
     body.tratamento .topnav a{
       color:#eaf2ff !important;
       text-decoration:none;
       font-weight:900;
       font-size:14px;
-      padding: 10px 12px;
-      border-radius: 12px;
+      padding: 10px 14px;
+      border-radius: 14px;
       transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
       white-space: nowrap;
       outline:none;
+      background: rgba(255,255,255,0.04);
     }
+
     body.tratamento .topnav a:hover{
       background: rgba(255,255,255,0.14);
       transform: translateY(-1px);
       box-shadow: 0 10px 18px rgba(2,6,23,.18);
     }
+
     body.tratamento .topnav a:focus-visible{
       background: rgba(255,255,255,0.14);
       box-shadow: var(--t-ring);
     }
-    /* marca a página atual (opcional: deixe só em tratamento.html) */
+
     body.tratamento .topnav a[aria-current="page"]{
       background: rgba(255,255,255,0.18);
       outline: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 10px 18px rgba(2,6,23,.16);
     }
 
-    /* SUBNAV (âncoras internas) */
-    body.tratamento .subnav{
-      background: linear-gradient(180deg, rgba(11,61,145,1), rgba(11,61,145,.96));
-      position: sticky;
-      top: 54px; /* abaixo do topnav */
-      z-index: 998;
-      display:flex;
-      justify-content:center;
-      gap: 10px;
-      padding: 10px 12px;
-      flex-wrap: wrap;
-      border-bottom: 1px solid rgba(255,255,255,0.15);
-      box-shadow: 0 10px 20px rgba(2,6,23,.10);
-    }
-    body.tratamento .subnav a{
-      color:#fff !important;
-      text-decoration:none;
-      font-weight:900;
-      font-size: 13px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.10);
-      transition: transform .14s ease, background .14s ease, box-shadow .14s ease;
-      outline:none;
-      white-space: nowrap;
-    }
-    body.tratamento .subnav a:hover{
-      background: rgba(255,255,255,0.18);
-      transform: translateY(-1px);
-      box-shadow: 0 12px 24px rgba(2,6,23,.18);
-    }
-    body.tratamento .subnav a:focus-visible{
-      box-shadow: var(--t-ring);
-      background: rgba(255,255,255,0.18);
-    }
-
-    /* MAIN */
     body.tratamento main{
-      max-width: 1100px;
-      margin: 18px auto;
+      max-width: 1120px;
+      margin: 22px auto;
       padding: 0 16px 56px;
     }
 
-    /* CARDS: mais "vivos" + hover */
+    body.tratamento .hero{
+      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
+      border: 1px solid var(--t-border);
+      border-radius: 24px;
+      box-shadow: var(--t-shadow-2);
+      padding: 26px;
+      margin: 16px 0 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body.tratamento .hero::before{
+      content:"";
+      position:absolute;
+      inset:auto -80px -80px auto;
+      width:260px;
+      height:260px;
+      border-radius:50%;
+      background: radial-gradient(circle at center, rgba(11,91,211,.10), transparent 65%);
+      pointer-events:none;
+    }
+
+    body.tratamento .hero h2{
+      margin:0 0 10px;
+      font-size: clamp(24px, 3vw, 34px);
+      line-height:1.15;
+      color:#0b2b63;
+      font-weight:1000;
+      letter-spacing:-.3px;
+      position:relative;
+      z-index:1;
+    }
+
+    body.tratamento .hero p{
+      margin:0;
+      color:#334155;
+      font-size:16px;
+      line-height:1.75;
+      max-width: 75ch;
+      position:relative;
+      z-index:1;
+    }
+
+    body.tratamento .hero-badges{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+      position:relative;
+      z-index:1;
+    }
+
+    body.tratamento .hero-badge{
+      padding:10px 14px;
+      border-radius:999px;
+      background:#eff6ff;
+      border:1px solid #dbeafe;
+      color:#0b3d91;
+      font-size:13px;
+      font-weight:900;
+      box-shadow: var(--t-soft);
+    }
+
     body.tratamento .card{
       background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
       border-radius: var(--t-radius);
@@ -171,6 +204,7 @@
       transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
       will-change: transform;
     }
+
     body.tratamento .card::before{
       content:"";
       position:absolute;
@@ -180,18 +214,15 @@
       transition: opacity .18s ease;
       pointer-events:none;
     }
+
     body.tratamento .card:hover{
       transform: translateY(-3px);
       box-shadow: var(--t-shadow-2);
       border-color: rgba(11,91,211,.22);
     }
-    body.tratamento .card:hover::before{ opacity: 1; }
-    body.tratamento .card:focus-within{
-      box-shadow: var(--t-shadow-2), var(--t-ring);
-      border-color: rgba(11,91,211,.30);
-    }
 
-    /* Títulos */
+    body.tratamento .card:hover::before{ opacity: 1; }
+
     body.tratamento .card h2{
       margin: 0 0 10px;
       font-size: 24px;
@@ -201,7 +232,10 @@
       display:flex;
       align-items:center;
       gap:10px;
+      position:relative;
+      z-index:1;
     }
+
     body.tratamento .card h2::before{
       content:"";
       width: 4px;
@@ -212,20 +246,44 @@
       display:inline-block;
     }
 
+    body.tratamento .card h3{
+      margin:16px 0 8px;
+      font-size:18px;
+      font-weight:950;
+      color:#0b2b63;
+      position:relative;
+      z-index:1;
+    }
+
     body.tratamento .card p,
     body.tratamento .card li{
       font-size: 16px;
-      line-height: 1.65;
+      line-height: 1.7;
       color:#243042;
+      position:relative;
+      z-index:1;
     }
 
     body.tratamento ul{
       margin: 10px 0 0;
       padding-left: 20px;
     }
+
     body.tratamento li{ margin: 6px 0; }
 
-    /* Nota (alerta didático) */
+    body.tratamento .two-col{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:16px;
+    }
+
+    body.tratamento .highlight{
+      background:
+        radial-gradient(circle at top left, rgba(11,91,211,.10), transparent 45%),
+        linear-gradient(180deg, rgba(255,255,255,1), rgba(248,251,255,1));
+      border-color: rgba(11,91,211,.16);
+    }
+
     body.tratamento .note{
       background: linear-gradient(180deg, rgba(255,246,224,1), rgba(255,246,224,.86));
       border-left: 8px solid #f0b400;
@@ -234,17 +292,20 @@
       margin-top: 12px;
       box-shadow: var(--t-soft);
       border: 1px solid rgba(240,180,0,.20);
+      position:relative;
+      z-index:1;
     }
 
-    /* Tabela responsiva + sombra */
     body.tratamento .table-wrap{
       margin-top: 14px;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
-      background: transparent;
       border-radius: 14px;
       box-shadow: var(--t-soft);
+      position:relative;
+      z-index:1;
     }
+
     body.tratamento table{
       width: 100%;
       min-width: 820px;
@@ -254,83 +315,82 @@
       overflow: hidden;
       border: 1px solid rgba(15,23,42,.10);
     }
+
     body.tratamento th, body.tratamento td{
       border-bottom: 1px solid #e7e7e7;
       padding: 12px 12px;
       vertical-align: top;
       font-size: 14px;
-      line-height: 1.5;
+      line-height: 1.55;
       color:#243042;
     }
+
     body.tratamento th{
       background: linear-gradient(180deg, var(--t-blue-1), #0b4ab1);
       color:#fff;
       font-weight: 950;
       font-size: 14px;
     }
+
     body.tratamento tr:last-child td{ border-bottom: none; }
 
     body.tratamento .refs{
       font-size: 13px;
       color: var(--t-muted);
       margin-top: 10px;
+      position:relative;
+      z-index:1;
     }
 
-    /* FOOTER */
     body.tratamento footer{
       text-align:center;
       color:#475569;
-      padding: 22px 12px;
+      padding: 22px 12px 32px;
       font-size: 13px;
     }
 
-    /* âncora com compensação (pra não ficar escondida no sticky) */
-    body.tratamento section[id]{
-      scroll-margin-top: 140px;
-    }
-
-    /* animação leve */
     @keyframes fadeUp{
       from{ opacity:0; transform: translateY(8px); }
       to{ opacity:1; transform: translateY(0); }
     }
+
+    body.tratamento .hero,
     body.tratamento .card{
       animation: fadeUp .18s ease both;
     }
 
-    /* Mobile: topnav e subnav com rolagem horizontal + snap (fica MUITO fácil) */
+    @media (max-width: 900px){
+      body.tratamento .two-col{
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 820px){
-      body.tratamento .topnav,
-      body.tratamento .subnav{
+      body.tratamento .topnav{
         justify-content:flex-start;
         flex-wrap: nowrap;
         overflow-x:auto;
         scrollbar-width:none;
         -webkit-overflow-scrolling: touch;
-        scroll-snap-type: x mandatory;
       }
-      body.tratamento .topnav::-webkit-scrollbar,
-      body.tratamento .subnav::-webkit-scrollbar{ display:none; }
 
-      body.tratamento .topnav a,
-      body.tratamento .subnav a{
+      body.tratamento .topnav::-webkit-scrollbar{ display:none; }
+
+      body.tratamento .topnav a{
         flex: 0 0 auto;
-        scroll-snap-align: start;
       }
     }
 
-    /* Mobile: tipografia */
     @media (max-width: 768px){
-      body.tratamento header h1{ font-size: 26px; }
+      body.tratamento header h1{ font-size: 28px; }
       body.tratamento header p{ font-size: 14px; }
-      body.tratamento .subnav{ top: 52px; }
-      body.tratamento .card{ padding: 18px 18px; }
+      body.tratamento .hero,
+      body.tratamento .card{ padding: 18px; }
       body.tratamento .card h2{ font-size: 20px; }
       body.tratamento .card p,
       body.tratamento .card li{ font-size: 15px; }
     }
 
-    /* acessibilidade: reduz movimento */
     @media (prefers-reduced-motion: reduce){
       body.tratamento *{ transition:none !important; animation:none !important; }
     }
@@ -340,11 +400,10 @@
 <body class="tratamento">
 
   <header>
-    <h1>Tratamento da Lesão por Pressão (LP)</h1>
-    <p>Guia para estudantes</p>
+    <h1>Tratamento da Lesão por Pressão</h1>
+    <p>Guia didático com abordagem prática e profissional</p>
   </header>
 
-  <!-- Menu entre páginas -->
   <nav class="topnav">
     <a href="index.html">Início</a>
     <a href="guia-simples.html">Guia Simples</a>
@@ -353,67 +412,69 @@
     <a href="selecao-produtos.html">Seleção de Produtos</a>
   </nav>
 
-  <!-- Menu interno (âncoras) -->
-  <nav class="subnav">
-    <a href="#avaliacao">1) Avaliação</a>
-    <a href="#alivio">2) Alívio de pressão</a>
-    <a href="#limpeza">3) Limpeza</a>
-    <a href="#curativos">4) Curativos</a>
-    <a href="#desbridamento">5) Desbridamento</a>
-    <a href="#infeccao">6) Infecção/dor</a>
-    <a href="#fatores">7) Fatores sistêmicos</a>
-  </nav>
-
   <main>
 
-    <section class="card" id="intro">
+    <section class="hero">
+      <h2>Condutas fundamentais no tratamento da lesão por pressão</h2>
       <p>
-        O tratamento da LP é baseado em quatro eixos: <b>alívio de pressão</b>, <b>manejo da ferida</b>,
-        <b>controle de fatores sistêmicos</b> e <b>prevenção de complicações</b>.
-        A enfermagem tem papel central na avaliação, escolha/monitoramento de coberturas e reavaliação contínua.
+        O tratamento da lesão por pressão é construído a partir de quatro pilares: alívio de pressão,
+        manejo adequado da ferida, controle dos fatores sistêmicos e prevenção de complicações.
+        A enfermagem exerce papel central na avaliação, no acompanhamento da evolução e na segurança do cuidado.
       </p>
-    </section>
 
-    <section class="card" id="avaliacao">
-      <h2>1) Avaliação inicial (o que você deve checar)</h2>
-      <ul>
-        <li><b>Estágio/condição:</b> estágio, lesão não classificável, lesão tissular profunda.</li>
-        <li><b>Tecido do leito:</b> granulação, epitelização, esfacelo, necrose.</li>
-        <li><b>Exsudato:</b> quantidade, aspecto, odor (e maceração de bordas).</li>
-        <li><b>Pele perilesional:</b> hiperemia, maceração, ressecamento, dermatite associada à umidade.</li>
-        <li><b>Dor:</b> intensidade (escala), fatores desencadeantes, analgesia antes da troca.</li>
-        <li><b>Sinais de infecção:</b> aumento de dor, calor, rubor, exsudato purulento, febre, piora clínica.</li>
-        <li><b>Mensuração:</b> comprimento × largura × profundidade e presença de túneis/cavidades.</li>
-      </ul>
-    </section>
-
-    <section class="card" id="alivio">
-      <h2>2) Alívio de pressão (sempre prioritário)</h2>
-      <p>Sem redistribuição de pressão, a cicatrização tende a falhar.</p>
-      <ul>
-        <li>Reposicionamento programado (individualizar conforme risco e tolerância).</li>
-        <li>Superfícies de suporte (colchão/almofada de redistribuição de pressão).</li>
-        <li>Redução de fricção e cisalhamento (técnica de mobilização, lençol de transferência).</li>
-        <li>Proteção de proeminências ósseas (calcâneo, sacro, trocânter etc.).</li>
-      </ul>
-    </section>
-
-    <section class="card" id="limpeza">
-      <h2>3) Limpeza e preparo do leito da ferida</h2>
-      <ul>
-        <li><b>Limpeza:</b> preferir solução apropriada conforme protocolo do serviço; evitar trauma ao leito.</li>
-        <li><b>Controle de umidade:</b> manter ambiente úmido controlado (evitar ressecamento e maceração).</li>
-        <li><b>Proteção da pele ao redor:</b> barreira protetora quando houver umidade/exsudato.</li>
-      </ul>
-
-      <div class="note">
-        <b>Meta didática:</b> reduzir biocarga, remover detritos, proteger bordas e favorecer granulação/epitelização.
+      <div class="hero-badges">
+        <span class="hero-badge">Avaliação contínua</span>
+        <span class="hero-badge">Controle da pressão</span>
+        <span class="hero-badge">Escolha racional de coberturas</span>
+        <span class="hero-badge">Prevenção de complicações</span>
       </div>
     </section>
 
-    <section class="card" id="curativos">
-      <h2>4) Seleção de curativos (raciocínio rápido)</h2>
-      <p>A escolha depende principalmente de <b>exsudato</b>, <b>tecido</b> e <b>profundidade</b>.</p>
+    <section class="card highlight">
+      <h2>Avaliação inicial</h2>
+      <ul>
+        <li><b>Estágio ou condição da lesão:</b> estágio, lesão não classificável ou lesão tissular profunda.</li>
+        <li><b>Tecido do leito:</b> granulação, epitelização, esfacelo ou necrose.</li>
+        <li><b>Exsudato:</b> quantidade, aspecto, odor e risco de maceração.</li>
+        <li><b>Pele perilesional:</b> hiperemia, maceração, ressecamento e dermatite associada à umidade.</li>
+        <li><b>Dor:</b> intensidade, fatores desencadeantes e necessidade de analgesia antes da troca.</li>
+        <li><b>Sinais de infecção:</b> aumento da dor, calor, rubor, exsudato purulento, febre e piora clínica.</li>
+        <li><b>Mensuração:</b> comprimento, largura, profundidade, túneis e cavidades.</li>
+      </ul>
+    </section>
+
+    <section class="two-col">
+      <section class="card">
+        <h2>Alívio de pressão</h2>
+        <p>Sem redistribuição de pressão, a cicatrização tende a falhar.</p>
+        <ul>
+          <li>Reposicionamento programado conforme risco e tolerância.</li>
+          <li>Uso de superfícies de suporte, como colchões e almofadas.</li>
+          <li>Redução de fricção e cisalhamento com técnica correta de mobilização.</li>
+          <li>Proteção de proeminências ósseas, como calcâneo, sacro e trocânter.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Limpeza e preparo do leito</h2>
+        <ul>
+          <li><b>Limpeza:</b> utilizar solução apropriada conforme protocolo institucional.</li>
+          <li><b>Controle da umidade:</b> manter ambiente úmido controlado, evitando ressecamento e maceração.</li>
+          <li><b>Proteção perilesional:</b> uso de barreira protetora quando houver umidade ou exsudato.</li>
+        </ul>
+
+        <div class="note">
+          <b>Objetivo:</b> reduzir biocarga, remover detritos, proteger as bordas e favorecer granulação e epitelização.
+        </div>
+      </section>
+    </section>
+
+    <section class="card">
+      <h2>Seleção de curativos</h2>
+      <p>
+        A escolha da cobertura depende principalmente da quantidade de exsudato, do tipo de tecido presente
+        no leito e da profundidade da lesão.
+      </p>
 
       <div class="table-wrap">
         <table>
@@ -421,14 +482,14 @@
             <tr>
               <th>Achado principal</th>
               <th>Objetivo do cuidado</th>
-              <th>Estratégia de cobertura (descrição geral)</th>
+              <th>Estratégia de cobertura</th>
               <th>Ponto de atenção</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>Pouco exsudato / ferida superficial</td>
-              <td>Manter umidade controlada + proteger</td>
+              <td>Manter umidade controlada e proteger</td>
               <td>Coberturas protetoras que mantenham ambiente úmido</td>
               <td>Evitar ressecamento e trauma na troca</td>
             </tr>
@@ -439,27 +500,27 @@
               <td>Proteger pele perilesional</td>
             </tr>
             <tr>
-              <td>Exsudato alto / risco de vazamento</td>
-              <td>Controle de umidade + prevenção de maceração</td>
-              <td>Coberturas mais absorventes + barreira perilesional</td>
+              <td>Exsudato alto</td>
+              <td>Controlar umidade e prevenir maceração</td>
+              <td>Coberturas mais absorventes associadas à barreira perilesional</td>
               <td>Trocas mais frequentes podem ser necessárias</td>
             </tr>
             <tr>
-              <td>Ferida cavitária/túneis</td>
-              <td>Preencher “sem compactar” + controlar exsudato</td>
-              <td>Preenchimento apropriado à cavidade, sem pressão</td>
-              <td>Não “tamponar” com força (risco de isquemia)</td>
+              <td>Ferida cavitária ou com túneis</td>
+              <td>Preencher sem compactar</td>
+              <td>Preenchimento apropriado à cavidade</td>
+              <td>Não tamponar com pressão</td>
             </tr>
             <tr>
-              <td>Tecido desvitalizado (esfacelo/necrose)</td>
-              <td>Preparar leito + remover tecido inviável</td>
-              <td>Conduta de desbridamento conforme avaliação e protocolo</td>
+              <td>Tecido desvitalizado</td>
+              <td>Preparar o leito e remover tecido inviável</td>
+              <td>Conduta de desbridamento conforme avaliação</td>
               <td>Avaliar perfusão, dor e sinais de infecção</td>
             </tr>
             <tr>
               <td>Sinais sugestivos de infecção</td>
-              <td>Reduzir biocarga + segurança do paciente</td>
-              <td>Reavaliar limpeza, condutas e acionar equipe conforme protocolo</td>
+              <td>Reduzir biocarga e aumentar segurança</td>
+              <td>Reavaliar limpeza e conduta terapêutica</td>
               <td>Observar sinais sistêmicos e piora clínica</td>
             </tr>
           </tbody>
@@ -471,48 +532,50 @@
       </p>
 
       <ul>
-        <li><b>Pouco exsudato/ferida superficial:</b> manter umidade e proteger contra fricção.</li>
-        <li><b>Moderado a alto exsudato:</b> absorver e proteger perilesional para evitar maceração.</li>
-        <li><b>Feridas cavitárias:</b> preencher sem compactar (evitar “tamponar” com pressão).</li>
-        <li><b>Suspeita de biofilme/colonização crítica:</b> reavaliar limpeza, frequência de troca e condutas conforme protocolo.</li>
+        <li><b>Pouco exsudato:</b> priorizar proteção e manutenção de umidade adequada.</li>
+        <li><b>Moderado a alto exsudato:</b> absorver e proteger a pele perilesional.</li>
+        <li><b>Feridas cavitárias:</b> preencher sem compactar.</li>
+        <li><b>Suspeita de colonização crítica:</b> reavaliar limpeza, frequência de troca e protocolo.</li>
       </ul>
 
-      <p><b>Checklist do estudante:</b> a cobertura controla exsudato? protege borda? reduz dor? respeita profundidade? permite intervalo de troca seguro?</p>
+      <p><b>Checklist:</b> a cobertura controla exsudato, protege bordas, reduz dor e respeita a profundidade da lesão?</p>
     </section>
 
-    <section class="card" id="desbridamento">
-      <h2>5) Desbridamento (quando considerar)</h2>
-      <ul>
-        <li>Indicado quando há tecido desvitalizado (esfacelo/necrose) e não há contraindicação.</li>
-        <li>Tipos: autolítico, enzimático, mecânico, conservador e cirúrgico (conforme avaliação e protocolo local).</li>
-        <li><b>Atenção:</b> necrose seca estável em calcâneo pode ter conduta específica conforme avaliação vascular e protocolo do serviço.</li>
-      </ul>
+    <section class="two-col">
+      <section class="card">
+        <h2>Desbridamento</h2>
+        <ul>
+          <li>Indicado quando há tecido desvitalizado e não existe contraindicação.</li>
+          <li>Pode ser autolítico, enzimático, mecânico, conservador ou cirúrgico.</li>
+          <li>Necrose seca estável em calcâneo pode ter conduta específica conforme avaliação vascular e protocolo.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Infecção, dor e segurança</h2>
+        <ul>
+          <li><b>Dor:</b> planejar analgesia antes da troca do curativo.</li>
+          <li><b>Infecção:</b> reconhecer sinais locais e sistêmicos e comunicar a equipe.</li>
+          <li><b>Segurança:</b> higienização das mãos, técnica adequada e descarte correto.</li>
+        </ul>
+      </section>
     </section>
 
-    <section class="card" id="infeccao">
-      <h2>6) Infecção, dor e segurança</h2>
+    <section class="card highlight">
+      <h2>Fatores sistêmicos que alteram o prognóstico</h2>
       <ul>
-        <li><b>Dor:</b> planejar analgesia antes da troca; técnicas menos traumáticas.</li>
-        <li><b>Infecção:</b> reconhecer sinais locais/sistêmicos e comunicar a equipe para conduta.</li>
-        <li><b>Segurança:</b> higienização de mãos, técnica limpa/estéril conforme protocolo, descarte correto.</li>
-      </ul>
-    </section>
-
-    <section class="card" id="fatores">
-      <h2>7) Fatores sistêmicos que mudam o prognóstico</h2>
-      <ul>
-        <li><b>Nutrição:</b> risco nutricional compromete cicatrização (avaliar e encaminhar).</li>
-        <li><b>Perfusão/oxigenação:</b> vasculopatias e hipóxia reduzem reparo tecidual.</li>
+        <li><b>Nutrição:</b> risco nutricional compromete cicatrização.</li>
+        <li><b>Perfusão e oxigenação:</b> vasculopatias e hipóxia reduzem reparo tecidual.</li>
         <li><b>Glicemia:</b> descontrole glicêmico aumenta risco de infecção e retarda cicatrização.</li>
-        <li><b>Mobilidade e adesão:</b> reabilitação e educação do paciente/cuidador.</li>
+        <li><b>Mobilidade e adesão:</b> reabilitação e educação do paciente e cuidador são essenciais.</li>
       </ul>
 
-      <h3 style="margin:14px 0 8px; font-size:18px; font-weight:900; color:#0b2b63;">Quando solicitar avaliação multiprofissional / encaminhar</h3>
+      <h3>Quando solicitar avaliação multiprofissional</h3>
       <ul>
-        <li>LP estágio 3/4, cavitária extensa, piora rápida ou dor desproporcional.</li>
+        <li>Lesão por pressão estágio 3 ou 4, cavitária extensa ou piora rápida.</li>
         <li>Sinais sistêmicos de infecção ou suspeita de osteomielite.</li>
-        <li>Falha terapêutica apesar de alívio de pressão e manejo adequado.</li>
-        <li>Necrose extensa, odor forte persistente, exsudato purulento.</li>
+        <li>Falha terapêutica apesar do manejo adequado.</li>
+        <li>Necrose extensa, odor forte persistente ou exsudato purulento.</li>
       </ul>
     </section>
 
@@ -521,9 +584,8 @@
   <footer>© 2026 - Projeto Integrador</footer>
 
   <script>
-    /* Interação extra: tilt leve nos cards (somente em dispositivos com hover) */
     (function(){
-      const cards = Array.from(document.querySelectorAll('body.tratamento .card'));
+      const cards = Array.from(document.querySelectorAll('body.tratamento .card, body.tratamento .hero'));
       const canHover = window.matchMedia('(hover:hover)').matches;
 
       function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
@@ -535,41 +597,20 @@
             const x = (e.clientX - r.left) / r.width;
             const y = (e.clientY - r.top) / r.height;
 
-            const rx = clamp((0.5 - y) * 5, -5, 5);
-            const ry = clamp((x - 0.5) * 5, -5, 5);
+            const rx = clamp((0.5 - y) * 4, -4, 4);
+            const ry = clamp((x - 0.5) * 4, -4, 4);
 
-            card.style.transform = `translateY(-3px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+            if(card.classList.contains('hero')){
+              card.style.transform = `translateY(-2px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+            } else {
+              card.style.transform = `translateY(-3px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+            }
           });
 
           card.addEventListener('mouseleave', () => {
             card.style.transform = '';
           });
         });
-      }
-
-      /* Destaque do link ativo do subnav conforme scroll (sem depender de frameworks) */
-      const subnavLinks = Array.from(document.querySelectorAll('body.tratamento .subnav a'));
-      const sections = subnavLinks
-        .map(a => document.querySelector(a.getAttribute('href')))
-        .filter(Boolean);
-
-      if('IntersectionObserver' in window && subnavLinks.length && sections.length){
-        const obs = new IntersectionObserver((entries) => {
-          const visible = entries
-            .filter(en => en.isIntersecting)
-            .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-          if(!visible) return;
-
-          const id = '#' + visible.target.id;
-          subnavLinks.forEach(a => {
-            const active = a.getAttribute('href') === id;
-            a.style.background = active ? 'rgba(255,255,255,.22)' : 'rgba(255,255,255,.10)';
-            a.style.boxShadow = active ? '0 12px 24px rgba(2,6,23,.18)' : 'none';
-          });
-        }, { rootMargin: '-45% 0px -50% 0px', threshold: [0.15, 0.25, 0.35] });
-
-        sections.forEach(s => obs.observe(s));
       }
     })();
   </script>
