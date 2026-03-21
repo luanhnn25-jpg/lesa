@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b3d91" />
   <meta
     name="description"
-    content="Impacto econômico da lesão por pressão no contexto hospitalar, com base em ANVISA, OMS, PubMed e NPIAP."
+    content="Impacto econômico hospitalar da lesão por pressão com dados de custo, comparação visual e referências preservadas."
   />
 
   <link rel="manifest" href="manifest.webmanifest" />
@@ -23,46 +23,49 @@
 
   <style>
     :root{
-      --blue-1:#0b3d91;
-      --blue-2:#0a2f73;
-      --blue-3:#0f5bd3;
-      --blue-4:#3b82f6;
-      --bg:#edf3f8;
-      --card:#ffffff;
-      --text:#0f172a;
-      --muted:#475569;
-      --border:rgba(15,23,42,.08);
-      --radius:20px;
-      --shadow:0 12px 30px rgba(2, 6, 23, .08);
-      --shadow-2:0 20px 48px rgba(2, 6, 23, .12);
-      --shadow-soft:0 10px 24px rgba(2, 6, 23, .06);
-      --ring:0 0 0 4px rgba(59, 130, 246, .18);
-      --info:#eef6ff;
-      --gold:#f0b400;
-      --success:#16a34a;
-      --danger:#dc2626;
-      --max:1180px;
+      --i-blue-1:#0b3d91;
+      --i-blue-2:#0f5bd3;
+      --i-blue-3:#0b5bd3;
+      --i-navy:#082c63;
+      --i-gold:#f0b400;
+
+      --i-card:#ffffff;
+      --i-muted:#475569;
+      --i-text:#0f172a;
+
+      --i-radius:20px;
+
+      --i-shadow:0 12px 30px rgba(2,6,23,.10);
+      --i-shadow-2:0 22px 60px rgba(2,6,23,.16);
+      --i-soft:0 10px 24px rgba(2,6,23,.08);
+
+      --i-glow:0 0 0 4px rgba(56,130,246,.16), 0 18px 42px rgba(15,91,211,.18);
+      --i-border:rgba(15,23,42,.10);
+
+      --i-grad:linear-gradient(135deg, rgba(15,91,211,.55), rgba(11,61,145,.20), rgba(240,180,0,.22));
     }
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
 
-    body{
+    body.impacto{
       margin:0;
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 620px at 10% -10%, rgba(11,91,211,.14), transparent 55%),
-        radial-gradient(900px 520px at 90% 10%, rgba(11,61,145,.12), transparent 55%),
-        radial-gradient(800px 420px at 50% 110%, rgba(240,180,0,.08), transparent 60%),
-        var(--bg);
       overflow-x:hidden;
+      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--i-text);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.16), transparent 55%),
+        radial-gradient(900px 520px at 90% 10%, rgba(11,61,145,.14), transparent 55%),
+        radial-gradient(900px 520px at 50% 110%, rgba(240,180,0,.08), transparent 55%),
+        #eef2f6;
     }
+
+    body.impacto a{ -webkit-tap-highlight-color: transparent; }
 
     .lpp-header{
       background:
         radial-gradient(circle at top center, rgba(255,255,255,.18), transparent 36%),
-        linear-gradient(180deg, var(--blue-1), #0b4ab1 58%, #0a3790 100%);
+        linear-gradient(180deg, var(--i-blue-1), #0b4ab1 58%, #0a3790 100%);
       color:#fff;
       padding:30px 16px 22px;
       text-align:center;
@@ -99,11 +102,11 @@
 
     .lpp-header p{
       margin:0;
-      max-width:820px;
       opacity:.94;
       font-size:15px;
       font-weight:700;
       line-height:1.6;
+      max-width:760px;
     }
 
     .header-actions{
@@ -147,7 +150,7 @@
     }
 
     .lpp-nav-inner{
-      max-width:var(--max);
+      max-width:1180px;
       margin:0 auto;
       padding:10px 16px;
       display:grid;
@@ -256,7 +259,7 @@
       box-shadow:0 14px 26px rgba(2,6,23,.22);
     }
 
-    .user-btn:focus-visible{box-shadow:var(--ring)}
+    .user-btn:focus-visible{box-shadow:var(--i-glow)}
 
     .user-icon{
       width:30px;
@@ -347,8 +350,18 @@
       margin-bottom:10px;
     }
 
-    .drop-head .t1{font-weight:950;color:#0b2b63;font-size:13px}
-    .drop-head .t2{margin-top:4px;color:#475569;font-size:12px;word-break:break-all}
+    .drop-head .t1{
+      font-weight:950;
+      color:#0b2b63;
+      font-size:13px;
+    }
+
+    .drop-head .t2{
+      margin-top:4px;
+      color:#475569;
+      font-size:12px;
+      word-break:break-all;
+    }
 
     .drop-item{
       width:100%;
@@ -373,7 +386,7 @@
       box-shadow:0 12px 24px rgba(2,6,23,.10);
     }
 
-    .drop-muted{font-size:12px;color:var(--muted);font-weight:850}
+    .drop-muted{font-size:12px;color:#475569;font-weight:850}
     .drop-sep{height:1px;background:rgba(15,23,42,.10);margin:10px 4px}
 
     .skeleton{
@@ -393,288 +406,197 @@
       100%{background-position:240px 0}
     }
 
-    @keyframes fadeUp{
-      from{opacity:0;transform:translateY(18px)}
-      to{opacity:1;transform:translateY(0)}
-    }
-
-    .impact-main{
+    main{
       max-width:1100px;
-      margin:24px auto 64px;
-      padding:0 16px;
+      margin:20px auto;
+      padding:0 16px 46px;
     }
 
-    .hero-grid{
-      display:grid;
-      grid-template-columns:1.15fr .85fr;
-      gap:18px;
-      margin-bottom:8px;
-    }
-
-    .card{
-      background:linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.985));
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:22px;
-      margin:16px 0;
-      border:1px solid var(--border);
+    .hero{
+      background:linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
+      border-radius:24px;
+      padding:26px 24px;
+      margin:14px 0 18px;
+      box-shadow:var(--i-shadow-2);
+      border:1px solid var(--i-border);
       position:relative;
       overflow:hidden;
-      transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-      animation:fadeUp .45s ease both;
     }
 
-    .card:hover{
-      transform:translateY(-3px);
-      box-shadow:var(--shadow-2);
-      border-color:rgba(11,91,211,.18);
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:auto -80px -80px auto;
+      width:260px;
+      height:260px;
+      border-radius:50%;
+      background:radial-gradient(circle at center, rgba(11,91,211,.10), transparent 65%);
+      pointer-events:none;
     }
 
-    .hero-card{
-      padding:28px;
-      background:
-        radial-gradient(circle at top right, rgba(11,91,211,.10), transparent 34%),
-        linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
-    }
-
-    .hero-label{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:#eff6ff;
-      color:#0b3d91;
-      border:1px solid #dbeafe;
-      font-weight:900;
-      font-size:12px;
-      margin-bottom:14px;
-    }
-
-    .hero-heading{
-      margin:0 0 12px;
-      font-size:clamp(26px, 3.4vw, 38px);
-      line-height:1.08;
+    .hero h2{
+      margin:0 0 10px;
+      font-size:clamp(24px, 3vw, 34px);
+      line-height:1.1;
       color:#0b2b63;
       font-weight:1000;
-      letter-spacing:-.4px;
+      letter-spacing:-0.3px;
+      position:relative;
+      z-index:1;
     }
 
-    .hero-text{
+    .hero p{
       margin:0;
-      color:var(--muted);
-      line-height:1.75;
-      font-size:15.5px;
+      color:#334155;
+      font-size:16px;
+      line-height:1.7;
+      max-width:76ch;
+      position:relative;
+      z-index:1;
     }
 
-    .hero-points{
-      display:grid;
-      grid-template-columns:repeat(2, minmax(0,1fr));
-      gap:10px;
-      margin-top:18px;
-    }
-
-    .hero-point{
-      border:1px solid #e5eaf3;
-      background:#f8fbff;
-      border-radius:14px;
-      padding:12px;
-      box-shadow:var(--shadow-soft);
-      color:#0b2b63;
-      font-size:13px;
-      font-weight:850;
-      min-height:72px;
-      display:flex;
-      align-items:center;
-    }
-
-    .stats-card{display:grid;gap:12px;align-content:start}
-    .stats-grid{display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:12px}
-
-    .stat-box{
-      border-radius:16px;
-      padding:16px;
-      background:linear-gradient(180deg, #0b3d91, #0a2f73);
-      color:#fff;
-      box-shadow:var(--shadow-soft);
-      min-height:112px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-    }
-
-    .stat-box.light{
-      background:linear-gradient(180deg, #ffffff, #f8fbff);
-      color:#0b2b63;
-      border:1px solid #e5eaf3;
-    }
-
-    .stat-box .k{font-size:12px;opacity:.84;font-weight:800}
-    .stat-box .v{margin-top:6px;font-size:22px;line-height:1.15;font-weight:1000}
-    .stat-box .sub{margin-top:6px;font-size:12px;line-height:1.45;opacity:.88;font-weight:700}
-
-    .subnav{
+    .hero-badges{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
-      margin:10px 0 4px;
+      margin-top:16px;
+      position:relative;
+      z-index:1;
     }
 
-    .subnav a{
-      text-decoration:none;
-      color:#0b3d91;
-      font-weight:850;
-      font-size:13px;
-      padding:10px 12px;
+    .hero-badge{
+      padding:9px 13px;
       border-radius:999px;
       background:#eff6ff;
       border:1px solid #dbeafe;
-      box-shadow:var(--shadow-soft);
+      color:#0b3d91;
+      font-size:13px;
+      font-weight:900;
+      box-shadow:var(--i-soft);
     }
 
-    .title{
+    .summary-banner{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:14px;
+      margin:0 0 16px;
+    }
+
+    .summary-box{
+      background:#fff;
+      border:1px solid var(--i-border);
+      border-radius:18px;
+      padding:16px;
+      box-shadow:var(--i-soft);
+    }
+
+    .summary-box h3{
+      margin:0 0 8px;
+      font-size:16px;
+      font-weight:950;
+      color:#0b2b63;
+    }
+
+    .summary-box p{
+      margin:0;
+      color:#475569;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .section-title{
+      font-size:22px;
+      font-weight:950;
+      margin:18px 0 12px;
+      letter-spacing:-0.2px;
+      color:#0b2b63;
       display:flex;
       align-items:center;
       gap:10px;
-      margin:0 0 10px;
-      font-size:21px;
-      font-weight:950;
-      color:#0b2b63;
-      letter-spacing:.2px;
+      position:relative;
+      z-index:1;
     }
 
-    .title::before{
+    .section-title::before{
       content:"";
       width:4px;
       height:22px;
       border-radius:999px;
-      background:var(--blue-3);
-      display:inline-block;
+      background:var(--i-blue-3);
       box-shadow:0 10px 18px rgba(11,91,211,.25);
     }
 
-    .title-icon{
-      width:36px;
-      height:36px;
-      border-radius:12px;
-      display:grid;
-      place-items:center;
-      background:#eff6ff;
-      border:1px solid #dbeafe;
-      color:#0b3d91;
-      flex:0 0 auto;
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
+      border-radius:var(--i-radius);
+      padding:20px 22px;
+      margin:14px 0;
+      box-shadow:var(--i-shadow);
+      border:1px solid var(--i-border);
+      position:relative;
+      overflow:hidden;
+      transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+      will-change:transform;
     }
 
-    .title-icon svg{width:18px;height:18px}
-
-    .text{
-      margin:0;
-      color:var(--muted);
-      line-height:1.75;
-      font-size:15px;
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      padding:1px;
+      border-radius:inherit;
+      background:var(--i-grad);
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      opacity:.55;
+      pointer-events:none;
     }
 
-    .text + .text{margin-top:12px}
-
-    .list{
-      margin:10px 0 0;
-      padding-left:18px;
-      color:var(--muted);
-      line-height:1.7;
-      font-size:15px;
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 260px at 20% 0%, rgba(11,91,211,.12), transparent 55%),
+        radial-gradient(520px 240px at 90% 20%, rgba(240,180,0,.10), transparent 60%);
+      opacity:0;
+      transition:opacity .18s ease;
+      pointer-events:none;
     }
 
-    .list li{margin:6px 0}
+    .card:hover{
+      transform:translateY(-4px);
+      box-shadow:var(--i-shadow-2);
+      border-color:rgba(11,91,211,.22);
+    }
 
-    .callout{
-      margin-top:14px;
-      padding:14px 16px;
-      border-radius:16px;
-      background:var(--info);
-      border:1px solid #dbeafe;
-      color:#0b2b63;
+    .card:hover::before{ opacity: 1; }
+
+    .muted{
+      color:var(--i-muted);
       font-size:14px;
       line-height:1.65;
-      font-weight:700;
-    }
-
-    .summary-grid{
-      display:grid;
-      grid-template-columns:repeat(3, minmax(0,1fr));
-      gap:14px;
-      margin-top:14px;
-    }
-
-    .summary-card{
-      padding:16px;
-      border-radius:16px;
-      background:#fff;
-      border:1px solid #e5eaf3;
-      box-shadow:var(--shadow-soft);
-    }
-
-    .summary-card h3{
-      margin:0 0 8px;
-      font-size:16px;
-      color:#0b2b63;
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-
-    .summary-card p{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.65;
-    }
-
-    .icon-badge{
-      width:28px;
-      height:28px;
-      border-radius:999px;
-      display:grid;
-      place-items:center;
-      background:#eff6ff;
-      color:#0b3d91;
-      border:1px solid #dbeafe;
-      flex:0 0 auto;
-    }
-
-    .icon-badge svg{width:15px;height:15px}
-
-    .grid-2{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:16px;
-    }
-
-    .mini{
-      background:#fff;
-      border-radius:16px;
-      padding:16px;
-      border:1px solid rgba(15,23,42,.10);
-      box-shadow:var(--shadow-soft);
-    }
-
-    .mini h3{
-      margin:0 0 8px;
-      font-size:16px;
-      font-weight:950;
-      color:#0b2b63;
+      margin-top:6px;
+      position:relative;
+      z-index:1;
     }
 
     .table-wrap{
       overflow-x:auto;
       -webkit-overflow-scrolling:touch;
       border-radius:16px;
-      margin-top:12px;
-      box-shadow:var(--shadow-soft);
+      margin-top:10px;
+      box-shadow:var(--i-soft);
+      position:relative;
+      z-index:1;
     }
 
     table{
       width:100%;
-      min-width:860px;
+      min-width:920px;
       border-collapse:collapse;
       background:#fff;
       border-radius:16px;
@@ -682,25 +604,24 @@
       border:1px solid rgba(15,23,42,.10);
     }
 
-    th, td{
-      padding:13px 12px;
+    th, body.impacto td{
+      padding:12px 12px;
       border-bottom:1px solid #ececec;
       vertical-align:top;
       font-size:14px;
-      line-height:1.6;
+      line-height:1.55;
       color:#243042;
-      text-align:left;
     }
 
     th{
-      background:linear-gradient(180deg, var(--blue-1), #0b4ab1);
+      background:linear-gradient(180deg, var(--i-blue-1), #0b4ab1);
       color:#fff;
       font-weight:950;
       font-size:14px;
     }
 
-    tr:last-child td{border-bottom:none}
-    td strong{color:#0b3d91}
+    tr:last-child td{ border-bottom:none; }
+    td strong{ color:#0b3d91; }
 
     .chart-box{
       background:#fff;
@@ -708,8 +629,9 @@
       padding:14px 14px 8px;
       border:1px solid rgba(15,23,42,.10);
       overflow:hidden;
-      box-shadow:var(--shadow-soft);
-      margin-top:12px;
+      box-shadow:var(--i-soft);
+      position:relative;
+      z-index:1;
     }
 
     .chart-wrap{
@@ -718,31 +640,211 @@
       height:360px;
     }
 
-    .method-box{
-      margin-top:14px;
+    .two-cols{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-top:10px;
+      position:relative;
+      z-index:1;
+    }
+
+    .mini{
+      background:#fff;
+      border-radius:16px;
+      padding:14px 16px;
+      border:1px solid rgba(15,23,42,.10);
+      box-shadow:var(--i-soft);
+      transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .mini::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(520px 220px at 20% 10%, rgba(11,91,211,.10), transparent 60%);
+      opacity:0;
+      transition:opacity .16s ease;
+      pointer-events:none;
+    }
+
+    .mini:hover{
+      transform:translateY(-3px);
+      box-shadow:0 22px 44px rgba(2,6,23,.12);
+      border-color:rgba(11,91,211,.18);
+    }
+
+    .mini:hover::before{ opacity:1; }
+
+    .mini h3{
+      margin:0 0 8px;
+      font-size:16px;
+      font-weight:950;
+      color:#0b2b63;
+      position:relative;
+      z-index:1;
+    }
+
+    ul{
+      margin:8px 0 0;
+      padding-left:18px;
+      position:relative;
+      z-index:1;
+    }
+
+    li{
+      font-size:14px;
+      line-height:1.6;
+      color:#243042;
+      margin:6px 0;
+    }
+
+    .extra-content{
+      margin-top:12px;
       padding:14px 16px;
       border-radius:16px;
       background:#f8fbff;
-      border:1px solid #e5eaf3;
+      border:1px solid #dbeafe;
       color:#334155;
       font-size:14px;
       line-height:1.65;
+      position:relative;
+      z-index:1;
     }
 
-    .quote-box{
-      margin-top:14px;
-      padding:16px;
-      border-radius:18px;
-      background:linear-gradient(180deg, #fff, #f8fbff);
-      border:1px solid #e5eaf3;
-      box-shadow:var(--shadow-soft);
+    .premium-lock{
+      position:relative;
     }
 
-    .quote-box p{
+    .premium-content.locked{
+      filter:blur(3px);
+      pointer-events:none;
+      user-select:none;
+    }
+
+    .premium-overlay{
+      position:absolute;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:5;
+      background:linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.92));
+      backdrop-filter:blur(3px);
+    }
+
+    .premium-lock.locked .premium-overlay{
+      display:flex;
+    }
+
+    .premium-box{
+      width:min(560px, 100%);
+      background:#fff;
+      border:1px solid rgba(15,23,42,.10);
+      border-radius:20px;
+      box-shadow:0 24px 50px rgba(2,6,23,.18);
+      padding:22px;
+      text-align:center;
+    }
+
+    .premium-icon{
+      width:58px;
+      height:58px;
+      margin:0 auto 12px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(180deg, #fff7db, #ffe8a3);
+      color:#8a5a00;
+      border:1px solid rgba(240,180,0,.35);
+      box-shadow:0 10px 20px rgba(240,180,0,.16);
+    }
+
+    .premium-icon svg{
+      width:26px;
+      height:26px;
+    }
+
+    .premium-box h3{
+      margin:0 0 8px;
+      font-size:22px;
+      color:#0b2b63;
+    }
+
+    .premium-box p{
       margin:0;
-      color:#334155;
-      line-height:1.7;
+      color:#475569;
+      line-height:1.65;
       font-size:15px;
+    }
+
+    .premium-actions{
+      margin-top:16px;
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .premium-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:11px 16px;
+      border-radius:999px;
+      text-decoration:none;
+      font-weight:900;
+      font-size:14px;
+      border:1px solid transparent;
+      cursor:pointer;
+    }
+
+    .premium-btn.primary{
+      background:#0b3d91;
+      color:#fff;
+      box-shadow:0 14px 28px rgba(11,61,145,.22);
+    }
+
+    .premium-btn.secondary{
+      background:#fff;
+      color:#0b2b63;
+      border-color:#dbe3ef;
+    }
+
+    .refs{
+      margin:10px 0 0;
+      padding-left:18px;
+      position:relative;
+      z-index:1;
+    }
+
+    .refs li{
+      margin:10px 0;
+    }
+
+    .refs a{
+      color:var(--i-blue-2);
+      font-weight:900;
+      text-decoration:none;
+      border-bottom:1px dashed rgba(15,91,211,.45);
+      transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+      border-radius:8px;
+      padding:0 2px;
+      outline:none;
+      word-break:break-word;
+    }
+
+    .refs a:hover{
+      background:rgba(15,91,211,.08);
+      box-shadow:0 10px 22px rgba(2,6,23,.08);
+    }
+
+    .refs a:focus-visible{
+      box-shadow:var(--i-glow);
+      background:rgba(15,91,211,.10);
     }
 
     .stamp{
@@ -757,34 +859,8 @@
       font-size:12px;
       font-weight:900;
       margin-top:10px;
-    }
-
-    .refs{
-      margin:12px 0 0;
-      padding-left:18px;
-    }
-
-    .refs li{
-      margin:10px 0;
-      color:#334155;
-      line-height:1.75;
-    }
-
-    .refs a{
-      color:var(--blue-3);
-      font-weight:900;
-      text-decoration:none;
-      border-bottom:1px dashed rgba(15,91,211,.45);
-      word-break:break-word;
-    }
-
-    .refs a:hover{background:rgba(15,91,211,.08)}
-
-    .footer{
-      text-align:center;
-      color:#64748b;
-      font-size:13px;
-      padding:18px 10px 30px;
+      position:relative;
+      z-index:1;
     }
 
     .pwa-modal{
@@ -807,10 +883,14 @@
       border:1px solid rgba(15, 23, 42, .10);
       box-shadow:0 20px 55px rgba(2,6,23,.28);
       padding:16px;
-      transform:none !important;
     }
 
-    .pwa-title{margin:0 0 10px;font-size:18px;font-weight:950;color:#0b2b63}
+    .pwa-title{
+      margin:0 0 10px;
+      font-size:18px;
+      font-weight:950;
+      color:#0b2b63;
+    }
 
     .pwa-img{
       width:100%;
@@ -848,21 +928,34 @@
     .pwa-btn-primary{background:#0b3d91;color:#fff}
     .pwa-btn-secondary{background:#fff;border-color:#dbe3ef;color:#0f172a}
 
-    .pwa-btn:focus-visible{
-      outline:none;
-      box-shadow:0 0 0 4px rgba(56, 130, 246, .20);
+    footer{
+      text-align:center;
+      color:#475569;
+      padding:22px 12px;
+      font-size:13px;
+      opacity:.95;
     }
 
     @media (max-width: 980px){
-      .hero-grid,
-      .grid-2,
       .lpp-nav-inner{
         grid-template-columns:1fr;
       }
 
-      .summary-grid{grid-template-columns:1fr}
-      .user-area{justify-content:flex-end}
-      .user-btn{width:100%;max-width:100%}
+      .user-area{
+        justify-content:flex-end;
+      }
+
+      .user-btn{
+        width:100%;
+        max-width:100%;
+      }
+    }
+
+    @media (max-width: 900px){
+      .summary-banner{grid-template-columns:1fr}
+      .chart-wrap{ height: 320px; }
+      .two-cols{ grid-template-columns: 1fr; }
+      .section-title{ font-size: 20px; }
     }
 
     @media (max-width: 640px){
@@ -880,28 +973,22 @@
       }
 
       .dropdown.open{transform:translateY(0)}
-      .hero-points,.stats-grid{grid-template-columns:1fr}
-      .impact-main{padding:0 14px}
-      .card{padding:18px}
-      .chart-wrap{height:320px}
       .user-btn{min-width:0}
       .user-email{max-width:160px}
     }
 
     @media (prefers-reduced-motion: reduce){
-      html{scroll-behavior:auto}
-      *{transition:none !important;animation:none !important}
+      *{ transition:none !important; }
     }
   </style>
 </head>
 
-<body>
+<body class="impacto">
+
   <header class="lpp-header">
     <div class="lpp-brand">
       <h1>Impacto Econômico Hospitalar</h1>
-      <p>
-        Custos, carga assistencial e relevância institucional da lesão por pressão, com base em ANVISA, OMS, PubMed e NPIAP.
-      </p>
+      <p>Custos estimados associados à lesão por pressão no contexto assistencial</p>
 
       <div class="header-actions">
         <button id="pwaInstallBtn" class="lpp-pill" style="display:none;">
@@ -913,13 +1000,14 @@
 
   <nav class="lpp-nav" aria-label="Navegação principal">
     <div class="lpp-nav-inner">
+
       <div class="menu-shell">
         <div class="lpp-menu" id="menuLinks">
           <a href="index.html">Início</a>
-          <a href="nosso-produto.html">Nosso Produto</a>
-          <a href="tratamento.html">Tratamento</a>
-          <a href="impacto-economico.html" aria-current="page">Impacto Econômico</a>
+          <a href="tratamento.html">Página Técnica</a>
           <a href="guia-simples.html">Guia Simples</a>
+          <a href="impacto-economico.html" aria-current="page">Impacto Econômico</a>
+          <a href="nosso-produto.html">Nosso Produto</a>
           <a href="selecao-produtos.html">Seleção de Produtos</a>
           <a href="avaliacao.html">Avaliação</a>
         </div>
@@ -945,7 +1033,7 @@
         <div id="userDrop" class="dropdown" role="menu" aria-label="Menu do usuário">
           <div class="drop-head">
             <div class="t1" id="dropHeadTitle">Conta</div>
-            <div class="t2" id="dropHeadSub">Verificando sessão...</div>
+            <div class="t2" id="dropHeadSub">Verificando sessão…</div>
           </div>
 
           <a id="dropLogin" class="drop-item" href="login.html?mode=login">
@@ -965,367 +1053,237 @@
           </button>
         </div>
       </div>
+
     </div>
   </nav>
 
-  <main class="impact-main">
-    <section class="hero-grid">
-      <article class="card hero-card">
-        <span class="hero-label">Análise institucional</span>
-        <h2 class="hero-heading">A lesão por pressão amplia custo, tempo assistencial e complexidade do cuidado</h2>
-        <p class="hero-text">
-          O impacto econômico da lesão por pressão não se limita ao curativo. Ele envolve permanência hospitalar maior,
-          maior uso de insumos, aumento do tempo de equipe, risco de agravamento clínico e pior aproveitamento de recursos.
-          Em casos avançados, uma parcela menor de pacientes pode concentrar parte importante do gasto.
-        </p>
+  <main>
 
-        <div class="hero-points">
-          <div class="hero-point">Mais dias de internação</div>
-          <div class="hero-point">Maior consumo de materiais</div>
-          <div class="hero-point">Maior carga multiprofissional</div>
-          <div class="hero-point">Prevenção reduz custo evitável</div>
-        </div>
-      </article>
-
-      <aside class="card stats-card">
-        <div class="stats-grid">
-          <div class="stat-box">
-            <div class="k">OMS</div>
-            <div class="v">15%</div>
-            <div class="sub">dos gastos hospitalares na OCDE ligados a eventos adversos evitáveis</div>
-          </div>
-
-          <div class="stat-box light">
-            <div class="k">PubMed</div>
-            <div class="v">US$ 26,8 bi</div>
-            <div class="sub">estimativa anual de custo de lesões adquiridas no hospital nos EUA</div>
-          </div>
-
-          <div class="stat-box">
-            <div class="k">PubMed</div>
-            <div class="v">59%</div>
-            <div class="sub">do custo total concentrado em lesões estágio 3 e 4</div>
-          </div>
-
-          <div class="stat-box light">
-            <div class="k">Mensagem central</div>
-            <div class="v">Prevenir custa menos</div>
-            <div class="sub">do que lidar com lesões avançadas e complicações</div>
-          </div>
-        </div>
-      </aside>
-    </section>
-
-    <div class="subnav" aria-label="Seções da página">
-      <a href="#visao-geral">Visão Geral</a>
-      <a href="#resumo">Resumo Executivo</a>
-      <a href="#indicadores">Indicadores</a>
-      <a href="#grafico">Gráfico</a>
-      <a href="#interpretacao">Interpretação</a>
-      <a href="#referencias">Referências</a>
-    </div>
-
-    <section class="card" id="visao-geral">
-      <h2 class="title">
-        <span class="title-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M12 3v18M3 12h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </span>
-        Visão geral do impacto econômico
-      </h2>
-
-      <p class="text">
-        A Organização Mundial da Saúde aponta que os eventos adversos representam uma carga expressiva para os serviços de saúde.
-        Entre eles, a lesão por pressão é reconhecida como evento de alta relevância clínica e econômica. No Brasil, a ANVISA
-        inclui sua prevenção entre as práticas de segurança do paciente, reforçando que o problema deve ser tratado também como tema de gestão.
-      </p>
-
-      <p class="text">
-        Em termos práticos, isso significa que a ausência de prevenção adequada pode levar a mais procedimentos, maior tempo de cuidado,
-        necessidade de materiais adicionais e permanência hospitalar prolongada, com repercussão direta sobre custo e eficiência assistencial.
-      </p>
-
-      <div class="callout">
-        Em linguagem de gestão: prevenir lesão por pressão não é apenas uma ação clínica. É também uma estratégia de segurança,
-        qualidade e melhor uso de recursos institucionais.
+    <section class="summary-banner">
+      <div class="summary-box">
+        <h3>Custos diretos</h3>
+        <p>Os dados mostram grande variação conforme estágio da lesão, número de curativos e complexidade assistencial.</p>
+      </div>
+      <div class="summary-box">
+        <h3>Impacto hospitalar</h3>
+        <p>Além do curativo, a lesão por pressão afeta tempo de internação, uso de materiais e demanda multiprofissional.</p>
+      </div>
+      <div class="summary-box">
+        <h3>Mensagem central</h3>
+        <p>Em termos assistenciais e econômicos, prevenir tende a ser mais eficiente do que tratar casos avançados.</p>
       </div>
     </section>
 
-    <section class="card" id="resumo">
-      <h2 class="title">
-        <span class="title-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M5 7h14M5 12h14M5 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </span>
-        Resumo executivo
-      </h2>
+    <section class="hero">
+      <h2>O impacto financeiro da lesão por pressão vai além do curativo</h2>
+      <p>
+        A lesão por pressão está associada ao aumento do tempo de internação, maior consumo de materiais,
+        necessidade de assistência multiprofissional e elevação do custo hospitalar. Em situações avançadas
+        ou complexas, o tratamento pode atingir valores muito expressivos.
+      </p>
 
-      <div class="summary-grid">
-        <div class="summary-card">
-          <h3>
-            <span class="icon-badge" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M12 8v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"/>
-              </svg>
-            </span>
-            Problema relevante
-          </h3>
-          <p>Lesão por pressão aumenta uso de recursos, tempo assistencial e risco de complicações em pacientes internados.</p>
-        </div>
-
-        <div class="summary-card">
-          <h3>
-            <span class="icon-badge" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M5 16l4-4 3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-            Gasto concentrado
-          </h3>
-          <p>Os casos mais graves concentram parcela importante do custo total, o que torna a prevenção ainda mais estratégica.</p>
-        </div>
-
-        <div class="summary-card">
-          <h3>
-            <span class="icon-badge" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M12 4l7 4v8l-7 4-7-4V8l7-4Z" stroke="currentColor" stroke-width="2"/>
-              </svg>
-            </span>
-            Mensagem-chave
-          </h3>
-          <p>Prevenção, identificação precoce e classificação correta tendem a ser mais eficientes do que o manejo tardio.</p>
-        </div>
-      </div>
-
-      <div class="quote-box">
-        <p>
-          Para apresentação acadêmica ou institucional, a síntese mais defensável é:
-          <strong>a lesão por pressão representa um problema clínico com repercussão econômica importante, e o investimento em prevenção se justifica tanto pela segurança do paciente quanto pela racionalização de custos</strong>.
-        </p>
+      <div class="hero-badges">
+        <span class="hero-badge">Internação prolongada</span>
+        <span class="hero-badge">Maior uso de insumos</span>
+        <span class="hero-badge">Mais tempo assistencial</span>
+        <span class="hero-badge">Prevenção reduz custo</span>
       </div>
     </section>
 
-    <section class="card" id="indicadores">
-      <h2 class="title">
-        <span class="title-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M6 18V9M12 18V5M18 18v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </span>
-        Indicadores econômicos das fontes consultadas
-      </h2>
-
-      <p class="text">
-        Os estudos econômicos sobre lesão por pressão não usam exatamente a mesma unidade. Alguns trazem custo por dia,
-        outros custo anual, percentual do gasto ou participação dos casos graves no custo total. Por isso, a tabela abaixo
-        foi organizada para mostrar <strong>magnitude e tendência</strong>, e não equivalência direta entre todos os valores.
-      </p>
+    <div class="card">
+      <div class="section-title">Dados de custo</div>
+      <div class="muted">
+        Os valores abaixo sintetizam estimativas encontradas em diferentes contextos de assistência e pesquisa.
+        A comparação deve considerar a unidade de medida utilizada em cada estudo.
+      </div>
 
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Fonte</th>
               <th>Indicador</th>
               <th>Unidade</th>
               <th>Valor</th>
-              <th>Leitura prática</th>
+              <th>Descrição</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><strong>OMS</strong></td>
-              <td>Gasto hospitalar relacionado a eventos adversos na OCDE</td>
-              <td>Proporção do gasto</td>
-              <td><strong>15%</strong></td>
-              <td>Eventos adversos consomem recursos importantes do sistema; lesões por pressão figuram entre os mais onerosos.</td>
+              <td><strong>Custos diretos de curativos (todos os estágios)</strong></td>
+              <td>Por procedimento</td>
+              <td><strong>R$ 16,41 a R$ 260,18</strong></td>
+              <td>Inclui materiais e mão de obra diretamente relacionados ao procedimento.</td>
             </tr>
             <tr>
-              <td><strong>PubMed</strong></td>
-              <td>Custo nacional estimado de lesões por pressão adquiridas no hospital nos EUA</td>
-              <td>Estimativa anual</td>
-              <td><strong>US$ 26,8 bilhões</strong></td>
-              <td>Expressa a dimensão econômica do problema em larga escala.</td>
+              <td><strong>Custo total de tratamento hospitalar</strong></td>
+              <td>Por paciente / 6 meses</td>
+              <td><strong>R$ 1.886,00</strong></td>
+              <td>Média por paciente ao longo de seis meses, conforme o estudo citado.</td>
             </tr>
             <tr>
-              <td><strong>PubMed</strong></td>
-              <td>Participação dos estágios 3 e 4 no custo total</td>
-              <td>Percentual do custo</td>
-              <td><strong>59%</strong></td>
-              <td>Casos graves concentram parte desproporcional do gasto total.</td>
+              <td><strong>LPP em estágios avançados (III–IV)</strong></td>
+              <td>Total / 104 curativos</td>
+              <td><strong>R$ 6.828,27</strong></td>
+              <td>Estimativa com base em materiais consumidos em internação prolongada.</td>
             </tr>
             <tr>
-              <td><strong>PubMed</strong></td>
-              <td>Custo de prevenção por paciente/dia</td>
-              <td>Faixa estimada</td>
-              <td><strong>2,65 a 87,57 EUR</strong></td>
-              <td>Varia conforme protocolo, cenário assistencial e recursos utilizados.</td>
+              <td><strong>LPP em estágios avançados (III–IV)</strong></td>
+              <td>Média diária</td>
+              <td><strong>R$ 74,22 por dia</strong></td>
+              <td>Valor médio diário relatado no contexto assistencial estudado.</td>
             </tr>
             <tr>
-              <td><strong>PubMed</strong></td>
-              <td>Custo de tratamento por paciente/dia</td>
-              <td>Faixa estimada</td>
-              <td><strong>1,71 a 470,49 EUR</strong></td>
-              <td>O tratamento pode ultrapassar amplamente o custo preventivo, sobretudo em casos graves.</td>
+              <td><strong>Caso de alta complexidade</strong></td>
+              <td>Total / 189 dias</td>
+              <td><strong>R$ 111.254,85</strong></td>
+              <td>Inclui internação prolongada, recursos humanos e materiais utilizados.</td>
             </tr>
             <tr>
-              <td><strong>ANVISA / NPIAP</strong></td>
-              <td>Prioridade assistencial e institucional</td>
-              <td>Diretriz</td>
-              <td><strong>Alta relevância</strong></td>
-              <td>Prevenção, classificação e detecção precoce ajudam a reduzir dano e desperdício evitável.</td>
+              <td><strong>Caso de alta complexidade</strong></td>
+              <td>Média diária</td>
+              <td><strong>R$ 588,65 por dia</strong></td>
+              <td>Média diária calculada no estudo de caso apresentado.</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="method-box">
-        <strong>Nota metodológica:</strong> valores econômicos provenientes de países, moedas e desenhos de estudo diferentes
-        não devem ser somados nem comparados como se fossem equivalentes. O ponto mais consistente entre as fontes é:
-        <strong>lesões graves aumentam fortemente o custo e a prevenção tende a ser mais eficiente do que o manejo tardio</strong>.
+      <div class="extra-content">
+        <strong>Leitura complementar:</strong> os valores apresentados reforçam que o impacto econômico não deve ser interpretado apenas pelo custo unitário de um curativo, mas pelo conjunto de recursos mobilizados ao longo do cuidado.
       </div>
-    </section>
+    </div>
 
-    <section class="card" id="grafico">
-      <h2 class="title">
-        <span class="title-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M5 19V10M12 19V5M19 19v-8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </span>
-        Comparação visual dos indicadores
-      </h2>
+    <section class="premium-lock locked" id="premiumArea">
+      <div class="premium-content locked" id="premiumContent">
 
-      <p class="text">
-        O gráfico foi mantido com indicadores numéricos comparáveis apenas em termos de escala visual. Ele serve para destacar
-        a diferença de magnitude entre alguns achados centrais, mas não substitui a interpretação contextual da tabela e das referências.
-      </p>
+        <div class="card">
+          <div class="section-title">Comparação visual</div>
+          <div class="muted">
+            O gráfico permite observar a amplitude do impacto econômico. Como as unidades diferem entre os estudos,
+            a leitura deve ser interpretada com cautela e foco comparativo.
+          </div>
 
-      <div class="chart-box">
-        <div class="chart-wrap">
-          <canvas id="graficoCusto"></canvas>
+          <div class="chart-box" style="margin-top:12px;">
+            <div class="chart-wrap">
+              <canvas id="graficoCusto"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Prevenção versus tratamento</div>
+
+          <div class="two-cols">
+            <div class="mini">
+              <h3>Prevenção</h3>
+              <ul>
+                <li>Avaliação de risco e inspeção diária da pele.</li>
+                <li>Reposicionamento programado.</li>
+                <li>Controle de umidade e proteção cutânea.</li>
+                <li>Uso de superfícies de redistribuição de pressão quando indicado.</li>
+                <li>Potencial para reduzir custos assistenciais e tempo de internação.</li>
+              </ul>
+            </div>
+
+            <div class="mini">
+              <h3>Tratamento</h3>
+              <ul>
+                <li>Necessidade de curativos seriados e maior consumo de materiais.</li>
+                <li>Possibilidade de internação prolongada em estágios avançados.</li>
+                <li>Maior demanda de assistência multiprofissional.</li>
+                <li>Casos complexos podem alcançar valores financeiros muito elevados.</li>
+                <li>Impacto clínico e econômico mais expressivo que a prevenção.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="extra-content">
+            A comparação entre prevenção e tratamento ajuda a demonstrar que a lesão por pressão não deve ser analisada apenas como evento clínico, mas também como marcador de qualidade assistencial e eficiência no uso de recursos.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Leitura premium</div>
+          <div class="muted">
+            Em cenário institucional, a prevenção da lesão por pressão pode ser interpretada como intervenção com potencial de reduzir desperdício evitável, minimizar progressão para estágios graves e apoiar melhores indicadores de qualidade.
+          </div>
+
+          <div class="extra-content">
+            Em apresentações, TCC ou defesa de projeto, esta parte pode ser usada como argumento para relacionar segurança do paciente, gestão de custos e racionalidade assistencial.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="premium-overlay" id="premiumOverlay">
+        <div class="premium-box">
+          <div class="premium-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M8 10V7a4 4 0 1 1 8 0v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <h3>Conteúdo Premium</h3>
+          <p>
+            A comparação visual, a análise de prevenção versus tratamento e a leitura complementar detalhada
+            estão disponíveis para usuários premium.
+          </p>
+          <div class="premium-actions">
+            <a class="premium-btn primary" href="login.html?mode=signup">Desbloquear Premium</a>
+            <a class="premium-btn secondary" href="login.html?mode=login">Já tenho conta</a>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="grid-2" id="interpretacao">
-      <section class="card">
-        <h2 class="title">
-          <span class="title-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-          Por que a prevenção tende a custar menos?
-        </h2>
-
-        <ul class="list">
-          <li>Reduz a chance de progressão para lesões profundas e mais caras.</li>
-          <li>Diminui necessidade de curativos complexos e insumos adicionais.</li>
-          <li>Pode reduzir tempo de internação e sobrecarga assistencial.</li>
-          <li>Evita parte dos custos concentrados em casos avançados.</li>
-          <li>Melhora segurança do paciente e qualidade do cuidado.</li>
-        </ul>
-      </section>
-
-      <section class="card">
-        <h2 class="title">
-          <span class="title-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
-              <path d="M12 8v4l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </span>
-          Como interpretar os números com segurança?
-        </h2>
-
-        <ul class="list">
-          <li>Observe sempre se o valor é por dia, por paciente, por ano ou por sistema.</li>
-          <li>Considere que moedas e países são diferentes.</li>
-          <li>Estágios graves não representam apenas maior dano clínico, mas maior peso econômico.</li>
-          <li>Comparar tendência é mais seguro do que comparar valores absolutos isolados.</li>
-          <li>Para uso acadêmico, cite a fonte exata de cada indicador.</li>
-        </ul>
-      </section>
-    </section>
-
-    <section class="card">
-      <h2 class="title">
-        <span class="title-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M6 12l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </span>
-        Síntese para uso no projeto
-      </h2>
-
-      <div class="mini">
-        <h3>Mensagem recomendada</h3>
-        <p class="text">
-          A lesão por pressão gera impacto econômico relevante por aumentar o tempo de internação, o consumo de insumos
-          e a necessidade de cuidado multiprofissional. Evidências mostram que lesões mais graves concentram parcela importante
-          do custo total, reforçando que estratégias de prevenção e identificação precoce são mais eficientes do ponto de vista
-          clínico e econômico.
-        </p>
-      </div>
-    </section>
-
-    <section class="card" id="referencias">
-      <h2 class="title">
-        <span class="title-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M7 6h10M7 12h10M7 18h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </span>
-        Fontes e referências
-      </h2>
+    <div class="card" id="referencias">
+      <div class="section-title">Referências</div>
 
       <div class="stamp">
         <span>Consulta realizada em</span>
-        <span>21/03/2026, 15:38:01 (UTC-03:00)</span>
+        <span id="dataHoraConsulta">—</span>
       </div>
 
       <ol class="refs">
         <li>
-          ANVISA. <strong>Práticas de Segurança do Paciente em Serviços de Saúde: Prevenção de Lesão por Pressão</strong>. Brasília: Agência Nacional de Vigilância Sanitária, 28 ago 2023.
-          Disponível em:
-          <a href="https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/notas-tecnicas/notas-tecnicas-vigentes/nota-tecnica-gvims-ggtes-anvisa-no-05-2023-praticas-de-seguranca-do-paciente-em-servicos-de-saude-prevencao-de-lesao-por-pressao/%40%40download/file" target="_blank" rel="noopener noreferrer">gov.br/anvisa</a>
+          PubMed. Custos diretos de curativos em lesão por pressão.
+          <a href="https://pubmed.ncbi.nlm.nih.gov/27384210/" target="_blank" rel="noopener noreferrer">
+            https://pubmed.ncbi.nlm.nih.gov/27384210/
+          </a>
         </li>
         <li>
-          OMS. <strong>Patient safety</strong>. World Health Organization.
-          Disponível em:
-          <a href="https://www.who.int/health-topics/patient-safety" target="_blank" rel="noopener noreferrer">who.int/health-topics/patient-safety</a>
+          Revista Enfermagem Atual. Custo total do tratamento hospitalar de LPP.
+          <a href="https://revistaenfermagematual.com.br/index.php/revista/article/view/93?utm_source=chatgpt.com"
+             target="_blank" rel="noopener noreferrer">
+            https://revistaenfermagematual.com.br/index.php/revista/article/view/93
+          </a>
         </li>
         <li>
-          OMS. <strong>Patient safety: facts in pictures</strong>. World Health Organization.
-          Disponível em:
-          <a href="https://www.who.int/news-room/facts-in-pictures/detail/patient-safety" target="_blank" rel="noopener noreferrer">who.int/news-room/facts-in-pictures/detail/patient-safety</a>
+          Universidade Federal do Maranhão. Materiais consumidos em curativos de LPP.
+          <a href="https://monografias.ufma.br/jspui/handle/123456789/5950?utm_source=chatgpt.com"
+             target="_blank" rel="noopener noreferrer">
+            https://monografias.ufma.br/jspui/handle/123456789/5950
+          </a>
         </li>
         <li>
-          Padula WV, Delarmente BA. <strong>The national cost of hospital-acquired pressure injuries in the United States</strong>. Int Wound J. 2019;16(3):634-640. PMID: 30693644.
-          Disponível em:
-          <a href="https://pubmed.ncbi.nlm.nih.gov/30693644/" target="_blank" rel="noopener noreferrer">PubMed PMID: 30693644</a>
-        </li>
-        <li>
-          Demarré L, Verhaeghe S, Van Hecke A, et al. <strong>The cost of prevention and treatment of pressure ulcers: A systematic review</strong>. Int J Nurs Stud. 2015;52(11):1754-1774. PMID: 26231383.
-          Disponível em:
-          <a href="https://pubmed.ncbi.nlm.nih.gov/26231383/" target="_blank" rel="noopener noreferrer">PubMed PMID: 26231383</a>
-        </li>
-        <li>
-          NPIAP. <strong>Pressure Injury Stages</strong>. National Pressure Injury Advisory Panel.
-          Disponível em:
-          <a href="https://npiap.com/page/PressureInjuryStages" target="_blank" rel="noopener noreferrer">npiap.com/page/PressureInjuryStages</a>
+          Anais SOBEST. Caso complexo com internação prolongada.
+          <a href="https://anais.sobest.com.br/cpe/article/view/1007?utm_source=chatgpt.com"
+             target="_blank" rel="noopener noreferrer">
+            https://anais.sobest.com.br/cpe/article/view/1007
+          </a>
         </li>
       </ol>
-    </section>
+
+      <p class="muted" style="margin-bottom:0;">
+        Nota metodológica: os valores podem variar conforme protocolo institucional, gravidade clínica,
+        perfil do paciente, tempo de internação e recursos utilizados no serviço.
+      </p>
+    </div>
+
   </main>
 
-  <footer class="footer">
-    © 2026 - Projeto Integrador | Conteúdo com base em ANVISA, OMS, PubMed e NPIAP.
+  <footer>
+    © 2026 - Projeto Integrador · <span id="dataHoraRodape">—</span>
   </footer>
 
   <div id="pwaModal" class="pwa-modal" aria-hidden="true">
@@ -1343,29 +1301,57 @@
   </div>
 
   <script>
+    const dados = {
+      curativoMin: 16.41,
+      curativoMax: 260.18,
+      seisMeses: 1886.00,
+      avancadoDia: 74.22,
+      complexoDia: 588.65,
+      complexoTotal: 111254.85
+    };
+
     const labels = [
-      "OMS: % gasto hospitalar",
-      "PubMed: % custo estágios 3-4",
-      "PubMed: prevenção mín./dia",
-      "PubMed: prevenção máx./dia",
-      "PubMed: tratamento mín./dia",
-      "PubMed: tratamento máx./dia"
+      'Curativo mínimo',
+      'Curativo máximo',
+      'Tratamento em 6 meses',
+      'Estágio avançado por dia',
+      'Caso complexo por dia',
+      'Caso complexo total'
     ];
 
-    const valores = [15, 59, 2.65, 87.57, 1.71, 470.49];
-    const ctx = document.getElementById("graficoCusto");
+    const valores = [
+      dados.curativoMin,
+      dados.curativoMax,
+      dados.seisMeses,
+      dados.avancadoDia,
+      dados.complexoDia,
+      dados.complexoTotal
+    ];
 
-    if (window.Chart && ctx) {
+    const ctx = document.getElementById('graficoCusto');
+
+    function renderPremiumChart() {
+      if (!(window.Chart && ctx)) {
+        const box = document.querySelector('.chart-box');
+        if (box) {
+          box.innerHTML = '<p style="margin:0; padding:12px; font-weight:900; color:#0b2b63;">Gráfico indisponível. Verifique a conexão com a biblioteca Chart.js.</p>';
+        }
+        return;
+      }
+
+      if (ctx.dataset.rendered === "true") return;
+      ctx.dataset.rendered = "true";
+
       new Chart(ctx, {
-        type: "bar",
+        type: 'bar',
         data: {
           labels,
           datasets: [{
-            label: "Indicadores econômicos",
+            label: 'Custo estimado (R$)',
             data: valores,
-            backgroundColor: ["#0b3d91", "#0f5bd3", "#93c5fd", "#60a5fa", "#f0b400", "#f59e0b"],
+            borderWidth: 1,
             borderRadius: 10,
-            borderWidth: 0
+            backgroundColor: ['#0b3d91', '#0f5bd3', '#60a5fa', '#93c5fd', '#f0b400', '#f59e0b']
           }]
         },
         options: {
@@ -1376,28 +1362,50 @@
             legend: { display: false },
             tooltip: {
               callbacks: {
-                label: (context) => String(context.parsed.y ?? 0).replace(".", ",")
+                label: (context) => {
+                  const v = context.parsed.y ?? 0;
+                  return 'R$ ' + Number(v).toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  });
+                }
               }
             }
           },
           scales: {
-            x: {
-              ticks: { color: "#475569", font: { size: 11 } },
-              grid: { display: false }
-            },
             y: {
               beginAtZero: true,
-              ticks: { color: "#475569" }
+              ticks: {
+                callback: (value) => 'R$ ' + Number(value).toLocaleString('pt-BR')
+              }
             }
           }
         }
       });
-    } else {
-      const box = document.querySelector(".chart-box");
-      if (box) {
-        box.innerHTML = '<p style="margin:0; padding:12px; font-weight:900; color:#0b2b63;">Gráfico indisponível. Verifique a conexão com a biblioteca Chart.js.</p>';
-      }
     }
+
+    (function () {
+      const alvo1 = document.getElementById("dataHoraConsulta");
+      const alvo2 = document.getElementById("dataHoraRodape");
+
+      const formatar = () => {
+        try {
+          const now = new Date();
+          const fmt = new Intl.DateTimeFormat("pt-BR", {
+            timeZone: "America/Sao_Paulo",
+            dateStyle: "short",
+            timeStyle: "short"
+          });
+          return fmt.format(now) + " (America/Sao_Paulo)";
+        } catch (e) {
+          return new Date().toLocaleString("pt-BR");
+        }
+      };
+
+      const texto = formatar();
+      if (alvo1) alvo1.textContent = texto;
+      if (alvo2) alvo2.textContent = texto;
+    })();
   </script>
 
   <script>
@@ -1451,9 +1459,8 @@
         if (!deferredPrompt) return;
         closeModal();
         deferredPrompt.prompt();
-        try {
-          await deferredPrompt.userChoice;
-        } finally {
+        try { await deferredPrompt.userChoice; }
+        finally {
           deferredPrompt = null;
           installBtn.style.display = "none";
         }
@@ -1480,23 +1487,40 @@
 
     const userBtn = document.getElementById("userBtn");
     const userDrop = document.getElementById("userDrop");
+
     const userEmail = document.getElementById("userEmail");
     const userStatus = document.getElementById("userStatus");
+
     const dropHeadTitle = document.getElementById("dropHeadTitle");
     const dropHeadSub = document.getElementById("dropHeadSub");
+
     const dropLogin = document.getElementById("dropLogin");
     const dropSignup = document.getElementById("dropSignup");
     const dropPremium = document.getElementById("dropPremium");
     const dropLogout = document.getElementById("dropLogout");
 
+    const premiumArea = document.getElementById("premiumArea");
+    const premiumContent = document.getElementById("premiumContent");
+
     function openDrop() {
       userDrop.classList.add("open");
-      userBtn.setAttribute("aria-expanded", "true");
+      userBtn.setAttribute("aria-expanded","true");
     }
 
     function closeDrop() {
       userDrop.classList.remove("open");
-      userBtn.setAttribute("aria-expanded", "false");
+      userBtn.setAttribute("aria-expanded","false");
+    }
+
+    function lockPremium() {
+      premiumArea?.classList.add("locked");
+      premiumContent?.classList.add("locked");
+    }
+
+    function unlockPremium() {
+      premiumArea?.classList.remove("locked");
+      premiumContent?.classList.remove("locked");
+      renderPremiumChart();
     }
 
     userBtn?.addEventListener("click", () => {
@@ -1509,29 +1533,35 @@
 
     window.addEventListener("scroll", () => {
       if (userDrop.classList.contains("open")) closeDrop();
-    }, { passive: true });
+    }, { passive:true });
 
     function setLoggedOut() {
       userEmail.textContent = "Entrar / Criar conta";
       userStatus.innerHTML = 'Não autenticado <span class="badge">Free</span>';
       dropHeadTitle.textContent = "Conta";
       dropHeadSub.textContent = "Você não está autenticado";
+
       dropLogin.style.display = "";
       dropSignup.style.display = "";
       dropPremium.style.display = "";
       dropLogout.style.display = "none";
+
+      lockPremium();
     }
 
     async function setLoggedIn(user) {
       const email = user?.email || "Usuário";
       userEmail.textContent = email;
+
       dropHeadTitle.textContent = "Conta ativa";
       dropHeadSub.textContent = email;
+
       dropLogin.style.display = "none";
       dropSignup.style.display = "none";
       dropPremium.style.display = "";
       dropLogout.style.display = "";
-      userStatus.innerHTML = 'Conta ativa <span class="badge verified">Verificado</span>';
+
+      userStatus.innerHTML = 'Conta ativa <span class="badge verified">✔ Verificado</span>';
 
       try {
         const { data, error } = await supabase
@@ -1541,15 +1571,18 @@
           .single();
 
         if (!error && data?.premium) {
-          userStatus.innerHTML = 'Premium <span class="badge premium">VIP</span> <span class="badge verified">Verificado</span>';
+          userStatus.innerHTML = 'Premium <span class="badge premium">VIP</span> <span class="badge verified">✔ Verificado</span>';
           dropPremium.style.display = "none";
+          unlockPremium();
         } else {
           userStatus.innerHTML = 'Conta ativa <span class="badge">Free</span>';
           dropPremium.style.display = "";
+          lockPremium();
         }
       } catch {
         userStatus.innerHTML = 'Conta ativa <span class="badge">Free</span>';
         dropPremium.style.display = "";
+        lockPremium();
       }
     }
 
@@ -1564,7 +1597,7 @@
       userEmail.innerHTML = '<span class="skeleton"></span>';
       userStatus.innerHTML = '<span class="skeleton small"></span>';
       dropHeadTitle.textContent = "Conta";
-      dropHeadSub.textContent = "Verificando sessão...";
+      dropHeadSub.textContent = "Verificando sessão…";
 
       const hardFallback = setTimeout(() => {
         if (String(userEmail.innerHTML).includes("skeleton")) setLoggedOut();
@@ -1586,6 +1619,7 @@
 
         if (!user) return setLoggedOut();
         return await setLoggedIn(user);
+
       } catch {
         clearTimeout(hardFallback);
         return setLoggedOut();
@@ -1602,23 +1636,5 @@
     renderStateSafe();
   </script>
 
-  <script>
-    async function lppHardRefresh() {
-      try {
-        if ("serviceWorker" in navigator) {
-          const regs = await navigator.serviceWorker.getRegistrations();
-          await Promise.all(regs.map(r => r.unregister()));
-        }
-        if ("caches" in window) {
-          const keys = await caches.keys();
-          await Promise.all(keys.map(k => caches.delete(k)));
-        }
-      } finally {
-        location.href = location.href.split("#")[0];
-      }
-    }
-
-    window.lppHardRefresh = lppHardRefresh;
-  </script>
 </body>
 </html>
