@@ -584,38 +584,6 @@
       z-index:1;
     }
 
-    .chart-intro{
-      display:grid;
-      grid-template-columns:repeat(3, minmax(0,1fr));
-      gap:12px;
-      margin-top:14px;
-      margin-bottom:12px;
-      position:relative;
-      z-index:1;
-    }
-
-    .chart-note{
-      background:#f8fbff;
-      border:1px solid #dbeafe;
-      border-radius:16px;
-      padding:14px;
-      box-shadow:var(--i-soft);
-    }
-
-    .chart-note h3{
-      margin:0 0 6px;
-      font-size:14px;
-      font-weight:950;
-      color:#0b2b63;
-    }
-
-    .chart-note p{
-      margin:0;
-      font-size:13px;
-      color:#475569;
-      line-height:1.6;
-    }
-
     .table-wrap{
       overflow-x:auto;
       -webkit-overflow-scrolling:touch;
@@ -655,55 +623,77 @@
     tr:last-child td{ border-bottom:none; }
     td strong{ color:#0b3d91; }
 
-    .chart-box{
-      background:#fff;
-      border-radius:16px;
-      padding:18px 18px 12px;
-      border:1px solid rgba(15,23,42,.10);
-      overflow:hidden;
-      box-shadow:var(--i-soft);
+    .period-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:14px;
+      margin-top:14px;
       position:relative;
       z-index:1;
     }
 
-    .chart-caption{
-      margin:0 0 12px;
+    .period-card{
+      background:#fff;
+      border:1px solid rgba(15,23,42,.10);
+      border-radius:18px;
+      padding:16px;
+      box-shadow:var(--i-soft);
+    }
+
+    .period-card h3{
+      margin:0 0 6px;
+      font-size:17px;
+      font-weight:950;
+      color:#0b2b63;
+    }
+
+    .period-card p{
+      margin:0;
       font-size:13px;
       line-height:1.6;
       color:#475569;
     }
 
-    .chart-wrap{
+    .period-chart{
       position:relative;
-      width:100%;
-      height:520px;
+      height:300px;
+      margin-top:12px;
     }
 
-    .chart-legend{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:14px;
+    .period-list{
+      margin:12px 0 0;
+      padding-left:18px;
     }
 
-    .legend-item{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      background:#f8fafc;
-      border:1px solid #e2e8f0;
-      font-size:12px;
-      font-weight:800;
+    .period-list li{
+      font-size:13px;
+      line-height:1.6;
       color:#334155;
+      margin:6px 0;
     }
 
-    .legend-dot{
-      width:10px;
-      height:10px;
-      border-radius:999px;
-      display:inline-block;
+    .period-note{
+      margin-top:14px;
+      padding:14px 16px;
+      border-radius:16px;
+      background:#fff8e8;
+      border:1px solid #fde7a8;
+      color:#6b7280;
+      font-size:13px;
+      line-height:1.65;
+    }
+
+    .procedure-box{
+      margin-top:14px;
+      padding:14px 16px;
+      border-radius:16px;
+      background:#f8fbff;
+      border:1px solid #dbeafe;
+      color:#334155;
+      font-size:14px;
+      line-height:1.65;
+      position:relative;
+      z-index:1;
     }
 
     .two-cols{
@@ -1019,12 +1009,8 @@
 
     @media (max-width: 900px){
       .summary-banner,
-      .chart-intro{
+      .period-grid{
         grid-template-columns:1fr;
-      }
-
-      .chart-wrap{
-        height:460px;
       }
 
       .two-cols{
@@ -1053,10 +1039,6 @@
       .dropdown.open{transform:translateY(0)}
       .user-btn{min-width:0}
       .user-email{max-width:160px}
-
-      .chart-wrap{
-        height:560px;
-      }
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -1144,15 +1126,15 @@
     <section class="summary-banner">
       <div class="summary-box">
         <h3>Custos diretos</h3>
-        <p>Os dados mostram grande variação conforme estágio da lesão, número de curativos e complexidade assistencial.</p>
+        <p>Os estudos mostram variação importante conforme estágio da lesão, tempo de internação e complexidade clínica.</p>
       </div>
       <div class="summary-box">
         <h3>Impacto hospitalar</h3>
-        <p>Além do curativo, a lesão por pressão afeta tempo de internação, uso de materiais e demanda multiprofissional.</p>
+        <p>Além dos curativos, a LPP aumenta uso de materiais, tempo assistencial e demanda multiprofissional.</p>
       </div>
       <div class="summary-box">
         <h3>Mensagem central</h3>
-        <p>Em termos assistenciais e econômicos, prevenir tende a ser mais eficiente do que tratar casos avançados.</p>
+        <p>Os casos graves e complexos concentram maior custo, reforçando a importância da prevenção e da detecção precoce.</p>
       </div>
     </section>
 
@@ -1175,63 +1157,78 @@
     <div class="card">
       <div class="section-title">Dados de custo</div>
       <div class="muted">
-        Os valores abaixo sintetizam estimativas encontradas em diferentes contextos de assistência e pesquisa.
-        A comparação deve considerar a unidade de medida utilizada em cada estudo.
+        Os valores abaixo foram reorganizados para deixar claro <strong>o contexto clínico</strong>,
+        <strong>o intervalo de tempo</strong> e, quando disponível na fonte, <strong>o número de pacientes</strong>.
       </div>
 
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Indicador</th>
+              <th>Contexto / tipo de lesão</th>
               <th>Unidade</th>
               <th>Valor</th>
+              <th>Amostra</th>
               <th>Descrição</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><strong>Custos diretos de curativos (todos os estágios)</strong></td>
+              <td><strong>Curativos em pacientes críticos com LPP ≥ estágio 2</strong></td>
               <td>Por procedimento</td>
               <td><strong>R$ 16,41 a R$ 260,18</strong></td>
-              <td>Inclui materiais e mão de obra diretamente relacionados ao procedimento.</td>
+              <td><strong>15 pacientes</strong></td>
+              <td>Variação do custo direto dos curativos conforme área da lesão, categoria e cobertura utilizada.</td>
             </tr>
             <tr>
-              <td><strong>Custo total de tratamento hospitalar</strong></td>
-              <td>Por paciente / 6 meses</td>
-              <td><strong>R$ 1.886,00</strong></td>
-              <td>Média por paciente ao longo de seis meses, conforme o estudo citado.</td>
+              <td><strong>Tratamento hospitalar geral de LPP</strong></td>
+              <td>Custo médio diário por paciente</td>
+              <td><strong>R$ 14,24/dia</strong></td>
+              <td><strong>58 pacientes / 87 lesões</strong></td>
+              <td>Estimativa hospitalar de custo médio diário do tratamento da lesão por pressão.</td>
             </tr>
             <tr>
-              <td><strong>LPP em estágios avançados (III–IV)</strong></td>
+              <td><strong>Tratamento hospitalar geral de LPP</strong></td>
+              <td>Custo total do estudo</td>
+              <td><strong>R$ 2.992,03</strong></td>
+              <td><strong>58 pacientes / 87 lesões</strong></td>
+              <td>Custo total reportado no período estudado pelo serviço hospitalar avaliado.</td>
+            </tr>
+            <tr>
+              <td><strong>LPP estágios III-IV</strong></td>
               <td>Total / 104 curativos</td>
               <td><strong>R$ 6.828,27</strong></td>
-              <td>Estimativa com base em materiais consumidos em internação prolongada.</td>
+              <td><strong>10 pacientes</strong></td>
+              <td>Custo direto do tratamento com materiais e coberturas em pacientes com lesões avançadas.</td>
             </tr>
             <tr>
-              <td><strong>LPP em estágios avançados (III–IV)</strong></td>
+              <td><strong>LPP estágios III-IV</strong></td>
               <td>Média diária</td>
-              <td><strong>R$ 74,22 por dia</strong></td>
-              <td>Valor médio diário relatado no contexto assistencial estudado.</td>
+              <td><strong>R$ 74,22/dia</strong></td>
+              <td><strong>10 pacientes</strong></td>
+              <td>Valor diário derivado do custo total e do tempo médio de internação informado no estudo.</td>
             </tr>
             <tr>
-              <td><strong>Caso de alta complexidade</strong></td>
+              <td><strong>Caso oncológico complexo com LPP</strong></td>
               <td>Total / 189 dias</td>
               <td><strong>R$ 111.254,85</strong></td>
-              <td>Inclui internação prolongada, recursos humanos e materiais utilizados.</td>
+              <td><strong>1 paciente</strong></td>
+              <td>Estudo de caso com internação prolongada, grande demanda de materiais, profissionais e cuidado especializado.</td>
             </tr>
             <tr>
-              <td><strong>Caso de alta complexidade</strong></td>
+              <td><strong>Caso oncológico complexo com LPP</strong></td>
               <td>Média diária</td>
-              <td><strong>R$ 588,65 por dia</strong></td>
-              <td>Média diária calculada no estudo de caso apresentado.</td>
+              <td><strong>R$ 588,65/dia</strong></td>
+              <td><strong>1 paciente</strong></td>
+              <td>Média diária calculada a partir do custo total do caso e do período de internação.</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <div class="extra-content">
-        <strong>Leitura complementar:</strong> os valores apresentados reforçam que o impacto econômico não deve ser interpretado apenas pelo custo unitário de um curativo, mas pelo conjunto de recursos mobilizados ao longo do cuidado.
+        <strong>Leitura complementar:</strong> os custos não são homogêneos entre “todos os estágios”. Parte das fontes trata de
+        <strong>lesões avançadas (III-IV)</strong> e outra trata de <strong>caso complexo individual</strong>, por isso a comparação precisa ser feita por contexto.
       </div>
     </div>
 
@@ -1239,42 +1236,77 @@
       <div class="premium-content locked" id="premiumContent">
 
         <div class="card">
-          <div class="section-title">Comparação visual</div>
+          <div class="section-title">Comparação visual por período e contexto</div>
           <div class="muted">
-            Para melhorar a leitura, o gráfico abaixo usa <strong>barras horizontais</strong> e <strong>escala logarítmica</strong>.
-            Isso ajuda a comparar custos muito diferentes sem “apagar” visualmente os valores menores.
+            Para evitar comparações equivocadas, os gráficos foram separados por <strong>dia</strong>, <strong>semana</strong>,
+            <strong>mês</strong> e <strong>1 ano</strong>. Também foi indicado <strong>qual lesão ou contexto clínico</strong>
+            e <strong>quantos pacientes</strong> participaram da estimativa quando a fonte trouxe essa informação.
           </div>
 
-          <div class="chart-intro">
-            <div class="chart-note">
-              <h3>Escala diferente</h3>
-              <p>O caso de alta complexidade total é muito maior que os demais valores e distorce a leitura em escala linear.</p>
+          <div class="procedure-box">
+            <strong>Importante:</strong> o valor de <strong>R$ 16,41 a R$ 260,18</strong> refere-se a
+            <strong>custo por procedimento de curativo</strong> em pacientes com LPP em contexto crítico, e não a custo por dia, semana, mês ou ano.
+            Por isso ele foi mantido fora dos gráficos por período.
+          </div>
+
+          <div class="period-grid">
+            <div class="period-card">
+              <h3>Por dia</h3>
+              <p>Custos diários observados ou derivados diretamente do período informado.</p>
+              <div class="period-chart">
+                <canvas id="chartDia"></canvas>
+              </div>
+              <ul class="period-list">
+                <li><strong>Tratamento hospitalar geral de LPP:</strong> R$ 14,24/dia. Amostra: 58 pacientes e 87 lesões.</li>
+                <li><strong>LPP estágios III-IV:</strong> R$ 74,22/dia. Amostra: 10 pacientes.</li>
+                <li><strong>Caso oncológico complexo com LPP:</strong> R$ 588,65/dia. Amostra: 1 paciente.</li>
+              </ul>
             </div>
-            <div class="chart-note">
-              <h3>Leitura correta</h3>
-              <p>Compare a ordem de grandeza e o valor exato de cada barra, e não apenas o comprimento visual.</p>
+
+            <div class="period-card">
+              <h3>Por semana</h3>
+              <p>Estimativas derivadas a partir dos custos diários multiplicados por 7 dias.</p>
+              <div class="period-chart">
+                <canvas id="chartSemana"></canvas>
+              </div>
+              <ul class="period-list">
+                <li><strong>Tratamento hospitalar geral de LPP:</strong> R$ 99,68/semana. Amostra: 58 pacientes.</li>
+                <li><strong>LPP estágios III-IV:</strong> R$ 519,54/semana. Amostra: 10 pacientes.</li>
+                <li><strong>Caso oncológico complexo com LPP:</strong> R$ 4.120,55/semana. Amostra: 1 paciente.</li>
+              </ul>
             </div>
-            <div class="chart-note">
-              <h3>Ponto central</h3>
-              <p>Os casos complexos e prolongados ampliam muito o custo total do cuidado hospitalar.</p>
+
+            <div class="period-card">
+              <h3>Por mês</h3>
+              <p>Estimativas mensais úteis para comparação visual entre tratamento geral, lesões avançadas e caso complexo.</p>
+              <div class="period-chart">
+                <canvas id="chartMes"></canvas>
+              </div>
+              <ul class="period-list">
+                <li><strong>Tratamento hospitalar geral de LPP:</strong> R$ 427,20/mês. Amostra: 58 pacientes.</li>
+                <li><strong>LPP estágios III-IV:</strong> R$ 2.226,60/mês. Amostra: 10 pacientes.</li>
+                <li><strong>Caso oncológico complexo com LPP:</strong> R$ 17.659,50/mês. Amostra: 1 paciente.</li>
+              </ul>
+            </div>
+
+            <div class="period-card">
+              <h3>Por 1 ano</h3>
+              <p>Projeções anuais usadas apenas para evidenciar ordem de grandeza do custo em diferentes contextos.</p>
+              <div class="period-chart">
+                <canvas id="chartAno"></canvas>
+              </div>
+              <ul class="period-list">
+                <li><strong>Tratamento hospitalar geral de LPP:</strong> R$ 5.197,60/ano. Amostra: 58 pacientes.</li>
+                <li><strong>LPP estágios III-IV:</strong> R$ 27.090,30/ano. Amostra: 10 pacientes.</li>
+                <li><strong>Caso oncológico complexo com LPP:</strong> R$ 214.857,25/ano. Amostra: 1 paciente.</li>
+              </ul>
             </div>
           </div>
 
-          <div class="chart-box" style="margin-top:12px;">
-            <p class="chart-caption">
-              Escala do eixo em progressão logarítmica. Os rótulos ao lado de cada barra mostram o valor real em reais.
-            </p>
-
-            <div class="chart-wrap">
-              <canvas id="graficoCusto"></canvas>
-            </div>
-
-            <div class="chart-legend">
-              <span class="legend-item"><span class="legend-dot" style="background:#0b3d91;"></span> Custos baixos</span>
-              <span class="legend-item"><span class="legend-dot" style="background:#60a5fa;"></span> Custos intermediários</span>
-              <span class="legend-item"><span class="legend-dot" style="background:#f0b400;"></span> Custos altos</span>
-              <span class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> Caso extremo</span>
-            </div>
+          <div class="period-note">
+            <strong>Nota metodológica importante:</strong> os valores de semana, mês e 1 ano para LPP estágios III-IV e caso complexo
+            representam <strong>estimativas derivadas</strong> dos custos diários ou do período total informado. Eles foram usados para facilitar
+            a visualização comparativa e <strong>não devem ser apresentados como seguimento real longitudinal de todas as fontes</strong>.
           </div>
         </div>
 
@@ -1409,45 +1441,51 @@
   </div>
 
   <script>
-    const dados = [
-      {
-        label: 'Curativo mínimo',
-        valor: 16.41,
-        cor: '#0b3d91'
+    const chartData = {
+      dia: {
+        labels: [
+          'Hospitalar geral (58 pacientes)',
+          'LPP III-IV (10 pacientes)',
+          'Caso complexo (1 paciente)'
+        ],
+        values: [14.24, 74.22, 588.65],
+        colors: ['#0b3d91', '#60a5fa', '#f59e0b']
       },
-      {
-        label: 'Estágio avançado por dia',
-        valor: 74.22,
-        cor: '#0f5bd3'
+      semana: {
+        labels: [
+          'Hospitalar geral (58 pacientes)',
+          'LPP III-IV (10 pacientes)',
+          'Caso complexo (1 paciente)'
+        ],
+        values: [99.68, 519.54, 4120.55],
+        colors: ['#0b3d91', '#60a5fa', '#f59e0b']
       },
-      {
-        label: 'Curativo máximo',
-        valor: 260.18,
-        cor: '#60a5fa'
+      mes: {
+        labels: [
+          'Hospitalar geral (58 pacientes)',
+          'LPP III-IV (10 pacientes)',
+          'Caso complexo (1 paciente)'
+        ],
+        values: [427.20, 2226.60, 17659.50],
+        colors: ['#0b3d91', '#60a5fa', '#f59e0b']
       },
-      {
-        label: 'Caso complexo por dia',
-        valor: 588.65,
-        cor: '#93c5fd'
-      },
-      {
-        label: 'Tratamento em 6 meses',
-        valor: 1886.00,
-        cor: '#f0b400'
-      },
-      {
-        label: 'Caso complexo total',
-        valor: 111254.85,
-        cor: '#f59e0b'
+      ano: {
+        labels: [
+          'Hospitalar geral (58 pacientes)',
+          'LPP III-IV (10 pacientes)',
+          'Caso complexo (1 paciente)'
+        ],
+        values: [5197.60, 27090.30, 214857.25],
+        colors: ['#0b3d91', '#60a5fa', '#f59e0b']
       }
-    ];
+    };
 
     const valueLabelPlugin = {
       id: 'valueLabelPlugin',
       afterDatasetsDraw(chart) {
         const { ctx } = chart;
-        const dataset = chart.data.datasets[0];
         const meta = chart.getDatasetMeta(0);
+        const values = chart.data.datasets[0].data;
 
         ctx.save();
         ctx.font = '700 12px Inter, system-ui, sans-serif';
@@ -1455,47 +1493,33 @@
         ctx.textBaseline = 'middle';
 
         meta.data.forEach((bar, index) => {
-          const raw = dataset.data[index];
-          const texto = 'R$ ' + Number(raw).toLocaleString('pt-BR', {
+          const valor = values[index];
+          const texto = 'R$ ' + Number(valor).toLocaleString('pt-BR', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
           });
 
-          const x = bar.x + 10;
-          const y = bar.y;
-
-          ctx.fillText(texto, x, y);
+          ctx.fillText(texto, bar.x + 8, bar.y);
         });
 
         ctx.restore();
       }
     };
 
-    const ctx = document.getElementById('graficoCusto');
+    function createPeriodoChart(canvasId, dataset) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas || !window.Chart) return;
 
-    function renderPremiumChart() {
-      if (!(window.Chart && ctx)) {
-        const box = document.querySelector('.chart-box');
-        if (box) {
-          box.innerHTML = '<p style="margin:0; padding:12px; font-weight:900; color:#0b2b63;">Gráfico indisponível. Verifique a conexão com a biblioteca Chart.js.</p>';
-        }
-        return;
-      }
-
-      if (ctx.dataset.rendered === "true") return;
-      ctx.dataset.rendered = "true";
-
-      new Chart(ctx, {
+      new Chart(canvas, {
         type: 'bar',
         data: {
-          labels: dados.map(item => item.label),
+          labels: dataset.labels,
           datasets: [{
-            label: 'Custo estimado (R$)',
-            data: dados.map(item => item.valor),
-            borderWidth: 0,
+            data: dataset.values,
+            backgroundColor: dataset.colors,
             borderRadius: 10,
-            backgroundColor: dados.map(item => item.cor),
-            barThickness: 24
+            borderWidth: 0,
+            barThickness: 22
           }]
         },
         options: {
@@ -1524,28 +1548,13 @@
           },
           scales: {
             x: {
-              type: 'logarithmic',
-              min: 10,
-              suggestedMax: 200000,
+              beginAtZero: true,
               grid: {
                 color: 'rgba(148,163,184,.22)'
               },
               ticks: {
                 color: '#475569',
-                callback: (value) => {
-                  const marcadores = [10, 100, 1000, 10000, 100000];
-                  if (!marcadores.includes(Number(value))) return '';
-                  return 'R$ ' + Number(value).toLocaleString('pt-BR');
-                }
-              },
-              title: {
-                display: true,
-                text: 'Escala logarítmica de custo em reais (R$)',
-                color: '#334155',
-                font: {
-                  size: 12,
-                  weight: '700'
-                }
+                callback: (value) => 'R$ ' + Number(value).toLocaleString('pt-BR')
               }
             },
             y: {
@@ -1564,6 +1573,13 @@
         },
         plugins: [valueLabelPlugin]
       });
+    }
+
+    function renderPremiumChart() {
+      createPeriodoChart('chartDia', chartData.dia);
+      createPeriodoChart('chartSemana', chartData.semana);
+      createPeriodoChart('chartMes', chartData.mes);
+      createPeriodoChart('chartAno', chartData.ano);
     }
 
     (function () {
