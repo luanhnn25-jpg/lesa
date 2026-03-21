@@ -584,6 +584,38 @@
       z-index:1;
     }
 
+    .chart-intro{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:12px;
+      margin-top:14px;
+      margin-bottom:12px;
+      position:relative;
+      z-index:1;
+    }
+
+    .chart-note{
+      background:#f8fbff;
+      border:1px solid #dbeafe;
+      border-radius:16px;
+      padding:14px;
+      box-shadow:var(--i-soft);
+    }
+
+    .chart-note h3{
+      margin:0 0 6px;
+      font-size:14px;
+      font-weight:950;
+      color:#0b2b63;
+    }
+
+    .chart-note p{
+      margin:0;
+      font-size:13px;
+      color:#475569;
+      line-height:1.6;
+    }
+
     .table-wrap{
       overflow-x:auto;
       -webkit-overflow-scrolling:touch;
@@ -626,7 +658,7 @@
     .chart-box{
       background:#fff;
       border-radius:16px;
-      padding:14px 14px 8px;
+      padding:18px 18px 12px;
       border:1px solid rgba(15,23,42,.10);
       overflow:hidden;
       box-shadow:var(--i-soft);
@@ -634,10 +666,44 @@
       z-index:1;
     }
 
+    .chart-caption{
+      margin:0 0 12px;
+      font-size:13px;
+      line-height:1.6;
+      color:#475569;
+    }
+
     .chart-wrap{
       position:relative;
       width:100%;
-      height:360px;
+      height:520px;
+    }
+
+    .chart-legend{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .legend-item{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      font-size:12px;
+      font-weight:800;
+      color:#334155;
+    }
+
+    .legend-dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      display:inline-block;
     }
 
     .two-cols{
@@ -952,10 +1018,22 @@
     }
 
     @media (max-width: 900px){
-      .summary-banner{grid-template-columns:1fr}
-      .chart-wrap{ height: 320px; }
-      .two-cols{ grid-template-columns: 1fr; }
-      .section-title{ font-size: 20px; }
+      .summary-banner,
+      .chart-intro{
+        grid-template-columns:1fr;
+      }
+
+      .chart-wrap{
+        height:460px;
+      }
+
+      .two-cols{
+        grid-template-columns: 1fr;
+      }
+
+      .section-title{
+        font-size: 20px;
+      }
     }
 
     @media (max-width: 640px){
@@ -975,6 +1053,10 @@
       .dropdown.open{transform:translateY(0)}
       .user-btn{min-width:0}
       .user-email{max-width:160px}
+
+      .chart-wrap{
+        height:560px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -1159,13 +1241,39 @@
         <div class="card">
           <div class="section-title">Comparação visual</div>
           <div class="muted">
-            O gráfico permite observar a amplitude do impacto econômico. Como as unidades diferem entre os estudos,
-            a leitura deve ser interpretada com cautela e foco comparativo.
+            Para melhorar a leitura, o gráfico abaixo usa <strong>barras horizontais</strong> e <strong>escala logarítmica</strong>.
+            Isso ajuda a comparar custos muito diferentes sem “apagar” visualmente os valores menores.
+          </div>
+
+          <div class="chart-intro">
+            <div class="chart-note">
+              <h3>Escala diferente</h3>
+              <p>O caso de alta complexidade total é muito maior que os demais valores e distorce a leitura em escala linear.</p>
+            </div>
+            <div class="chart-note">
+              <h3>Leitura correta</h3>
+              <p>Compare a ordem de grandeza e o valor exato de cada barra, e não apenas o comprimento visual.</p>
+            </div>
+            <div class="chart-note">
+              <h3>Ponto central</h3>
+              <p>Os casos complexos e prolongados ampliam muito o custo total do cuidado hospitalar.</p>
+            </div>
           </div>
 
           <div class="chart-box" style="margin-top:12px;">
+            <p class="chart-caption">
+              Escala do eixo em progressão logarítmica. Os rótulos ao lado de cada barra mostram o valor real em reais.
+            </p>
+
             <div class="chart-wrap">
               <canvas id="graficoCusto"></canvas>
+            </div>
+
+            <div class="chart-legend">
+              <span class="legend-item"><span class="legend-dot" style="background:#0b3d91;"></span> Custos baixos</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#60a5fa;"></span> Custos intermediários</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#f0b400;"></span> Custos altos</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> Caso extremo</span>
             </div>
           </div>
         </div>
@@ -1301,32 +1409,67 @@
   </div>
 
   <script>
-    const dados = {
-      curativoMin: 16.41,
-      curativoMax: 260.18,
-      seisMeses: 1886.00,
-      avancadoDia: 74.22,
-      complexoDia: 588.65,
-      complexoTotal: 111254.85
+    const dados = [
+      {
+        label: 'Curativo mínimo',
+        valor: 16.41,
+        cor: '#0b3d91'
+      },
+      {
+        label: 'Estágio avançado por dia',
+        valor: 74.22,
+        cor: '#0f5bd3'
+      },
+      {
+        label: 'Curativo máximo',
+        valor: 260.18,
+        cor: '#60a5fa'
+      },
+      {
+        label: 'Caso complexo por dia',
+        valor: 588.65,
+        cor: '#93c5fd'
+      },
+      {
+        label: 'Tratamento em 6 meses',
+        valor: 1886.00,
+        cor: '#f0b400'
+      },
+      {
+        label: 'Caso complexo total',
+        valor: 111254.85,
+        cor: '#f59e0b'
+      }
+    ];
+
+    const valueLabelPlugin = {
+      id: 'valueLabelPlugin',
+      afterDatasetsDraw(chart) {
+        const { ctx } = chart;
+        const dataset = chart.data.datasets[0];
+        const meta = chart.getDatasetMeta(0);
+
+        ctx.save();
+        ctx.font = '700 12px Inter, system-ui, sans-serif';
+        ctx.fillStyle = '#0f172a';
+        ctx.textBaseline = 'middle';
+
+        meta.data.forEach((bar, index) => {
+          const raw = dataset.data[index];
+          const texto = 'R$ ' + Number(raw).toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          });
+
+          const x = bar.x + 10;
+          const y = bar.y;
+
+          ctx.fillText(texto, x, y);
+        });
+
+        ctx.restore();
+      }
     };
-
-    const labels = [
-      'Curativo mínimo',
-      'Curativo máximo',
-      'Tratamento em 6 meses',
-      'Estágio avançado por dia',
-      'Caso complexo por dia',
-      'Caso complexo total'
-    ];
-
-    const valores = [
-      dados.curativoMin,
-      dados.curativoMax,
-      dados.seisMeses,
-      dados.avancadoDia,
-      dados.complexoDia,
-      dados.complexoTotal
-    ];
 
     const ctx = document.getElementById('graficoCusto');
 
@@ -1345,25 +1488,32 @@
       new Chart(ctx, {
         type: 'bar',
         data: {
-          labels,
+          labels: dados.map(item => item.label),
           datasets: [{
             label: 'Custo estimado (R$)',
-            data: valores,
-            borderWidth: 1,
+            data: dados.map(item => item.valor),
+            borderWidth: 0,
             borderRadius: 10,
-            backgroundColor: ['#0b3d91', '#0f5bd3', '#60a5fa', '#93c5fd', '#f0b400', '#f59e0b']
+            backgroundColor: dados.map(item => item.cor),
+            barThickness: 24
           }]
         },
         options: {
+          indexAxis: 'y',
           responsive: true,
           maintainAspectRatio: false,
           animation: false,
+          layout: {
+            padding: {
+              right: 110
+            }
+          },
           plugins: {
             legend: { display: false },
             tooltip: {
               callbacks: {
                 label: (context) => {
-                  const v = context.parsed.y ?? 0;
+                  const v = context.parsed.x ?? 0;
                   return 'R$ ' + Number(v).toLocaleString('pt-BR', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
@@ -1373,14 +1523,46 @@
             }
           },
           scales: {
-            y: {
-              beginAtZero: true,
+            x: {
+              type: 'logarithmic',
+              min: 10,
+              suggestedMax: 200000,
+              grid: {
+                color: 'rgba(148,163,184,.22)'
+              },
               ticks: {
-                callback: (value) => 'R$ ' + Number(value).toLocaleString('pt-BR')
+                color: '#475569',
+                callback: (value) => {
+                  const marcadores = [10, 100, 1000, 10000, 100000];
+                  if (!marcadores.includes(Number(value))) return '';
+                  return 'R$ ' + Number(value).toLocaleString('pt-BR');
+                }
+              },
+              title: {
+                display: true,
+                text: 'Escala logarítmica de custo em reais (R$)',
+                color: '#334155',
+                font: {
+                  size: 12,
+                  weight: '700'
+                }
+              }
+            },
+            y: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                color: '#0f172a',
+                font: {
+                  size: 12,
+                  weight: '700'
+                }
               }
             }
           }
-        }
+        },
+        plugins: [valueLabelPlugin]
       });
     }
 
