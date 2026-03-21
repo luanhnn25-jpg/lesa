@@ -27,21 +27,19 @@
       --lpp-text:#0f172a;
       --lpp-muted:#475569;
       --lpp-soft:#94a3b8;
-
       --lpp-shadow:0 12px 30px rgba(2, 6, 23, .10);
       --lpp-shadow-2:0 18px 45px rgba(2, 6, 23, .14);
       --lpp-shadow-3:0 28px 70px rgba(2, 6, 23, .18);
       --lpp-shadow-soft:0 10px 24px rgba(2, 6, 23, .08);
-
       --lpp-radius:18px;
       --lpp-max:1180px;
-
       --lpp-ring:0 0 0 4px rgba(56, 130, 246, .18);
       --lpp-border:rgba(15, 23, 42, .08);
     }
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
+
     body{
       margin:0;
       font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -95,6 +93,7 @@
       opacity:.92;
       font-size:15px;
       font-weight:700;
+      max-width:780px;
     }
 
     .header-actions{
@@ -629,7 +628,8 @@
       margin-top:12px;
     }
 
-    .lpp-search input{
+    .lpp-search input,
+    .chat-textarea{
       flex:1 1 260px;
       padding:13px 15px;
       border-radius:14px;
@@ -638,9 +638,11 @@
       font-size:15px;
       background:#fff;
       transition:box-shadow .14s ease, border-color .14s ease;
+      font:inherit;
     }
 
-    .lpp-search input:focus{
+    .lpp-search input:focus,
+    .chat-textarea:focus{
       border-color:#9cc3ff;
       box-shadow:var(--lpp-ring);
     }
@@ -737,6 +739,69 @@
       font-size:14px;
     }
 
+    .chat-grid{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .chat-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .chat-btn{
+      padding:12px 16px;
+      border:none;
+      border-radius:999px;
+      background:#0b3d91;
+      color:#fff;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 10px 18px rgba(11,61,145,.18);
+    }
+
+    .chat-status{
+      color:var(--lpp-muted);
+      font-size:14px;
+    }
+
+    .chat-reply{
+      display:none;
+      padding:16px;
+      border-radius:16px;
+      border:1px solid #dbeafe;
+      background:#f8fbff;
+      color:#243042;
+      line-height:1.7;
+      white-space:pre-wrap;
+    }
+
+    .source-box{
+      background:linear-gradient(180deg,#ffffff,#f8fbff);
+      border:1px solid #dbeafe;
+    }
+
+    .source-list{
+      margin:12px 0 0;
+      padding-left:18px;
+      color:var(--lpp-muted);
+      line-height:1.7;
+      font-size:14px;
+    }
+
+    .source-list li{
+      margin:8px 0;
+    }
+
+    .source-list a{
+      color:#0b5bd3;
+      font-weight:800;
+      text-decoration:none;
+    }
+
     .lpp-footer{
       text-align:center;
       color:#64748b;
@@ -823,23 +888,6 @@
     .pwa-btn:focus-visible{
       outline:none;
       box-shadow:0 0 0 4px rgba(56, 130, 246, .20);
-    }
-
-    .skeleton{
-      display:inline-block;
-      width:160px;
-      height:12px;
-      border-radius:999px;
-      background:linear-gradient(90deg, rgba(255,255,255,.18), rgba(255,255,255,.28), rgba(255,255,255,.18));
-      background-size:240px 100%;
-      animation:sk 1.1s infinite;
-    }
-
-    .skeleton.small{width:120px;height:10px;opacity:.95}
-
-    @keyframes sk{
-      0%{background-position:-240px 0}
-      100%{background-position:240px 0}
     }
 
     @media (max-width: 980px){
@@ -1089,6 +1137,25 @@
       </p>
     </section>
 
+    <section class="lpp-card" id="bot">
+      <h2 class="lpp-title">Tire sua dúvida</h2>
+      <p class="lpp-text">
+        Assistente experimental para perguntas básicas sobre lesão por pressão.
+        As respostas devem se limitar a ANVISA, OMS, NPIAP, COFEN e COREN-SP.
+      </p>
+
+      <div class="chat-grid">
+        <textarea id="chatInput" class="chat-textarea" rows="4" placeholder="Ex.: Como prevenir lesão por pressão em casa?"></textarea>
+
+        <div class="chat-actions">
+          <button id="chatSend" class="chat-btn">Perguntar</button>
+          <span id="chatStatus" class="chat-status"></span>
+        </div>
+
+        <div id="chatReply" class="chat-reply"></div>
+      </div>
+    </section>
+
     <section class="lpp-card" id="faq">
       <h2 class="lpp-title">Perguntas frequentes</h2>
 
@@ -1228,6 +1295,40 @@
           </div>
         </details>
       </div>
+    </section>
+
+    <section class="lpp-card source-box" id="fontes">
+      <h2 class="lpp-title">Base Científica e Institucional</h2>
+      <p class="lpp-text">
+        O conteúdo do site e do assistente experimental foi organizado com base nas fontes institucionais abaixo.
+      </p>
+
+      <ul class="source-list">
+        <li>
+          ANVISA. Nota Técnica GVIMS/GGTES/Anvisa nº 05/2023 - Práticas de Segurança do Paciente em Serviços de Saúde: Prevenção de Lesão por Pressão.
+          <a href="https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/notas-tecnicas/notas-tecnicas-vigentes/nota-tecnica-gvims-ggtes-anvisa-no-05-2023-praticas-de-seguranca-do-paciente-em-servicos-de-saude-prevencao-de-lesao-por-pressao/view" target="_blank" rel="noopener noreferrer">Acessar</a>
+        </li>
+        <li>
+          OMS. Patient safety.
+          <a href="https://www.who.int/news-room/fact-sheets/detail/patient-safety" target="_blank" rel="noopener noreferrer">Acessar</a>
+        </li>
+        <li>
+          NPIAP. Pressure Injury Stages.
+          <a href="https://npiap.com/page/PressureInjuryStages" target="_blank" rel="noopener noreferrer">Acessar</a>
+        </li>
+        <li>
+          COFEN. Anvisa lança nota técnica que orienta a comunicar lesões por pressão.
+          <a href="https://www.cofen.gov.br/anvisa-lanca-nota-tecnica-que-orienta-a-comunicar-lesoes-por-pressao/" target="_blank" rel="noopener noreferrer">Acessar</a>
+        </li>
+        <li>
+          COREN-SP. Coren-SP faz palestra sobre aspectos éticos e legais da enfermagem no Hospital Santa Isabel.
+          <a href="https://portal.coren-sp.gov.br/noticias/coren-sp-faz-palestra-sobre-aspectos-eticos-e-legais-da-enfermagem-no-hospital-santa-isabel/" target="_blank" rel="noopener noreferrer">Acessar</a>
+        </li>
+      </ul>
+
+      <p class="lpp-text" style="margin-top:12px;">
+        Consulta realizada em 21/03/2026, 15:45 (UTC-03:00).
+      </p>
     </section>
   </main>
 
@@ -1406,6 +1507,37 @@
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
+    const GEMINI_API_KEY = "AIzaSyCMH4rpsb4sKX_zPrC0pV0uUhgOmHzpRnk";
+    const GEMINI_MODEL = "gemini-1.5-flash";
+
+    const SOURCE_CONTEXT = `
+Fontes permitidas para responder:
+1. ANVISA - Nota Técnica GVIMS/GGTES/Anvisa nº 05/2023 sobre prevenção de lesão por pressão.
+Resumo: prevenção da lesão por pressão envolve inspeção da pele, mudança de decúbito, controle da umidade, uso de superfícies de suporte e segurança do paciente.
+
+2. OMS - Patient safety.
+Resumo: segurança do paciente é prioridade institucional; eventos adversos evitáveis afetam qualidade do cuidado e resultados em saúde.
+
+3. NPIAP - Pressure Injury Stages.
+Resumo: lesão por pressão é classificada por estágios conforme profundidade e comprometimento tecidual; há também lesão tissular profunda e lesão não classificável.
+
+4. COFEN - conteúdo relacionado à nota técnica da Anvisa sobre lesão por pressão.
+Resumo: a enfermagem tem papel central na prevenção, observação clínica, comunicação e segurança do paciente.
+
+5. COREN-SP - aspectos éticos e legais da enfermagem na prevenção de lesão por pressão.
+Resumo: a prevenção da lesão por pressão também envolve responsabilidade ética, legal e qualidade da assistência de enfermagem.
+
+Regras:
+- Responder somente com base nessas fontes.
+- Se a pergunta sair desse escopo, diga que não há base suficiente nas fontes institucionais configuradas.
+- Responder em português do Brasil.
+- Linguagem simples, segura e educativa.
+- Não inventar tratamento específico fora dessas bases.
+- Se houver gravidade, orientar procurar profissional de saúde.
+- Ao final, incluir: "Base da resposta: ..." com o nome das fontes usadas.
+- Não citar outras fontes.
+`;
+
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
     const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
@@ -1425,6 +1557,11 @@
     const dropSignup = document.getElementById("dropSignup");
     const dropPremium = document.getElementById("dropPremium");
     const dropLogout = document.getElementById("dropLogout");
+
+    const chatInput = document.getElementById("chatInput");
+    const chatSend = document.getElementById("chatSend");
+    const chatStatus = document.getElementById("chatStatus");
+    const chatReply = document.getElementById("chatReply");
 
     function openDrop(){
       userDrop.classList.add("open");
@@ -1539,6 +1676,63 @@
       closeDrop();
       window.location.href = SITE_BASE + "index.html";
     });
+
+    async function perguntarGemini() {
+      const pergunta = chatInput?.value.trim();
+      if (!pergunta) {
+        chatStatus.textContent = "Digite uma pergunta.";
+        return;
+      }
+
+      chatStatus.textContent = "Consultando...";
+      chatReply.style.display = "none";
+      chatReply.textContent = "";
+
+      const prompt = `
+${SOURCE_CONTEXT}
+
+Pergunta do usuário:
+${pergunta}
+`;
+
+      try {
+        const resp = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              contents: [
+                {
+                  parts: [{ text: prompt }]
+                }
+              ]
+            })
+          }
+        );
+
+        if (!resp.ok) {
+          throw new Error("Falha na requisição");
+        }
+
+        const data = await resp.json();
+        const texto =
+          data?.candidates?.[0]?.content?.parts?.map(p => p.text).join("\n").trim() ||
+          "Não foi possível gerar resposta no momento.";
+
+        chatReply.textContent = texto;
+        chatReply.style.display = "block";
+        chatStatus.textContent = "Resposta gerada.";
+      } catch (err) {
+        chatStatus.textContent = "Erro ao consultar o assistente.";
+        chatReply.textContent = "Tente novamente em instantes.";
+        chatReply.style.display = "block";
+      }
+    }
+
+    chatSend?.addEventListener("click", perguntarGemini);
 
     supabase.auth.onAuthStateChange(() => renderStateSafe());
     renderStateSafe();
