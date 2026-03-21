@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#0b3d91" />
+  <meta name="description" content="Seleção de produtos para lesão por pressão com organização visual aprimorada e conteúdo preservado." />
   <title>Seleção de Produtos — Lesão por Pressão (LPP)</title>
 
   <style>
@@ -55,9 +56,6 @@
 
     body[data-locked="1"] main{ display:none; }
 
-    /* =========================
-       TOP HEADER
-       ========================= */
     .top{
       background:
         radial-gradient(circle at top center, rgba(255,255,255,.16), transparent 38%),
@@ -285,9 +283,6 @@
       margin:6px 4px 8px;
     }
 
-    /* =========================
-       NAV
-       ========================= */
     .nav{
       background:rgba(10,47,115,.96);
       backdrop-filter:blur(8px);
@@ -355,9 +350,6 @@
       .user-email{ max-width:180px; }
     }
 
-    /* =========================
-       LOCK
-       ========================= */
     #lockScreen{
       max-width:1180px;
       margin:18px auto;
@@ -443,9 +435,6 @@
       border-color:rgba(37,99,235,.22);
     }
 
-    /* =========================
-       MAIN
-       ========================= */
     .lpp-main{
       max-width:1180px;
       margin:0 auto;
@@ -547,11 +536,31 @@
       box-shadow:0 8px 18px rgba(2,6,23,.06);
     }
 
+    .quick-nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+      position:relative;
+      z-index:1;
+    }
+
+    .quick-nav a{
+      text-decoration:none;
+      padding:9px 12px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid rgba(15,23,42,.08);
+      color:#0b2b63;
+      font-size:13px;
+      font-weight:850;
+      box-shadow:0 8px 18px rgba(2,6,23,.06);
+    }
+
     .side-panel{
       position:sticky;
       top:148px;
-      background:
-        linear-gradient(180deg, #ffffff, #fbfdff);
+      background:linear-gradient(180deg, #ffffff, #fbfdff);
       border:1px solid var(--lpp-border);
       border-radius:22px;
       box-shadow:var(--lpp-shadow);
@@ -704,6 +713,37 @@
       .lpp-grid{ grid-template-columns:1fr; }
     }
 
+    .lpp-highlight-row{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:12px;
+      margin-top:14px;
+      position:relative;
+      z-index:1;
+    }
+
+    .highlight-box{
+      background:#fff;
+      border:1px solid rgba(15,23,42,.08);
+      border-radius:16px;
+      padding:14px;
+      box-shadow:0 8px 18px rgba(2,6,23,.05);
+    }
+
+    .highlight-box h3{
+      margin:0 0 6px;
+      font-size:15px;
+      font-weight:950;
+      color:#0b2b63;
+    }
+
+    .highlight-box p{
+      margin:0;
+      font-size:13px;
+      color:var(--lpp-muted);
+      line-height:1.6;
+    }
+
     .lpp-table-wrap{
       width:100%;
       overflow-x:auto;
@@ -799,6 +839,7 @@
 
     @media (max-width:900px){
       .lpp-sections{ grid-template-columns:1fr; }
+      .lpp-highlight-row{ grid-template-columns:1fr; }
     }
 
     .lpp-item{
@@ -921,15 +962,25 @@
             facilitando a associação entre exsudato, profundidade, tecido do leito, proteção da pele perilesional
             e necessidade de suporte sistêmico.
           </p>
+
           <div class="hero-badges">
             <span class="hero-badge">Comparação rápida</span>
             <span class="hero-badge">Linguagem didática</span>
             <span class="hero-badge">Uso acadêmico e assistencial</span>
             <span class="hero-badge">Foco em raciocínio clínico</span>
           </div>
+
+          <div class="quick-nav">
+            <a href="#como-usar">Como usar</a>
+            <a href="#tabela-comparativa">Tabela comparativa</a>
+            <a href="#limpeza">Limpeza</a>
+            <a href="#coberturas">Coberturas</a>
+            <a href="#desbridamento">Desbridamento</a>
+            <a href="#referencias">Referências</a>
+          </div>
         </section>
 
-        <section class="lpp-card">
+        <section class="lpp-card" id="como-usar">
           <h2 class="lpp-title"><span class="lpp-bar"></span>Como usar este material</h2>
           <div class="lpp-grid">
             <p class="lpp-lead">
@@ -946,11 +997,28 @@
               </ul>
             </div>
           </div>
+
+          <div class="lpp-highlight-row">
+            <div class="highlight-box">
+              <h3>1. Leia o exsudato</h3>
+              <p>Antes de escolher a cobertura, observe se o volume é baixo, moderado ou alto.</p>
+            </div>
+            <div class="highlight-box">
+              <h3>2. Observe o leito</h3>
+              <p>Tecido viável, necrose, esfacelo e odor ajudam a definir o tipo de abordagem.</p>
+            </div>
+            <div class="highlight-box">
+              <h3>3. Proteja a pele ao redor</h3>
+              <p>Mesmo uma boa cobertura falha quando há maceração ou trauma perilesional.</p>
+            </div>
+          </div>
+
           <p class="lpp-note"><b>Atenção:</b> conteúdo educativo. Condutas clínicas devem seguir avaliação profissional e protocolos do serviço.</p>
         </section>
 
-        <section class="lpp-card">
+        <section class="lpp-card" id="tabela-comparativa">
           <h2 class="lpp-title"><span class="lpp-bar"></span>Tabela comparativa (produto × exsudato × estágio)</h2>
+          <p class="lpp-lead">A tabela abaixo foi mantida com os mesmos dados, apenas reorganizada visualmente para leitura mais rápida e comparação lateral mais clara.</p>
 
           <div class="lpp-table-wrap" role="region" aria-label="Tabela comparativa de produtos para LPP" tabindex="0">
             <table class="lpp-table">
@@ -1063,7 +1131,7 @@
           </p>
         </section>
 
-        <section class="lpp-card">
+        <section class="lpp-card" id="limpeza">
           <h2 class="lpp-title"><span class="lpp-bar"></span>1) Soluções para limpeza do leito</h2>
           <p class="lpp-lead">
             Indicadas na etapa inicial do curativo. <b>Objetivo:</b> reduzir biocarga, remover detritos e preservar tecido viável.
@@ -1077,7 +1145,7 @@
           <p class="lpp-note">A escolha da solução e técnica deve considerar protocolo do serviço e tolerância do paciente.</p>
         </section>
 
-        <section class="lpp-card">
+        <section class="lpp-card" id="coberturas">
           <h2 class="lpp-title"><span class="lpp-bar"></span>2) Coberturas primárias (atuam diretamente no leito)</h2>
 
           <div class="lpp-sections">
@@ -1125,7 +1193,7 @@
           <p class="lpp-note">Se houver piora clínica, sinais sistêmicos ou suspeita de osteomielite, encaminhar para avaliação multiprofissional.</p>
         </section>
 
-        <section class="lpp-card">
+        <section class="lpp-card" id="desbridamento">
           <h2 class="lpp-title"><span class="lpp-bar"></span>4) Produtos para desbridamento</h2>
           <p class="lpp-lead">Quando há <b>tecido desvitalizado</b> (esfacelo/necrose), a técnica depende do caso, local e protocolo.</p>
           <div class="lpp-sections" style="margin-top:10px">
@@ -1197,7 +1265,7 @@
           </div>
         </section>
 
-        <section class="lpp-card">
+        <section class="lpp-card" id="referencias">
           <h2 class="lpp-title"><span class="lpp-bar"></span>Referências</h2>
           <ul style="margin:10px 0 0 18px; color:var(--lpp-muted); position:relative; z-index:1;">
             <li><b>EPUAP/NPIAP/PPPIA.</b> <i>Prevention and Treatment of Pressure Ulcers/Injuries: Clinical Practice Guideline</i>. 2019.</li>
@@ -1222,7 +1290,7 @@
         </ul>
 
         <div class="mini-note">
-          A tabela foi mantida integralmente. O acabamento visual foi refinado para facilitar leitura, estudo e consulta rápida.
+          Os dados da tabela e dos blocos foram preservados. As mudanças aqui são de organização visual e apoio à leitura.
         </div>
       </aside>
     </div>
@@ -1238,6 +1306,7 @@
       const el = document.getElementById("lockTitle");
       if (el) el.textContent = txt;
     }
+
     function setLockMsg(txt){
       const el = document.getElementById("lockMsg");
       if (el) el.textContent = txt;
