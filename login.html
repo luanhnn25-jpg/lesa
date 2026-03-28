@@ -860,13 +860,27 @@
       setMsg("Entrando...", "warn");
 
       try {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
           setBusy(false);
           setMsg(humanizeAuthError(error), "bad");
           startCooldown(2500);
           return;
+        }
+
+        if (data?.session?.access_token && data?.session?.refresh_token) {
+          const { error: persistError } = await supabase.auth.setSession({
+            access_token: data.session.access_token,
+            refresh_token: data.session.refresh_token
+          });
+
+          if (persistError) {
+            setBusy(false);
+            setMsg("O login foi aceito, mas a sessão não pôde ser persistida localmente.\n" + persistError.message, "bad");
+            startCooldown(2500);
+            return;
+          }
         }
 
         const persistedSession = await waitForLocalSession();
