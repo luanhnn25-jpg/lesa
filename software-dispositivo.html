@@ -33,12 +33,15 @@
     .hero,.card,.panel,.stat-card,.tile,.metric-card,.report-card{background:linear-gradient(180deg,#fff,#fbfdff);border:1px solid var(--border);box-shadow:var(--shadow)}
     .hero{border-radius:var(--radius-xl);padding:30px 22px;box-shadow:var(--shadow-2);margin-bottom:18px}
     .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:start}
-    .hero-label,.chip,.status-chip,.role-pill{display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;font-size:12px;font-weight:900}
+    .hero-label,.chip,.status-chip,.role-pill,.priority-pill{display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;font-size:12px;font-weight:900}
     .hero-label{background:#eff6ff;border:1px solid #dbeafe;color:#0b3d91;margin-bottom:14px}
     .hero h2{margin:0 0 12px;font-size:clamp(28px,4vw,40px);line-height:1.05;color:#0b2b63;font-weight:1000;letter-spacing:-.5px}
     .hero p,.lead,.helper-text,.empty-state,.report-text{margin:0;color:#334155;font-size:15px;line-height:1.75}
     .hero-badges,.inline-actions,.meta-row,.filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
     .chip,.role-pill{background:#f8fafc;border:1px solid rgba(15,23,42,.08);color:#0b2b63;box-shadow:var(--soft)}
+    .priority-red{background:var(--red-soft);border:1px solid rgba(185,28,28,.15);color:var(--red)}
+    .priority-amber{background:var(--amber-soft);border:1px solid rgba(180,83,9,.15);color:var(--amber)}
+    .priority-green{background:var(--green-soft);border:1px solid rgba(21,128,61,.15);color:var(--green)}
     .panel,.card,.stat-card,.tile,.metric-card,.report-card{border-radius:20px;padding:18px}
     .hero-side,.form-grid{display:grid;gap:14px}
     .panel h3,.section-title,.tile h4,.metric-card h4,.report-card h4{margin:0 0 8px;color:#0b2b63;font-weight:1000}
@@ -71,6 +74,12 @@
     .auth-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--soft);margin-bottom:16px}.auth-user{font-size:14px;color:#334155;font-weight:800}.auth-user b{color:#0b2b63}
     .feedback{margin-top:12px;padding:12px 14px;border-radius:14px;font-size:14px;font-weight:800}.feedback.ok{background:var(--green-soft);color:var(--green);border:1px solid rgba(21,128,61,.12)}.feedback.warn{background:var(--amber-soft);color:var(--amber);border:1px solid rgba(180,83,9,.12)}.feedback.err{background:var(--red-soft);color:var(--red);border:1px solid rgba(185,28,28,.12)}
     .footer-note{text-align:center;color:#475569;padding:22px 12px;font-size:13px;opacity:.95}
+    @media print{
+      .topnav,.auth-bar,.btn,.btn-secondary,.btn-small,.inline-actions,.body-map,.footer-note{display:none !important}
+      body{background:#fff}
+      .card,.panel,.tile,.report-card,.metric-card,.stat-card{box-shadow:none;border:1px solid #ddd}
+      main{max-width:none;padding:0}
+    }
     @media (max-width:1100px){.hero-grid,.layout-grid,.stats-grid,.list-grid,.report-grid,.metrics-grid{grid-template-columns:1fr}}
     @media (max-width:820px){.topnav-inner{align-items:flex-start;flex-direction:column}.topnav-links{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;width:100%;scrollbar-width:none;-webkit-overflow-scrolling:touch}.topnav-links::-webkit-scrollbar{display:none}.topnav a{flex:0 0 auto}.qr-box,.body-map{grid-template-columns:1fr}}
     @media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
@@ -122,18 +131,8 @@
         </div>
         <div class="hero-side">
           <div class="panel">
-            <h3>Melhorias incluídas</h3>
-            <ul>
-              <li>Dados compartilhados entre usuários autenticados.</li>
-              <li>Painel do enfermeiro com filtros operacionais.</li>
-              <li>Temporizador regressivo e status de atraso.</li>
-              <li>Relatório final e fechamento de turno.</li>
-              <li>Gestão por setor e por técnico responsável.</li>
-            </ul>
-          </div>
-          <div class="panel">
-            <h3>Nota de implantação</h3>
-            <p class="report-text">Para uso compartilhado real, o SQL em `supabase_lpp_guard_pro.sql` deve estar executado no Supabase antes da primeira utilização da página.</p>
+            <h3>Visão operacional</h3>
+            <p class="report-text">A proposta organiza o cuidado preventivo em uma lógica contínua: o enfermeiro define o plano, o técnico recebe a tarefa vinculada ao leito, confirma a intervenção por QR code e o sistema consolida rastreabilidade, adesão e relatório final do turno.</p>
           </div>
         </div>
       </div>
@@ -230,6 +229,9 @@
     <section class="card" id="relatorio">
       <h2 class="section-title">Relatório final de turno</h2>
       <p class="lead">Resumo da adesão do técnico às mudanças de decúbito após o disparo do alarme, com identificação de pendências e atrasos.</p>
+      <div class="inline-actions">
+        <button class="btn-secondary" id="printReportBtn" type="button">Exportar / Imprimir relatório</button>
+      </div>
       <div id="reportSummary" class="report-grid"></div>
       <div id="reportDetails" class="list-grid"></div>
       <div id="reportEmpty" class="empty-state">Ainda não há dados suficientes para o turno selecionado.</div>
@@ -237,6 +239,7 @@
         <h3>Fechamento do turno</h3>
         <div class="form-grid">
           <div class="field"><label for="nurseName">Nome do enfermeiro responsável</label><input id="nurseName" type="text" placeholder="Ex.: Enf. Carla Lima" /></div>
+          <div class="field"><label for="nurseSignature">Assinatura do enfermeiro</label><input id="nurseSignature" type="text" placeholder="Ex.: Enf. Carla Lima - COREN 000000" /></div>
           <div class="field"><label for="closingSummary">Síntese do turno</label><textarea id="closingSummary" placeholder="Descreva pendências, pacientes prioritários e observações para a próxima equipe."></textarea></div>
           <div class="inline-actions"><button class="btn" id="closeShiftBtn" type="button">Registrar fechamento do turno</button></div>
         </div>
@@ -255,6 +258,28 @@
       <div id="sectorMetrics" class="metrics-grid"></div>
       <div id="techMetrics" class="metrics-grid"></div>
     </section>
+
+    <section class="card" id="evolucao">
+      <h2 class="section-title">Evolução da pele</h2>
+      <p class="lead">Registro seriado da condição da pele e da evolução de lesões por pressão, com possibilidade de associar imagem por URL.</p>
+      <div class="layout-grid">
+        <div class="panel">
+          <h3>Novo registro de evolução</h3>
+          <form id="evolutionForm" class="form-grid">
+            <div class="field"><label for="evolutionPatient">Paciente</label><select id="evolutionPatient" required><option value="">Selecione</option></select></div>
+            <div class="field"><label for="evolutionSkin">Condição da pele</label><select id="evolutionSkin" required><option value="">Selecione</option><option value="Íntegra">Íntegra</option><option value="Hiperemia">Hiperemia</option><option value="LPP instalada">LPP instalada</option><option value="Melhora clínica">Melhora clínica</option><option value="Piora clínica">Piora clínica</option></select></div>
+            <div class="field"><label for="evolutionPhoto">URL da imagem</label><input id="evolutionPhoto" type="url" placeholder="https://..." /></div>
+            <div class="field"><label for="evolutionNotes">Descrição da evolução</label><textarea id="evolutionNotes" required placeholder="Ex.: redução da hiperemia, manutenção da integridade perilesional, sem aumento do exsudato."></textarea></div>
+            <div class="inline-actions"><button class="btn" type="submit">Salvar evolução</button></div>
+          </form>
+        </div>
+        <div class="panel">
+          <h3>Histórico evolutivo</h3>
+          <div id="evolutionList" class="list-grid"></div>
+          <div id="evolutionEmpty" class="empty-state">Ainda não há evolução registrada.</div>
+        </div>
+      </div>
+    </section>
   </main>
   <footer class="footer-note">© 2026 - Projeto Integrador</footer>
 
@@ -271,6 +296,7 @@
     const refreshDataButton = document.getElementById('refreshData');
     const clearFiltersButton = document.getElementById('clearFilters');
     const closeShiftBtn = document.getElementById('closeShiftBtn');
+    const printReportBtn = document.getElementById('printReportBtn');
 
     const authUser = document.getElementById('authUser');
     const rolePill = document.getElementById('rolePill');
@@ -283,6 +309,13 @@
     const handoffBox = document.getElementById('handoffBox');
     const sectorMetrics = document.getElementById('sectorMetrics');
     const techMetrics = document.getElementById('techMetrics');
+    const evolutionForm = document.getElementById('evolutionForm');
+    const evolutionPatient = document.getElementById('evolutionPatient');
+    const evolutionSkin = document.getElementById('evolutionSkin');
+    const evolutionPhoto = document.getElementById('evolutionPhoto');
+    const evolutionNotes = document.getElementById('evolutionNotes');
+    const evolutionList = document.getElementById('evolutionList');
+    const evolutionEmpty = document.getElementById('evolutionEmpty');
 
     const patientEmpty = document.getElementById('patientEmpty');
     const taskEmpty = document.getElementById('taskEmpty');
@@ -301,9 +334,10 @@
     const reportShift = document.getElementById('reportShift');
     const bodySite = document.getElementById('bodySite');
     const nurseName = document.getElementById('nurseName');
+    const nurseSignature = document.getElementById('nurseSignature');
     const closingSummary = document.getElementById('closingSummary');
 
-    const state = { user: null, patients: [], tasks: [], reports: [], role: 'enfermeiro' };
+    const state = { user: null, patients: [], tasks: [], reports: [], evolutions: [], role: 'enfermeiro' };
 
     function nowText(date = new Date()) {
       return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Sao_Paulo' }).format(date);
@@ -330,6 +364,13 @@
       if (risk === 'alto') return 'Risco alto';
       if (risk === 'moderado') return 'Risco moderado';
       return 'Risco baixo';
+    }
+
+    function priorityData(item) {
+      const braden = Number(item.braden_score ?? item.bradenScore ?? 0);
+      if (item.risk === 'alto' || (braden && braden <= 12)) return { cls: 'priority-red', label: 'Prioridade alta' };
+      if (item.risk === 'moderado' || (braden && braden <= 16)) return { cls: 'priority-amber', label: 'Prioridade moderada' };
+      return { cls: 'priority-green', label: 'Prioridade baixa' };
     }
 
     function dueHours(frequency) {
@@ -370,6 +411,7 @@
     function createPatientCard(patient) {
       const lesionInfo = patient.existing_injury === 'Sim' ? `${patient.body_site || 'Sem localização registrada'} | ${patient.injury_stage}` : 'Sem LPP instalada registrada';
       const qrPayload = patient.qr_payload || `LPP Guard Pro|Leito:${patient.bed}|Paciente:${patient.patient_name}|Tecnico:${patient.responsible_tech}|Conduta:${patient.main_action}`;
+      const priority = priorityData(patient);
       return `
         <article class="tile">
           <div class="tile-header">
@@ -380,6 +422,7 @@
             <span class="status-chip ${riskClass(patient.risk)}">${riskLabel(patient.risk)}</span>
           </div>
           <div class="tile-meta">
+            <span class="priority-pill ${priority.cls}">${priority.label}</span>
             <span class="meta-pill">Técnico: ${patient.responsible_tech}</span>
             <span class="meta-pill">Turno: ${patient.shift}</span>
             <span class="meta-pill">Braden: ${patient.braden_score ?? 'Não informado'}</span>
@@ -401,6 +444,7 @@
     function createTaskCard(task) {
       const badge = isOverdue(task) ? '<span class="status-chip status-overdue">Em atraso</span>' : '<span class="status-chip status-medium">Ativa</span>';
       const qrPayload = task.qr_payload || `LPP Guard Pro|Leito:${task.bed}|Paciente:${task.patient_name}|Tecnico:${task.responsible_tech}|Conduta:${task.action}`;
+      const priority = priorityData(task);
       return `
         <article class="tile">
           <div class="tile-header">
@@ -411,6 +455,7 @@
             ${badge}
           </div>
           <div class="tile-meta">
+            <span class="priority-pill ${priority.cls}">${priority.label}</span>
             <span class="meta-pill">Técnico: ${task.responsible_tech}</span>
             <span class="meta-pill">Turno: ${task.shift}</span>
             <span class="meta-pill">Alarme: ${nowText(new Date(task.alarm_at || task.created_at))}</span>
@@ -432,6 +477,7 @@
 
     function createHistoryCard(item) {
       const delayLabel = item.was_late ? 'Confirmação com atraso' : 'Confirmação no tempo esperado';
+      const priority = priorityData(item);
       return `
         <article class="tile">
           <div class="tile-header">
@@ -442,6 +488,7 @@
             <span class="status-chip ${item.was_late ? 'status-high' : 'status-done'}">${delayLabel}</span>
           </div>
           <div class="tile-meta">
+            <span class="priority-pill ${priority.cls}">${priority.label}</span>
             <span class="meta-pill">Setor: ${item.sector}</span>
             <span class="meta-pill">Técnico: ${item.responsible_tech}</span>
             <span class="meta-pill">Alarme: ${nowText(new Date(item.alarm_at || item.created_at))}</span>
@@ -449,6 +496,7 @@
           </div>
           <p style="margin-top:10px;"><b>Periodicidade:</b> ${item.frequency}</p>
           <p style="margin-top:8px;"><b>Observação:</b> ${item.notes || 'Sem observações complementares.'}</p>
+          <p style="margin-top:8px;"><b>Assinatura do técnico:</b> ${item.completed_by || 'Não registrada'}</p>
         </article>
       `;
     }
@@ -471,10 +519,11 @@
       const ok = await ensureUser();
       if (!ok) return;
 
-      const [{ data: patients, error: pErr }, { data: tasks, error: tErr }, { data: reports, error: rErr }] = await Promise.all([
+      const [{ data: patients, error: pErr }, { data: tasks, error: tErr }, { data: reports, error: rErr }, evolutionRes] = await Promise.all([
         supabase.from('lpp_patients').select('*').eq('active', true).order('created_at', { ascending: false }),
         supabase.from('lpp_tasks').select('*').order('alarm_at', { ascending: false }),
-        supabase.from('lpp_shift_reports').select('*').order('created_at', { ascending: false }).limit(10)
+        supabase.from('lpp_shift_reports').select('*').order('created_at', { ascending: false }).limit(10),
+        supabase.from('lpp_skin_evolution').select('*').order('created_at', { ascending: false })
       ]);
 
       if (pErr || tErr || rErr) {
@@ -485,6 +534,7 @@
       state.patients = patients || [];
       state.tasks = tasks || [];
       state.reports = reports || [];
+      state.evolutions = evolutionRes?.error ? [] : (evolutionRes?.data || []);
       clearFeedback();
       render();
     }
@@ -525,6 +575,20 @@
       }).join('') || '<div class="empty-state">Sem dados por técnico.</div>';
     }
 
+    function renderEvolution(filteredPatients) {
+      evolutionPatient.innerHTML = '<option value="">Selecione</option>' + filteredPatients.map((patient) => `<option value="${patient.id}">${patient.patient_name} - Leito ${patient.bed}</option>`).join('');
+      evolutionList.innerHTML = state.evolutions.map((item) => `
+        <article class="tile">
+          <h4>${item.patient_name || 'Paciente'}</h4>
+          <p><b>Condição:</b> ${item.skin_condition}</p>
+          <p><b>Data:</b> ${item.created_at ? nowText(new Date(item.created_at)) : '—'}</p>
+          <p><b>Descrição:</b> ${item.notes || 'Sem descrição.'}</p>
+          ${item.photo_url ? `<p style="margin-top:8px;"><a href="${item.photo_url}" target="_blank" rel="noopener noreferrer">Abrir imagem registrada</a></p>` : ''}
+        </article>
+      `).join('');
+      evolutionEmpty.classList.toggle('hidden', state.evolutions.length > 0);
+    }
+
     function renderReport(filteredTasks) {
       const shift = reportShift.value;
       const shiftTasks = filteredTasks.filter((item) => item.shift === shift);
@@ -541,9 +605,13 @@
         <article class="report-card"><h4>Adesão</h4><p>${adherence}% de adesão ao plano preventivo.</p></article>
       ` : '';
 
+      const lastReport = state.reports.find((item) => item.shift === shift);
       const details = [];
-      done.forEach((item) => details.push(`<article class="tile"><h4>${item.patient_name} - ${item.responsible_tech}</h4><p><b>Leito:</b> ${item.bed} | <b>Alarme:</b> ${nowText(new Date(item.alarm_at || item.created_at))}</p><p><b>Confirmação:</b> ${item.completed_at ? nowText(new Date(item.completed_at)) : '—'} | <b>Status:</b> ${item.was_late ? 'Atrasado' : 'No prazo'}</p></article>`));
+      done.forEach((item) => details.push(`<article class="tile"><h4>${item.patient_name} - ${item.responsible_tech}</h4><p><b>Leito:</b> ${item.bed} | <b>Alarme:</b> ${nowText(new Date(item.alarm_at || item.created_at))}</p><p><b>Confirmação:</b> ${item.completed_at ? nowText(new Date(item.completed_at)) : '—'} | <b>Status:</b> ${item.was_late ? 'Atrasado' : 'No prazo'}</p><p><b>Assinatura do técnico:</b> ${item.completed_by || 'Não registrada'}</p></article>`));
       active.forEach((item) => details.push(`<article class="tile"><h4>${item.patient_name} - ${item.responsible_tech}</h4><p><b>Leito:</b> ${item.bed} | <b>Alarme:</b> ${nowText(new Date(item.alarm_at || item.created_at))}</p><p><b>Status:</b> ${isOverdue(item) ? 'Pendente em atraso' : 'Pendente dentro do prazo'}</p></article>`));
+      if (lastReport) {
+        details.unshift(`<article class="tile"><h4>Último fechamento do turno ${shift}</h4><p><b>Enfermeiro:</b> ${lastReport.nurse_name || 'Não informado'}</p><p><b>Assinatura:</b> ${lastReport.nurse_signature || 'Não registrada'}</p><p><b>Síntese:</b> ${lastReport.summary || 'Sem síntese registrada.'}</p></article>`);
+      }
       reportDetails.innerHTML = details.join('');
       reportEmpty.classList.toggle('hidden', total > 0);
 
@@ -567,6 +635,7 @@
       updateStats(activeTasks, doneTasks);
       renderReport(filteredTasks);
       renderMetrics(filteredTasks);
+      renderEvolution(filteredPatients);
       bindTaskButtons();
     }
 
@@ -621,6 +690,7 @@
         status: 'done',
         completed_at: new Date().toISOString(),
         was_late: isOverdue(task),
+        completed_by: state.user?.email || state.user?.id || 'Usuário autenticado',
         updated_at: new Date().toISOString()
       }).eq('id', taskId);
       if (error) {
@@ -645,6 +715,7 @@
         shift,
         sector: filterSector.value === 'todos' ? null : filterSector.value,
         nurse_name: nurseName.value.trim() || state.user.email || 'Enfermeiro responsável',
+        nurse_signature: nurseSignature.value.trim() || state.user.email || 'Assinatura não informada',
         summary: closingSummary.value.trim() || null,
         adherence_percent: adherence,
         total_alarms: total,
@@ -660,7 +731,33 @@
       }
       showFeedback('ok', 'Fechamento do turno registrado com sucesso.');
       nurseName.value = '';
+      nurseSignature.value = '';
       closingSummary.value = '';
+      await loadAll();
+    }
+
+    async function addEvolution() {
+      const patientId = evolutionPatient.value;
+      if (!patientId) {
+        showFeedback('warn', 'Selecione um paciente para registrar evolução da pele.');
+        return;
+      }
+      const patient = state.patients.find((item) => item.id === patientId);
+      const payload = {
+        patient_id: patientId,
+        patient_name: patient?.patient_name || 'Paciente',
+        skin_condition: evolutionSkin.value,
+        notes: evolutionNotes.value.trim(),
+        photo_url: evolutionPhoto.value.trim() || null,
+        created_by: state.user.id
+      };
+      const { error } = await supabase.from('lpp_skin_evolution').insert(payload);
+      if (error) {
+        showFeedback('err', `Não foi possível salvar a evolução da pele: ${error.message}`);
+        return;
+      }
+      evolutionForm.reset();
+      showFeedback('ok', 'Evolução da pele registrada com sucesso.');
       await loadAll();
     }
 
@@ -739,6 +836,11 @@
       filterTech.value = '';
       searchBed.value = '';
       render();
+    });
+    printReportBtn.addEventListener('click', () => window.print());
+    evolutionForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      await addEvolution();
     });
 
     supabase.auth.onAuthStateChange(() => loadAll());
