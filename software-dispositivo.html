@@ -288,7 +288,15 @@
 
     const SUPABASE_URL = 'https://owpswekkfaleauwjmahc.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq';
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const AUTH_STORAGE_KEY = 'lpp-guard-pro-auth';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storageKey: AUTH_STORAGE_KEY
+      }
+    });
 
     const form = document.getElementById('patientForm');
     const seedDemoButton = document.getElementById('seedDemo');
@@ -525,8 +533,7 @@
           throw new Error('no-session');
         }
 
-        const userRes = await withTimeout(supabase.auth.getUser(), 4000);
-        state.user = userRes?.data?.user || null;
+        state.user = session.user || null;
         if (!state.user) {
           throw new Error('no-user');
         }
