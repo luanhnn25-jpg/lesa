@@ -1,22 +1,26 @@
+
 <!doctype html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#0b3d91" />
+  <meta name="description" content="Acesso premium ao projeto sobre lesão por pressão com autenticação integrada ao Supabase." />
   <title>Acesso • LPP Premium</title>
 
   <style>
     :root{
       --bg1:#0b3d91;
       --bg2:#08265c;
+      --bg3:#061a40;
       --card:#ffffff;
       --text:#0f172a;
       --muted:#475569;
       --border:rgba(15,23,42,.10);
-      --shadow:0 20px 45px rgba(2,6,23,.14);
-      --shadow-strong:0 30px 80px rgba(2,6,23,.22);
-      --radius:22px;
+      --shadow:0 22px 50px rgba(2,6,23,.16);
+      --shadow-strong:0 34px 90px rgba(2,6,23,.26);
+      --shadow-soft:0 14px 30px rgba(2,6,23,.10);
+      --radius:24px;
       --primary:#2563eb;
       --primary2:#1d4ed8;
       --primary3:#1e40af;
@@ -24,8 +28,9 @@
       --warn:#f59e0b;
       --bad:#dc2626;
       --field:#f8fafc;
-      --focus:rgba(37,99,235,.20);
-      --white:rgba(255,255,255,.96);
+      --focus:rgba(37,99,235,.18);
+      --glass:rgba(255,255,255,.12);
+      --glass-border:rgba(255,255,255,.18);
     }
 
     *{box-sizing:border-box}
@@ -33,28 +38,29 @@
 
     body{
       margin:0;
-      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--text);
       background:
-        radial-gradient(1200px 650px at 15% 10%, rgba(255,255,255,.18), transparent 60%),
-        radial-gradient(900px 500px at 85% 15%, rgba(255,255,255,.10), transparent 60%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
+        radial-gradient(1200px 650px at 10% 10%, rgba(255,255,255,.16), transparent 60%),
+        radial-gradient(900px 540px at 90% 14%, rgba(255,255,255,.10), transparent 60%),
+        radial-gradient(600px 300px at 50% 100%, rgba(212,167,44,.10), transparent 70%),
+        linear-gradient(180deg,var(--bg1),var(--bg2) 58%,var(--bg3));
       min-height:100vh;
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:20px 14px;
+      padding:24px 14px;
     }
 
     .wrap{
-      width:min(1120px, 100%);
+      width:min(1160px,100%);
       display:grid;
-      grid-template-columns: 1.08fr .92fr;
-      gap:18px;
+      grid-template-columns:1.08fr .92fr;
+      gap:20px;
       align-items:stretch;
     }
 
-    @media (max-width: 920px){
+    @media (max-width: 940px){
       .wrap{grid-template-columns:1fr}
     }
 
@@ -62,79 +68,97 @@
       position:relative;
       overflow:hidden;
       border-radius:var(--radius);
-      padding:24px;
-      background:rgba(255,255,255,.12);
-      backdrop-filter:blur(14px);
-      border:1px solid rgba(255,255,255,.18);
+      padding:28px;
+      background:var(--glass);
+      backdrop-filter:blur(16px);
+      border:1px solid var(--glass-border);
       box-shadow:var(--shadow-strong);
       color:#fff;
+      isolation:isolate;
     }
 
     .hero::before{
       content:"";
       position:absolute;
-      inset:auto -130px -120px auto;
+      inset:auto -120px -130px auto;
       width:360px;
       height:360px;
       border-radius:50%;
-      background:radial-gradient(circle at 30% 30%, rgba(37,99,235,.55), transparent 70%);
+      background:radial-gradient(circle at 30% 30%, rgba(37,99,235,.50), transparent 70%);
       pointer-events:none;
+      z-index:-1;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      left:-120px;
+      top:-120px;
+      width:280px;
+      height:280px;
+      border-radius:50%;
+      background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.14), transparent 70%);
+      pointer-events:none;
+      z-index:-1;
     }
 
     .brand{
       display:flex;
       align-items:center;
       gap:12px;
-      margin-bottom:18px;
+      margin-bottom:22px;
     }
 
     .logo{
-      width:48px;
-      height:48px;
-      border-radius:16px;
+      width:52px;
+      height:52px;
+      border-radius:18px;
       display:grid;
       place-items:center;
-      font-weight:900;
+      font-weight:1000;
       letter-spacing:.5px;
       background:rgba(255,255,255,.16);
-      border:1px solid rgba(255,255,255,.22);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.15);
+      border:1px solid rgba(255,255,255,.20);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.16), 0 14px 30px rgba(2,6,23,.18);
+      flex:0 0 auto;
     }
 
     .brand h1{
       margin:0;
-      font-size:18px;
-      font-weight:900;
+      font-size:19px;
+      font-weight:1000;
       letter-spacing:.2px;
     }
 
     .brand p{
-      margin:3px 0 0;
+      margin:4px 0 0;
       font-size:12px;
       opacity:.92;
+      font-weight:700;
     }
 
     .hero h2{
-      margin:12px 0 8px;
-      font-size:clamp(26px, 4vw, 34px);
-      line-height:1.1;
+      margin:14px 0 10px;
+      font-size:clamp(28px,4vw,38px);
+      line-height:1.06;
       font-weight:1000;
-      max-width:14ch;
+      max-width:13ch;
+      letter-spacing:-.5px;
     }
 
     .hero .sub{
       margin:0;
-      max-width:60ch;
-      line-height:1.6;
+      max-width:62ch;
+      line-height:1.72;
       font-size:14px;
-      opacity:.95;
+      opacity:.96;
     }
 
     .badges{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin-top:16px;
+      margin-top:18px;
     }
 
     .badge{
@@ -146,6 +170,25 @@
       background:rgba(255,255,255,.12);
       border:1px solid rgba(255,255,255,.20);
       font-size:12px;
+      font-weight:900;
+      box-shadow:0 10px 22px rgba(2,6,23,.10);
+    }
+
+    .features{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .feature{
+      padding:14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow:0 14px 28px rgba(2,6,23,.10);
+      font-size:13px;
+      line-height:1.65;
       font-weight:800;
     }
 
@@ -153,8 +196,9 @@
       margin-top:18px;
       background:rgba(255,255,255,.10);
       border:1px solid rgba(255,255,255,.18);
-      border-radius:18px;
-      padding:16px;
+      border-radius:20px;
+      padding:18px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
     }
 
     .priceRow{
@@ -167,31 +211,45 @@
 
     .priceLabel{
       font-size:12px;
-      font-weight:800;
+      font-weight:900;
       opacity:.92;
       text-transform:uppercase;
       letter-spacing:.08em;
     }
 
     .price{
-      margin:4px 0 0;
-      font-size:36px;
+      margin:6px 0 0;
+      font-size:38px;
       font-weight:1000;
       letter-spacing:.2px;
+      line-height:1;
     }
 
     .mini{
-      margin:6px 0 0;
+      margin:8px 0 0;
       font-size:12px;
-      opacity:.9;
+      opacity:.92;
+      line-height:1.5;
+    }
+
+    .premiumPill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 13px;
+      border-radius:999px;
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.20);
+      font-size:12px;
+      font-weight:1000;
     }
 
     .pixBox{
-      margin-top:14px;
-      background:rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.18);
-      border-radius:16px;
-      padding:12px;
+      margin-top:16px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:18px;
+      padding:14px;
     }
 
     .pixBox label{
@@ -199,98 +257,119 @@
       margin:0 0 8px;
       color:#fff;
       font-size:12px;
-      font-weight:900;
-      opacity:.95;
+      font-weight:1000;
+      opacity:.96;
     }
 
     .pixBox textarea{
       width:100%;
-      min-height:84px;
+      min-height:86px;
       resize:none;
       border:none;
       outline:none;
-      border-radius:14px;
-      padding:12px;
-      background:rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:13px;
+      background:rgba(255,255,255,.10);
       color:#fff;
-      font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
       font-size:13px;
-      line-height:1.4;
+      line-height:1.45;
       border:1px solid rgba(255,255,255,.16);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
     }
 
     .actions{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin-top:12px;
+      margin-top:13px;
     }
 
-    .btnWide,
-    .btn{
+    .btnWide,.btn{
       border:none;
       cursor:pointer;
-      transition:transform .06s ease, filter .15s ease, opacity .15s ease;
-      font-weight:900;
-      border-radius:14px;
+      transition:transform .08s ease, filter .15s ease, opacity .15s ease, box-shadow .15s ease;
+      font-weight:1000;
+      border-radius:16px;
     }
 
-    .btnWide:hover,
-    .btn:hover{
+    .btnWide:hover,.btn:hover{
       filter:brightness(1.03);
+      box-shadow:0 16px 28px rgba(2,6,23,.12);
     }
 
-    .btnWide:active,
-    .btn:active{
+    .btnWide:active,.btn:active{
       transform:translateY(1px);
     }
 
     .btnWide{
       flex:1 1 220px;
-      padding:13px 14px;
+      padding:14px 15px;
       color:#fff;
       border:1px solid rgba(255,255,255,.16);
-      background:rgba(255,255,255,.14);
+      background:rgba(255,255,255,.12);
+      box-shadow:var(--shadow-soft);
     }
 
     .btnWide.blue{
-      background:linear-gradient(180deg, #2563eb, #1d4ed8);
+      background:linear-gradient(180deg,#2563eb,#1d4ed8);
     }
 
     .btnWide.green{
-      background:linear-gradient(180deg, #22c55e, #16a34a);
+      background:linear-gradient(180deg,#22c55e,#16a34a);
     }
 
     .card{
-      background:var(--card);
+      background:linear-gradient(180deg,#ffffff,#fbfdff);
       border:1px solid var(--border);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      padding:22px 18px;
+      padding:24px 20px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:auto auto -100px -70px;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background:radial-gradient(circle at center, rgba(37,99,235,.07), transparent 68%);
+      pointer-events:none;
     }
 
     .card h3{
-      margin:0 0 6px;
-      font-size:22px;
+      margin:0 0 8px;
+      font-size:24px;
       font-weight:1000;
-      letter-spacing:.2px;
+      letter-spacing:.1px;
+      color:#0b2b63;
+      position:relative;
+      z-index:1;
     }
 
     .hint{
-      margin:0 0 16px;
+      margin:0 0 18px;
       color:var(--muted);
       font-size:13px;
-      line-height:1.55;
+      line-height:1.65;
+      position:relative;
+      z-index:1;
     }
 
     .tabs{
       display:flex;
       gap:8px;
-      margin:12px 0 16px;
+      margin:14px 0 18px;
       background:#f8fafc;
       border:1px solid rgba(15,23,42,.07);
       border-radius:999px;
       padding:4px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+      position:relative;
+      z-index:1;
     }
 
     .tab{
@@ -300,15 +379,16 @@
       padding:11px 12px;
       border-radius:999px;
       cursor:pointer;
-      font-weight:900;
+      font-weight:1000;
       font-size:13px;
       color:var(--muted);
+      transition:all .16s ease;
     }
 
     .tab[aria-selected="true"]{
       background:#fff;
       color:var(--primary2);
-      box-shadow:0 6px 18px rgba(37,99,235,.12);
+      box-shadow:0 8px 20px rgba(37,99,235,.12);
       border:1px solid rgba(37,99,235,.12);
     }
 
@@ -317,30 +397,36 @@
       margin:12px 0 7px;
       font-size:12px;
       color:var(--muted);
-      font-weight:900;
+      font-weight:1000;
       letter-spacing:.02em;
+      position:relative;
+      z-index:1;
     }
 
     .field{
       width:100%;
-      padding:13px 14px;
-      border-radius:14px;
+      padding:14px 15px;
+      border-radius:16px;
       border:1px solid var(--border);
       background:var(--field);
       outline:none;
       font-size:14px;
       color:var(--text);
-      transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
+      transition:border-color .15s ease, box-shadow .15s ease, background .15s ease, transform .15s ease;
+      position:relative;
+      z-index:1;
     }
 
     .field:focus{
       background:#fff;
       border-color:rgba(37,99,235,.45);
       box-shadow:0 0 0 5px var(--focus);
+      transform:translateY(-1px);
     }
 
     .pwRow{
       position:relative;
+      z-index:1;
     }
 
     .pwBtn{
@@ -352,10 +438,10 @@
       background:transparent;
       cursor:pointer;
       color:var(--primary2);
-      font-weight:900;
+      font-weight:1000;
       font-size:13px;
       padding:8px 10px;
-      border-radius:10px;
+      border-radius:12px;
     }
 
     .pwBtn:hover{
@@ -369,12 +455,15 @@
       gap:10px;
       flex-wrap:wrap;
       margin-top:12px;
+      position:relative;
+      z-index:1;
     }
 
     .small{
       margin:0;
       font-size:12px;
       color:var(--muted);
+      font-weight:800;
     }
 
     .link{
@@ -384,19 +473,22 @@
       cursor:pointer;
       color:var(--primary2);
       font-size:12px;
-      font-weight:900;
+      font-weight:1000;
       text-decoration:underline;
     }
 
     .btn{
       width:100%;
-      padding:13px 14px;
+      padding:14px 15px;
       color:#fff;
-      background:linear-gradient(180deg, var(--primary), var(--primary2));
+      background:linear-gradient(180deg,var(--primary),var(--primary2));
       margin-top:14px;
       border:1px solid rgba(37,99,235,.28);
       font-size:14px;
       letter-spacing:.2px;
+      box-shadow:0 16px 30px rgba(37,99,235,.20);
+      position:relative;
+      z-index:1;
     }
 
     .btn.secondary{
@@ -406,23 +498,23 @@
       box-shadow:none;
     }
 
-    .btn:disabled,
-    .btnWide:disabled,
-    .tab:disabled,
-    .link:disabled{
+    .btn:disabled,.btnWide:disabled,.tab:disabled,.link:disabled{
       opacity:.65;
       cursor:not-allowed;
     }
 
     .msg{
       margin-top:14px;
-      padding:12px 14px;
-      border-radius:14px;
+      padding:13px 14px;
+      border-radius:16px;
       border:1px solid var(--border);
       font-size:13px;
-      line-height:1.5;
+      line-height:1.6;
       display:none;
       white-space:pre-wrap;
+      position:relative;
+      z-index:1;
+      box-shadow:var(--shadow-soft);
     }
 
     .msg.show{display:block}
@@ -447,6 +539,8 @@
       text-align:center;
       font-size:12px;
       color:var(--muted);
+      position:relative;
+      z-index:1;
     }
 
     .statusDot{
@@ -457,6 +551,10 @@
       margin-right:6px;
       background:currentColor;
       opacity:.8;
+    }
+
+    @media (max-width: 940px){
+      .features{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -471,16 +569,21 @@
         </div>
       </div>
 
-      <h2>Acesso premium simples e rápido</h2>
+      <h2>Acesso premium simples, rápido e profissional</h2>
       <p class="sub">
         Realize o pagamento via Pix, envie o comprovante pelo WhatsApp e, após a liberação do perfil,
-        o acesso ao conteúdo premium será disponibilizado automaticamente.
+        o acesso ao conteúdo premium será disponibilizado automaticamente no seu login.
       </p>
 
       <div class="badges">
-        <span class="badge">🔒 Ambiente seguro</span>
-        <span class="badge">⚡ Liberação rápida</span>
-        <span class="badge">💬 Suporte via WhatsApp</span>
+        <span class="badge">Ambiente seguro</span>
+        <span class="badge">Liberação rápida</span>
+        <span class="badge">Suporte via WhatsApp</span>
+      </div>
+
+      <div class="features">
+        <div class="feature">Autenticação integrada ao Supabase, com persistência de sessão e controle de acesso premium.</div>
+        <div class="feature">Fluxo organizado para pagamento, validação do perfil e redirecionamento automático ao conteúdo liberado.</div>
       </div>
 
       <div class="pay">
@@ -488,9 +591,9 @@
           <div>
             <div class="priceLabel">Valor de acesso</div>
             <div class="price">R$ 2,00</div>
-            <p class="mini">Pagamento exclusivo via Pix</p>
+            <p class="mini">Pagamento exclusivo via Pix para ativação do perfil premium.</p>
           </div>
-          <div class="badge">Premium</div>
+          <div class="premiumPill">Premium</div>
         </div>
 
         <div class="pixBox">
@@ -498,12 +601,12 @@
           <textarea id="pixPayload" readonly>28d39758-0fe0-47f1-9c7c-9cb6e032c5cf</textarea>
 
           <div class="actions">
-            <button id="btnCopyPix" class="btnWide blue" type="button">📋 Copiar chave Pix</button>
-            <button id="btnWhats" class="btnWide green" type="button">💬 Enviar comprovante</button>
+            <button id="btnCopyPix" class="btnWide blue" type="button">Copiar chave Pix</button>
+            <button id="btnWhats" class="btnWide green" type="button">Enviar comprovante</button>
           </div>
 
           <p class="mini">
-            Após o pagamento, envie o comprovante e, em seguida, faça login para validar o acesso.
+            Após o pagamento, envie o comprovante e em seguida faça login para validar o acesso ao conteúdo premium.
           </p>
         </div>
       </div>
@@ -512,7 +615,7 @@
     <main class="card" aria-label="Acesso de usuário">
       <h3>Entrar ou criar conta</h3>
       <p class="hint">
-        Caso a confirmação por e-mail esteja ativada no Supabase, você receberá um link para concluir o cadastro.
+        Caso a confirmação por e-mail esteja ativada no Supabase, você receberá um link para concluir o cadastro antes do primeiro acesso.
       </p>
 
       <div class="tabs" role="tablist" aria-label="Alternar modo">
@@ -539,7 +642,7 @@
           placeholder="Mínimo de 6 caracteres"
           autocomplete="current-password"
         />
-        <button id="btnTogglePw" class="pwBtn" type="button" aria-label="Mostrar ou ocultar senha">👁</button>
+        <button id="btnTogglePw" class="pwBtn" type="button" aria-label="Mostrar ou ocultar senha">Mostrar</button>
       </div>
 
       <div class="row">
@@ -559,25 +662,17 @@
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-    // =========================
-    // CONFIGURAÇÃO
-    // =========================
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
 
-    // Ajuste este valor para o endereço real publicado do seu projeto
-    const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
-
-    const CONFIRM_URL = new URL("confirm.html", SITE_BASE).href;
-    const HOME_URL = new URL("index.html", SITE_BASE).href;
+    const baseUrl = new URL("./", window.location.href);
+    const CONFIRM_URL = new URL("confirm.html", baseUrl).href;
+    const HOME_URL = new URL("index.html", baseUrl).href;
     const DEFAULT_GO = "selecao-produtos.html";
     const GO_IF_NOT_PREMIUM = HOME_URL;
     const WHATS_NUMBER = "5515988119989";
     const PIX_KEY = "28d39758-0fe0-47f1-9c7c-9cb6e032c5cf";
 
-    // =========================
-    // VALIDAÇÃO INICIAL
-    // =========================
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
       alert("Configuração do Supabase ausente.");
       throw new Error("SUPABASE_URL ou SUPABASE_ANON_KEY não configurados.");
@@ -617,7 +712,7 @@
     function getGoUrl() {
       const go = localStorage.getItem("lpp_go_after_auth") || DEFAULT_GO;
       if (/^https?:\/\//i.test(go)) return go;
-      return new URL(go.replace(/^\/+/, ""), SITE_BASE).href;
+      return new URL(go.replace(/^\/+/, ""), baseUrl).href;
     }
 
     function isValidEmail(email) {
@@ -681,9 +776,7 @@
       try {
         const res = await fetch(`${SUPABASE_URL}/auth/v1/health`, {
           method: "GET",
-          headers: {
-            apikey: SUPABASE_ANON_KEY
-          }
+          headers: { apikey: SUPABASE_ANON_KEY }
         });
         return res.ok;
       } catch {
@@ -697,19 +790,12 @@
       if (raw.includes("failed to fetch")) {
         return (
           "Não foi possível conectar ao servidor de autenticação.\n\n" +
-          "Verifique:\n" +
-          "• conexão com a internet\n" +
-          "• URL e chave pública do Supabase\n" +
-          "• se o projeto está ativo\n" +
-          "• se o domínio do site está autorizado no Supabase"
+          "Verifique a conexão com a internet, a configuração do Supabase e se o projeto está ativo."
         );
       }
 
       if (raw.includes("email not confirmed") || raw.includes("confirm")) {
-        return (
-          "Seu e-mail ainda não foi confirmado.\n\n" +
-          "Confira a caixa de entrada e também a pasta de spam."
-        );
+        return "Seu e-mail ainda não foi confirmado. Confira a caixa de entrada e também a pasta de spam.";
       }
 
       if (raw.includes("invalid login credentials")) {
@@ -753,9 +839,7 @@
         if (profileError) {
           setMsg(
             "Não foi possível consultar o status premium.\n\n" +
-            "Verifique se:\n" +
-            "• a tabela profiles possui a linha do usuário\n" +
-            "• a política RLS permite SELECT\n\n" +
+            "Verifique se a tabela profiles possui a linha do usuário e se a política RLS permite SELECT.\n\n" +
             `Detalhe técnico: ${profileError.message}`,
             "bad"
           );
@@ -923,7 +1007,7 @@
         await navigator.clipboard.writeText(pixPayload.value.trim());
         setMsg(
           "Chave Pix copiada com sucesso.\n" +
-          "Agora realize o pagamento e envie o comprovante no WhatsApp.",
+          "Agora realize o pagamento e envie o comprovante pelo WhatsApp.",
           "ok"
         );
       } catch {
@@ -958,7 +1042,7 @@
     function togglePassword() {
       const isPassword = passwordInput.type === "password";
       passwordInput.type = isPassword ? "text" : "password";
-      btnTogglePw.textContent = isPassword ? "🙈" : "👁";
+      btnTogglePw.textContent = isPassword ? "Ocultar" : "Mostrar";
     }
 
     function handleEnterKey(event) {
