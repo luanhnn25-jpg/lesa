@@ -1,52 +1,56 @@
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0b3d91" />
-  <meta name="description" content="LPP Guard Pro com fluxo assistencial compartilhado via Supabase, painel do enfermeiro, QR code por leito e relatório final de turno." />
-  <title>LPP Guard Pro - Software Assistencial</title>
+  <meta name="description" content="LPP Guard Pro com fluxo assistencial compartilhado, supervisão por turno, QR code por leito e dashboard gerencial." />
+  <title>LPP Guard Pro - Plataforma Assistencial</title>
   <style>
     html,body{margin:0;padding:0;scroll-behavior:smooth}
     :root{
       --blue-1:#0b3d91;--blue-2:#0f5bd3;--blue-3:#1d4ed8;--navy:#082c63;
       --green:#15803d;--green-soft:#eefbf3;--amber:#b45309;--amber-soft:#fff7ed;
       --red:#b91c1c;--red-soft:#fff1f2;--bg:#eef2f6;--text:#0f172a;--muted:#475569;
-      --border:rgba(15,23,42,.10);--radius:22px;--radius-xl:28px;
+      --border:rgba(15,23,42,.10);--radius:20px;--radius-xl:28px;
       --shadow:0 12px 30px rgba(2,6,23,.10);--shadow-2:0 22px 60px rgba(2,6,23,.16);--soft:0 10px 24px rgba(2,6,23,.08)
     }
     *{box-sizing:border-box}
     body{min-height:100vh;overflow-x:hidden;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.16), transparent 55%),radial-gradient(900px 520px at 90% 10%, rgba(11,61,145,.14), transparent 55%),radial-gradient(900px 520px at 50% 110%, rgba(212,167,44,.08), transparent 55%),var(--bg)}
     header{background:radial-gradient(circle at top center, rgba(255,255,255,.18), transparent 40%),linear-gradient(90deg,var(--blue-1),var(--blue-2));color:#fff;text-align:center;padding:56px 16px 34px;box-shadow:0 18px 42px rgba(2,6,23,.18);border-bottom:1px solid rgba(255,255,255,.10)}
-    header h1{margin:0;font-size:clamp(28px,4vw,42px);font-weight:1000;letter-spacing:-0.4px;line-height:1.1}
-    header p{margin:10px auto 0;max-width:960px;font-size:15px;line-height:1.65;font-weight:700;opacity:.95}
+    header h1{margin:0;font-size:clamp(28px,4vw,42px);font-weight:1000;letter-spacing:-.4px;line-height:1.1}
+    header p{margin:10px auto 0;max-width:980px;font-size:15px;line-height:1.65;font-weight:700;opacity:.95}
     .topnav{background:rgba(8,44,99,.96);backdrop-filter:blur(10px);position:sticky;top:0;z-index:999;box-shadow:0 12px 24px rgba(2,6,23,.12);border-bottom:1px solid rgba(255,255,255,.08)}
-    .topnav-inner{max-width:1280px;margin:0 auto;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .topnav-inner{max-width:1320px;margin:0 auto;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
     .topnav-links{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .topnav a{color:#fff;text-decoration:none;font-weight:900;font-size:14px;padding:10px 12px;border-radius:12px;white-space:nowrap;background:rgba(255,255,255,.05)}
     .topnav a:hover,.topnav a[aria-current="page"]{background:rgba(255,255,255,.16)}
     .nav-badge{color:#eaf2ff;font-size:12px;font-weight:900;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.10);white-space:nowrap}
-    main{max-width:1280px;margin:0 auto;padding:26px 16px 54px}
+    main{max-width:1320px;margin:0 auto;padding:24px 16px 56px}
     section[id]{scroll-margin-top:90px}
-    .hero,.card,.panel,.stat-card,.tile{background:linear-gradient(180deg,#fff,#fbfdff);border:1px solid var(--border);box-shadow:var(--shadow)}
+    .hero,.card,.panel,.stat-card,.tile,.metric-card,.report-card{background:linear-gradient(180deg,#fff,#fbfdff);border:1px solid var(--border);box-shadow:var(--shadow)}
     .hero{border-radius:var(--radius-xl);padding:30px 22px;box-shadow:var(--shadow-2);margin-bottom:18px}
-    .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:start}
-    .hero-label,.chip,.status-chip{display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;font-size:12px;font-weight:900}
+    .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:start}
+    .hero-label,.chip,.status-chip,.role-pill{display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;font-size:12px;font-weight:900}
     .hero-label{background:#eff6ff;border:1px solid #dbeafe;color:#0b3d91;margin-bottom:14px}
-    .hero h2{margin:0 0 12px;font-size:clamp(28px,4vw,40px);line-height:1.05;color:#0b2b63;font-weight:1000;letter-spacing:-0.5px}
-    .hero p,.lead,.empty-state,.helper-text,.report-text{margin:0;color:#334155;font-size:15px;line-height:1.75}
+    .hero h2{margin:0 0 12px;font-size:clamp(28px,4vw,40px);line-height:1.05;color:#0b2b63;font-weight:1000;letter-spacing:-.5px}
+    .hero p,.lead,.helper-text,.empty-state,.report-text{margin:0;color:#334155;font-size:15px;line-height:1.75}
     .hero-badges,.inline-actions,.meta-row,.filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-    .chip{background:#f8fafc;border:1px solid rgba(15,23,42,.08);color:#0b2b63;box-shadow:var(--soft)}
+    .chip,.role-pill{background:#f8fafc;border:1px solid rgba(15,23,42,.08);color:#0b2b63;box-shadow:var(--soft)}
+    .panel,.card,.stat-card,.tile,.metric-card,.report-card{border-radius:20px;padding:18px}
     .hero-side,.form-grid{display:grid;gap:14px}
-    .panel,.card,.stat-card,.tile{border-radius:20px;padding:18px}
-    .panel h3,.section-title,.tile h4,.report-card h4{margin:0 0 8px;color:#0b2b63;font-weight:1000}
+    .panel h3,.section-title,.tile h4,.metric-card h4,.report-card h4{margin:0 0 8px;color:#0b2b63;font-weight:1000}
     .panel ul{margin:10px 0 0 18px;color:#334155;font-size:14px;line-height:1.65}
-    .stats-grid,.layout-grid,.list-grid,.report-grid{display:grid;gap:14px}
+    .stats-grid,.layout-grid,.list-grid,.report-grid,.metrics-grid{display:grid;gap:14px}
     .stats-grid{grid-template-columns:repeat(4,minmax(0,1fr));margin:18px 0}
-    .stat-card .k{font-size:12px;color:var(--muted);font-weight:800;margin-bottom:6px}.stat-card .v{font-size:24px;font-weight:1000;color:#0b2b63;line-height:1.1}
-    .card{margin:16px 0}.section-title{font-size:24px;letter-spacing:-0.2px;display:flex;align-items:center;gap:10px}.section-title::before{content:"";width:4px;height:24px;border-radius:999px;background:var(--blue-3)}.lead{color:var(--muted)}
-    .layout-grid{grid-template-columns:390px minmax(0,1fr);margin-top:16px;align-items:start}
+    .stat-card .k{font-size:12px;color:var(--muted);font-weight:800;margin-bottom:6px}
+    .stat-card .v{font-size:24px;font-weight:1000;color:#0b2b63;line-height:1.1}
+    .card{margin:16px 0}
+    .section-title{font-size:24px;letter-spacing:-.2px;display:flex;align-items:center;gap:10px}.section-title::before{content:"";width:4px;height:24px;border-radius:999px;background:var(--blue-3)}
+    .lead{color:var(--muted)}
+    .layout-grid{grid-template-columns:410px minmax(0,1fr);margin-top:16px;align-items:start}
     .field label{display:block;font-size:13px;font-weight:900;color:#334155;margin-bottom:6px}
     .field input,.field select,.field textarea{width:100%;padding:12px 13px;border-radius:14px;border:1px solid rgba(15,23,42,.12);background:#fff;color:#0f172a;font:inherit;outline:none}
     .field textarea{min-height:92px;resize:vertical}
@@ -56,24 +60,26 @@
     .btn-secondary{background:#fff;color:#0b3d91;padding:12px 16px;border-color:rgba(15,23,42,.10);box-shadow:var(--soft)}
     .btn-small{padding:9px 12px;background:#eff6ff;color:#0b3d91;border-color:#dbeafe}
     .status-chip{border:1px solid transparent;width:fit-content;gap:6px}.status-high{background:var(--red-soft);border-color:rgba(185,28,28,.15);color:var(--red)}.status-medium{background:var(--amber-soft);border-color:rgba(180,83,9,.15);color:var(--amber)}.status-low,.status-done{background:var(--green-soft);border-color:rgba(21,128,61,.15);color:var(--green)}.status-overdue{background:var(--red-soft);border-color:rgba(185,28,28,.15);color:var(--red)}
-    .list-grid{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:16px}.report-grid{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:16px}
+    .list-grid{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:16px}.report-grid{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:16px}.metrics-grid{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:16px}
     .tile-header{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:10px}.tile-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
     .meta-pill{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;background:#f8fafc;border:1px solid rgba(15,23,42,.08);color:#334155;font-size:12px;font-weight:800}
-    .tile p,.report-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.65}
+    .tile p,.metric-card p,.report-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.65}
     .qr-box{margin-top:14px;display:grid;grid-template-columns:140px 1fr;gap:14px;align-items:center}.qr-box img{width:140px;height:140px;border-radius:14px;border:1px solid rgba(15,23,42,.08);background:#fff}
+    .body-map{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.body-map button{padding:10px;border-radius:12px;border:1px solid rgba(15,23,42,.10);background:#fff;font-weight:800;color:#334155;cursor:pointer}
+    .body-map button:hover{background:#eff6ff;color:#0b3d91}
     .empty-state{background:#fff;border:1px dashed rgba(15,23,42,.16);border-radius:18px;padding:18px}.hidden{display:none !important}
     .auth-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--soft);margin-bottom:16px}.auth-user{font-size:14px;color:#334155;font-weight:800}.auth-user b{color:#0b2b63}
     .feedback{margin-top:12px;padding:12px 14px;border-radius:14px;font-size:14px;font-weight:800}.feedback.ok{background:var(--green-soft);color:var(--green);border:1px solid rgba(21,128,61,.12)}.feedback.warn{background:var(--amber-soft);color:var(--amber);border:1px solid rgba(180,83,9,.12)}.feedback.err{background:var(--red-soft);color:var(--red);border:1px solid rgba(185,28,28,.12)}
     .footer-note{text-align:center;color:#475569;padding:22px 12px;font-size:13px;opacity:.95}
-    @media (max-width:1100px){.hero-grid,.layout-grid,.stats-grid,.list-grid,.report-grid{grid-template-columns:1fr}}
-    @media (max-width:820px){.topnav-inner{align-items:flex-start;flex-direction:column}.topnav-links{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;width:100%;scrollbar-width:none;-webkit-overflow-scrolling:touch}.topnav-links::-webkit-scrollbar{display:none}.topnav a{flex:0 0 auto}.qr-box{grid-template-columns:1fr}}
-    @media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important}}
+    @media (max-width:1100px){.hero-grid,.layout-grid,.stats-grid,.list-grid,.report-grid,.metrics-grid{grid-template-columns:1fr}}
+    @media (max-width:820px){.topnav-inner{align-items:flex-start;flex-direction:column}.topnav-links{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;width:100%;scrollbar-width:none;-webkit-overflow-scrolling:touch}.topnav-links::-webkit-scrollbar{display:none}.topnav a{flex:0 0 auto}.qr-box,.body-map{grid-template-columns:1fr}}
+    @media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
   </style>
 </head>
 <body>
   <header>
     <h1>LPP Guard Pro</h1>
-    <p>Software assistencial compartilhado entre usuários autenticados, com cadastro clínico, técnico responsável, QR code por leito, alertas de atraso, passagem de plantão e relatório final para supervisão de enfermagem.</p>
+    <p>Plataforma assistencial compartilhada para prevenção de lesão por pressão, com supervisão do enfermeiro, confirmação por QR code, dashboard gerencial e fechamento estruturado de turno.</p>
   </header>
   <nav class="topnav">
     <div class="topnav-inner">
@@ -85,48 +91,49 @@
         <a href="#tarefas">Tarefas</a>
         <a href="#historico">Histórico</a>
         <a href="#relatorio">Relatório</a>
-        <a href="#passagem">Passagem de plantão</a>
+        <a href="#passagem">Passagem</a>
+        <a href="#gestao">Gestão</a>
       </div>
-      <div class="nav-badge">Supabase compartilhado</div>
+      <div class="nav-badge">LPP Guard Pro compartilhado</div>
     </div>
   </nav>
-
   <main>
     <div class="auth-bar">
       <div class="auth-user" id="authUser">Verificando sessão…</div>
       <div class="inline-actions">
+        <span class="role-pill" id="rolePill">Perfil: enfermeiro</span>
         <a class="btn-secondary" href="login.html?mode=login">Entrar</a>
-        <button class="btn-small hidden" id="refreshData" type="button">Atualizar dados</button>
+        <button class="btn-small hidden" id="refreshData" type="button">Atualizar</button>
       </div>
     </div>
 
     <section class="hero">
       <div class="hero-grid">
         <div>
-          <div class="hero-label">Versão completa do fluxo assistencial</div>
-          <h2>Agora com salvamento para todos os usuários autorizados</h2>
-          <p>O LPP Guard Pro passa a funcionar como uma base assistencial compartilhada: qualquer usuário autenticado pode visualizar pacientes, tarefas ativas, confirmações por QR code, atrasos e relatórios do turno. Isso elimina a limitação do navegador local e fortalece rastreabilidade, supervisão do enfermeiro e continuidade do cuidado.</p>
+          <div class="hero-label">Versão completa e compartilhada</div>
+          <h2>Mais próxima de um sistema assistencial real</h2>
+          <p>O LPP Guard Pro agora reúne cadastro clínico, classificação de risco, Braden, técnico responsável, QR code por leito, filtro por setor, busca por leito, alerta de atraso, relatório do turno, passagem de plantão e um painel gerencial com adesão por técnico e por unidade assistencial.</p>
           <div class="hero-badges">
             <span class="chip">Supabase</span>
-            <span class="chip">QR code por leito</span>
-            <span class="chip">Filtro por setor</span>
-            <span class="chip">Relatório do turno</span>
+            <span class="chip">Braden</span>
+            <span class="chip">Busca por leito</span>
+            <span class="chip">Adesão por técnico</span>
           </div>
         </div>
         <div class="hero-side">
           <div class="panel">
-            <h3>Melhorias principais</h3>
+            <h3>Melhorias incluídas</h3>
             <ul>
-              <li>Dados compartilhados entre usuários logados.</li>
-              <li>Filtro por setor, turno e técnico responsável.</li>
-              <li>Relatório final com adesão, pendências e atrasos.</li>
-              <li>Passagem de plantão automática com resumo operacional.</li>
-              <li>Painel do enfermeiro com visão consolidada do turno.</li>
+              <li>Dados compartilhados entre usuários autenticados.</li>
+              <li>Painel do enfermeiro com filtros operacionais.</li>
+              <li>Temporizador regressivo e status de atraso.</li>
+              <li>Relatório final e fechamento de turno.</li>
+              <li>Gestão por setor e por técnico responsável.</li>
             </ul>
           </div>
           <div class="panel">
-            <h3>Pré-requisito</h3>
-            <p class="report-text">Para funcionar completamente, é necessário executar o SQL já preparado em [supabase_lpp_guard_pro.sql](C:/Users/luian/Desktop/codex/supabase_lpp_guard_pro.sql) no projeto Supabase.</p>
+            <h3>Nota de implantação</h3>
+            <p class="report-text">Para uso compartilhado real, o SQL em `supabase_lpp_guard_pro.sql` deve estar executado no Supabase antes da primeira utilização da página.</p>
           </div>
         </div>
       </div>
@@ -136,11 +143,11 @@
       <div class="stat-card"><div class="k">Pacientes ativos</div><div class="v" id="statPatients">0</div></div>
       <div class="stat-card"><div class="k">Tarefas ativas</div><div class="v" id="statTasks">0</div></div>
       <div class="stat-card"><div class="k">Confirmações</div><div class="v" id="statDone">0</div></div>
-      <div class="stat-card"><div class="k">Em atraso</div><div class="v" id="statOverdue">0</div></div>
+      <div class="stat-card"><div class="k">Atrasos</div><div class="v" id="statOverdue">0</div></div>
     </section>
     <section class="card" id="painel">
       <h2 class="section-title">Painel do enfermeiro</h2>
-      <p class="lead">Cadastro clínico, programação preventiva e distribuição da responsabilidade assistencial para o técnico de enfermagem.</p>
+      <p class="lead">Cadastro clínico, programação preventiva e responsabilização do técnico de enfermagem por paciente.</p>
       <div class="layout-grid">
         <div class="panel">
           <h3>Novo paciente e plano preventivo</h3>
@@ -148,32 +155,51 @@
             <div class="field"><label for="patientName">Nome do paciente</label><input id="patientName" name="patientName" type="text" required /></div>
             <div class="field"><label for="patientBed">Leito</label><input id="patientBed" name="patientBed" type="text" required /></div>
             <div class="field"><label for="patientSector">Setor</label><select id="patientSector" name="patientSector" required><option value="">Selecione</option><option value="UTI">UTI</option><option value="Clínica Médica">Clínica Médica</option><option value="Pediatria">Pediatria</option><option value="Enfermaria Cirúrgica">Enfermaria Cirúrgica</option></select></div>
-            <div class="field"><label for="patientRisk">Risco para LPP</label><select id="patientRisk" name="patientRisk" required><option value="">Selecione</option><option value="alto">Alto</option><option value="moderado">Moderado</option><option value="baixo">Baixo</option></select></div>
+            <div class="field"><label for="patientRisk">Classificação de risco</label><select id="patientRisk" name="patientRisk" required><option value="">Selecione</option><option value="alto">Alto</option><option value="moderado">Moderado</option><option value="baixo">Baixo</option></select></div>
             <div class="field"><label for="bradenScore">Escore de Braden</label><input id="bradenScore" name="bradenScore" type="number" min="6" max="23" /></div>
             <div class="field"><label for="responsibleTech">Técnico responsável</label><input id="responsibleTech" name="responsibleTech" type="text" required /></div>
             <div class="field"><label for="nursePrescription">Mudança de decúbito</label><select id="nursePrescription" name="nursePrescription" required><option value="">Selecione</option><option value="A cada 2 horas">A cada 2 horas</option><option value="Conforme prescrição">Conforme prescrição</option></select></div>
             <div class="field"><label for="patientAction">Conduta preventiva principal</label><select id="patientAction" name="patientAction" required><option value="">Selecione</option><option value="Mudança de decúbito">Mudança de decúbito</option><option value="Inspeção da pele">Inspeção da pele</option><option value="Proteção de proeminências ósseas">Proteção de proeminências ósseas</option><option value="Controle de umidade e barreira cutânea">Controle de umidade e barreira cutânea</option></select></div>
             <div class="field"><label for="existingInjury">LPP já existente?</label><select id="existingInjury" name="existingInjury"><option value="Não">Não</option><option value="Sim">Sim</option></select></div>
-            <div class="field"><label for="bodySite">Localização anatômica</label><input id="bodySite" name="bodySite" type="text" /></div>
+            <div class="field"><label for="bodySite">Localização anatômica</label><input id="bodySite" name="bodySite" type="text" placeholder="Ex.: região sacral" /></div>
             <div class="field"><label for="injuryStage">Estágio da lesão</label><select id="injuryStage" name="injuryStage"><option value="Não se aplica">Não se aplica</option><option value="Estágio 1">Estágio 1</option><option value="Estágio 2">Estágio 2</option><option value="Estágio 3">Estágio 3</option><option value="Estágio 4">Estágio 4</option><option value="Lesão tissular profunda">Lesão tissular profunda</option><option value="Não classificável">Não classificável</option></select></div>
             <div class="field"><label for="shift">Turno</label><select id="shift" name="shift" required><option value="">Selecione</option><option value="Manhã">Manhã</option><option value="Tarde">Tarde</option><option value="Noite">Noite</option></select></div>
             <div class="field"><label for="patientNotes">Observações do enfermeiro</label><textarea id="patientNotes" name="patientNotes"></textarea></div>
-            <div class="inline-actions"><button class="btn" type="submit">Salvar no sistema</button><button class="btn-secondary" id="seedDemo" type="button">Inserir exemplo</button></div>
+            <div class="field">
+              <label>Mapa corporal rápido</label>
+              <div class="body-map">
+                <button type="button" data-body-site="Região sacral">Sacral</button>
+                <button type="button" data-body-site="Calcâneo">Calcâneo</button>
+                <button type="button" data-body-site="Trocânter">Trocânter</button>
+                <button type="button" data-body-site="Occipital">Occipital</button>
+                <button type="button" data-body-site="Escápula">Escápula</button>
+                <button type="button" data-body-site="Cotovelos">Cotovelos</button>
+              </div>
+            </div>
+            <div class="inline-actions">
+              <button class="btn" type="submit">Salvar no sistema</button>
+              <button class="btn-secondary" id="seedDemo" type="button">Inserir exemplo</button>
+            </div>
           </form>
           <div id="feedbackBox" class="feedback hidden"></div>
         </div>
+
         <div class="panel">
-          <h3>Filtros operacionais</h3>
+          <h3>Filtros e monitoramento</h3>
           <div class="form-grid">
-            <div class="field"><label for="filterSector">Filtrar por setor</label><select id="filterSector"><option value="todos">Todos</option><option value="UTI">UTI</option><option value="Clínica Médica">Clínica Médica</option><option value="Pediatria">Pediatria</option><option value="Enfermaria Cirúrgica">Enfermaria Cirúrgica</option></select></div>
-            <div class="field"><label for="filterShift">Filtrar por turno</label><select id="filterShift"><option value="todos">Todos</option><option value="Manhã">Manhã</option><option value="Tarde">Tarde</option><option value="Noite">Noite</option></select></div>
-            <div class="field"><label for="filterTech">Filtrar por técnico</label><input id="filterTech" type="text" placeholder="Digite o nome do técnico" /></div>
-            <div class="field"><label for="reportShift">Relatório do turno</label><select id="reportShift"><option value="Manhã">Manhã</option><option value="Tarde">Tarde</option><option value="Noite">Noite</option></select></div>
-            <div class="inline-actions"><button class="btn-secondary" id="refreshReport" type="button">Atualizar relatório</button><button class="btn-small" id="clearFilters" type="button">Limpar filtros</button></div>
+            <div class="field"><label for="filterSector">Setor</label><select id="filterSector"><option value="todos">Todos</option><option value="UTI">UTI</option><option value="Clínica Médica">Clínica Médica</option><option value="Pediatria">Pediatria</option><option value="Enfermaria Cirúrgica">Enfermaria Cirúrgica</option></select></div>
+            <div class="field"><label for="filterShift">Turno</label><select id="filterShift"><option value="todos">Todos</option><option value="Manhã">Manhã</option><option value="Tarde">Tarde</option><option value="Noite">Noite</option></select></div>
+            <div class="field"><label for="filterTech">Técnico responsável</label><input id="filterTech" type="text" placeholder="Digite o nome do técnico" /></div>
+            <div class="field"><label for="searchBed">Busca por leito</label><input id="searchBed" type="text" placeholder="Ex.: 08A" /></div>
+            <div class="field"><label for="reportShift">Turno do relatório</label><select id="reportShift"><option value="Manhã">Manhã</option><option value="Tarde">Tarde</option><option value="Noite">Noite</option></select></div>
+            <div class="inline-actions">
+              <button class="btn-secondary" id="refreshReport" type="button">Atualizar relatório</button>
+              <button class="btn-small" id="clearFilters" type="button">Limpar filtros</button>
+            </div>
           </div>
           <div class="meta-row">
-            <span class="chip">QR code por leito</span>
-            <span class="chip">Risco e Braden</span>
+            <span class="chip">Busca por leito</span>
+            <span class="chip">Adesão por técnico</span>
             <span class="chip">Passagem de plantão</span>
           </div>
         </div>
@@ -182,39 +208,52 @@
 
     <section class="card" id="pacientes">
       <h2 class="section-title">Pacientes monitorados</h2>
-      <p class="lead">Painel clínico compartilhado entre usuários autenticados.</p>
+      <p class="lead">Painel clínico compartilhado entre usuários autenticados, com rastreabilidade e identificação do técnico responsável.</p>
       <div id="patientList" class="list-grid"></div>
       <div id="patientEmpty" class="empty-state">Nenhum paciente encontrado com os filtros atuais.</div>
     </section>
 
     <section class="card" id="tarefas">
       <h2 class="section-title">Tarefas preventivas ativas</h2>
-      <p class="lead">Cada tarefa representa um alarme ativo. A confirmação simula a leitura do QR code do leito e atualiza o histórico compartilhado.</p>
+      <p class="lead">Cada tarefa representa um alarme ativo associado ao leito. O contador indica o tempo decorrido e ajuda a identificar atrasos.</p>
       <div id="taskList" class="list-grid"></div>
       <div id="taskEmpty" class="empty-state">Nenhuma tarefa ativa no momento.</div>
     </section>
 
     <section class="card" id="historico">
       <h2 class="section-title">Histórico de intervenções</h2>
-      <p class="lead">Registros já confirmados, visíveis para todos os usuários autenticados.</p>
+      <p class="lead">Registros confirmados de mudança de decúbito e outras intervenções preventivas, visíveis para todos os usuários autenticados.</p>
       <div id="historyList" class="list-grid"></div>
       <div id="historyEmpty" class="empty-state">Ainda não há confirmações registradas.</div>
     </section>
 
     <section class="card" id="relatorio">
       <h2 class="section-title">Relatório final de turno</h2>
-      <p class="lead">Resumo da adesão do técnico às mudanças de decúbito após o disparo do alarme.</p>
+      <p class="lead">Resumo da adesão do técnico às mudanças de decúbito após o disparo do alarme, com identificação de pendências e atrasos.</p>
       <div id="reportSummary" class="report-grid"></div>
       <div id="reportDetails" class="list-grid"></div>
       <div id="reportEmpty" class="empty-state">Ainda não há dados suficientes para o turno selecionado.</div>
+      <div class="panel" style="margin-top:16px;">
+        <h3>Fechamento do turno</h3>
+        <div class="form-grid">
+          <div class="field"><label for="nurseName">Nome do enfermeiro responsável</label><input id="nurseName" type="text" placeholder="Ex.: Enf. Carla Lima" /></div>
+          <div class="field"><label for="closingSummary">Síntese do turno</label><textarea id="closingSummary" placeholder="Descreva pendências, pacientes prioritários e observações para a próxima equipe."></textarea></div>
+          <div class="inline-actions"><button class="btn" id="closeShiftBtn" type="button">Registrar fechamento do turno</button></div>
+        </div>
+      </div>
     </section>
 
     <section class="card" id="passagem">
       <h2 class="section-title">Passagem de plantão</h2>
-      <p class="lead">Resumo rápido para continuidade assistencial entre equipes.</p>
-      <div id="handoffBox" class="panel">
-        <p class="report-text">Aguardando dados do turno para gerar a passagem de plantão.</p>
-      </div>
+      <p class="lead">Resumo operacional automático para continuidade assistencial entre equipes.</p>
+      <div id="handoffBox" class="panel"><p class="report-text">Aguardando dados do turno para gerar a passagem de plantão.</p></div>
+    </section>
+
+    <section class="card" id="gestao">
+      <h2 class="section-title">Painel gerencial</h2>
+      <p class="lead">Indicadores resumidos por setor e por técnico responsável, úteis para coordenação de enfermagem e segurança do paciente.</p>
+      <div id="sectorMetrics" class="metrics-grid"></div>
+      <div id="techMetrics" class="metrics-grid"></div>
     </section>
   </main>
   <footer class="footer-note">© 2026 - Projeto Integrador</footer>
@@ -231,8 +270,10 @@
     const refreshReportButton = document.getElementById('refreshReport');
     const refreshDataButton = document.getElementById('refreshData');
     const clearFiltersButton = document.getElementById('clearFilters');
+    const closeShiftBtn = document.getElementById('closeShiftBtn');
 
     const authUser = document.getElementById('authUser');
+    const rolePill = document.getElementById('rolePill');
     const feedbackBox = document.getElementById('feedbackBox');
     const patientList = document.getElementById('patientList');
     const taskList = document.getElementById('taskList');
@@ -240,6 +281,8 @@
     const reportSummary = document.getElementById('reportSummary');
     const reportDetails = document.getElementById('reportDetails');
     const handoffBox = document.getElementById('handoffBox');
+    const sectorMetrics = document.getElementById('sectorMetrics');
+    const techMetrics = document.getElementById('techMetrics');
 
     const patientEmpty = document.getElementById('patientEmpty');
     const taskEmpty = document.getElementById('taskEmpty');
@@ -254,9 +297,13 @@
     const filterSector = document.getElementById('filterSector');
     const filterShift = document.getElementById('filterShift');
     const filterTech = document.getElementById('filterTech');
+    const searchBed = document.getElementById('searchBed');
     const reportShift = document.getElementById('reportShift');
+    const bodySite = document.getElementById('bodySite');
+    const nurseName = document.getElementById('nurseName');
+    const closingSummary = document.getElementById('closingSummary');
 
-    const state = { user: null, patients: [], tasks: [] };
+    const state = { user: null, patients: [], tasks: [], reports: [], role: 'enfermeiro' };
 
     function nowText(date = new Date()) {
       return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Sao_Paulo' }).format(date);
@@ -295,15 +342,29 @@
       return Date.now() - alarmMs > dueHours(task.frequency) * 60 * 60 * 1000;
     }
 
+    function countdownText(task) {
+      const alarmMs = new Date(task.alarm_at || task.created_at).getTime();
+      const dueMs = alarmMs + dueHours(task.frequency) * 60 * 60 * 1000;
+      const diff = dueMs - Date.now();
+      const abs = Math.abs(diff);
+      const hours = Math.floor(abs / 3600000);
+      const mins = Math.floor((abs % 3600000) / 60000);
+      if (diff >= 0) return `Prazo em ${hours}h ${mins}min`;
+      return `Atraso de ${hours}h ${mins}min`;
+    }
+
     function qrUrl(payload) {
       return `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(payload)}`;
     }
 
     function matchesFilters(item) {
+      const techName = (item.responsible_tech || '').toLowerCase();
+      const bed = (item.bed || '').toLowerCase();
       const sectorOk = filterSector.value === 'todos' || item.sector === filterSector.value;
       const shiftOk = filterShift.value === 'todos' || item.shift === filterShift.value;
-      const techOk = !filterTech.value.trim() || (item.responsible_tech || item.tech || '').toLowerCase().includes(filterTech.value.trim().toLowerCase());
-      return sectorOk && shiftOk && techOk;
+      const techOk = !filterTech.value.trim() || techName.includes(filterTech.value.trim().toLowerCase());
+      const bedOk = !searchBed.value.trim() || bed.includes(searchBed.value.trim().toLowerCase());
+      return sectorOk && shiftOk && techOk && bedOk;
     }
 
     function createPatientCard(patient) {
@@ -339,6 +400,7 @@
 
     function createTaskCard(task) {
       const badge = isOverdue(task) ? '<span class="status-chip status-overdue">Em atraso</span>' : '<span class="status-chip status-medium">Ativa</span>';
+      const qrPayload = task.qr_payload || `LPP Guard Pro|Leito:${task.bed}|Paciente:${task.patient_name}|Tecnico:${task.responsible_tech}|Conduta:${task.action}`;
       return `
         <article class="tile">
           <div class="tile-header">
@@ -352,11 +414,11 @@
             <span class="meta-pill">Técnico: ${task.responsible_tech}</span>
             <span class="meta-pill">Turno: ${task.shift}</span>
             <span class="meta-pill">Alarme: ${nowText(new Date(task.alarm_at || task.created_at))}</span>
-            <span class="meta-pill">Frequência: ${task.frequency}</span>
+            <span class="meta-pill">${countdownText(task)}</span>
           </div>
           <p style="margin-top:10px;"><b>Observação:</b> ${task.notes || 'Sem observações complementares.'}</p>
           <div class="qr-box">
-            <img src="${qrUrl(task.qr_payload || `LPP Guard Pro|Leito:${task.bed}|Paciente:${task.patient_name}|Tecnico:${task.responsible_tech}|Conduta:${task.action}`)}" alt="QR code do leito ${task.bed}" />
+            <img src="${qrUrl(qrPayload)}" alt="QR code do leito ${task.bed}" />
             <div>
               <p><b>Confirmação por QR code:</b> o técnico valida a mudança de decúbito pela leitura do código do leito.</p>
               <div class="inline-actions">
@@ -406,21 +468,23 @@
     }
 
     async function loadAll() {
-      const canUse = await ensureUser();
-      if (!canUse) return;
+      const ok = await ensureUser();
+      if (!ok) return;
 
-      const [{ data: patients, error: pErr }, { data: tasks, error: tErr }] = await Promise.all([
+      const [{ data: patients, error: pErr }, { data: tasks, error: tErr }, { data: reports, error: rErr }] = await Promise.all([
         supabase.from('lpp_patients').select('*').eq('active', true).order('created_at', { ascending: false }),
-        supabase.from('lpp_tasks').select('*').order('alarm_at', { ascending: false })
+        supabase.from('lpp_tasks').select('*').order('alarm_at', { ascending: false }),
+        supabase.from('lpp_shift_reports').select('*').order('created_at', { ascending: false }).limit(10)
       ]);
 
-      if (pErr || tErr) {
-        showFeedback('err', `Falha ao carregar dados compartilhados. ${pErr?.message || tErr?.message || ''}`);
+      if (pErr || tErr || rErr) {
+        showFeedback('err', `Falha ao carregar dados compartilhados. ${pErr?.message || tErr?.message || rErr?.message || ''}`);
         return;
       }
 
       state.patients = patients || [];
       state.tasks = tasks || [];
+      state.reports = reports || [];
       clearFeedback();
       render();
     }
@@ -432,45 +496,58 @@
       statOverdue.textContent = String(activeTasks.filter(isOverdue).length);
     }
 
+    function renderMetrics(filteredTasks) {
+      const bySector = {};
+      const byTech = {};
+      filteredTasks.forEach((item) => {
+        bySector[item.sector] ??= { total: 0, done: 0, overdue: 0 };
+        byTech[item.responsible_tech] ??= { total: 0, done: 0, overdue: 0 };
+        bySector[item.sector].total += 1;
+        byTech[item.responsible_tech].total += 1;
+        if (item.status === 'done') {
+          bySector[item.sector].done += 1;
+          byTech[item.responsible_tech].done += 1;
+        }
+        if (item.status === 'active' && isOverdue(item)) {
+          bySector[item.sector].overdue += 1;
+          byTech[item.responsible_tech].overdue += 1;
+        }
+      });
+
+      sectorMetrics.innerHTML = Object.entries(bySector).map(([sector, info]) => {
+        const adherence = info.total ? Math.round((info.done / info.total) * 100) : 0;
+        return `<article class="metric-card"><h4>${sector}</h4><p><b>Total:</b> ${info.total}</p><p><b>Concluídas:</b> ${info.done}</p><p><b>Em atraso:</b> ${info.overdue}</p><p><b>Adesão:</b> ${adherence}%</p></article>`;
+      }).join('') || '<div class="empty-state">Sem dados por setor.</div>';
+
+      techMetrics.innerHTML = Object.entries(byTech).map(([tech, info]) => {
+        const adherence = info.total ? Math.round((info.done / info.total) * 100) : 0;
+        return `<article class="metric-card"><h4>${tech}</h4><p><b>Total:</b> ${info.total}</p><p><b>Concluídas:</b> ${info.done}</p><p><b>Em atraso:</b> ${info.overdue}</p><p><b>Adesão:</b> ${adherence}%</p></article>`;
+      }).join('') || '<div class="empty-state">Sem dados por técnico.</div>';
+    }
+
     function renderReport(filteredTasks) {
       const shift = reportShift.value;
       const shiftTasks = filteredTasks.filter((item) => item.shift === shift);
       const active = shiftTasks.filter((item) => item.status === 'active');
       const done = shiftTasks.filter((item) => item.status === 'done');
-      const totalAlarms = shiftTasks.length;
-      const adherence = totalAlarms ? Math.round((done.length / totalAlarms) * 100) : 0;
+      const total = shiftTasks.length;
       const overdue = active.filter(isOverdue).length;
+      const adherence = total ? Math.round((done.length / total) * 100) : 0;
 
-      reportSummary.innerHTML = totalAlarms ? `
-        <div class="report-card"><h4>Alarmes disparados</h4><p>${totalAlarms} registro(s) no turno ${shift}.</p></div>
-        <div class="report-card"><h4>Trocas confirmadas</h4><p>${done.length} intervenção(ões) confirmadas.</p></div>
-        <div class="report-card"><h4>Pendências</h4><p>${active.length} tarefa(s) ainda ativas.</p></div>
-        <div class="report-card"><h4>Adesão</h4><p>${adherence}% de adesão ao plano preventivo.</p></div>
+      reportSummary.innerHTML = total ? `
+        <article class="report-card"><h4>Alarmes disparados</h4><p>${total} registro(s) no turno ${shift}.</p></article>
+        <article class="report-card"><h4>Confirmações</h4><p>${done.length} intervenção(ões) confirmadas.</p></article>
+        <article class="report-card"><h4>Pendências</h4><p>${active.length} tarefa(s) ainda ativas.</p></article>
+        <article class="report-card"><h4>Adesão</h4><p>${adherence}% de adesão ao plano preventivo.</p></article>
       ` : '';
 
       const details = [];
-      done.forEach((item) => details.push(`
-        <article class="tile">
-          <h4>${item.patient_name} - ${item.responsible_tech}</h4>
-          <p><b>Leito:</b> ${item.bed} | <b>Alarme:</b> ${nowText(new Date(item.alarm_at || item.created_at))}</p>
-          <p><b>Confirmação:</b> ${item.completed_at ? nowText(new Date(item.completed_at)) : '—'} | <b>Status:</b> ${item.was_late ? 'Atrasado' : 'No prazo'}</p>
-        </article>
-      `));
-      active.forEach((item) => details.push(`
-        <article class="tile">
-          <h4>${item.patient_name} - ${item.responsible_tech}</h4>
-          <p><b>Leito:</b> ${item.bed} | <b>Alarme:</b> ${nowText(new Date(item.alarm_at || item.created_at))}</p>
-          <p><b>Status:</b> ${isOverdue(item) ? 'Pendente em atraso' : 'Pendente dentro do prazo'}</p>
-        </article>
-      `));
-
+      done.forEach((item) => details.push(`<article class="tile"><h4>${item.patient_name} - ${item.responsible_tech}</h4><p><b>Leito:</b> ${item.bed} | <b>Alarme:</b> ${nowText(new Date(item.alarm_at || item.created_at))}</p><p><b>Confirmação:</b> ${item.completed_at ? nowText(new Date(item.completed_at)) : '—'} | <b>Status:</b> ${item.was_late ? 'Atrasado' : 'No prazo'}</p></article>`));
+      active.forEach((item) => details.push(`<article class="tile"><h4>${item.patient_name} - ${item.responsible_tech}</h4><p><b>Leito:</b> ${item.bed} | <b>Alarme:</b> ${nowText(new Date(item.alarm_at || item.created_at))}</p><p><b>Status:</b> ${isOverdue(item) ? 'Pendente em atraso' : 'Pendente dentro do prazo'}</p></article>`));
       reportDetails.innerHTML = details.join('');
-      reportEmpty.classList.toggle('hidden', totalAlarms > 0);
+      reportEmpty.classList.toggle('hidden', total > 0);
 
-      handoffBox.innerHTML = totalAlarms ? `
-        <h3>Resumo para passagem de plantão - ${shift}</h3>
-        <p class="report-text"><b>Confirmadas:</b> ${done.length} | <b>Pendentes:</b> ${active.length} | <b>Em atraso:</b> ${overdue}. Priorizar pacientes com tarefas pendentes ou em atraso e revisar técnica responsável antes da troca de turno.</p>
-      ` : '<p class="report-text">Sem dados para gerar passagem de plantão no turno selecionado.</p>';
+      handoffBox.innerHTML = total ? `<h3>Resumo para passagem de plantão - ${shift}</h3><p class="report-text"><b>Confirmadas:</b> ${done.length} | <b>Pendentes:</b> ${active.length} | <b>Em atraso:</b> ${overdue}. Priorizar pacientes com tarefas pendentes, revisar técnicos responsáveis e manter vigilância ampliada nos leitos críticos.</p>` : '<p class="report-text">Sem dados para gerar passagem de plantão no turno selecionado.</p>';
     }
 
     function render() {
@@ -481,7 +558,7 @@
 
       patientList.innerHTML = filteredPatients.map(createPatientCard).join('');
       taskList.innerHTML = activeTasks.map(createTaskCard).join('');
-      historyList.innerHTML = [...doneTasks].map(createHistoryCard).join('');
+      historyList.innerHTML = doneTasks.map(createHistoryCard).join('');
 
       patientEmpty.classList.toggle('hidden', filteredPatients.length > 0);
       taskEmpty.classList.toggle('hidden', activeTasks.length > 0);
@@ -489,6 +566,7 @@
 
       updateStats(activeTasks, doneTasks);
       renderReport(filteredTasks);
+      renderMetrics(filteredTasks);
       bindTaskButtons();
     }
 
@@ -553,6 +631,39 @@
       await loadAll();
     }
 
+    async function closeShift() {
+      const shift = reportShift.value;
+      const filteredTasks = state.tasks.filter(matchesFilters).filter((item) => item.shift === shift);
+      const active = filteredTasks.filter((item) => item.status === 'active');
+      const done = filteredTasks.filter((item) => item.status === 'done');
+      const overdue = active.filter(isOverdue).length;
+      const total = filteredTasks.length;
+      const adherence = total ? Math.round((done.length / total) * 100) : 0;
+
+      const payload = {
+        created_by: state.user.id,
+        shift,
+        sector: filterSector.value === 'todos' ? null : filterSector.value,
+        nurse_name: nurseName.value.trim() || state.user.email || 'Enfermeiro responsável',
+        summary: closingSummary.value.trim() || null,
+        adherence_percent: adherence,
+        total_alarms: total,
+        confirmed_count: done.length,
+        pending_count: active.length,
+        overdue_count: overdue
+      };
+
+      const { error } = await supabase.from('lpp_shift_reports').insert(payload);
+      if (error) {
+        showFeedback('err', `Não foi possível registrar o fechamento do turno: ${error.message}`);
+        return;
+      }
+      showFeedback('ok', 'Fechamento do turno registrado com sucesso.');
+      nurseName.value = '';
+      closingSummary.value = '';
+      await loadAll();
+    }
+
     function bindTaskButtons() {
       document.querySelectorAll('[data-complete-task]').forEach((button) => {
         button.onclick = () => completeTask(button.getAttribute('data-complete-task'));
@@ -611,18 +722,27 @@
       }
     });
 
-    [filterSector, filterShift, filterTech].forEach((el) => el.addEventListener('input', render));
+    document.querySelectorAll('[data-body-site]').forEach((button) => {
+      button.addEventListener('click', () => {
+        bodySite.value = button.getAttribute('data-body-site');
+      });
+    });
+
+    [filterSector, filterShift, filterTech, searchBed].forEach((el) => el.addEventListener('input', render));
     refreshReportButton.addEventListener('click', render);
     reportShift.addEventListener('change', render);
     refreshDataButton.addEventListener('click', loadAll);
+    closeShiftBtn.addEventListener('click', closeShift);
     clearFiltersButton.addEventListener('click', () => {
       filterSector.value = 'todos';
       filterShift.value = 'todos';
       filterTech.value = '';
+      searchBed.value = '';
       render();
     });
 
     supabase.auth.onAuthStateChange(() => loadAll());
+    setInterval(() => render(), 60000);
     loadAll();
   </script>
 </body>
