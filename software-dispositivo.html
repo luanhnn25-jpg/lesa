@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -109,7 +111,7 @@
       <div class="auth-user" id="authUser">Verificando sessão…</div>
       <div class="inline-actions">
         <span class="role-pill" id="rolePill">Perfil: enfermeiro</span>
-        <a class="btn-secondary" href="login.html?mode=login">Entrar</a>
+        <a class="btn-secondary" href="login.html?mode=login&go=software-dispositivo.html">Entrar</a>
         <button class="btn-small hidden" id="refreshData" type="button">Atualizar</button>
       </div>
     </div>
@@ -142,7 +144,6 @@
       <div class="stat-card"><div class="k">Confirmações</div><div class="v" id="statDone">0</div></div>
       <div class="stat-card"><div class="k">Atrasos</div><div class="v" id="statOverdue">0</div></div>
     </section>
-
     <section class="card" id="painel">
       <h2 class="section-title">Painel do enfermeiro</h2>
       <p class="lead">Cadastro clínico, programação preventiva e responsabilização do técnico de enfermagem por paciente.</p>
@@ -507,15 +508,24 @@
       `;
     }
 
+    async function waitForSession(maxAttempts = 4, delayMs = 700) {
+      for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+        const sess = await withTimeout(supabase.auth.getSession(), 4000);
+        const session = sess?.data?.session;
+        if (session?.user) return session;
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+      }
+      return null;
+    }
+
     async function ensureUser() {
       try {
-        const sess = await withTimeout(supabase.auth.getSession(), 2500);
-        const session = sess?.data?.session;
+        const session = await waitForSession();
         if (!session) {
           throw new Error('no-session');
         }
 
-        const userRes = await withTimeout(supabase.auth.getUser(), 3000);
+        const userRes = await withTimeout(supabase.auth.getUser(), 4000);
         state.user = userRes?.data?.user || null;
         if (!state.user) {
           throw new Error('no-user');
@@ -530,8 +540,8 @@
         authUser.innerHTML = 'Sessão não encontrada. Redirecionando para o login…';
         form.querySelectorAll('input, select, textarea, button').forEach((el) => el.disabled = true);
         setTimeout(() => {
-          window.location.href = 'login.html?mode=login';
-        }, 900);
+          window.location.href = 'login.html?mode=login&go=software-dispositivo.html';
+        }, 1200);
         return false;
       }
     }
