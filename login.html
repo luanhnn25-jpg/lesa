@@ -764,16 +764,6 @@
       btnPrimary.textContent = isLogin ? "Entrar" : "Criar conta";
     }
 
-    async function redirectIfSessionExists() {
-      try {
-        const session = await waitForLocalSession(2, 250);
-        if (session?.user) {
-          setMsg("Sessão já identificada. Verificando acesso premium...", "warn");
-          await checkPremiumAndRedirect();
-        }
-      } catch {}
-    }
-
     async function safeNetworkCheck() {
       try {
         const res = await fetch(`${SUPABASE_URL}/auth/v1/health`, {
@@ -1077,7 +1067,6 @@
     const initialMode = params.get("mode");
     setMode(initialMode === "signup" ? "signup" : "login");
     setMsg("Sistema pronto. Escolha entre login ou criação de conta.", "warn");
-    redirectIfSessionExists();
   </script>
 </body>
 </html>
