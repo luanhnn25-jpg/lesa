@@ -23,7 +23,6 @@
       --radius:24px;
       --primary:#2563eb;
       --primary2:#1d4ed8;
-      --primary3:#1e40af;
       --ok:#16a34a;
       --warn:#f59e0b;
       --bad:#dc2626;
@@ -311,13 +310,8 @@
       box-shadow:var(--shadow-soft);
     }
 
-    .btnWide.blue{
-      background:linear-gradient(180deg,#2563eb,#1d4ed8);
-    }
-
-    .btnWide.green{
-      background:linear-gradient(180deg,#22c55e,#16a34a);
-    }
+    .btnWide.blue{background:linear-gradient(180deg,#2563eb,#1d4ed8)}
+    .btnWide.green{background:linear-gradient(180deg,#22c55e,#16a34a)}
 
     .card{
       background:linear-gradient(180deg,#ffffff,#fbfdff);
@@ -444,9 +438,7 @@
       border-radius:12px;
     }
 
-    .pwBtn:hover{
-      background:rgba(37,99,235,.08);
-    }
+    .pwBtn:hover{background:rgba(37,99,235,.08)}
 
     .row{
       display:flex;
@@ -518,21 +510,9 @@
     }
 
     .msg.show{display:block}
-    .msg.ok{
-      background:rgba(22,163,74,.08);
-      border-color:rgba(22,163,74,.22);
-      color:#14532d;
-    }
-    .msg.warn{
-      background:rgba(245,158,11,.10);
-      border-color:rgba(245,158,11,.28);
-      color:#92400e;
-    }
-    .msg.bad{
-      background:rgba(220,38,38,.08);
-      border-color:rgba(220,38,38,.22);
-      color:#7f1d1d;
-    }
+    .msg.ok{background:rgba(22,163,74,.08);border-color:rgba(22,163,74,.22);color:#14532d}
+    .msg.warn{background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.28);color:#92400e}
+    .msg.bad{background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.22);color:#7f1d1d}
 
     .footer{
       margin-top:16px;
@@ -668,7 +648,7 @@
     const baseUrl = new URL("./", window.location.href);
     const CONFIRM_URL = new URL("confirm.html", baseUrl).href;
     const HOME_URL = new URL("index.html", baseUrl).href;
-    const DEFAULT_GO = "selecao-produtos.html";
+    const DEFAULT_GO = "software-dispositivo.html";
     const GO_IF_NOT_PREMIUM = HOME_URL;
     const WHATS_NUMBER = "5515988119989";
     const PIX_KEY = "28d39758-0fe0-47f1-9c7c-9cb6e032c5cf";
@@ -770,6 +750,17 @@
       passwordInput.setAttribute("autocomplete", isLogin ? "current-password" : "new-password");
       modeHint.innerHTML = `<span class="statusDot"></span>Modo: ${isLogin ? "Login" : "Criar conta"}`;
       btnPrimary.textContent = isLogin ? "Entrar" : "Criar conta";
+    }
+
+    async function redirectIfSessionExists() {
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error) return;
+        if (data?.session?.user) {
+          setMsg("Sessão já identificada. Verificando acesso premium...", "warn");
+          await checkPremiumAndRedirect();
+        }
+      } catch {}
     }
 
     async function safeNetworkCheck() {
@@ -1064,8 +1055,8 @@
 
     const initialMode = params.get("mode");
     setMode(initialMode === "signup" ? "signup" : "login");
-
     setMsg("Sistema pronto. Escolha entre login ou criação de conta.", "warn");
+    redirectIfSessionExists();
   </script>
 </body>
 </html>
