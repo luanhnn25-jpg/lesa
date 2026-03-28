@@ -658,11 +658,14 @@
       throw new Error("SUPABASE_URL ou SUPABASE_ANON_KEY não configurados.");
     }
 
+    const AUTH_STORAGE_KEY = "lpp-guard-pro-auth";
+
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
-        detectSessionInUrl: true
+        detectSessionInUrl: true,
+        storageKey: AUTH_STORAGE_KEY
       }
     });
 
@@ -693,6 +696,15 @@
       const go = localStorage.getItem("lpp_go_after_auth") || DEFAULT_GO;
       if (/^https?:\/\//i.test(go)) return go;
       return new URL(go.replace(/^\/+/, ""), baseUrl).href;
+    }
+
+    async function waitForLocalSession(maxAttempts = 6, delayMs = 500) {
+      for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+        const { data, error } = await supabase.auth.getSession();
+        if (!error && data?.session?.user) return data.session;
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+      }
+      return null;
     }
 
     function isValidEmail(email) {
@@ -754,9 +766,8 @@
 
     async function redirectIfSessionExists() {
       try {
-        const { data, error } = await supabase.auth.getSession();
-        if (error) return;
-        if (data?.session?.user) {
+        const session = await waitForLocalSession(2, 250);
+        if (session?.user) {
           setMsg("Sessão já identificada. Verificando acesso premium...", "warn");
           await checkPremiumAndRedirect();
         }
@@ -808,14 +819,16 @@
       setMsg("Login realizado. Verificando acesso premium...", "warn");
 
       try {
+        const session = await waitForLocalSession();
+        const sessionUser = session?.user || null;
         const { data: authData, error: authError } = await supabase.auth.getUser();
 
-        if (authError) {
+        if (authError && !sessionUser) {
           setMsg("Não foi possível identificar o usuário autenticado.\n" + authError.message, "bad");
           return;
         }
 
-        const user = authData?.user;
+        const user = authData?.user || sessionUser;
         if (!user?.id) {
           setMsg("Sessão não localizada. Faça login novamente.", "bad");
           return;
@@ -862,6 +875,14 @@
         if (error) {
           setBusy(false);
           setMsg(humanizeAuthError(error), "bad");
+          startCooldown(2500);
+          return;
+        }
+
+        const persistedSession = await waitForLocalSession();
+        if (!persistedSession?.user) {
+          setBusy(false);
+          setMsg("O login foi aceito, mas a sessão não ficou disponível localmente. Tente novamente.", "bad");
           startCooldown(2500);
           return;
         }
