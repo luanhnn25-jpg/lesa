@@ -111,7 +111,7 @@
       <div class="auth-user" id="authUser">Verificando sessão…</div>
       <div class="inline-actions">
         <span class="role-pill" id="rolePill">Perfil: enfermeiro</span>
-        <a class="btn-secondary" href="login.html?mode=login&go=software-dispositivo.html">Entrar</a>
+        <a class="btn-secondary" id="loginLink" href="login.html?mode=login&go=software-dispositivo.html">Entrar</a>
         <button class="btn-small hidden" id="refreshData" type="button">Atualizar</button>
       </div>
     </div>
@@ -302,6 +302,7 @@
     const seedDemoButton = document.getElementById('seedDemo');
     const refreshReportButton = document.getElementById('refreshReport');
     const refreshDataButton = document.getElementById('refreshData');
+    const loginLink = document.getElementById('loginLink');
     const clearFiltersButton = document.getElementById('clearFilters');
     const closeShiftBtn = document.getElementById('closeShiftBtn');
     const printReportBtn = document.getElementById('printReportBtn');
@@ -541,14 +542,14 @@
         authUser.innerHTML = `Usuário autenticado: <b>${state.user.email || 'Usuário'}</b>`;
         form.querySelectorAll('input, select, textarea, button').forEach((el) => el.disabled = false);
         refreshDataButton.classList.remove('hidden');
+        loginLink.classList.add('hidden');
         return true;
       } catch {
         state.user = null;
-        authUser.innerHTML = 'Sessão não encontrada. Redirecionando para o login…';
+        authUser.innerHTML = 'Sessão não encontrada. Faça login para acessar o sistema compartilhado.';
         form.querySelectorAll('input, select, textarea, button').forEach((el) => el.disabled = true);
-        setTimeout(() => {
-          window.location.href = 'login.html?mode=login&go=software-dispositivo.html';
-        }, 1200);
+        refreshDataButton.classList.add('hidden');
+        loginLink.classList.remove('hidden');
         return false;
       }
     }
@@ -881,7 +882,11 @@
       await addEvolution();
     });
 
-    supabase.auth.onAuthStateChange(() => loadAll());
+    supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        loadAll();
+      }
+    });
     setInterval(() => render(), 60000);
     loadAll();
   </script>
