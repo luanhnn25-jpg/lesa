@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -1301,6 +1302,7 @@
 
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+    const AUTH_STORAGE_KEY = "lpp-guard-pro-auth";
 
     function setLockTitle(txt){
       const el = document.getElementById("lockTitle");
@@ -1363,12 +1365,24 @@
           return;
         }
 
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: AUTH_STORAGE_KEY } });
 
-        setLockMsg("2/3) Lendo usuário logado…");
+        setLockMsg("2/3) Lendo sessão do usuário…");
+        const { data: sessionRes } = await supabaseClient.auth.getSession();
+        const session = sessionRes?.session;
+
+        if (!session?.user){
+          clearTimeout(hard);
+          setLockTitle("Login necessário");
+          setLockMsg("Sem sessão ativa.\nIndo para o login…");
+          setTimeout(() => window.location.replace("./login.html?mode=login"), 900);
+          return;
+        }
+
         const { data: userRes, error: userErr } = await supabaseClient.auth.getUser();
+        const activeUser = userRes?.user || session.user;
 
-        if (userErr || !userRes?.user){
+        if (userErr && !activeUser){
           clearTimeout(hard);
           setLockTitle("Login necessário");
           setLockMsg("Sem sessão ativa.\nIndo para o login…");
@@ -1377,12 +1391,12 @@
         }
 
         userPill.style.display = "flex";
-        userEmail.textContent = userRes.user.email || "Usuário";
+        userEmail.textContent = activeUser.email || "Usuário";
         userBadge.textContent = "Verificando…";
         userBadge.className = "badge free";
         userNote.textContent = "Verificando status premium…";
 
-        const uid = userRes.user.id;
+        const uid = activeUser.id;
 
         setLockMsg("3/3) Consultando status premium…");
         const { data, error } = await supabaseClient
@@ -1430,7 +1444,7 @@
     btnLogout?.addEventListener("click", async () => {
       try{
         if (!supabaseClient && window.supabase) {
-          supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: AUTH_STORAGE_KEY } });
         }
         await supabaseClient?.auth?.signOut?.();
       } finally {
