@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -1679,9 +1680,17 @@
 
     const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+    const AUTH_STORAGE_KEY = "lpp-guard-pro-auth";
     const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storageKey: AUTH_STORAGE_KEY
+      }
+    });
 
     const userBtn = document.getElementById("userBtn");
     const userDrop = document.getElementById("userDrop");
