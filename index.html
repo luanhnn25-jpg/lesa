@@ -1,4 +1,5 @@
 
+
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -109,6 +110,112 @@
       font-size:13px;
       cursor:pointer;
       box-shadow:0 10px 18px rgba(2,6,23,.06);
+    }
+
+    .lpp-pill-link{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+    }
+
+    .app-download{
+      background:
+        radial-gradient(circle at top right, rgba(11,91,211,.10), transparent 36%),
+        linear-gradient(180deg,#f8fbff,#ffffff);
+    }
+
+    .app-download-grid{
+      display:grid;
+      grid-template-columns:1.25fr .95fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .download-panel{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:18px;
+      box-shadow:var(--soft);
+    }
+
+    .download-kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border-radius:999px;
+      padding:7px 12px;
+      background:#dbeafe;
+      color:#0b3d91;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.2px;
+      margin-bottom:12px;
+    }
+
+    .download-title{
+      margin:0 0 10px 0;
+      color:#0b2b63;
+      font-size:28px;
+      line-height:1.15;
+    }
+
+    .download-copy{
+      color:#475569;
+      line-height:1.7;
+      margin:0 0 14px 0;
+    }
+
+    .download-steps{
+      margin:0;
+      padding-left:18px;
+      color:#334155;
+      line-height:1.7;
+    }
+
+    .download-steps li + li{margin-top:6px}
+
+    .download-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    .download-note{
+      margin-top:12px;
+      color:#64748b;
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    .download-metrics{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin-top:14px;
+    }
+
+    .download-metric{
+      border-radius:18px;
+      padding:14px;
+      background:#f8fbff;
+      border:1px solid #dbeafe;
+    }
+
+    .download-metric .k{
+      color:#64748b;
+      font-size:12px;
+      font-weight:800;
+      margin-bottom:6px;
+    }
+
+    .download-metric .v{
+      color:#0f172a;
+      font-size:16px;
+      font-weight:900;
+      line-height:1.35;
     }
 
     .lpp-nav{
@@ -671,6 +778,209 @@
       border:1px solid #dbeafe;
     }
 
+    .ai-assistant{
+      background:
+        radial-gradient(circle at top right, rgba(11,91,211,.10), transparent 30%),
+        linear-gradient(180deg,#f7fbff,#ffffff);
+    }
+
+    .ai-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+
+    .ai-head-copy p{
+      margin:8px 0 0;
+      color:var(--muted);
+      line-height:1.7;
+      font-size:14px;
+      max-width:72ch;
+    }
+
+    .ai-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:#e8f1ff;
+      color:#0b2b63;
+      font-weight:950;
+      font-size:12px;
+      border:1px solid #d7e6ff;
+      white-space:nowrap;
+    }
+
+    .ai-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .ai-controls,
+    .ai-chat{
+      border:1px solid var(--border);
+      border-radius:20px;
+      background:#fff;
+      box-shadow:var(--soft);
+      padding:18px;
+    }
+
+    .ai-controls label{
+      display:block;
+      margin:0 0 7px;
+      font-size:12px;
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .ai-select,
+    .ai-textarea{
+      width:100%;
+      border:1px solid #dbe6f4;
+      border-radius:16px;
+      background:#f8fbff;
+      padding:13px 14px;
+      font:inherit;
+      color:var(--text);
+      outline:none;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+    }
+
+    .ai-textarea{
+      resize:vertical;
+      min-height:140px;
+      line-height:1.7;
+    }
+
+    .ai-select:focus,
+    .ai-textarea:focus{
+      border-color:#93c5fd;
+      box-shadow:var(--ring);
+      background:#fff;
+    }
+
+    .ai-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .ai-quick{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      margin-top:12px;
+    }
+
+    .ai-chip{
+      border:1px solid #dbe6f4;
+      background:#fff;
+      color:#0f172a;
+      border-radius:16px;
+      padding:11px 12px;
+      text-align:left;
+      font-size:12px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .ai-chip:hover{
+      background:#eff6ff;
+      border-color:#bfdbfe;
+    }
+
+    .ai-actions{
+      margin-top:12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .ai-btn{
+      border:none;
+      cursor:pointer;
+      border-radius:16px;
+      padding:13px 18px;
+      font-weight:1000;
+      font-size:14px;
+      transition:transform .08s ease, filter .15s ease, box-shadow .15s ease;
+    }
+
+    .ai-btn:hover{
+      filter:brightness(1.02);
+      box-shadow:0 14px 28px rgba(2,6,23,.10);
+    }
+
+    .ai-btn:active{transform:translateY(1px)}
+    .ai-btn.primary{background:#0b5bd3;color:#fff}
+    .ai-btn.secondary{background:#e2e8f0;color:#0f172a}
+
+    .ai-status{
+      margin-top:10px;
+      color:#475569;
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .ai-feed{
+      display:grid;
+      gap:12px;
+      max-height:520px;
+      overflow:auto;
+      padding-right:4px;
+    }
+
+    .ai-bubble{
+      border-radius:18px;
+      border:1px solid var(--border);
+      padding:16px;
+      box-shadow:0 10px 24px rgba(2,6,23,.05);
+      background:#fff;
+    }
+
+    .ai-bubble.user{
+      background:#0b3d91;
+      border-color:rgba(11,61,145,.20);
+      color:#fff;
+    }
+
+    .ai-bubble h3{
+      margin:0 0 8px;
+      font-size:13px;
+      font-weight:1000;
+    }
+
+    .ai-bubble p{
+      margin:0;
+      white-space:pre-wrap;
+      line-height:1.75;
+      font-size:13px;
+    }
+
+    .ai-sources{
+      margin-top:12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .ai-sources a{
+      display:inline-flex;
+      align-items:center;
+      padding:7px 10px;
+      border-radius:999px;
+      text-decoration:none;
+      background:#eff6ff;
+      color:#1d4ed8;
+      font-weight:900;
+      font-size:12px;
+    }
+
     .source-list{
       margin:12px 0 0;
       padding-left:18px;
@@ -769,7 +1079,8 @@
     @media (max-width:980px){
       .hero-intro,
       .risk-section,
-      .info-grid{
+      .info-grid,
+      .app-download-grid{
         grid-template-columns:1fr;
       }
 
@@ -828,6 +1139,7 @@
       <p>Projeto Integrador com linguagem didática, base institucional e apoio para estudo em saúde.</p>
       <div class="header-actions">
         <button id="pwaInstallBtn" class="lpp-pill" style="display:none;">Instalar aplicativo</button>
+        <a class="lpp-pill lpp-pill-link" href="./lpp-livre-android.apk" download>Baixar APK Android</a>
       </div>
     </div>
   </header>
@@ -836,6 +1148,7 @@
     <div class="lpp-nav-inner">
       <div class="menu-shell">
         <div class="lpp-menu" id="menuLinks">
+          <a href="#aplicativo">Aplicativo</a>
           <a href="index.html" aria-current="page">Início</a>
           <a href="nosso-produto.html">Nosso Produto</a>
           <a href="software-dispositivo.html">software-dispositivo</a>
@@ -844,6 +1157,7 @@
           <a href="guia-simples.html">Guia Simples</a>
           <a href="selecao-produtos.html">Seleção de Produtos</a>
           <a href="avaliacao.html">Avaliação</a>
+          <a href="#ia-enfermagem">IA especialista</a>
           <a href="fontes.html">Fontes</a>
         </div>
       </div>
@@ -925,6 +1239,55 @@
           </div>
         </div>
       </aside>
+    </section>
+
+    <section class="lpp-card app-download" id="aplicativo">
+      <div class="app-download-grid">
+        <div class="download-panel">
+          <div class="download-kicker">Aplicativo Android em teste</div>
+          <h2 class="download-title">Baixar o aplicativo LPP Livre</h2>
+          <p class="download-copy">
+            O aplicativo Android do projeto ja pode ser baixado para avaliacao. Ele reune acompanhamento clinico,
+            estudo guiado, quiz, interacoes medicamentosas, materiais oficiais, IA educativa e integracao com o site.
+          </p>
+          <ol class="download-steps">
+            <li>Baixe o arquivo APK no celular Android.</li>
+            <li>Autorize a instalacao do arquivo, se o sistema solicitar.</li>
+            <li>Abra o app e teste cadastro, estudo, quiz e o site integrado.</li>
+            <li>Se preferir, consulte a pagina dedicada de instalacao com orientacoes resumidas.</li>
+          </ol>
+          <div class="download-actions">
+            <a class="lpp-pill lpp-pill-link" href="./lpp-livre-android.apk" download>Baixar APK Android</a>
+            <a class="lpp-pill lpp-pill-link" href="./download-app.html">Abrir pagina de instalacao</a>
+            <a class="lpp-pill lpp-pill-link" href="#ia-enfermagem">Abrir IA especialista</a>
+          </div>
+          <div class="download-note">
+            Observacao: o APK atual e de teste. O download foi preparado para instalacao manual em Android e para validacao do fluxo clinico e educativo.
+          </div>
+        </div>
+
+        <div class="download-panel">
+          <h3 class="lpp-title" style="margin-bottom:8px;">Visao rapida do pacote</h3>
+          <div class="download-metrics">
+            <div class="download-metric">
+              <div class="k">Arquivo</div>
+              <div class="v">APK Android de release</div>
+            </div>
+            <div class="download-metric">
+              <div class="k">Formato</div>
+              <div class="v">Instalacao manual</div>
+            </div>
+            <div class="download-metric">
+              <div class="k">Conteudo</div>
+              <div class="v">Quiz, IA, guias e acompanhamento</div>
+            </div>
+            <div class="download-metric">
+              <div class="k">Integracao</div>
+              <div class="v">Site embutido no app</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="lpp-card" id="conceito">
@@ -1071,6 +1434,65 @@
       </ul>
 
       <p class="lpp-text" style="margin-top:12px;">Consulta realizada em <span class="timestamp auto-timestamp">—</span>.</p>
+    </section>
+    <section class="lpp-card ai-assistant" id="ia-enfermagem">
+      <div class="ai-head">
+        <div class="ai-head-copy">
+          <h2 class="lpp-title">IA especialista em enfermagem, lesão por pressão e farmacologia</h2>
+          <p>
+            Assistente educativo dedicado a perguntas de enfermagem, prevenção, curativos, interações medicamentosas e
+            medicamentos usados em UBS, PA, hospital e UPA/UPH, sempre com foco em fontes oficiais e segurança clínica.
+          </p>
+        </div>
+        <div class="ai-badge">Fontes oficiais e linguagem segura</div>
+      </div>
+
+      <div class="ai-grid">
+        <div class="ai-controls">
+          <div class="ai-row">
+            <div>
+              <label for="aiRole">Perfil da resposta</label>
+              <select id="aiRole" class="ai-select">
+                <option value="paciente">Paciente</option>
+                <option value="cuidador">Cuidador</option>
+                <option value="enfermagem" selected>Enfermagem</option>
+                <option value="profissional">Profissional de saúde</option>
+              </select>
+            </div>
+            <div>
+              <label for="aiScope">Foco principal</label>
+              <select id="aiScope" class="ai-select">
+                <option value="lesao">Lesão por pressão</option>
+                <option value="interacoes">Interações medicamentosas</option>
+                <option value="curativos">Curativos e coberturas</option>
+                <option value="enfermagem" selected>Perguntas de enfermagem</option>
+                <option value="urgencia">UBS, PA, UPA/UPH e hospital</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="ai-quick">
+            <button class="ai-chip" type="button" data-ai-question="Quais sinais indicam piora da lesão por pressão e necessidade de avaliação rápida?">Sinais de piora da lesão</button>
+            <button class="ai-chip" type="button" data-ai-question="Explique por que varfarina e ibuprofeno não devem ser misturados e quais são os riscos.">Varfarina com ibuprofeno</button>
+            <button class="ai-chip" type="button" data-ai-question="Quais medicamentos e vias de administração aparecem com mais frequência em UBS, PA, UPA e hospital para estudo de enfermagem?">Medicamentos por cenário</button>
+            <button class="ai-chip" type="button" data-ai-question="Explique a diferença entre creme barreira, hidrogel, colagenase e sulfadiazina de prata.">Pomadas, gel e coberturas</button>
+          </div>
+
+          <label for="aiQuestion" style="margin-top:14px;">Pergunta clínica ou educativa</label>
+          <textarea id="aiQuestion" class="ai-textarea" placeholder="Ex.: Ceftriaxona pode ser misturada com cálcio? Explique o motivo, o risco, a via e o que acontece."></textarea>
+
+          <div class="ai-actions">
+            <button class="ai-btn primary" id="btnAiAsk" type="button">Perguntar à IA</button>
+            <button class="ai-btn secondary" id="btnAiClear" type="button">Limpar conversa</button>
+          </div>
+
+          <div class="ai-status" id="aiStatus">Pronto para responder com base educativa especializada e foco em enfermagem.</div>
+        </div>
+
+        <div class="ai-chat">
+          <div class="ai-feed" id="aiFeed" aria-live="polite"></div>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -1366,6 +1788,505 @@
     }).format(new Date()) + ' (America/Sao_Paulo)';
 
     document.querySelectorAll('.auto-timestamp').forEach(el => el.textContent = stamp);
+  </script>
+  <script>
+    (function(){
+      const aiFeed = document.getElementById('aiFeed');
+      const aiStatus = document.getElementById('aiStatus');
+      const aiQuestion = document.getElementById('aiQuestion');
+      const aiRole = document.getElementById('aiRole');
+      const aiScope = document.getElementById('aiScope');
+      const btnAiAsk = document.getElementById('btnAiAsk');
+      const btnAiClear = document.getElementById('btnAiClear');
+      const quickButtons = Array.from(document.querySelectorAll('[data-ai-question]'));
+
+      if(!aiFeed || !aiStatus || !aiQuestion || !aiRole || !aiScope || !btnAiAsk || !btnAiClear) return;
+
+      const curatedKnowledgeBase = [
+        {
+          scope:'lesao',
+          keywords:['lesão','lesao','odor','febre','secreção','secrecao','dor','piora','necrose'],
+          title:'Sinais de alerta em lesão por pressão',
+          answer:'Sinais que exigem avaliação clínica mais rápida incluem dor crescente, odor intenso, aumento de exsudato, febre, escurecimento tecidual, ampliação da área da lesão e piora do estado geral. Esses achados podem indicar infecção, progressão da lesão ou necessidade de revisão do plano de cuidado.',
+          rationale:'A piora do quadro indica que o manejo atual pode estar insuficiente ou que há complicações locais e sistêmicas.',
+          risks:'Risco de progressão para lesão mais profunda, infecção, dor persistente, atraso de cicatrização e necessidade de internação.',
+          sources:[
+            { label:'WHO', url:'https://iris.who.int/handle/10665/255507' },
+            { label:'ANVISA', url:'https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/notas-tecnicas/notas-tecnicas-vigentes/nota-tecnica-gvims-ggtes-anvisa-no-05-2023-praticas-de-seguranca-do-paciente-em-servicos-de-saude-prevencao-de-lesao-por-pressao/view' }
+          ]
+        },
+        {
+          scope:'interacoes',
+          keywords:['varfarina','ibuprofeno','aine','naproxeno','sangramento'],
+          title:'Varfarina com ibuprofeno ou outros AINEs',
+          answer:'Essa combinação geralmente não deve ser feita sem avaliação profissional. A varfarina reduz a coagulação e o ibuprofeno aumenta o risco de sangramento, especialmente gastrointestinal.',
+          rationale:'Os mecanismos se somam: anticoagulação mais agressão à mucosa e interferência na hemostasia.',
+          risks:'Sangramento digestivo, urinário, gengival, hematomas extensos e eventos hemorrágicos relevantes.',
+          sources:[
+            { label:'MedlinePlus Varfarina', url:'https://medlineplus.gov/druginfo/meds/a682277.html' }
+          ]
+        },
+        {
+          scope:'interacoes',
+          keywords:['ceftriaxona','cálcio','calcio','neonato','precipitado','iv'],
+          title:'Ceftriaxona com cálcio intravenoso',
+          answer:'Em neonatos essa associação é especialmente perigosa. A ceftriaxona pode formar precipitados com soluções contendo cálcio, tornando a combinação inadequada em cenários específicos.',
+          rationale:'O problema é físico-químico, com formação de precipitados insolúveis.',
+          risks:'Complicações graves, especialmente em recém-nascidos, com risco de eventos potencialmente fatais.',
+          sources:[
+            { label:'DailyMed', url:'https://dailymed.nlm.nih.gov/dailymed/' }
+          ]
+        },
+        {
+          scope:'interacoes',
+          keywords:['levotiroxina','cálcio','calcio','ferro','absorção','absorcao'],
+          title:'Levotiroxina com cálcio ou ferro',
+          answer:'A associação próxima no horário tende a ser inadequada porque cálcio e ferro reduzem a absorção intestinal da levotiroxina.',
+          rationale:'O efeito principal é farmacocinético, com redução da biodisponibilidade do hormônio.',
+          risks:'Controle inadequado do hipotireoidismo, sintomas persistentes e falsa impressão de necessidade maior de dose.',
+          sources:[
+            { label:'MedlinePlus Levothyroxine', url:'https://medlineplus.gov/druginfo/meds/a682461.html' }
+          ]
+        },
+        {
+          scope:'curativos',
+          keywords:['colagenase','prata','iodo','curativo','enzimática','enzimatica'],
+          title:'Colagenase com prata, iodo ou metais pesados',
+          answer:'Misturar colagenase com alguns agentes contendo prata ou iodo pode prejudicar a atividade enzimática. Em geral, isso não deve ser feito sem protocolo claro.',
+          rationale:'A enzima pode ser inativada ou ter sua eficiência reduzida por interação química.',
+          risks:'Debridamento menos eficaz, atraso de cicatrização e interpretação errada da resposta clínica.',
+          sources:[
+            { label:'DailyMed Collagenase', url:'https://dailymed.nlm.nih.gov/dailymed/' }
+          ]
+        },
+        {
+          scope:'curativos',
+          keywords:['hidrogel','barreira','creme','colagenase','sulfadiazina','prata'],
+          title:'Diferença entre pomadas, gel e coberturas',
+          answer:'Creme barreira protege pele exposta à umidade. Hidrogel é lembrado para tecido ressecado. Colagenase se relaciona ao debridamento enzimático. Sulfadiazina de prata é um antimicrobiano tópico de uso selecionado.',
+          rationale:'Cada produto responde a um objetivo terapêutico diferente: proteção cutânea, hidratação, debridamento ou ação antimicrobiana.',
+          risks:'Escolha inadequada pode atrasar cicatrização, irritar tecidos e mascarar piora clínica.',
+          sources:[
+            { label:'MedlinePlus', url:'https://medlineplus.gov/' },
+            { label:'DailyMed', url:'https://dailymed.nlm.nih.gov/dailymed/' }
+          ]
+        },
+        {
+          scope:'enfermagem',
+          keywords:['ubs','upa','uph','pa','hospital','vias','via','administração','administracao','diluição','diluicao'],
+          title:'Estudo de enfermagem por cenário assistencial',
+          answer:'Na prática de enfermagem, costumam aparecer com frequência analgésicos, antitérmicos, antieméticos, antibióticos, diuréticos, anticoagulantes, insulinas e coberturas tópicas. As vias mais comuns para estudo são oral, intravenosa, intramuscular, subcutânea e tópica.',
+          rationale:'A segurança depende de cenário assistencial, via correta, compatibilidade, preparo, diluição, tempo de administração e monitorização.',
+          risks:'Erros de via, diluição inadequada, incompatibilidade, hipoglicemia, sangramento, nefrotoxicidade e eventos adversos evitáveis.',
+          sources:[
+            { label:'MedlinePlus', url:'https://medlineplus.gov/' },
+            { label:'DailyMed', url:'https://dailymed.nlm.nih.gov/dailymed/' },
+            { label:'ANVISA', url:'https://www.gov.br/anvisa/' }
+          ]
+        }
+      ];
+
+      function setStatus(text){
+        aiStatus.textContent = text;
+      }
+
+      function sourceLinks(sources){
+        return `
+          <div class="ai-sources">
+            ${sources.map((source) => `<a href="${source.url}" target="_blank" rel="noopener noreferrer">${source.label}</a>`).join('')}
+          </div>
+        `;
+      }
+
+      function appendBubble(role, title, body, sources = []){
+        const article = document.createElement('article');
+        article.className = `ai-bubble ${role}`;
+        article.innerHTML = `
+          <h3>${title}</h3>
+          <p>${body}</p>
+          ${role === 'assistant' && sources.length ? sourceLinks(sources) : ''}
+        `;
+        aiFeed.prepend(article);
+      }
+
+      function scoreEntry(question, scope, role, entry){
+        const haystack = `${question} ${scope} ${role}`.toLowerCase();
+        return entry.keywords.reduce((total, keyword) => total + (haystack.includes(keyword) ? 2 : 0), entry.scope === scope ? 1 : 0);
+      }
+
+      function localReply(question, scope, role){
+        const ranked = curatedKnowledgeBase
+          .map((entry) => ({ entry, score: scoreEntry(question, scope, role, entry) }))
+          .sort((a, b) => b.score - a.score);
+
+        const best = ranked[0] && ranked[0].score > 0 ? ranked[0].entry : null;
+        if(!best){
+          return {
+            title:'Triagem educativa especializada',
+            body:
+              `Perfil: ${role}.\n\nNão localizei uma resposta específica no núcleo curado para essa pergunta.\n\nPosso aprofundar em prevenção, sinais de alerta, curativos, interações medicamentosas, vias de administração, preparo, diluição e riscos frequentes em UBS, PA, UPA/UPH e hospital.\n\nObservação: a resposta é educativa e não substitui avaliação clínica individual.`,
+            sources:[
+              { label:'WHO', url:'https://iris.who.int/handle/10665/255507' },
+              { label:'MedlinePlus', url:'https://medlineplus.gov/' }
+            ]
+          };
+        }
+
+        return {
+          title: best.title,
+          body:
+            `Perfil: ${role}.\n\nResumo objetivo:\n${best.answer}\n\nPor que isso importa:\n${best.rationale}\n\nRiscos principais:\n${best.risks}\n\nConduta educativa:\nUsar esta resposta para estudo, revisão de segurança e apoio à decisão prudente, sem substituir prescrição individual ou avaliação presencial quando houver risco clínico.`,
+          sources: best.sources
+        };
+      }
+
+      async function askRemote(question, scope, role){
+        const endpoint = 'https://owpswekkfaleauwjmahc.supabase.co/functions/v1/lpp-especialista';
+        const response = await fetch(endpoint, {
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'apikey':'sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq',
+            'Authorization':'Bearer sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq'
+          },
+          body: JSON.stringify({ question, scope, role })
+        });
+        if(!response.ok) throw new Error('assistente remoto indisponível');
+        return response.json();
+      }
+
+      async function submitQuestion(){
+        const question = aiQuestion.value.trim();
+        const scope = aiScope.value;
+        const role = aiRole.value;
+
+        if(!question){
+          setStatus('Escreva uma pergunta clínica ou educativa.');
+          return;
+        }
+
+        appendBubble('user', 'Sua pergunta', question);
+        aiQuestion.value = '';
+        btnAiAsk.disabled = true;
+        setStatus('A IA está analisando sua pergunta...');
+
+        try{
+          const remote = await askRemote(question, scope, role).catch(() => null);
+          if(remote && remote.answer){
+            appendBubble('assistant', remote.title || 'IA especialista', remote.answer, Array.isArray(remote.sources) ? remote.sources : []);
+            setStatus('Resposta gerada pela IA especialista remota.');
+          }else{
+            const local = localReply(question, scope, role);
+            appendBubble('assistant', local.title, local.body, local.sources);
+            setStatus('Resposta gerada pelo núcleo local curado.');
+          }
+        }catch(error){
+          const local = localReply(question, scope, role);
+          appendBubble('assistant', local.title, local.body, local.sources);
+          setStatus('A função remota não respondeu. Foi usado o núcleo local curado.');
+          console.error(error);
+        }finally{
+          btnAiAsk.disabled = false;
+        }
+      }
+
+      btnAiAsk.addEventListener('click', submitQuestion);
+      btnAiClear.addEventListener('click', () => {
+        aiFeed.innerHTML = '';
+        setStatus('Conversa limpa. Pronto para nova pergunta.');
+      });
+
+      aiQuestion.addEventListener('keydown', (event) => {
+        if(event.key === 'Enter' && (event.ctrlKey || event.metaKey)){
+          submitQuestion();
+        }
+      });
+
+      quickButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          aiQuestion.value = button.dataset.aiQuestion || '';
+          submitQuestion();
+        });
+      });
+
+      appendBubble(
+        'assistant',
+        'Assistente especialista em enfermagem',
+        'Posso responder sobre lesão por pressão, sinais de alerta, curativos, coberturas, medicamentos usados em UBS, PA, UPA/UPH e hospital, vias de administração e interações medicamentosas com foco em segurança clínica e fontes oficiais.',
+        [
+          { label:'WHO', url:'https://iris.who.int/handle/10665/255507' },
+          { label:'ANVISA', url:'https://www.gov.br/anvisa/' },
+          { label:'MedlinePlus', url:'https://medlineplus.gov/' },
+          { label:'DailyMed', url:'https://dailymed.nlm.nih.gov/dailymed/' }
+        ]
+      );
+    })();
+  </script>
+  <script>
+    (function(){
+      const aiFeed = document.getElementById('aiFeed');
+      const aiStatus = document.getElementById('aiStatus');
+      const aiQuestion = document.getElementById('aiQuestion');
+      const aiRole = document.getElementById('aiRole');
+      const aiScope = document.getElementById('aiScope');
+      const oldAsk = document.getElementById('btnAiAsk');
+      const oldClear = document.getElementById('btnAiClear');
+      const quickButtons = Array.from(document.querySelectorAll('[data-ai-question]'));
+
+      if(!aiFeed || !aiStatus || !aiQuestion || !aiRole || !aiScope || !oldAsk || !oldClear) return;
+
+      const btnAiAsk = oldAsk.cloneNode(true);
+      const btnAiClear = oldClear.cloneNode(true);
+      oldAsk.replaceWith(btnAiAsk);
+      oldClear.replaceWith(btnAiClear);
+
+      const curatedKnowledgeBase = [
+        {
+          scope:'lesao',
+          keywords:['lesao','odor','febre','secrecao','dor','piora','necrose','exsudato','infectada'],
+          title:'Sinais de alerta em lesao por pressao',
+          answer:'Quando a lesao apresenta dor crescente, odor forte, aumento de exsudato, febre, escurecimento tecidual, ampliacao da area ou piora do estado geral, a leitura mais prudente e de agravamento clinico.',
+          rationale:'Esses achados podem indicar infeccao, progressao do dano tecidual, sobrecarga de umidade, cobertura inadequada ou necessidade de reavaliacao do plano de cuidado.',
+          risks:'Progressao para lesoes mais profundas, infeccao local, atraso de cicatrizacao, dor persistente e possibilidade de internacao.',
+          practical:'Na pratica, vale revisar alivio de pressao, controle de umidade, pele ao redor, sinais sistemicos e necessidade de acionar equipe medica ou estomaterapia.',
+          sources:[
+            { label:'WHO', url:'https://iris.who.int/handle/10665/255507' },
+            { label:'ANVISA', url:'https://www.gov.br/anvisa/' }
+          ]
+        },
+        {
+          scope:'interacoes',
+          keywords:['varfarina','ibuprofeno','aine','naproxeno','sangramento','anticoagulante'],
+          title:'Varfarina com ibuprofeno ou outros AINEs',
+          answer:'Essa associacao merece cautela elevada. A varfarina atua como anticoagulante e o ibuprofeno pode aumentar o risco de sangramento, especialmente gastrointestinal.',
+          rationale:'O risco cresce porque os mecanismos se somam: anticoagulacao mais agressao de mucosa e efeito sobre hemostasia.',
+          risks:'Sangramento digestivo, urinario, gengival, hematomas extensos e eventos hemorragicos clinicamente relevantes.',
+          practical:'Quando a duvida e analgesia em paciente anticoagulado, o estudo precisa considerar alternativa terapeutica, historico de sangramento e avaliacao profissional.',
+          sources:[
+            { label:'MedlinePlus Varfarina', url:'https://medlineplus.gov/druginfo/meds/a682277.html' }
+          ]
+        },
+        {
+          scope:'interacoes',
+          keywords:['ceftriaxona','calcio','neonato','precipitado','iv','intravenoso'],
+          title:'Ceftriaxona com calcio intravenoso',
+          answer:'Em neonatos e contextos especificos, essa associacao e considerada de alto risco porque pode ocorrer formacao de precipitados quando a ceftriaxona entra em contato com solucoes contendo calcio por via intravenosa.',
+          rationale:'Trata-se de incompatibilidade fisico-quimica, e nao apenas de uma interacao farmacologica comum.',
+          risks:'Obstrucao por precipitados e eventos graves, especialmente em recem-nascidos.',
+          practical:'Este e um exemplo classico de incompatibilidade que precisa ser lembrada em preparo, administracao e checagem de seguranca.',
+          sources:[
+            { label:'DailyMed', url:'https://dailymed.nlm.nih.gov/dailymed/' }
+          ]
+        },
+        {
+          scope:'interacoes',
+          keywords:['levotiroxina','calcio','ferro','absorcao','tireoide','hipotireoidismo'],
+          title:'Levotiroxina com calcio ou ferro',
+          answer:'A proximidade no horario entre levotiroxina, calcio e ferro pode prejudicar a absorcao intestinal do hormonio.',
+          rationale:'E uma interacao farmacocinetica, na qual a biodisponibilidade da levotiroxina cai quando a administracao ocorre em intervalo inadequado.',
+          risks:'Controle insatisfatorio do hipotireoidismo, manutencao de sintomas e exames alterados.',
+          practical:'Na educacao em saude, vale reforcar separacao de horarios e revisao de suplementos ou antiacidos em uso.',
+          sources:[
+            { label:'MedlinePlus Levothyroxine', url:'https://medlineplus.gov/druginfo/meds/a682461.html' }
+          ]
+        },
+        {
+          scope:'curativos',
+          keywords:['colagenase','prata','iodo','curativo','enzimatica','debridamento'],
+          title:'Colagenase com prata, iodo ou metais pesados',
+          answer:'Misturar colagenase com alguns agentes contendo prata ou iodo pode reduzir ou inativar a atividade enzimatica.',
+          rationale:'A enzima depende de integridade funcional para atuar no leito da ferida, e certos agentes podem interferir nesse processo.',
+          risks:'Debridamento menos eficaz, demora na limpeza do leito e atraso de cicatrizacao.',
+          practical:'Uma pergunta util para estudo e: qual e o objetivo do produto, proteger, hidratar, desbridar ou controlar biocarga?',
+          sources:[
+            { label:'DailyMed Collagenase', url:'https://dailymed.nlm.nih.gov/dailymed/' }
+          ]
+        },
+        {
+          scope:'curativos',
+          keywords:['hidrogel','barreira','creme','colagenase','sulfadiazina','prata','espuma','pomada'],
+          title:'Diferenca entre pomadas, gel e coberturas',
+          answer:'Creme barreira costuma ser lembrado para pele exposta a umidade. Hidrogel se relaciona a tecido ressecado e equilibrio umido. Colagenase se relaciona ao debridamento enzimatico. Sulfadiazina de prata e um antimicrobiano topico de uso selecionado. Cobertura de espuma costuma ser discutida em protecao e absorcao.',
+          rationale:'Cada recurso responde a um objetivo clinico diferente: proteger, hidratar, desbridar, reduzir biocarga ou absorver exsudato.',
+          risks:'Escolha inadequada pode irritar tecidos, piorar maceracao, atrasar cicatrizacao ou mascarar necessidade de reavaliacao.',
+          practical:'A pergunta central costuma ser: qual e o objetivo do cuidado hoje, proteger, hidratar, absorver, desbridar ou controlar sinais infecciosos?',
+          sources:[
+            { label:'MedlinePlus', url:'https://medlineplus.gov/' },
+            { label:'DailyMed', url:'https://dailymed.nlm.nih.gov/dailymed/' }
+          ]
+        },
+        {
+          scope:'enfermagem',
+          keywords:['ubs','upa','uph','pa','hospital','vias','via','administracao','diluicao','diluir','enfermagem'],
+          title:'Estudo de enfermagem por cenario assistencial',
+          answer:'Na pratica de enfermagem em UBS, PA, UPA e hospital, aparecem com frequencia analgesicos, antitermicos, antiemeticos, antibioticos, diureticos, anticoagulantes, insulinas e terapias topicas.',
+          rationale:'O estudo mais seguro nao se limita ao nome do medicamento: inclui via, diluente, compatibilidade, tempo de administracao, monitorizacao e reacoes adversas.',
+          risks:'Erros de via, diluicao inadequada, incompatibilidade, hipoglicemia, sangramento, hipotensao e nefrotoxicidade.',
+          practical:'Uma boa estrategia de estudo e sempre revisar: para que serve, qual a via, o que nao deve ser misturado, qual risco principal e o que precisa ser monitorado.',
+          sources:[
+            { label:'MedlinePlus', url:'https://medlineplus.gov/' },
+            { label:'DailyMed', url:'https://dailymed.nlm.nih.gov/dailymed/' },
+            { label:'ANVISA', url:'https://www.gov.br/anvisa/' }
+          ]
+        },
+        {
+          scope:'enfermagem',
+          keywords:['diluir','diluente','soro fisiologico','agua destilada','compatibilidade','misturar','equipo'],
+          title:'Diluicao, diluente e compatibilidade',
+          answer:'Perguntas sobre diluicao precisam ser tratadas com muita prudencia. Em ambiente assistencial, nao basta saber se um farmaco pode ser diluido: e preciso saber em qual diluente, em que volume, em qual tempo de infusao e se existe incompatibilidade com outras medicacoes na mesma via.',
+          rationale:'A seguranca depende de estabilidade, compatibilidade fisico-quimica, concentracao final e risco de irritacao tecidual ou perda de eficacia.',
+          risks:'Precipitado, degradacao do farmaco, irritacao venosa, extravasamento, subdose, superdose e eventos adversos por preparo inadequado.',
+          practical:'Para estudo, o melhor caminho e sempre confirmar em fonte oficial do medicamento e protocolo institucional antes de reproduzir qualquer preparo.',
+          sources:[
+            { label:'DailyMed', url:'https://dailymed.nlm.nih.gov/dailymed/' },
+            { label:'ANVISA', url:'https://www.gov.br/anvisa/' }
+          ]
+        }
+      ];
+
+      function setStatus(text){
+        aiStatus.textContent = text;
+      }
+
+      function sourceLinks(sources){
+        if(!sources.length) return '';
+        return `<div class="ai-sources">${sources.map((source) => `<a href="${source.url}" target="_blank" rel="noopener noreferrer">${source.label}</a>`).join('')}</div>`;
+      }
+
+      function formatBody(text){
+        return String(text)
+          .split('\n')
+          .filter(Boolean)
+          .map((line) => `<p>${line}</p>`)
+          .join('');
+      }
+
+      function appendBubble(role, title, body, sources = []){
+        const article = document.createElement('article');
+        article.className = `ai-bubble ${role}`;
+        article.innerHTML = `
+          <h3>${title}</h3>
+          <div class="ai-rich-body">${formatBody(body)}</div>
+          ${role === 'assistant' && sources.length ? sourceLinks(sources) : ''}
+        `;
+        aiFeed.prepend(article);
+      }
+
+      function scoreEntry(question, scope, role, entry){
+        const haystack = `${question} ${scope} ${role}`.toLowerCase();
+        return entry.keywords.reduce((total, keyword) => total + (haystack.includes(keyword) ? 2 : 0), entry.scope === scope ? 1 : 0);
+      }
+
+      function localReply(question, scope, role){
+        const ranked = curatedKnowledgeBase
+          .map((entry) => ({ entry, score: scoreEntry(question, scope, role, entry) }))
+          .sort((a, b) => b.score - a.score);
+
+        const best = ranked[0] && ranked[0].score > 0 ? ranked[0].entry : null;
+        if(!best){
+          return {
+            title:'Triagem educativa especializada',
+            body:`Perfil selecionado: ${role}.\nNao encontrei uma resposta local totalmente especifica para essa pergunta.\nPosso aprofundar prevencao, sinais de alerta, curativos, interacoes medicamentosas, vias de administracao, preparo, diluicao e riscos frequentes em UBS, PA, UPA e hospital.\nSe quiser uma resposta melhor, tente perguntar de forma direta: por que esse medicamento nao pode ser misturado, qual a diferenca entre hidrogel e creme barreira, quais sinais indicam piora da lesao.\nFechamento de seguranca: esta resposta tem carater educativo e nao substitui avaliacao clinica individual ou validacao institucional de preparo.`,
+            sources:[
+              { label:'WHO', url:'https://iris.who.int/handle/10665/255507' },
+              { label:'MedlinePlus', url:'https://medlineplus.gov/' },
+              { label:'DailyMed', url:'https://dailymed.nlm.nih.gov/dailymed/' }
+            ]
+          };
+        }
+
+        return {
+          title: best.title,
+          body:`Perfil selecionado: ${role}.\nResumo clinico: ${best.answer}\nPor que isso importa na pratica: ${best.rationale}\nO que merece mais atencao: ${best.risks}\nLeitura educativa para estudo e assistencia: ${best.practical}\nFechamento de seguranca: use esta resposta como apoio educativo, sem substituir prescricao individual, protocolo institucional ou avaliacao presencial quando houver risco clinico.`,
+          sources: best.sources
+        };
+      }
+
+      async function askRemote(question, scope, role){
+        const endpoint = 'https://owpswekkfaleauwjmahc.supabase.co/functions/v1/lpp-especialista';
+        const response = await fetch(endpoint, {
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'apikey':'sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq',
+            'Authorization':'Bearer sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq'
+          },
+          body: JSON.stringify({ question, scope, role })
+        });
+        if(!response.ok) throw new Error('assistente remoto indisponivel');
+        return response.json();
+      }
+
+      async function submitQuestion(){
+        const question = aiQuestion.value.trim();
+        const scope = aiScope.value;
+        const role = aiRole.value;
+
+        if(!question){
+          setStatus('Escreva uma pergunta clinica, educativa ou farmacologica para a IA.');
+          return;
+        }
+
+        appendBubble('user', 'Sua pergunta', question);
+        aiQuestion.value = '';
+        btnAiAsk.disabled = true;
+        setStatus('A IA esta lendo sua pergunta e organizando uma resposta mais completa...');
+
+        try{
+          const remote = await askRemote(question, scope, role).catch(() => null);
+          if(remote && remote.answer){
+            appendBubble('assistant', remote.title || 'IA especialista', remote.answer, Array.isArray(remote.sources) ? remote.sources : []);
+            setStatus('Resposta gerada pela IA especialista remota com base orientativa.');
+          }else{
+            const local = localReply(question, scope, role);
+            appendBubble('assistant', local.title, local.body, local.sources);
+            setStatus('Resposta gerada pelo nucleo local curado do site.');
+          }
+        }catch(error){
+          const local = localReply(question, scope, role);
+          appendBubble('assistant', local.title, local.body, local.sources);
+          setStatus('A funcao remota nao respondeu. O site usou a base curada local como apoio.');
+          console.error(error);
+        }finally{
+          btnAiAsk.disabled = false;
+        }
+      }
+
+      btnAiAsk.addEventListener('click', submitQuestion);
+      btnAiClear.addEventListener('click', () => {
+        aiFeed.innerHTML = '';
+        setStatus('Conversa limpa. Pronto para uma nova pergunta mais detalhada.');
+      });
+
+      aiQuestion.addEventListener('keydown', (event) => {
+        if(event.key === 'Enter' && (event.ctrlKey || event.metaKey)){
+          submitQuestion();
+        }
+      });
+
+      quickButtons.forEach((button) => {
+        const replacement = button.cloneNode(true);
+        button.replaceWith(replacement);
+        replacement.addEventListener('click', () => {
+          aiQuestion.value = replacement.dataset.aiQuestion || '';
+          submitQuestion();
+        });
+      });
+
+      aiFeed.innerHTML = '';
+      appendBubble(
+        'assistant',
+        'Assistente especialista em enfermagem',
+        'Estou pronta para responder de forma mais acolhedora e explicativa sobre lesao por pressao, sinais de alerta, curativos, farmacologia clinica, interacoes medicamentosas, vias de administracao, compatibilidade, diluicao e riscos de mistura. Se preferir, voce pode perguntar como estudante, enfermagem, cuidador ou profissional de saude e eu adapto o foco da resposta.',
+        [
+          { label:'WHO', url:'https://iris.who.int/handle/10665/255507' },
+          { label:'ANVISA', url:'https://www.gov.br/anvisa/' },
+          { label:'MedlinePlus', url:'https://medlineplus.gov/' },
+          { label:'DailyMed', url:'https://dailymed.nlm.nih.gov/dailymed/' }
+        ]
+      );
+      setStatus('Assistente atualizado com respostas mais detalhadas, acolhedoras e focadas em enfermagem.');
+    })();
   </script>
 </body>
 </html>
