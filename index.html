@@ -786,33 +786,47 @@
 
     .ai-head{
       display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:14px;
-      flex-wrap:wrap;
+      flex-direction:column;
+      gap:12px;
       margin-bottom:18px;
     }
 
     .ai-head-copy p{
-      margin:8px 0 0;
+      margin:6px 0 0;
       color:var(--muted);
       line-height:1.7;
       font-size:14px;
-      max-width:72ch;
+      max-width:76ch;
     }
 
-    .ai-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 14px;
-      border-radius:999px;
-      background:#e8f1ff;
+    .ai-summary{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .ai-summary-card{
+      border-radius:16px;
+      border:1px solid #dbeafe;
+      background:linear-gradient(180deg,#f8fbff,#ffffff);
+      padding:14px;
+      box-shadow:0 8px 18px rgba(2,6,23,.05);
+    }
+
+    .ai-summary-card strong{
+      display:block;
       color:#0b2b63;
-      font-weight:950;
       font-size:12px;
-      border:1px solid #d7e6ff;
-      white-space:nowrap;
+      font-weight:1000;
+      margin-bottom:6px;
+      text-transform:uppercase;
+      letter-spacing:.2px;
+    }
+
+    .ai-summary-card span{
+      color:#475569;
+      font-size:13px;
+      line-height:1.55;
     }
 
     .ai-grid{
@@ -870,9 +884,20 @@
       gap:10px;
     }
 
+    .ai-helper{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:16px;
+      background:#f8fbff;
+      border:1px solid #dbeafe;
+      color:#475569;
+      font-size:13px;
+      line-height:1.6;
+    }
+
     .ai-quick{
-      display:grid;
-      grid-template-columns:1fr 1fr;
+      display:flex;
+      flex-wrap:wrap;
       gap:8px;
       margin-top:12px;
     }
@@ -882,11 +907,12 @@
       background:#fff;
       color:#0f172a;
       border-radius:16px;
-      padding:11px 12px;
+      padding:10px 12px;
       text-align:left;
       font-size:12px;
       font-weight:900;
       cursor:pointer;
+      flex:0 1 auto;
     }
 
     .ai-chip:hover{
@@ -930,7 +956,7 @@
     .ai-feed{
       display:grid;
       gap:12px;
-      max-height:520px;
+      max-height:560px;
       overflow:auto;
       padding-right:4px;
     }
@@ -951,15 +977,15 @@
 
     .ai-bubble h3{
       margin:0 0 8px;
-      font-size:13px;
+      font-size:14px;
       font-weight:1000;
     }
 
     .ai-bubble p{
       margin:0;
       white-space:pre-wrap;
-      line-height:1.75;
-      font-size:13px;
+      line-height:1.7;
+      font-size:14px;
     }
 
     .ai-sources{
@@ -1120,7 +1146,8 @@
 
       .hero-points,
       .stats-grid,
-      .risk-grid{
+      .risk-grid,
+      .ai-summary{
         grid-template-columns:1fr;
       }
 
@@ -1129,6 +1156,7 @@
       .lpp-title{font-size:18px}
       .user-btn{min-width:0}
       .user-email{max-width:160px}
+      .ai-row{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -1150,6 +1178,7 @@
         <div class="lpp-menu" id="menuLinks">
           <a href="#conceito" aria-current="page">Início</a>
           <a href="#aplicativo">Aplicativo</a>
+          <a href="#guias">Guias</a>
           <a href="#conceito">Conceito</a>
           <a href="#prevencao">Prevenção</a>
           <a href="#faq">FAQ</a>
@@ -1284,6 +1313,22 @@
             </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="lpp-card" id="guias">
+      <h2 class="lpp-title">Guias do projeto</h2>
+      <p class="lpp-text">Acesso rapido aos materiais complementares do projeto para estudo, revisao cientifica e navegacao tematica.</p>
+      <div class="chip-row" style="margin-top:14px;">
+        <a class="lpp-pill lpp-pill-link" href="guia-simples.html">Guia simples</a>
+        <a class="lpp-pill lpp-pill-link" href="avaliacao.html">Avaliacao</a>
+        <a class="lpp-pill lpp-pill-link" href="tratamento.html">Tratamento</a>
+        <a class="lpp-pill lpp-pill-link" href="fontes.html">Fontes</a>
+        <a class="lpp-pill lpp-pill-link" href="impacto-economico.html">Impacto economico</a>
+        <a class="lpp-pill lpp-pill-link" href="nosso-produto.html">Nosso produto</a>
+        <a class="lpp-pill lpp-pill-link" href="software-dispositivo.html">Software e dispositivo</a>
+        <a class="lpp-pill lpp-pill-link" href="premium.html">Premium</a>
+        <a class="lpp-pill lpp-pill-link" href="selecao-produtos.html">Selecao de produtos</a>
       </div>
     </section>
 
@@ -1437,11 +1482,25 @@
         <div class="ai-head-copy">
           <h2 class="lpp-title">IA especialista em enfermagem, lesão por pressão e farmacologia</h2>
           <p>
-            Assistente educativo dedicado a perguntas de enfermagem, prevenção, curativos, interações medicamentosas e
-            medicamentos usados em UBS, PA, hospital e UPA/UPH, sempre com foco em fontes oficiais e segurança clínica.
+            Assistente educativo para apoio ao estudo e à revisão profissional em enfermagem. A proposta é responder de forma
+            mais clara, acolhedora e tecnicamente organizada sobre lesão por pressão, administração de medicamentos,
+            farmacologia, segurança do paciente, curativos, sinais vitais, urgência e dúvidas frequentes da prática clínica.
           </p>
         </div>
-        <div class="ai-badge">Fontes oficiais e linguagem segura</div>
+        <div class="ai-summary">
+          <div class="ai-summary-card">
+            <strong>Escopo</strong>
+            <span>Lesão por pressão, processo de enfermagem, medicação, curativos, sinais vitais e urgência.</span>
+          </div>
+          <div class="ai-summary-card">
+            <strong>Estilo</strong>
+            <span>Resposta didática, com raciocínio clínico básico, foco em segurança e linguagem profissional.</span>
+          </div>
+          <div class="ai-summary-card">
+            <strong>Base</strong>
+            <span>Conteúdo local curado com apoio em ANVISA, OMS, NPIAP, MedlinePlus e DailyMed.</span>
+          </div>
+        </div>
       </div>
 
       <div class="ai-grid">
@@ -1463,27 +1522,34 @@
                 <option value="interacoes">Interações medicamentosas</option>
                 <option value="curativos">Curativos e coberturas</option>
                 <option value="enfermagem" selected>Perguntas de enfermagem</option>
-                <option value="urgencia">UBS, PA, UPA/UPH e hospital</option>
+                <option value="urgencia">Urgência e hospital</option>
               </select>
             </div>
           </div>
 
+          <div class="ai-helper">
+            Pode perguntar sobre sinais vitais, cálculo e administração de medicamentos, segurança do paciente, oxigenoterapia,
+            acesso venoso, sepse, curativos, lesão por pressão, interações, diluição, monitorização e condutas educativas.
+          </div>
+
           <div class="ai-quick">
-            <button class="ai-chip" type="button" data-ai-question="Quais sinais indicam piora da lesão por pressão e necessidade de avaliação rápida?">Sinais de piora da lesão</button>
-            <button class="ai-chip" type="button" data-ai-question="Explique por que varfarina e ibuprofeno não devem ser misturados e quais são os riscos.">Varfarina com ibuprofeno</button>
-            <button class="ai-chip" type="button" data-ai-question="Quais medicamentos e vias de administração aparecem com mais frequência em UBS, PA, UPA e hospital para estudo de enfermagem?">Medicamentos por cenário</button>
-            <button class="ai-chip" type="button" data-ai-question="Explique a diferença entre creme barreira, hidrogel, colagenase e sulfadiazina de prata.">Pomadas, gel e coberturas</button>
+            <button class="ai-chip" type="button" data-ai-question="Quais sinais indicam piora da lesão por pressão e necessidade de avaliação rápida?">Piora da lesão</button>
+            <button class="ai-chip" type="button" data-ai-question="Explique por que varfarina e ibuprofeno não devem ser associados e quais são os riscos.">Varfarina + ibuprofeno</button>
+            <button class="ai-chip" type="button" data-ai-question="Como funciona a escala de Braden e como ela orienta a prevenção?">Escala de Braden</button>
+            <button class="ai-chip" type="button" data-ai-question="Quais são os 9 certos da administração de medicamentos e por que isso importa?">9 certos da medicação</button>
+            <button class="ai-chip" type="button" data-ai-question="O que a enfermagem deve monitorar na sepse e quais sinais sugerem gravidade?">Sepse e monitorização</button>
+            <button class="ai-chip" type="button" data-ai-question="Explique a diferença entre creme barreira, hidrogel, colagenase e sulfadiazina de prata.">Curativos e coberturas</button>
           </div>
 
           <label for="aiQuestion" style="margin-top:14px;">Pergunta clínica ou educativa</label>
-          <textarea id="aiQuestion" class="ai-textarea" placeholder="Ex.: Ceftriaxona pode ser misturada com cálcio? Explique o motivo, o risco, a via e o que acontece."></textarea>
+          <textarea id="aiQuestion" class="ai-textarea" placeholder="Ex.: Como funciona a dipirona no organismo? O que a enfermagem precisa monitorar na sepse? Quando usar hidrogel?"></textarea>
 
           <div class="ai-actions">
             <button class="ai-btn primary" id="btnAiAsk" type="button">Perguntar à IA</button>
             <button class="ai-btn secondary" id="btnAiClear" type="button">Limpar conversa</button>
           </div>
 
-          <div class="ai-status" id="aiStatus">Pronto para responder com base educativa especializada e foco em enfermagem.</div>
+          <div class="ai-status" id="aiStatus">Pronta para responder com base educativa local, foco em enfermagem e linguagem mais clara.</div>
         </div>
 
         <div class="ai-chat">
@@ -1788,6 +1854,7 @@
   </script>
   <script>
     (function(){
+      return;
       const aiFeed = document.getElementById('aiFeed');
       const aiStatus = document.getElementById('aiStatus');
       const aiQuestion = document.getElementById('aiQuestion');
@@ -2003,6 +2070,7 @@
   </script>
   <script>
     (function(){
+      return;
       const aiFeed = document.getElementById('aiFeed');
       const aiStatus = document.getElementById('aiStatus');
       const aiQuestion = document.getElementById('aiQuestion');
@@ -2251,6 +2319,25 @@
   </script>
   <script>
     (function(){
+      const menu = document.getElementById('menuLinks');
+      if(menu){
+        menu.innerHTML = `
+          <a href="index.html" aria-current="page">In&iacute;cio</a>
+          <a href="guia-simples.html">Guia simples</a>
+          <a href="avaliacao.html">Avalia&ccedil;&atilde;o</a>
+          <a href="tratamento.html">Tratamento</a>
+          <a href="fontes.html">Fontes</a>
+          <a href="impacto-economico.html">Impacto econ&ocirc;mico</a>
+          <a href="nosso-produto.html">Nosso produto</a>
+          <a href="software-dispositivo.html">Software</a>
+          <a href="premium.html">Premium</a>
+          <a href="selecao-produtos.html">Sele&ccedil;&atilde;o de produtos</a>
+          <a href="#aplicativo">Aplicativo</a>
+          <a href="#ia-enfermagem">IA especialista</a>
+          <a href="acesso.html?mode=login">Acesso</a>
+        `;
+      }
+
       if(window.__LPP_AI_RESCUE_READY__) return;
       window.__LPP_AI_RESCUE_READY__ = true;
 
@@ -2288,6 +2375,20 @@
           practice: 'Para estudo em enfermagem, vale revisar alivio de pressao, revezamento de decubito, pele ao redor, exsudato, odor, dor e sinais sistemicos.',
           sources: [
             { label: 'WHO', url: 'https://iris.who.int/handle/10665/255507' },
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' }
+          ]
+        },
+        {
+          scope: 'lesao',
+          keywords: ['cura', 'cura completa', 'cicatriza', 'cicatrizacao', 'lesao por pressao tem cura', 'tem cura'],
+          title: 'Lesao por pressao tem cura?',
+          summary: 'A lesao por pressao pode cicatrizar em muitos casos, mas a resposta depende do estagio, da extensao do dano, da infeccao associada e das condicoes clinicas da pessoa.',
+          explanation: 'Nem toda lesao evolui no mesmo tempo. Lesoes superficiais tendem a responder melhor quando ha alivio de pressao, controle de umidade, nutricao adequada e cuidado local consistente. Lesoes profundas podem exigir acompanhamento prolongado, revisao frequente e cuidado multiprofissional.',
+          risks: 'Sem reposicionamento, sem controle de umidade, com infeccao, nutricao inadequada ou doencas descompensadas, a cicatrizacao pode atrasar e a lesao pode piorar.',
+          practice: 'Em enfermagem, a pergunta mais segura nao e apenas se tem cura, mas o que esta impedindo a cicatrizacao: pressao mantida, exsudato, infeccao, dor, nutricao, perfusao ou cobertura inadequada.',
+          sources: [
+            { label: 'WHO', url: 'https://iris.who.int/handle/10665/255507' },
+            { label: 'NPIAP', url: 'https://npiap.com/page/PressureInjuryStages' },
             { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' }
           ]
         },
@@ -2353,11 +2454,379 @@
             { label: 'DailyMed', url: 'https://dailymed.nlm.nih.gov/dailymed/' },
             { label: 'MedlinePlus', url: 'https://medlineplus.gov/' }
           ]
+        },
+        {
+          scope: 'lesao',
+          keywords: ['braden', 'risco', 'prevencao', 'escala', 'mobilidade', 'umidade'],
+          title: 'Escala de Braden e prevencao de lesao por pressao',
+          summary: 'A escala de Braden ajuda a estimar risco e a organizar medidas preventivas de forma mais consistente.',
+          explanation: 'Ela considera percepcao sensorial, umidade, atividade, mobilidade, nutricao e friccao ou cisalhamento, permitindo que a equipe ligue risco a condutas concretas.',
+          risks: 'Sem avaliacao estruturada, o risco pode ser subestimado e a prevencao se tornar tardia, aumentando a chance de dano evitavel.',
+          practice: 'Para estudo de enfermagem, o valor da escala esta em converter o escore em acao: reposicionamento, protecao cutanea, manejo da umidade, superficie de apoio e inspecao sistematica da pele.',
+          sources: [
+            { label: 'WHO', url: 'https://iris.who.int/handle/10665/255507' },
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' }
+          ]
+        },
+        {
+          scope: 'lesao',
+          keywords: ['reposicionamento', 'mudanca de decubito', 'decubito', 'cisalhamento', 'friccao'],
+          title: 'Reposicionamento e alivio de pressao',
+          summary: 'Reposicionamento programado e redistribuicao de pressao seguem entre as medidas mais importantes na prevencao e no cuidado inicial.',
+          explanation: 'Pressao prolongada, cisalhamento e friccao reduzem perfusao tecidual e favorecem dano isquemico, especialmente sobre proeminencias osseas.',
+          risks: 'Sem alivio adequado, a pele pode evoluir de hiperemia persistente para bolha, perda tecidual, infeccao e dor importante.',
+          practice: 'Vale estudar o reposicionamento sempre junto de superficie de apoio, dispositivos, conforto, umidade, nutricao e participacao do cuidador.',
+          sources: [
+            { label: 'WHO', url: 'https://iris.who.int/handle/10665/255507' },
+            { label: 'MedlinePlus', url: 'https://medlineplus.gov/' }
+          ]
+        },
+        {
+          scope: 'interacoes',
+          keywords: ['insulina', 'nph', 'regular', 'glargina', 'seringa', 'misturar'],
+          title: 'Mistura de insulinas na mesma seringa',
+          summary: 'Nem toda insulina deve ser misturada. Algumas combinacoes podem constar em protocolo, enquanto outras, como com glargina, exigem cautela e nao devem ser assumidas como seguras.',
+          explanation: 'A compatibilidade depende da formulacao, do pH e do comportamento farmacocinetico esperado de cada insulina.',
+          risks: 'Mistura inadequada pode alterar inicio de acao, pico, duracao e controle glicemico, aumentando risco de hipoglicemia ou hiperglicemia.',
+          practice: 'Em enfermagem, o aprendizado seguro e confirmar protocolo institucional e orientacao oficial do fabricante antes de misturar qualquer insulina na mesma seringa.',
+          sources: [
+            { label: 'MedlinePlus Insulin', url: 'https://medlineplus.gov/druginfo/meds/a682611.html' },
+            { label: 'DailyMed', url: 'https://dailymed.nlm.nih.gov/dailymed/' }
+          ]
+        },
+        {
+          scope: 'interacoes',
+          keywords: ['clopidogrel', 'omeprazol', 'pantoprazol', 'antiagregante', 'bomba de proton'],
+          title: 'Clopidogrel com omeprazol',
+          summary: 'Essa associacao merece avaliacao porque alguns cenarios podem reduzir o efeito antiplaquetario esperado do clopidogrel.',
+          explanation: 'O ponto central e metabolico: parte da ativacao do clopidogrel depende de vias enzimaticas que podem ser afetadas por outros farmacos.',
+          risks: 'Reducao de eficacia antiplaquetaria e manutencao de risco trombotico em pacientes selecionados.',
+          practice: 'Esse tema e util para mostrar que interacao medicamentosa nao significa apenas aumento de toxicidade; tambem pode significar perda de eficacia.',
+          sources: [
+            { label: 'MedlinePlus Clopidogrel', url: 'https://medlineplus.gov/druginfo/meds/a601040.html' },
+            { label: 'DailyMed', url: 'https://dailymed.nlm.nih.gov/dailymed/' }
+          ]
+        },
+        {
+          scope: 'enfermagem',
+          keywords: ['potassio', 'kcl', 'cloreto de potassio', 'concentrado', 'iv', 'intravenoso'],
+          title: 'Cloreto de potassio intravenoso',
+          summary: 'Cloreto de potassio intravenoso exige diluicao adequada, controle da concentracao e monitorizacao rigorosa.',
+          explanation: 'E um eletrólito concentrado com potencial de irritacao venosa e eventos graves se administrado de forma inadequada.',
+          risks: 'Dor intensa na veia, flebite, extravasamento, arritmias e eventos potencialmente fatais por erro de preparo ou velocidade.',
+          practice: 'No estudo, vale revisar concentracao final, diluente, tempo de infusao, bomba de infusao e monitorizacao cardiaca quando indicada.',
+          sources: [
+            { label: 'DailyMed', url: 'https://dailymed.nlm.nih.gov/dailymed/' },
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' }
+          ]
+        },
+        {
+          scope: 'interacoes',
+          keywords: ['metformina', 'contraste', 'iodado', 'tomografia', 'rim', 'creatinina'],
+          title: 'Metformina e contraste iodado',
+          summary: 'A associacao exige avaliacao clinica, especialmente quando ha risco de disfuncao renal.',
+          explanation: 'Aqui o problema principal nao e mistura fisica, mas o risco de alteracao renal apos contraste, o que pode mudar a seguranca do uso da metformina.',
+          risks: 'Acumulo do farmaco em contexto de disfuncao renal, necessidade de revisao temporaria da conduta e maior vulnerabilidade clinica.',
+          practice: 'Esse e um bom exemplo para ensinar a diferenca entre incompatibilidade fisica, interacao farmacologica e precaucao clinica baseada em funcao renal.',
+          sources: [
+            { label: 'MedlinePlus Metformin', url: 'https://medlineplus.gov/druginfo/meds/a696005.html' },
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' }
+          ]
+        },
+        {
+          scope: 'enfermagem',
+          keywords: ['antibiotico', 'antibioticos', 'ceftriaxona', 'cefazolina', 'vancomicina', 'meropenem', 'piperacilina'],
+          title: 'Classe dos antibioticos',
+          summary: 'Antibioticos exigem revisao de diluente, tempo de infusao, compatibilidade, funcao renal e vigilancia de eventos adversos.',
+          explanation: 'Nessa classe, erros de preparo, velocidade, incompatibilidade e uso sem revisao clinica podem comprometer eficacia e seguranca.',
+          risks: 'Falha terapeutica, reacoes infusionais, nefrotoxicidade, flebite, hipersensibilidade e eventos evitaveis por incompatibilidade.',
+          practice: 'Para estudo de enfermagem, vale separar betalactamicos, glicopeptideos e carbapenemicos, sempre ligando cada grupo a preparo, via e monitorizacao.',
+          sources: [
+            { label: 'DailyMed', url: 'https://dailymed.nlm.nih.gov/dailymed/' },
+            { label: 'MedlinePlus', url: 'https://medlineplus.gov/' }
+          ]
+        },
+        {
+          scope: 'enfermagem',
+          keywords: ['antiemetico', 'antiemeticos', 'ondansetrona', 'metoclopramida', 'nausea', 'vomito'],
+          title: 'Classe dos antiemeticos',
+          summary: 'Antiemeticos aparecem com frequencia em PA, UPA e hospital e pedem atencao a via, indicacao e efeitos neurológicos ou cardiovasculares.',
+          explanation: 'Mesmo quando parecem simples, podem se associar a sedacao, reacoes extrapiramidais ou prolongamento de QT conforme farmaco e paciente.',
+          risks: 'Sedacao, sintomas extrapiramidais, prolongamento de QT em cenarios selecionados e mascara de quadro clinico ainda em esclarecimento.',
+          practice: 'O estudo seguro diferencia mecanismo, via, principal risco e o que deve ser monitorado apos a administracao.',
+          sources: [
+            { label: 'MedlinePlus', url: 'https://medlineplus.gov/' },
+            { label: 'DailyMed', url: 'https://dailymed.nlm.nih.gov/dailymed/' }
+          ]
+        },
+        {
+          scope: 'enfermagem',
+          keywords: ['diuretico', 'diureticos', 'furosemida', 'espironolactona', 'hidroclorotiazida', 'edema'],
+          title: 'Classe dos diureticos',
+          summary: 'Diureticos exigem leitura integrada de pressao, volemia, funcao renal e eletrólitos.',
+          explanation: 'A classe mexe com volume e eletrólitos, e o efeito pode ser benéfico ou perigoso conforme dose, contexto e monitorizacao.',
+          risks: 'Hipotensao, desidratacao, hipocalemia ou hipercalemia, tontura, piora renal e arritmias em contexto suscetivel.',
+          practice: 'Vale estudar diureticos de alca, tiazidicos e poupadores de potassio, relacionando cada grupo ao eletrólito mais sensivel.',
+          sources: [
+            { label: 'MedlinePlus', url: 'https://medlineplus.gov/' },
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' }
+          ]
+        },
+        {
+          scope: 'enfermagem',
+          keywords: ['antihipertensivo', 'anti-hipertensivo', 'captopril', 'enalapril', 'losartana', 'amlodipino', 'pressao'],
+          title: 'Classe dos anti-hipertensivos',
+          summary: 'Anti-hipertensivos pedem interpretacao do contexto clinico, e nao apenas do valor da pressao.',
+          explanation: 'O mesmo farmaco pode ser adequado ou inadequado conforme perfusao, volemia, frequencia cardiaca, funcao renal e comorbidades.',
+          risks: 'Hipotensao excessiva, queda, tontura, bradicardia, edema e lesao renal em cenarios vulneraveis.',
+          practice: 'No estudo, ajuda organizar a classe por mecanismo: IECA, BRA, bloqueador de canal de calcio e beta-bloqueador.',
+          sources: [
+            { label: 'MedlinePlus', url: 'https://medlineplus.gov/' },
+            { label: 'DailyMed', url: 'https://dailymed.nlm.nih.gov/dailymed/' }
+          ]
+        },
+        {
+          scope: 'interacoes',
+          keywords: ['anticoagulante', 'enoxaparina', 'heparina', 'varfarina', 'apixabana', 'rivaroxabana'],
+          title: 'Classe dos anticoagulantes',
+          summary: 'Anticoagulantes exigem atencao redobrada a sangramento, funcao renal, duplicidade terapeutica e interacoes.',
+          explanation: 'A classe atua diretamente em vias da coagulacao, e pequenas mudancas no contexto podem alterar muito o equilibrio entre beneficio e dano.',
+          risks: 'Hematomas, sangramento digestivo, sangramento urinario, perda oculta de sangue e eventos graves se houver erro de dose ou associacao indevida.',
+          practice: 'Para estudar, vale diferenciar heparinas, antagonistas da vitamina K e anticoagulantes orais diretos, sempre relacionando monitorizacao e reversao.',
+          sources: [
+            { label: 'MedlinePlus', url: 'https://medlineplus.gov/' },
+            { label: 'DailyMed', url: 'https://dailymed.nlm.nih.gov/dailymed/' }
+          ]
+        },
+        {
+          scope: 'interacoes',
+          keywords: ['antiplaquetario', 'aas', 'aspirina', 'clopidogrel', 'ticagrelor', 'plaqueta'],
+          title: 'Classe dos antiplaquetarios',
+          summary: 'Antiplaquetarios alteram hemostasia e devem ser estudados junto de risco hemorrágico, procedimento invasivo e interacoes.',
+          explanation: 'Eles nao atuam da mesma forma que anticoagulantes, mas tambem influenciam seguranca em terapia combinada e em pacientes de risco.',
+          risks: 'Sangramento, hematomas, epistaxe, piora de risco hemorrágico em dupla terapia e perda de eficacia em algumas interacoes metabolicas.',
+          practice: 'Em enfermagem, e util perguntar sempre se o paciente usa antiplaquetario isolado, dupla antiagregacao ou associacao com anticoagulante.',
+          sources: [
+            { label: 'MedlinePlus', url: 'https://medlineplus.gov/' },
+            { label: 'DailyMed', url: 'https://dailymed.nlm.nih.gov/dailymed/' }
+          ]
+        },
+        {
+          scope: 'enfermagem',
+          keywords: ['broncodilatador', 'salbutamol', 'fenoterol', 'ipratropio', 'asma', 'dpoc'],
+          title: 'Classe dos broncodilatadores',
+          summary: 'Broncodilatadores pedem correlacao entre tecnica inalatória, resposta respiratoria e efeitos cardiovasculares.',
+          explanation: 'A eficacia depende muito da via e da tecnica de administracao, e alguns efeitos adversos aparecem rapidamente.',
+          risks: 'Taquicardia, tremor, ansiedade, resposta insuficiente por tecnica inadequada e atraso no reconhecimento de gravidade respiratoria.',
+          practice: 'Para estudar, vale diferenciar beta-agonistas e anticolinergicos e observar como a via inalatória muda a logica do cuidado.',
+          sources: [
+            { label: 'MedlinePlus', url: 'https://medlineplus.gov/' },
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' }
+          ]
+        },
+        {
+          scope: 'enfermagem',
+          keywords: ['corticoide', 'hidrocortisona', 'dexametasona', 'prednisona', 'prednisolona'],
+          title: 'Classe dos corticoides',
+          summary: 'Corticoides exigem leitura do motivo do uso, tempo, dose e risco metabólico ou infeccioso.',
+          explanation: 'A classe e anti-inflamatoria e imunomoduladora, mas tambem influencia glicemia, pressao, humor e resposta tecidual.',
+          risks: 'Hiperglicemia, retencao hidrica, alteracao de humor, maior vulnerabilidade a infeccao e atraso de cicatrizacao em alguns contextos.',
+          practice: 'No estudo, vale separar uso agudo e uso prolongado, associando cada um a monitorizacao mais relevante.',
+          sources: [
+            { label: 'MedlinePlus', url: 'https://medlineplus.gov/' },
+            { label: 'DailyMed', url: 'https://dailymed.nlm.nih.gov/dailymed/' }
+          ]
+        },
+        {
+          scope: 'enfermagem',
+          keywords: ['analgesico', 'dipirona', 'paracetamol', 'tramadol', 'morfina', 'dor'],
+          title: 'Classe dos analgesicos',
+          summary: 'Analgesicos exigem leitura do tipo de dor, via, intervalo, resposta e seguranca do paciente.',
+          explanation: 'Nao e a mesma logica para analgesico simples, AINE ou opioide; cada subgrupo tem risco e monitorizacao propria.',
+          risks: 'Sedacao, depressao respiratoria em opioides, hepatotoxicidade com paracetamol, sangramento com AINEs e mascara de agravamento clinico.',
+          practice: 'Vale dividir a classe em analgesicos simples, anti-inflamatorios e opioides, sempre ligando cada grupo ao principal risco e parametro de monitorizacao.',
+          sources: [
+            { label: 'MedlinePlus', url: 'https://medlineplus.gov/' },
+            { label: 'DailyMed', url: 'https://dailymed.nlm.nih.gov/dailymed/' }
+          ]
+        },
+        {
+          scope: 'enfermagem',
+          keywords: ['psicotropico', 'diazepam', 'midazolam', 'haloperidol', 'quetiapina', 'sedacao'],
+          title: 'Classe dos psicotropicos e sedativos',
+          summary: 'Psicotropicos e sedativos pedem atencao a consciencia, respiracao, pressao e risco de queda.',
+          explanation: 'A classe pode alterar comportamento, sono, hemodinamica e resposta neurológica em curto intervalo.',
+          risks: 'Sedacao excessiva, confusao, depressao respiratoria, hipotensao, prolongamento de QT em alguns farmacos e aumento de risco de queda.',
+          practice: 'No estudo, vale relacionar cada subgrupo ao principal motivo de uso e ao principal risco de monitorizacao imediata.',
+          sources: [
+            { label: 'MedlinePlus', url: 'https://medlineplus.gov/' },
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' }
+          ]
+        },
+        {
+          scope: 'enfermagem',
+          keywords: ['9 certos', 'nove certos', 'administracao segura', 'medicacao segura', 'medicamento certo', 'administracao de medicamentos', 'certo', 'certos'],
+          title: 'Administracao segura de medicamentos',
+          summary: 'A administracao de medicamentos precisa ser organizada por etapas de seguranca, e nao apenas pela tecnica de aplicar.',
+          explanation: 'A logica dos chamados 9 certos ajuda a reduzir erros ao revisar paciente, medicamento, dose, via, horario, registro, orientacao, resposta e motivo clinico.',
+          risks: 'Erro de paciente, dose inadequada, via incorreta, omissao de registro, duplicidade terapeutica e eventos adversos evitaveis.',
+          practice: 'Na enfermagem, esse tema se fortalece quando ligado a checagem ativa, leitura da prescricao, confirmacao de alergias, reconciliacao e observacao da resposta apos administracao.',
+          sources: [
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' },
+            { label: 'WHO', url: 'https://iris.who.int/handle/10665/255507' }
+          ]
+        },
+        {
+          scope: 'enfermagem',
+          keywords: ['sinais vitais', 'pressao arterial', 'frequencia cardiaca', 'temperatura', 'saturacao', 'spo2', 'respiratoria', 'interpretar sinais vitais', 'valor isolado', 'tendencia'],
+          title: 'Leitura clinica dos sinais vitais',
+          summary: 'Sinais vitais nao devem ser lidos isoladamente; o valor clinico aparece quando a equipe integra tendencia, contexto e sintomas.',
+          explanation: 'Pressao, frequencia cardiaca, frequencia respiratoria, temperatura e saturacao ajudam a reconhecer compensacao, deterioracao e resposta ao tratamento.',
+          risks: 'Interpretacao fragmentada pode atrasar reconhecimento de choque, sepse, insuficiencia respiratoria, dor mal controlada ou efeitos adversos de medicacoes.',
+          practice: 'Uma leitura profissional compara valores atuais com o basal, observa tendencia e pergunta: esse paciente esta melhorando, piorando ou mascarando gravidade?',
+          sources: [
+            { label: 'WHO', url: 'https://iris.who.int/handle/10665/255507' },
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' }
+          ]
+        },
+        {
+          scope: 'urgencia',
+          keywords: ['sepse', 'sepsis', 'lactato', 'choque septico', 'sepse grave'],
+          title: 'Sepse e vigilancia de enfermagem',
+          summary: 'Na sepse, a enfermagem tem papel central no reconhecimento precoce da gravidade e na monitorizacao das primeiras respostas ao tratamento.',
+          explanation: 'Alteracao do estado mental, hipotensao, taquicardia, taquipneia, febre ou hipotermia e piora da perfusao podem indicar resposta inflamatoria grave e necessidade de acao rapida.',
+          risks: 'Atraso no reconhecimento pode favorecer choque septico, disfuncao organica, necessidade de suporte intensivo e aumento de mortalidade.',
+          practice: 'Na pratica, vale correlacionar sinais vitais, diurese, perfusao, nivel de consciencia, coleta de exames e tempo ate antibiotico quando indicado pelo protocolo.',
+          sources: [
+            { label: 'WHO', url: 'https://iris.who.int/handle/10665/255507' },
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' }
+          ]
+        },
+        {
+          scope: 'enfermagem',
+          keywords: ['oxigenoterapia', 'cateter nasal', 'mascara', 'reservatorio', 'oxigenio', 'saturacao'],
+          title: 'Oxigenoterapia e vigilancia respiratoria',
+          summary: 'Oxigenoterapia deve ser acompanhada por avaliacao respiratoria continua, e nao apenas pelo fluxo prescrito.',
+          explanation: 'O cuidado envolve dispositivo correto, saturacao, trabalho respiratorio, conforto, umidificacao quando pertinente e resposta clinica ao suporte.',
+          risks: 'Uso inadequado pode manter hipoxemia, gerar falsa sensacao de seguranca, ressecar vias aereas ou atrasar escalonamento de suporte.',
+          practice: 'Em enfermagem, a pergunta util e: o paciente esta respondendo ao oxigenio ou esta precisando de nova avaliacao pela progressao do desconforto respiratorio?',
+          sources: [
+            { label: 'WHO', url: 'https://iris.who.int/handle/10665/255507' },
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' }
+          ]
+        },
+        {
+          scope: 'enfermagem',
+          keywords: ['acesso venoso', 'cateter periferico', 'punção venosa', 'puncao venosa', 'flebite', 'extravasamento'],
+          title: 'Acesso venoso periferico e seguranca',
+          summary: 'O acesso venoso periferico exige avaliacao do sitio, da permeabilidade e do risco de complicacoes ao longo do uso.',
+          explanation: 'Nao basta puncionar bem; e preciso manter vigilancia de dor, infiltracao, extravasamento, flebite, fixacao e necessidade real de permanencia do dispositivo.',
+          risks: 'Flebite, extravasamento, perda do acesso, infeccao local, dor e falha na administracao da terapêutica prescrita.',
+          practice: 'Na pratica, vale revisar calibre, tempo de permanencia, tipo de solucao administrada, queixa do paciente e sinais inflamatórios no local.',
+          sources: [
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' },
+            { label: 'WHO', url: 'https://iris.who.int/handle/10665/255507' }
+          ]
+        },
+        {
+          scope: 'enfermagem',
+          keywords: ['processo de enfermagem', 'sae', 'diagnostico de enfermagem', 'prescricao de enfermagem'],
+          title: 'Processo de enfermagem e SAE',
+          summary: 'O processo de enfermagem organiza o raciocinio clinico, o planejamento e o registro do cuidado de forma estruturada.',
+          explanation: 'Ele articula coleta de dados, diagnosticos, planejamento, implementacao e avaliacao, ajudando a transformar observacoes em cuidado coerente e comunicavel.',
+          risks: 'Sem esse encadeamento, o cuidado pode ficar fragmentado, reativo e com maior chance de omissoes importantes.',
+          practice: 'Para estudo, vale perguntar sempre: quais dados sustentam o problema, qual objetivo do cuidado, o que sera implementado e como a resposta sera reavaliada?',
+          sources: [
+            { label: 'COFEN', url: 'https://www.cofen.gov.br/' },
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' }
+          ]
+        }
+      ];
+
+      const medicationProfiles = [
+        {
+          names: ['dipirona', 'metamizol'],
+          title: 'Dipirona e mecanismo de acao',
+          mechanism: 'A dipirona e um analgesico e antipiretico. Em linguagem educativa, ela atua reduzindo mediadores relacionados a dor e febre, com efeito central importante no controle de sintomas.',
+          use: 'Costuma ser lembrada para dor e febre em cenarios ambulatoriais, urgencia e internacao, sempre conforme avaliacao clinica, via prescrita e contexto do paciente.',
+          risks: 'Pode causar hipotensao em algumas administracoes, reacoes de hipersensibilidade e, raramente, discrasias hematologicas graves. Em ambiente assistencial, tambem importa observar resposta clinica e tolerancia.',
+          monitoring: 'Na enfermagem, vale monitorar dor, temperatura, pressao arterial quando aplicavel, alergia previa e resposta apos administracao.',
+          sources: [
+            { label: 'MedlinePlus', url: 'https://medlineplus.gov/' },
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' }
+          ]
+        },
+        {
+          names: ['paracetamol', 'acetaminofeno'],
+          title: 'Paracetamol e mecanismo de acao',
+          mechanism: 'O paracetamol e mais lembrado como analgesico e antipiretico. De forma educativa, ele atua predominantemente no sistema nervoso central, modulando vias ligadas a dor e febre.',
+          use: 'E usado com frequencia para dor leve a moderada e febre, incluindo cenarios de atencao primaria e hospitalar.',
+          risks: 'O principal ponto de seguranca e hepatotoxicidade em dose excessiva ou em pacientes com risco aumentado.',
+          monitoring: 'Na pratica de enfermagem, importa revisar dose total em 24 horas, uso concomitante de outros produtos com paracetamol e resposta clinica.',
+          sources: [
+            { label: 'MedlinePlus Acetaminophen', url: 'https://medlineplus.gov/druginfo/meds/a681004.html' },
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' }
+          ]
+        },
+        {
+          names: ['ibuprofeno'],
+          title: 'Ibuprofeno e mecanismo de acao',
+          mechanism: 'O ibuprofeno e um anti-inflamatorio nao esteroidal. Em termos didaticos, ele reduz mediadores inflamatórios envolvidos em dor, febre e inflamação.',
+          use: 'Costuma ser usado para dor, febre e condicoes inflamatorias, sempre considerando risco gastrointestinal, renal e hemorrágico.',
+          risks: 'Pode aumentar risco de irritacao gastrica, sangramento, piora renal e interacoes relevantes, especialmente em pacientes fragilizados ou anticoagulados.',
+          monitoring: 'Na enfermagem, vale correlacionar dor, tolerancia digestiva, funcao renal quando pertinente e uso associado de anticoagulantes ou outros AINEs.',
+          sources: [
+            { label: 'MedlinePlus Ibuprofen', url: 'https://medlineplus.gov/druginfo/meds/a682159.html' },
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' }
+          ]
+        },
+        {
+          names: ['omeprazol'],
+          title: 'Omeprazol e mecanismo de acao',
+          mechanism: 'O omeprazol e um inibidor da bomba de proton. De forma simplificada, ele reduz a producao de acido gastrico ao inibir a etapa final da secrecao ácida.',
+          use: 'E lembrado em refluxo, gastrite, ulcera e protecao gastrica em contextos selecionados.',
+          risks: 'Uso prolongado ou sem revisao pode se associar a eventos como hipomagnesemia, alteracoes de absorcao e interacoes medicamentosas em alguns pacientes.',
+          monitoring: 'Na pratica educativa, convem revisar indicacao, tempo de uso e interacoes, como a discussao classica com clopidogrel.',
+          sources: [
+            { label: 'MedlinePlus Omeprazole', url: 'https://medlineplus.gov/druginfo/meds/a693050.html' },
+            { label: 'DailyMed', url: 'https://dailymed.nlm.nih.gov/dailymed/' }
+          ]
+        },
+        {
+          names: ['furosemida'],
+          title: 'Furosemida e mecanismo de acao',
+          mechanism: 'A furosemida e um diuretico de alca. Em linguagem de estudo, ela aumenta a eliminacao renal de sodio e agua, reduzindo sobrecarga volêmica em contextos selecionados.',
+          use: 'Aparece com frequencia em edema, insuficiencia cardiaca e outras situacoes com retencao hidrica, conforme avaliacao clinica.',
+          risks: 'Pode causar hipotensao, desidratacao, alteracoes eletroliticas, especialmente hipocalemia, e piora renal.',
+          monitoring: 'Na enfermagem, faz sentido correlacionar diurese, pressao arterial, peso, edema, eletrólitos e funcao renal quando disponivel.',
+          sources: [
+            { label: 'MedlinePlus Furosemide', url: 'https://medlineplus.gov/druginfo/meds/a682858.html' },
+            { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' }
+          ]
+        },
+        {
+          names: ['morfina'],
+          title: 'Morfina e mecanismo de acao',
+          mechanism: 'A morfina e um opioide. Em termos educativos, ela age em receptores opioides e reduz percepcao e resposta à dor, com efeito central relevante.',
+          use: 'E reservada a dores de maior intensidade e alguns contextos clinicos especificos, sempre com monitorizacao rigorosa.',
+          risks: 'Os principais riscos sao sedacao, depressao respiratoria, hipotensao, nausea, constipacao e queda do nivel de consciencia.',
+          monitoring: 'Na assistencia, vale observar dor, frequencia respiratoria, sedacao, pressao arterial, saturacao e resposta apos dose.',
+          sources: [
+            { label: 'MedlinePlus Morphine', url: 'https://medlineplus.gov/druginfo/meds/a682133.html' },
+            { label: 'DailyMed', url: 'https://dailymed.nlm.nih.gov/dailymed/' }
+          ]
         }
       ];
 
       function setStatus(message){
         status.textContent = message;
+      }
+
+      function normalizeText(value){
+        return String(value || '')
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '');
       }
 
       function formatParagraphs(text){
@@ -2377,24 +2846,57 @@
           <div class="ai-rich-body">${formatParagraphs(body)}</div>
           ${kind === 'assistant' ? renderSources(sources || []) : ''}
         `;
-        feed.prepend(article);
+        feed.appendChild(article);
+        feed.scrollTop = feed.scrollHeight;
       }
 
       function rankEntry(question, scope, role, entry){
-        const haystack = `${question} ${scope} ${role}`.toLowerCase();
-        return entry.keywords.reduce((score, keyword) => score + (haystack.includes(keyword) ? 2 : 0), entry.scope === scope ? 1 : 0);
+        const haystack = normalizeText(`${question} ${scope} ${role}`);
+        const keywordHits = entry.keywords.reduce((score, keyword) => score + (haystack.includes(normalizeText(keyword)) ? 2 : 0), 0);
+        const scopeBonus = keywordHits > 0 && entry.scope === scope ? 1 : 0;
+        return keywordHits + scopeBonus;
+      }
+
+      function buildMedicationMechanismAnswer(question, role){
+        const normalizedQuestion = normalizeText(question);
+        const profile = medicationProfiles.find((item) => item.names.some((name) => normalizedQuestion.includes(normalizeText(name))));
+        if(!profile) return null;
+
+        const asksMechanism = /(como funciona|mecanismo|como age|acao|ação|no organismo)/i.test(question);
+        const asksRisk = /(risco|efeito adverso|efeitos adversos|reacao|reação|contraindic)/i.test(question);
+        const asksUse = /(para que serve|indicacao|indicação|quando usar|uso)/i.test(question);
+
+        let focusLine = `Resumo clinico: ${profile.mechanism}`;
+        if(asksUse){
+          focusLine = `Resumo clinico: ${profile.use}`;
+        } else if(asksRisk){
+          focusLine = `Resumo clinico: ${profile.risks}`;
+        } else if(asksMechanism){
+          focusLine = `Resumo clinico: ${profile.mechanism}`;
+        }
+
+        return {
+          title: profile.title,
+          body: `Perfil selecionado: ${role}.\n${focusLine}\nMecanismo em linguagem didatica: ${profile.mechanism}\nPor que isso importa na pratica: ${profile.use}\nRiscos principais: ${profile.risks}\nLeitura pratica para estudo de enfermagem: ${profile.monitoring}\nFechamento de seguranca: esta resposta e educativa e precisa ser lida junto de prescricao, protocolo institucional e avaliacao clinica do paciente.`,
+          sources: profile.sources
+        };
       }
 
       function buildLocalAnswer(question, scope, role){
+        const directMedicationAnswer = buildMedicationMechanismAnswer(question, role);
+        if(directMedicationAnswer){
+          return directMedicationAnswer;
+        }
+
         const ranked = knowledge
           .map((entry) => ({ entry, score: rankEntry(question, scope, role, entry) }))
           .sort((a, b) => b.score - a.score);
 
-        const best = ranked[0] && ranked[0].score > 0 ? ranked[0].entry : null;
+        const best = ranked[0] && ranked[0].score >= 2 ? ranked[0].entry : null;
         if(!best){
           return {
             title: 'Triagem educativa especializada',
-            body: `Perfil selecionado: ${role}.\nNao encontrei uma resposta local completamente especifica para essa pergunta.\nPosso aprofundar sinais de alerta, curativos, prevencao, interacoes medicamentosas, vias de administracao, diluicao, diluente, compatibilidade e riscos clinicos.\nSe quiser uma resposta melhor, tente perguntar de forma direta, por exemplo: por que ceftriaxona com calcio e perigoso, quando usar hidrogel, ou por que varfarina com ibuprofeno aumenta risco.\nFechamento de seguranca: esta resposta tem objetivo educativo e nao substitui protocolo institucional, prescritor ou avaliacao clinica individual.`,
+            body: `Perfil selecionado: ${role}.\nNao encontrei uma resposta local completamente especifica para essa pergunta.\nSe a sua duvida for sobre um medicamento, tente informar o nome do farmaco e o foco da pergunta, por exemplo: como funciona a dipirona, para que serve a furosemida, quais riscos do omeprazol, ou por que ibuprofeno aumenta sangramento com varfarina.\nTambem posso aprofundar sinais de alerta, estadiamento, escala de Braden, prevencao, reposicionamento, curativos, interacoes medicamentosas, vias de administracao, diluicao, diluente, compatibilidade e mistura na mesma seringa.\nFechamento de seguranca: esta resposta tem objetivo educativo e nao substitui protocolo institucional, prescritor ou avaliacao clinica individual.`,
             sources: [
               { label: 'WHO', url: 'https://iris.who.int/handle/10665/255507' },
               { label: 'MedlinePlus', url: 'https://medlineplus.gov/' },
@@ -2420,14 +2922,14 @@
         const scope = scopeSelect.value;
 
         if(!question){
-          setStatus('Escreva uma pergunta clinica ou educativa para a IA.');
+          setStatus('Escreva uma pergunta de enfermagem, farmacologia, curativos, sinais vitais ou seguranca do paciente.');
           return;
         }
 
         appendMessage('user', 'Sua pergunta', question, []);
         questionInput.value = '';
         askButton.disabled = true;
-        setStatus('A IA esta analisando sua pergunta com foco em enfermagem e seguranca clinica...');
+        setStatus('Estou organizando uma resposta mais clara, com foco em enfermagem e seguranca clinica...');
 
         try{
           const local = buildLocalAnswer(question, scope, role);
@@ -2445,7 +2947,7 @@
       askButton.addEventListener('click', submitQuestion);
       clearButton.addEventListener('click', () => {
         feed.innerHTML = '';
-        setStatus('Conversa limpa. Pronto para uma nova pergunta.');
+        setStatus('Conversa limpa. Pode enviar uma nova duvida.');
       });
 
       questionInput.addEventListener('keydown', (event) => {
@@ -2465,7 +2967,7 @@
       appendMessage(
         'assistant',
         'Assistente especialista em enfermagem',
-        'Estou pronta para responder sobre lesao por pressao, prevencao, sinais de alerta, curativos, farmacologia clinica, interacoes medicamentosas, diluicao, diluente, vias de administracao e riscos de mistura, com foco em estudo de enfermagem e apoio educativo baseado em fontes oficiais.',
+        'Posso ajudar com duvidas de enfermagem de forma mais didatica e profissional. Respondo sobre lesao por pressao, processo de enfermagem, seguranca do paciente, sinais vitais, sepse, oxigenoterapia, acesso venoso, curativos, farmacologia clinica, interacoes medicamentosas, diluicao, vias de administracao, monitorizacao e raciocinio assistencial.',
         [
           { label: 'WHO', url: 'https://iris.who.int/handle/10665/255507' },
           { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' },
