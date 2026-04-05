@@ -66,6 +66,12 @@
     }
     .btn-primary{background:#0b3d91;color:#fff}
     .btn-secondary{background:#edf4ff;color:#0b2b63;border-color:#dbeafe}
+    .btn-disabled{
+      opacity:.55;
+      pointer-events:none;
+      cursor:not-allowed;
+      filter:grayscale(.15);
+    }
     .pill-grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
@@ -81,6 +87,22 @@
     .pill .k{font-size:12px;font-weight:800;color:#64748b;margin-bottom:6px}
     .pill .v{font-size:15px;font-weight:900;color:#0f172a;line-height:1.45}
     .foot{margin-top:18px;color:#64748b;font-size:13px;line-height:1.6}
+    .status-box{
+      margin-top:16px;
+      border-radius:16px;
+      padding:14px;
+      background:#f8fbff;
+      border:1px solid #dbeafe;
+      color:#1e3a8a;
+      font-size:14px;
+      line-height:1.7;
+      font-weight:700;
+    }
+    .status-box.warn{
+      background:#fff7ed;
+      border-color:#fed7aa;
+      color:#9a3412;
+    }
     @media (max-width:860px){
       .grid{grid-template-columns:1fr}
     }
@@ -109,8 +131,11 @@
           <li>Teste cadastro, quiz, IA, hub de materiais e o site integrado.</li>
         </ol>
         <div class="actions">
-          <a class="btn btn-primary" href="./lpp-livre-android.apk" download>Baixar APK Android</a>
+          <a class="btn btn-primary btn-disabled" id="apkDownloadLink" href="./lpp-livre-android.apk" download aria-disabled="true">Verificando APK...</a>
           <a class="btn btn-secondary" href="./index.html">Voltar ao site principal</a>
+        </div>
+        <div class="status-box" id="apkStatusBox">
+          Verificando a disponibilidade do APK publicado para download...
         </div>
         <p class="foot">
           Recomendacao: para testes clinicos e educativos, mantenha o aplicativo atualizado e valide os fluxos de cadastro,
@@ -141,5 +166,50 @@
       </aside>
     </section>
   </main>
+  <script>
+    (function(){
+      const downloadLink = document.getElementById('apkDownloadLink');
+      const statusBox = document.getElementById('apkStatusBox');
+      if(!downloadLink || !statusBox) return;
+
+      const apkUrl = new URL(downloadLink.getAttribute('href'), window.location.href).toString();
+      const enableDownload = (message) => {
+        downloadLink.classList.remove('btn-disabled');
+        downloadLink.removeAttribute('aria-disabled');
+        downloadLink.textContent = 'Baixar APK Android';
+        statusBox.textContent = message;
+        statusBox.classList.remove('warn');
+      };
+      const disableDownload = (message) => {
+        downloadLink.classList.add('btn-disabled');
+        downloadLink.setAttribute('aria-disabled', 'true');
+        downloadLink.textContent = 'APK ainda nao publicado';
+        statusBox.textContent = message;
+        statusBox.classList.add('warn');
+      };
+
+      if(window.location.href.includes('/android_asset/')){
+        disableDownload('Dentro do aplicativo, esta pagina funciona como guia de instalacao. O arquivo APK nao fica embarcado no WebView por seguranca; use a versao publicada do site ou a copia local da pasta de distribuicao para baixar o instalador.');
+        return;
+      }
+
+      if(window.location.protocol === 'file:'){
+        enableDownload('Arquivo local de distribuicao detectado. Se o APK estiver na mesma pasta desta pagina, o download local pode ser feito normalmente.');
+        return;
+      }
+
+      fetch(apkUrl, { method: 'HEAD', cache: 'no-store' })
+        .then((response) => {
+          if(response.ok){
+            enableDownload('APK publicado e pronto para download nesta pagina.');
+          } else {
+            throw new Error(`status-${response.status}`);
+          }
+        })
+        .catch(() => {
+          disableDownload('O APK ainda nao esta sincronizado nesta hospedagem. A pagina foi carregada, mas o arquivo publicado para download nao foi encontrado. Se necessario, use a versao local do projeto ou publique o APK junto com o site.');
+        });
+    })();
+  </script>
 </body>
 </html>
