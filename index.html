@@ -1938,18 +1938,7 @@
       }
 
       async function askRemote(question, scope, role){
-        const endpoint = 'https://owpswekkfaleauwjmahc.supabase.co/functions/v1/lpp-especialista';
-        const response = await fetch(endpoint, {
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json',
-            'apikey':'sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq',
-            'Authorization':'Bearer sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq'
-          },
-          body: JSON.stringify({ question, scope, role })
-        });
-        if(!response.ok) throw new Error('assistente remoto indisponível');
-        return response.json();
+        return null;
       }
 
       async function submitQuestion(){
@@ -1968,20 +1957,13 @@
         setStatus('A IA está analisando sua pergunta...');
 
         try{
-          const remote = await askRemote(question, scope, role).catch(() => null);
-          if(remote && remote.answer){
-            appendBubble('assistant', remote.title || 'IA especialista', remote.answer, Array.isArray(remote.sources) ? remote.sources : []);
-            setStatus('Resposta gerada pela IA especialista remota.');
-          }else{
-            const local = localReply(question, scope, role);
-            appendBubble('assistant', local.title, local.body, local.sources);
-            setStatus('Resposta gerada pelo núcleo local curado.');
-          }
+          const local = localReply(question, scope, role);
+          appendBubble('assistant', local.title, local.body, local.sources);
+          setStatus('Resposta gerada pela IA local curada do projeto.');
         }catch(error){
           const local = localReply(question, scope, role);
           appendBubble('assistant', local.title, local.body, local.sources);
-          setStatus('A função remota não respondeu. Foi usado o núcleo local curado.');
-          console.error(error);
+          setStatus('Resposta gerada pela IA local curada do projeto.');
         }finally{
           btnAiAsk.disabled = false;
         }
@@ -2200,18 +2182,7 @@
       }
 
       async function askRemote(question, scope, role){
-        const endpoint = 'https://owpswekkfaleauwjmahc.supabase.co/functions/v1/lpp-especialista';
-        const response = await fetch(endpoint, {
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json',
-            'apikey':'sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq',
-            'Authorization':'Bearer sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq'
-          },
-          body: JSON.stringify({ question, scope, role })
-        });
-        if(!response.ok) throw new Error('assistente remoto indisponivel');
-        return response.json();
+        return null;
       }
 
       async function submitQuestion(){
@@ -2230,20 +2201,13 @@
         setStatus('A IA esta lendo sua pergunta e organizando uma resposta mais completa...');
 
         try{
-          const remote = await askRemote(question, scope, role).catch(() => null);
-          if(remote && remote.answer){
-            appendBubble('assistant', remote.title || 'IA especialista', remote.answer, Array.isArray(remote.sources) ? remote.sources : []);
-            setStatus('Resposta gerada pela IA especialista remota com base orientativa.');
-          }else{
-            const local = localReply(question, scope, role);
-            appendBubble('assistant', local.title, local.body, local.sources);
-            setStatus('Resposta gerada pelo nucleo local curado do site.');
-          }
+          const local = localReply(question, scope, role);
+          appendBubble('assistant', local.title, local.body, local.sources);
+          setStatus('Resposta gerada pela IA local curada do site.');
         }catch(error){
           const local = localReply(question, scope, role);
           appendBubble('assistant', local.title, local.body, local.sources);
-          setStatus('A funcao remota nao respondeu. O site usou a base curada local como apoio.');
-          console.error(error);
+          setStatus('Resposta gerada pela IA local curada do site.');
         }finally{
           btnAiAsk.disabled = false;
         }
@@ -2447,20 +2411,7 @@
       }
 
       async function tryRemote(question, scope, role){
-        const endpoint = 'https://owpswekkfaleauwjmahc.supabase.co/functions/v1/lpp-especialista';
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': 'sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq',
-            'Authorization': 'Bearer sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq'
-          },
-          body: JSON.stringify({ question, scope, role })
-        });
-        if(!response.ok){
-          throw new Error(`remote-status-${response.status}`);
-        }
-        return response.json();
+        return null;
       }
 
       async function submitQuestion(){
@@ -2479,20 +2430,13 @@
         setStatus('A IA esta analisando sua pergunta com foco em enfermagem e seguranca clinica...');
 
         try{
-          const remote = await tryRemote(question, scope, role).catch(() => null);
-          if(remote && remote.answer){
-            appendMessage('assistant', remote.title || 'IA especialista', remote.answer, Array.isArray(remote.sources) ? remote.sources : []);
-            setStatus('Resposta gerada pela funcao remota da IA.');
-          } else {
-            const local = buildLocalAnswer(question, scope, role);
-            appendMessage('assistant', local.title, local.body, local.sources);
-            setStatus('A funcao remota nao estava disponivel. O site respondeu com a base local curada.');
-          }
+          const local = buildLocalAnswer(question, scope, role);
+          appendMessage('assistant', local.title, local.body, local.sources);
+          setStatus('Resposta gerada pela IA local curada do projeto.');
         } catch (error) {
           const local = buildLocalAnswer(question, scope, role);
           appendMessage('assistant', local.title, local.body, local.sources);
-          setStatus('A funcao remota falhou. O site respondeu com a base local curada.');
-          console.error(error);
+          setStatus('Resposta gerada pela IA local curada do projeto.');
         } finally {
           askButton.disabled = false;
         }
@@ -2529,7 +2473,7 @@
           { label: 'DailyMed', url: 'https://dailymed.nlm.nih.gov/dailymed/' }
         ]
       );
-      setStatus('Assistente pronta. Se a funcao remota nao estiver publicada, o site respondera pela base local curada.');
+      setStatus('Assistente pronta. Todas as respostas desta versao usam a base local curada do projeto.');
     })();
   </script>
 </body>
