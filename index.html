@@ -1147,7 +1147,8 @@
       .hero-points,
       .stats-grid,
       .risk-grid,
-      .ai-summary{
+      .ai-summary,
+      .ai-grid{
         grid-template-columns:1fr;
       }
 
@@ -1157,6 +1158,16 @@
       .user-btn{min-width:0}
       .user-email{max-width:160px}
       .ai-row{grid-template-columns:1fr}
+      .ai-controls,
+      .ai-chat{padding:14px}
+      .ai-feed{
+        max-height:none;
+        min-height:0;
+      }
+      .ai-chip{
+        width:100%;
+        justify-content:flex-start;
+      }
     }
   </style>
 </head>
@@ -1182,7 +1193,7 @@
           <a href="#conceito">Conceito</a>
           <a href="#prevencao">Prevenção</a>
           <a href="#faq">FAQ</a>
-          <a href="#ia-enfermagem">IA especialista</a>
+          <a href="#ia-enfermagem">Assistente</a>
           <a href="#fontes">Fontes</a>
           <a href="acesso.html?mode=login">Acesso</a>
         </div>
@@ -1285,7 +1296,7 @@
           <div class="download-actions">
             <a class="lpp-pill lpp-pill-link" href="./download-app.html">Baixar APK Android</a>
             <a class="lpp-pill lpp-pill-link" href="./download-app.html">Abrir pagina de instalacao</a>
-            <a class="lpp-pill lpp-pill-link" href="#ia-enfermagem">Abrir IA especialista</a>
+            <a class="lpp-pill lpp-pill-link" href="#ia-enfermagem">Abrir assistente</a>
           </div>
           <div class="download-note">
             Observacao: o APK atual e de teste. O download foi preparado para instalacao manual em Android e para validacao do fluxo clinico e educativo.
@@ -1480,7 +1491,7 @@
     <section class="lpp-card ai-assistant" id="ia-enfermagem">
       <div class="ai-head">
         <div class="ai-head-copy">
-          <h2 class="lpp-title">IA especialista em enfermagem, lesão por pressão e farmacologia</h2>
+          <h2 class="lpp-title">Assistente de enfermagem e farmacologia</h2>
           <p>
             Assistente educativo para apoio ao estudo e à revisão profissional em enfermagem. A proposta é responder de forma
             mais clara, acolhedora e tecnicamente organizada sobre lesão por pressão, administração de medicamentos,
@@ -1494,42 +1505,23 @@
           </div>
           <div class="ai-summary-card">
             <strong>Estilo</strong>
-            <span>Resposta didática, com raciocínio clínico básico, foco em segurança e linguagem profissional.</span>
+            <span>Resposta direta, com raciocínio clínico básico, foco em segurança e linguagem profissional.</span>
           </div>
           <div class="ai-summary-card">
             <strong>Base</strong>
-            <span>Conteúdo local curado com apoio em ANVISA, OMS, NPIAP, MedlinePlus e DailyMed.</span>
+            <span>Conteúdo local curado com apoio em ANVISA, OMS, NPIAP, Coren-SP e referências técnicas oficiais.</span>
           </div>
         </div>
       </div>
 
       <div class="ai-grid">
         <div class="ai-controls">
-          <div class="ai-row">
-            <div>
-              <label for="aiRole">Perfil da resposta</label>
-              <select id="aiRole" class="ai-select">
-                <option value="paciente">Paciente</option>
-                <option value="cuidador">Cuidador</option>
-                <option value="enfermagem" selected>Enfermagem</option>
-                <option value="profissional">Profissional de saúde</option>
-              </select>
-            </div>
-            <div>
-              <label for="aiScope">Foco principal</label>
-              <select id="aiScope" class="ai-select">
-                <option value="lesao">Lesão por pressão</option>
-                <option value="interacoes">Interações medicamentosas</option>
-                <option value="curativos">Curativos e coberturas</option>
-                <option value="enfermagem" selected>Perguntas de enfermagem</option>
-                <option value="urgencia">Urgência e hospital</option>
-              </select>
-            </div>
-          </div>
+          <input id="aiRole" type="hidden" value="enfermagem">
+          <input id="aiScope" type="hidden" value="enfermagem">
 
           <div class="ai-helper">
-            Pode perguntar sobre sinais vitais, cálculo e administração de medicamentos, segurança do paciente, oxigenoterapia,
-            acesso venoso, sepse, curativos, lesão por pressão, interações, diluição, monitorização e condutas educativas.
+            Pode perguntar sobre sinais vitais, administração de medicamentos, segurança do paciente, oxigenoterapia,
+            acesso venoso, sepse, curativos, lesão por pressão, diluição, monitorização e condutas educativas.
           </div>
 
           <div class="ai-quick">
@@ -1542,14 +1534,14 @@
           </div>
 
           <label for="aiQuestion" style="margin-top:14px;">Pergunta clínica ou educativa</label>
-          <textarea id="aiQuestion" class="ai-textarea" placeholder="Ex.: Como funciona a dipirona no organismo? O que a enfermagem precisa monitorar na sepse? Quando usar hidrogel?"></textarea>
+          <textarea id="aiQuestion" class="ai-textarea" placeholder="Ex.: Qual agulha usar na intramuscular? O que a enfermagem precisa monitorar na sepse? Quando usar hidrogel?"></textarea>
 
           <div class="ai-actions">
-            <button class="ai-btn primary" id="btnAiAsk" type="button">Perguntar à IA</button>
+            <button class="ai-btn primary" id="btnAiAsk" type="button">Perguntar</button>
             <button class="ai-btn secondary" id="btnAiClear" type="button">Limpar conversa</button>
           </div>
 
-          <div class="ai-status" id="aiStatus">Pronta para responder com base educativa local, foco em enfermagem e linguagem mais clara.</div>
+          <div class="ai-status" id="aiStatus">Pronta para responder com base educativa local e linguagem mais clara.</div>
         </div>
 
         <div class="ai-chat">
@@ -2057,7 +2049,7 @@
 
       appendBubble(
         'assistant',
-        'Assistente especialista em enfermagem',
+        'Assistente de enfermagem',
         'Posso responder sobre lesão por pressão, sinais de alerta, curativos, coberturas, medicamentos usados em UBS, PA, UPA/UPH e hospital, vias de administração e interações medicamentosas com foco em segurança clínica e fontes oficiais.',
         [
           { label:'WHO', url:'https://iris.who.int/handle/10665/255507' },
@@ -2305,8 +2297,8 @@
       aiFeed.innerHTML = '';
       appendBubble(
         'assistant',
-        'Assistente especialista em enfermagem',
-        'Estou pronta para responder de forma mais acolhedora e explicativa sobre lesao por pressao, sinais de alerta, curativos, farmacologia clinica, interacoes medicamentosas, vias de administracao, compatibilidade, diluicao e riscos de mistura. Se preferir, voce pode perguntar como estudante, enfermagem, cuidador ou profissional de saude e eu adapto o foco da resposta.',
+        'Assistente de enfermagem',
+        'Estou pronta para responder de forma mais acolhedora e explicativa sobre lesao por pressao, sinais de alerta, curativos, farmacologia clinica, interacoes medicamentosas, vias de administracao, compatibilidade, diluicao e riscos de mistura.',
         [
           { label:'WHO', url:'https://iris.who.int/handle/10665/255507' },
           { label:'ANVISA', url:'https://www.gov.br/anvisa/' },
@@ -2333,7 +2325,7 @@
           <a href="premium.html">Premium</a>
           <a href="selecao-produtos.html">Sele&ccedil;&atilde;o de produtos</a>
           <a href="#aplicativo">Aplicativo</a>
-          <a href="#ia-enfermagem">IA especialista</a>
+          <a href="#ia-enfermagem">Assistente</a>
           <a href="acesso.html?mode=login">Acesso</a>
         `;
       }
@@ -2453,6 +2445,20 @@
             { label: 'ANVISA', url: 'https://www.gov.br/anvisa/' },
             { label: 'DailyMed', url: 'https://dailymed.nlm.nih.gov/dailymed/' },
             { label: 'MedlinePlus', url: 'https://medlineplus.gov/' }
+          ]
+        },
+        {
+          scope: 'enfermagem',
+          keywords: ['intramuscular', 'im', 'agulha', 'agulhas', 'numero da agulha', 'agulha de intramuscular', 'qual agulha', 'qual agulha da intramuscular', 'qual agulha de im', 'deltoide', 'ventrogluteo', 'vasto lateral', 'gluteo', 'injecao', 'injecao intramuscular', '25x7', '30x7', '30x8'],
+          title: 'Administracao intramuscular: agulha, sitio e seguranca',
+          summary: 'Quando a pergunta e pratica, em muitos adultos costuma-se estudar primeiro as agulhas 30x7 ou 30x8 para aplicacao intramuscular. Ainda assim, a escolha final depende do sitio, do biotipo, do volume e da viscosidade do medicamento.',
+          explanation: 'Para responder de forma mais proxima da rotina brasileira: 30x7 e 30x8 aparecem com frequencia como referencia de estudo para intramuscular em adultos. Em situacoes selecionadas, 25x7 tambem pode ser lembrada, especialmente quando o sitio, a massa muscular e o tecido subcutaneo favorecem essa escolha. Deltoide costuma aceitar menor volume e exige avaliacao mais cuidadosa; ventrogluteo e vasto lateral tambem dependem do biotipo e da profundidade necessaria para atingir o musculo.',
+          risks: 'Agulha curta demais pode resultar em deposito subcutaneo e falha da via; escolha inadequada do sitio ou da profundidade pode aumentar dor, lesao local, necrose, vaso-puncao acidental e erro tecnico.',
+          practice: 'Para estudo de enfermagem, a sequencia segura e: 1) definir o sitio, 2) avaliar biotipo e massa muscular, 3) revisar volume e viscosidade, 4) escolher a agulha compativel com o paciente e 5) monitorar dor, sangramento, endurecimento e resposta clinica. Se a pergunta for "qual agulha de intramuscular?", a resposta curta e pratica costuma ser: 30x7 ou 30x8 em muitos adultos, com 25x7 em situacoes selecionadas conforme sitio e biotipo.',
+          sources: [
+            { label: 'CDC', url: 'https://www.cdc.gov/vaccines/hcp/admin/downloads/vaccine-administration-needle-length.pdf' },
+            { label: 'Coren-SP', url: 'https://portal.coren-sp.gov.br/noticias/coren-sp-educacao-transmite-atividade-sobre-administracao-de-medicamentos-via-intramuscular-e-subcutanea/' },
+            { label: 'ANVISA', url: 'https://antigo.anvisa.gov.br/listagem-de-alertas/-/asset_publisher/R6VaZWsQDDzS/content/diclofenaco-injetavel-risco-de-lesoes-no-local-da-injecao/33868?inheritRedirect=false' }
           ]
         },
         {
@@ -2678,7 +2684,7 @@
         },
         {
           scope: 'enfermagem',
-          keywords: ['sinais vitais', 'pressao arterial', 'frequencia cardiaca', 'temperatura', 'saturacao', 'spo2', 'respiratoria', 'interpretar sinais vitais', 'valor isolado', 'tendencia'],
+          keywords: ['sinais vitais', 'pressao arterial', 'frequencia cardiaca', 'temperatura', 'saturacao', 'spo2', 'respiratoria', 'interpretar sinais vitais', 'valor isolado', 'tendencia', 'normal', 'normais', 'adulto'],
           title: 'Leitura clinica dos sinais vitais',
           summary: 'Sinais vitais nao devem ser lidos isoladamente; o valor clinico aparece quando a equipe integra tendencia, contexto e sintomas.',
           explanation: 'Pressao, frequencia cardiaca, frequencia respiratoria, temperatura e saturacao ajudam a reconhecer compensacao, deterioracao e resposta ao tratamento.',
@@ -2853,8 +2859,12 @@
       function rankEntry(question, scope, role, entry){
         const haystack = normalizeText(`${question} ${scope} ${role}`);
         const keywordHits = entry.keywords.reduce((score, keyword) => score + (haystack.includes(normalizeText(keyword)) ? 2 : 0), 0);
+        const stopWords = new Set(['como', 'qual', 'quais', 'para', 'com', 'sem', 'mais', 'menos', 'sobre', 'essa', 'esse', 'isso', 'uma', 'umas', 'uns', 'onde']);
+        const entryText = normalizeText(`${entry.title} ${entry.summary} ${entry.explanation} ${entry.practice} ${(entry.keywords || []).join(' ')}`);
+        const tokenHits = Array.from(new Set(haystack.split(/[^a-z0-9]+/).filter((token) => token.length >= 4 && !stopWords.has(token))))
+          .reduce((score, token) => score + (entryText.includes(token) ? 1 : 0), 0);
         const scopeBonus = keywordHits > 0 && entry.scope === scope ? 1 : 0;
-        return keywordHits + scopeBonus;
+        return keywordHits + tokenHits + scopeBonus;
       }
 
       function buildMedicationMechanismAnswer(question, role){
@@ -2966,7 +2976,7 @@
       feed.innerHTML = '';
       appendMessage(
         'assistant',
-        'Assistente especialista em enfermagem',
+        'Assistente de enfermagem',
         'Posso ajudar com duvidas de enfermagem de forma mais didatica e profissional. Respondo sobre lesao por pressao, processo de enfermagem, seguranca do paciente, sinais vitais, sepse, oxigenoterapia, acesso venoso, curativos, farmacologia clinica, interacoes medicamentosas, diluicao, vias de administracao, monitorizacao e raciocinio assistencial.',
         [
           { label: 'WHO', url: 'https://iris.who.int/handle/10665/255507' },
@@ -2980,3 +2990,4 @@
   </script>
 </body>
 </html>
+
