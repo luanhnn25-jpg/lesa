@@ -1,0 +1,1847 @@
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b3d91" />
+  <meta
+    name="description"
+    content="Impacto econômico hospitalar da lesão por pressão com dados de custo, comparação visual e referências preservadas."
+  />
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="LPP" />
+
+  <title>Impacto Econômico - Lesão por Pressão</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root{
+      --i-blue-1:#0b3d91;
+      --i-blue-2:#0f5bd3;
+      --i-blue-3:#0b5bd3;
+      --i-navy:#082c63;
+      --i-gold:#f0b400;
+
+      --i-card:#ffffff;
+      --i-muted:#475569;
+      --i-text:#0f172a;
+
+      --i-radius:20px;
+
+      --i-shadow:0 12px 30px rgba(2,6,23,.10);
+      --i-shadow-2:0 22px 60px rgba(2,6,23,.16);
+      --i-soft:0 10px 24px rgba(2,6,23,.08);
+
+      --i-glow:0 0 0 4px rgba(56,130,246,.16), 0 18px 42px rgba(15,91,211,.18);
+      --i-border:rgba(15,23,42,.10);
+
+      --i-grad:linear-gradient(135deg, rgba(15,91,211,.55), rgba(11,61,145,.20), rgba(240,180,0,.22));
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+
+    body.impacto{
+      margin:0;
+      overflow-x:hidden;
+      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--i-text);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.16), transparent 55%),
+        radial-gradient(900px 520px at 90% 10%, rgba(11,61,145,.14), transparent 55%),
+        radial-gradient(900px 520px at 50% 110%, rgba(240,180,0,.08), transparent 55%),
+        #eef2f6;
+    }
+
+    body.impacto a{ -webkit-tap-highlight-color: transparent; }
+
+    .lpp-header{
+      background:
+        radial-gradient(circle at top center, rgba(255,255,255,.18), transparent 36%),
+        linear-gradient(180deg, var(--i-blue-1), #0b4ab1 58%, #0a3790 100%);
+      color:#fff;
+      padding:30px 16px 22px;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+      box-shadow:inset 0 -1px 0 rgba(255,255,255,.08);
+    }
+
+    .lpp-header::before{
+      content:"";
+      position:absolute;
+      inset:auto -120px -80px -120px;
+      height:180px;
+      background:radial-gradient(circle at 50% 20%, rgba(255,255,255,.12), transparent 60%);
+      pointer-events:none;
+    }
+
+    .lpp-brand{
+      position:relative;
+      z-index:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+    }
+
+    .lpp-header h1{
+      margin:0;
+      font-size:clamp(28px, 4vw, 44px);
+      font-weight:1000;
+      letter-spacing:.2px;
+      text-shadow:0 8px 24px rgba(2,6,23,.18);
+    }
+
+    .lpp-header p{
+      margin:0;
+      opacity:.94;
+      font-size:15px;
+      font-weight:700;
+      line-height:1.6;
+      max-width:760px;
+    }
+
+    .header-actions{
+      margin-top:16px;
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      position:relative;
+      z-index:1;
+    }
+
+    .lpp-pill{
+      padding:11px 14px;
+      border-radius:999px;
+      background:#edf4ff;
+      border:1px solid #d8e7ff;
+      color:#0b2b63;
+      font-weight:900;
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
+      transition:transform .14s ease, box-shadow .14s ease, background .14s ease;
+      box-shadow:0 10px 18px rgba(2,6,23,.06);
+    }
+
+    .lpp-pill:hover{
+      background:#e7f0ff;
+      transform:translateY(-1px);
+      box-shadow:0 16px 28px rgba(2,6,23,.10);
+    }
+
+    .lpp-nav{
+      background:rgba(10,47,115,.92);
+      backdrop-filter:blur(10px);
+      position:sticky;
+      top:0;
+      z-index:60;
+      box-shadow:0 12px 24px rgba(2,6,23,.12);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .lpp-nav-inner{
+      max-width:1180px;
+      margin:0 auto;
+      padding:10px 16px;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:14px;
+      align-items:center;
+    }
+
+    .menu-shell{
+      position:relative;
+      min-width:0;
+      overflow:hidden;
+      border-radius:16px;
+    }
+
+    .menu-shell::after{
+      content:"";
+      position:absolute;
+      right:0;
+      top:0;
+      bottom:0;
+      width:48px;
+      background:linear-gradient(90deg, rgba(10,47,115,0), rgba(10,47,115,.92));
+      pointer-events:none;
+      opacity:.95;
+    }
+
+    .lpp-menu{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:thin;
+      min-width:0;
+      padding:2px 6px 8px 0;
+      scroll-behavior:smooth;
+    }
+
+    .lpp-menu::-webkit-scrollbar{height:7px}
+    .lpp-menu::-webkit-scrollbar-thumb{
+      background:rgba(255,255,255,.26);
+      border-radius:999px;
+    }
+    .lpp-menu::-webkit-scrollbar-track{background:transparent}
+
+    .lpp-menu a{
+      color:#eaf2ff;
+      text-decoration:none;
+      padding:11px 14px;
+      border-radius:14px;
+      font-weight:900;
+      font-size:14px;
+      line-height:1;
+      white-space:nowrap;
+      transition:transform .15s ease, background .15s ease, box-shadow .15s ease;
+      outline:none;
+      flex:0 0 auto;
+      border:1px solid transparent;
+      background:rgba(255,255,255,.04);
+    }
+
+    .lpp-menu a:hover{
+      background:rgba(255,255,255,.14);
+      transform:translateY(-1px);
+      box-shadow:0 10px 18px rgba(2,6,23,.18);
+      border-color:rgba(255,255,255,.10);
+    }
+
+    .lpp-menu a[aria-current="page"]{
+      background:rgba(255,255,255,.18);
+      border-color:rgba(255,255,255,.16);
+      box-shadow:0 10px 18px rgba(2,6,23,.20);
+    }
+
+    .user-area{
+      position:relative;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+
+    .user-btn{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      max-width:320px;
+      min-width:210px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.10);
+      color:#fff;
+      font-weight:950;
+      cursor:pointer;
+      outline:none;
+      box-shadow:0 10px 18px rgba(2,6,23,.16);
+      transition:transform .12s ease, background .12s ease, box-shadow .12s ease;
+    }
+
+    .user-btn:hover{
+      background:rgba(255,255,255,.16);
+      transform:translateY(-1px);
+      box-shadow:0 14px 26px rgba(2,6,23,.22);
+    }
+
+    .user-btn:focus-visible{box-shadow:var(--i-glow)}
+
+    .user-icon{
+      width:30px;
+      height:30px;
+      flex:0 0 auto;
+      display:grid;
+      place-items:center;
+      border-radius:999px;
+      background:rgba(255,255,255,.22);
+      border:1px solid rgba(255,255,255,.18);
+    }
+
+    .user-icon svg{width:18px;height:18px;opacity:.95}
+    .user-text{display:flex;flex-direction:column;gap:2px;min-width:0;text-align:left}
+    .user-email{
+      font-size:12px;
+      font-weight:950;
+      opacity:.96;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      max-width:210px;
+    }
+
+    .user-status{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      flex-wrap:wrap;
+      font-size:11px;
+      opacity:.90;
+      font-weight:850;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:2px 8px;
+      border-radius:999px;
+      font-size:10.5px;
+      font-weight:950;
+      border:1px solid rgba(255,255,255,.22);
+      background:rgba(255,255,255,.14);
+      color:#fff;
+    }
+
+    .badge.premium{
+      background:rgba(34,197,94,.18);
+      border-color:rgba(34,197,94,.35);
+    }
+
+    .badge.verified{
+      background:rgba(59,130,246,.18);
+      border-color:rgba(59,130,246,.32);
+    }
+
+    .caret{opacity:.9;font-size:12px;margin-left:auto}
+
+    .dropdown{
+      position:absolute;
+      top:calc(100% + 10px);
+      right:0;
+      width:min(360px, 92vw);
+      background:#fff;
+      border:1px solid rgba(15,23,42,.10);
+      border-radius:16px;
+      box-shadow:0 18px 45px rgba(2,6,23,.22);
+      padding:10px;
+      opacity:0;
+      transform:translateY(-6px) scale(.98);
+      pointer-events:none;
+      transition:opacity .14s ease, transform .14s ease;
+      z-index:9999;
+      max-height:min(70vh, 520px);
+      overflow:auto;
+    }
+
+    .dropdown.open{
+      opacity:1;
+      transform:translateY(0) scale(1);
+      pointer-events:auto;
+    }
+
+    .drop-head{
+      padding:10px 10px 8px;
+      border-radius:14px;
+      background:linear-gradient(180deg, #f8fbff, #ffffff);
+      border:1px solid rgba(15,23,42,.08);
+      margin-bottom:10px;
+    }
+
+    .drop-head .t1{
+      font-weight:950;
+      color:#0b2b63;
+      font-size:13px;
+    }
+
+    .drop-head .t2{
+      margin-top:4px;
+      color:#475569;
+      font-size:12px;
+      word-break:break-all;
+    }
+
+    .drop-item{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:11px 12px;
+      border-radius:12px;
+      border:1px solid rgba(15,23,42,.08);
+      background:#fff;
+      color:#0f172a;
+      cursor:pointer;
+      font-weight:950;
+      text-decoration:none;
+      transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+    }
+
+    .drop-item:hover{
+      background:#f8fafc;
+      transform:translateY(-1px);
+      box-shadow:0 12px 24px rgba(2,6,23,.10);
+    }
+
+    .drop-muted{font-size:12px;color:#475569;font-weight:850}
+    .drop-sep{height:1px;background:rgba(15,23,42,.10);margin:10px 4px}
+
+    .skeleton{
+      display:inline-block;
+      width:160px;
+      height:12px;
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(255,255,255,.18), rgba(255,255,255,.28), rgba(255,255,255,.18));
+      background-size:240px 100%;
+      animation:sk 1.1s infinite;
+    }
+
+    .skeleton.small{width:120px;height:10px;opacity:.95}
+
+    @keyframes sk{
+      0%{background-position:-240px 0}
+      100%{background-position:240px 0}
+    }
+
+    main{
+      max-width:1100px;
+      margin:20px auto;
+      padding:0 16px 46px;
+    }
+
+    .hero{
+      background:linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
+      border-radius:24px;
+      padding:26px 24px;
+      margin:14px 0 18px;
+      box-shadow:var(--i-shadow-2);
+      border:1px solid var(--i-border);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:auto -80px -80px auto;
+      width:260px;
+      height:260px;
+      border-radius:50%;
+      background:radial-gradient(circle at center, rgba(11,91,211,.10), transparent 65%);
+      pointer-events:none;
+    }
+
+    .hero h2{
+      margin:0 0 10px;
+      font-size:clamp(24px, 3vw, 34px);
+      line-height:1.1;
+      color:#0b2b63;
+      font-weight:1000;
+      letter-spacing:-0.3px;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero p{
+      margin:0;
+      color:#334155;
+      font-size:16px;
+      line-height:1.7;
+      max-width:76ch;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero-badges{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero-badge{
+      padding:9px 13px;
+      border-radius:999px;
+      background:#eff6ff;
+      border:1px solid #dbeafe;
+      color:#0b3d91;
+      font-size:13px;
+      font-weight:900;
+      box-shadow:var(--i-soft);
+    }
+
+    .summary-banner{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:14px;
+      margin:0 0 16px;
+    }
+
+    .summary-box{
+      background:#fff;
+      border:1px solid var(--i-border);
+      border-radius:18px;
+      padding:16px;
+      box-shadow:var(--i-soft);
+    }
+
+    .summary-box h3{
+      margin:0 0 8px;
+      font-size:16px;
+      font-weight:950;
+      color:#0b2b63;
+    }
+
+    .summary-box p{
+      margin:0;
+      color:#475569;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .section-title{
+      font-size:22px;
+      font-weight:950;
+      margin:18px 0 12px;
+      letter-spacing:-0.2px;
+      color:#0b2b63;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      position:relative;
+      z-index:1;
+    }
+
+    .section-title::before{
+      content:"";
+      width:4px;
+      height:22px;
+      border-radius:999px;
+      background:var(--i-blue-3);
+      box-shadow:0 10px 18px rgba(11,91,211,.25);
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
+      border-radius:var(--i-radius);
+      padding:20px 22px;
+      margin:14px 0;
+      box-shadow:var(--i-shadow);
+      border:1px solid var(--i-border);
+      position:relative;
+      overflow:hidden;
+      transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+      will-change:transform;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      padding:1px;
+      border-radius:inherit;
+      background:var(--i-grad);
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      opacity:.55;
+      pointer-events:none;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 260px at 20% 0%, rgba(11,91,211,.12), transparent 55%),
+        radial-gradient(520px 240px at 90% 20%, rgba(240,180,0,.10), transparent 60%);
+      opacity:0;
+      transition:opacity .18s ease;
+      pointer-events:none;
+    }
+
+    .card:hover{
+      transform:translateY(-4px);
+      box-shadow:var(--i-shadow-2);
+      border-color:rgba(11,91,211,.22);
+    }
+
+    .card:hover::before{ opacity: 1; }
+
+    .muted{
+      color:var(--i-muted);
+      font-size:14px;
+      line-height:1.65;
+      margin-top:6px;
+      position:relative;
+      z-index:1;
+    }
+
+    .table-wrap{
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      border-radius:16px;
+      margin-top:10px;
+      box-shadow:var(--i-soft);
+      position:relative;
+      z-index:1;
+    }
+
+    table{
+      width:100%;
+      min-width:920px;
+      border-collapse:collapse;
+      background:#fff;
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid rgba(15,23,42,.10);
+    }
+
+    th, body.impacto td{
+      padding:12px 12px;
+      border-bottom:1px solid #ececec;
+      vertical-align:top;
+      font-size:14px;
+      line-height:1.55;
+      color:#243042;
+    }
+
+    th{
+      background:linear-gradient(180deg, var(--i-blue-1), #0b4ab1);
+      color:#fff;
+      font-weight:950;
+      font-size:14px;
+    }
+
+    tr:last-child td{ border-bottom:none; }
+    td strong{ color:#0b3d91; }
+
+    .period-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:14px;
+      margin-top:14px;
+      position:relative;
+      z-index:1;
+    }
+
+    .period-card{
+      background:#fff;
+      border:1px solid rgba(15,23,42,.10);
+      border-radius:18px;
+      padding:16px;
+      box-shadow:var(--i-soft);
+    }
+
+    .period-card h3{
+      margin:0 0 6px;
+      font-size:17px;
+      font-weight:950;
+      color:#0b2b63;
+    }
+
+    .period-card p{
+      margin:0;
+      font-size:13px;
+      line-height:1.6;
+      color:#475569;
+    }
+
+    .period-chart{
+      position:relative;
+      height:300px;
+      margin-top:12px;
+    }
+
+    .period-list{
+      margin:12px 0 0;
+      padding-left:18px;
+    }
+
+    .period-list li{
+      font-size:13px;
+      line-height:1.6;
+      color:#334155;
+      margin:6px 0;
+    }
+
+    .period-note{
+      margin-top:14px;
+      padding:14px 16px;
+      border-radius:16px;
+      background:#fff8e8;
+      border:1px solid #fde7a8;
+      color:#6b7280;
+      font-size:13px;
+      line-height:1.65;
+    }
+
+    .procedure-box{
+      margin-top:14px;
+      padding:14px 16px;
+      border-radius:16px;
+      background:#f8fbff;
+      border:1px solid #dbeafe;
+      color:#334155;
+      font-size:14px;
+      line-height:1.65;
+      position:relative;
+      z-index:1;
+    }
+
+    .two-cols{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-top:10px;
+      position:relative;
+      z-index:1;
+    }
+
+    .mini{
+      background:#fff;
+      border-radius:16px;
+      padding:14px 16px;
+      border:1px solid rgba(15,23,42,.10);
+      box-shadow:var(--i-soft);
+      transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .mini::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(520px 220px at 20% 10%, rgba(11,91,211,.10), transparent 60%);
+      opacity:0;
+      transition:opacity .16s ease;
+      pointer-events:none;
+    }
+
+    .mini:hover{
+      transform:translateY(-3px);
+      box-shadow:0 22px 44px rgba(2,6,23,.12);
+      border-color:rgba(11,91,211,.18);
+    }
+
+    .mini:hover::before{ opacity:1; }
+
+    .mini h3{
+      margin:0 0 8px;
+      font-size:16px;
+      font-weight:950;
+      color:#0b2b63;
+      position:relative;
+      z-index:1;
+    }
+
+    ul{
+      margin:8px 0 0;
+      padding-left:18px;
+      position:relative;
+      z-index:1;
+    }
+
+    li{
+      font-size:14px;
+      line-height:1.6;
+      color:#243042;
+      margin:6px 0;
+    }
+
+    .extra-content{
+      margin-top:12px;
+      padding:14px 16px;
+      border-radius:16px;
+      background:#f8fbff;
+      border:1px solid #dbeafe;
+      color:#334155;
+      font-size:14px;
+      line-height:1.65;
+      position:relative;
+      z-index:1;
+    }
+
+    .premium-lock{
+      position:relative;
+    }
+
+    .premium-content.locked{
+      filter:blur(3px);
+      pointer-events:none;
+      user-select:none;
+    }
+
+    .premium-overlay{
+      position:absolute;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:5;
+      background:linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.92));
+      backdrop-filter:blur(3px);
+    }
+
+    .premium-lock.locked .premium-overlay{
+      display:flex;
+    }
+
+    .premium-box{
+      width:min(560px, 100%);
+      background:#fff;
+      border:1px solid rgba(15,23,42,.10);
+      border-radius:20px;
+      box-shadow:0 24px 50px rgba(2,6,23,.18);
+      padding:22px;
+      text-align:center;
+    }
+
+    .premium-icon{
+      width:58px;
+      height:58px;
+      margin:0 auto 12px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(180deg, #fff7db, #ffe8a3);
+      color:#8a5a00;
+      border:1px solid rgba(240,180,0,.35);
+      box-shadow:0 10px 20px rgba(240,180,0,.16);
+    }
+
+    .premium-icon svg{
+      width:26px;
+      height:26px;
+    }
+
+    .premium-box h3{
+      margin:0 0 8px;
+      font-size:22px;
+      color:#0b2b63;
+    }
+
+    .premium-box p{
+      margin:0;
+      color:#475569;
+      line-height:1.65;
+      font-size:15px;
+    }
+
+    .premium-actions{
+      margin-top:16px;
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .premium-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:11px 16px;
+      border-radius:999px;
+      text-decoration:none;
+      font-weight:900;
+      font-size:14px;
+      border:1px solid transparent;
+      cursor:pointer;
+    }
+
+    .premium-btn.primary{
+      background:#0b3d91;
+      color:#fff;
+      box-shadow:0 14px 28px rgba(11,61,145,.22);
+    }
+
+    .premium-btn.secondary{
+      background:#fff;
+      color:#0b2b63;
+      border-color:#dbe3ef;
+    }
+
+    .refs{
+      margin:10px 0 0;
+      padding-left:18px;
+      position:relative;
+      z-index:1;
+    }
+
+    .refs li{
+      margin:10px 0;
+    }
+
+    .refs a{
+      color:var(--i-blue-2);
+      font-weight:900;
+      text-decoration:none;
+      border-bottom:1px dashed rgba(15,91,211,.45);
+      transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+      border-radius:8px;
+      padding:0 2px;
+      outline:none;
+      word-break:break-word;
+    }
+
+    .refs a:hover{
+      background:rgba(15,91,211,.08);
+      box-shadow:0 10px 22px rgba(2,6,23,.08);
+    }
+
+    .refs a:focus-visible{
+      box-shadow:var(--i-glow);
+      background:rgba(15,91,211,.10);
+    }
+
+    .stamp{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-radius:999px;
+      background:#eff6ff;
+      border:1px solid #dbeafe;
+      color:#0b3d91;
+      font-size:12px;
+      font-weight:900;
+      margin-top:10px;
+      position:relative;
+      z-index:1;
+    }
+
+    .pwa-modal{
+      position:fixed;
+      inset:0;
+      background:rgba(2, 6, 23, .55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:999999;
+    }
+
+    .pwa-modal.open{display:flex}
+
+    .pwa-box{
+      width:min(520px, 100%);
+      background:#ffffff;
+      border-radius:18px;
+      border:1px solid rgba(15, 23, 42, .10);
+      box-shadow:0 20px 55px rgba(2,6,23,.28);
+      padding:16px;
+    }
+
+    .pwa-title{
+      margin:0 0 10px;
+      font-size:18px;
+      font-weight:950;
+      color:#0b2b63;
+    }
+
+    .pwa-img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:14px;
+      border:1px solid rgba(15, 23, 42, .10);
+      box-shadow:0 12px 24px rgba(2,6,23,.12);
+      margin-bottom:10px;
+    }
+
+    .pwa-text{
+      margin:0 0 12px;
+      font-size:14.5px;
+      line-height:1.6;
+      color:#475569;
+    }
+
+    .pwa-actions{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+
+    .pwa-btn{
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid transparent;
+      cursor:pointer;
+      font-weight:950;
+      font-size:14px;
+    }
+
+    .pwa-btn-primary{background:#0b3d91;color:#fff}
+    .pwa-btn-secondary{background:#fff;border-color:#dbe3ef;color:#0f172a}
+
+    footer{
+      text-align:center;
+      color:#475569;
+      padding:22px 12px;
+      font-size:13px;
+      opacity:.95;
+    }
+
+    @media (max-width: 980px){
+      .lpp-nav-inner{
+        grid-template-columns:1fr;
+      }
+
+      .user-area{
+        justify-content:flex-end;
+      }
+
+      .user-btn{
+        width:100%;
+        max-width:100%;
+      }
+    }
+
+    @media (max-width: 900px){
+      .summary-banner,
+      .period-grid{
+        grid-template-columns:1fr;
+      }
+
+      .two-cols{
+        grid-template-columns: 1fr;
+      }
+
+      .section-title{
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 640px){
+      .dropdown{
+        position:fixed;
+        left:10px;
+        right:10px;
+        top:auto;
+        bottom:10px;
+        width:auto;
+        max-height:55vh;
+        border-radius:18px;
+        transform:translateY(10px);
+        transform-origin:bottom center;
+      }
+
+      .dropdown.open{transform:translateY(0)}
+      .user-btn{min-width:0}
+      .user-email{max-width:160px}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ transition:none !important; }
+    }
+  </style>
+</head>
+
+<body class="impacto">
+
+  <header class="lpp-header">
+    <div class="lpp-brand">
+      <h1>Impacto Econômico Hospitalar</h1>
+      <p>Custos estimados associados à lesão por pressão no contexto assistencial</p>
+
+      <div class="header-actions">
+        <button id="pwaInstallBtn" class="lpp-pill" style="display:none;">
+          📲 Instalar aplicativo
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="lpp-nav" aria-label="Navegação principal">
+    <div class="lpp-nav-inner">
+
+      <div class="menu-shell">
+        <div class="lpp-menu" id="menuLinks">
+          <a href="index.html">Início</a>
+          <a href="tratamento.html">Página Técnica</a>
+          <a href="guia-simples.html">Guia Simples</a>
+          <a href="impacto-economico.html" aria-current="page">Impacto Econômico</a>
+          <a href="nosso-produto.html">Nosso Produto</a>
+          <a href="selecao-produtos.html">Seleção de Produtos</a>
+          <a href="avaliacao.html">Avaliação</a>
+        </div>
+      </div>
+
+      <div class="user-area" aria-label="Área do usuário">
+        <button id="userBtn" class="user-btn" type="button" aria-expanded="false">
+          <span class="user-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 20a8 8 0 0 1 16 0" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+
+          <span class="user-text">
+            <span id="userEmail" class="user-email"><span class="skeleton"></span></span>
+            <span id="userStatus" class="user-status"><span class="skeleton small"></span></span>
+          </span>
+
+          <span class="caret">▾</span>
+        </button>
+
+        <div id="userDrop" class="dropdown" role="menu" aria-label="Menu do usuário">
+          <div class="drop-head">
+            <div class="t1" id="dropHeadTitle">Conta</div>
+            <div class="t2" id="dropHeadSub">Verificando sessão…</div>
+          </div>
+
+          <a id="dropLogin" class="drop-item" href="login.html?mode=login">
+            Entrar <span class="drop-muted">Login</span>
+          </a>
+          <a id="dropSignup" class="drop-item" href="login.html?mode=signup">
+            Criar conta <span class="drop-muted">Cadastro</span>
+          </a>
+
+          <div class="drop-sep"></div>
+
+          <a id="dropPremium" class="drop-item" href="login.html?mode=signup">
+            Premium <span class="drop-muted">Desbloquear</span>
+          </a>
+          <button id="dropLogout" class="drop-item" type="button" style="display:none;">
+            Sair <span class="drop-muted">Logout</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <main>
+
+    <section class="summary-banner">
+      <div class="summary-box">
+        <h3>Custos diretos</h3>
+        <p>Os estudos mostram variação importante conforme estágio da lesão, tempo de internação e complexidade clínica.</p>
+      </div>
+      <div class="summary-box">
+        <h3>Impacto hospitalar</h3>
+        <p>Além dos curativos, a LPP aumenta uso de materiais, tempo assistencial e demanda multiprofissional.</p>
+      </div>
+      <div class="summary-box">
+        <h3>Mensagem central</h3>
+        <p>Os casos graves e complexos concentram maior custo, reforçando a importância da prevenção e da detecção precoce.</p>
+      </div>
+    </section>
+
+    <section class="hero">
+      <h2>O impacto financeiro da lesão por pressão vai além do curativo</h2>
+      <p>
+        A lesão por pressão está associada ao aumento do tempo de internação, maior consumo de materiais,
+        necessidade de assistência multiprofissional e elevação do custo hospitalar. Em situações avançadas
+        ou complexas, o tratamento pode atingir valores muito expressivos.
+      </p>
+
+      <div class="hero-badges">
+        <span class="hero-badge">Internação prolongada</span>
+        <span class="hero-badge">Maior uso de insumos</span>
+        <span class="hero-badge">Mais tempo assistencial</span>
+        <span class="hero-badge">Prevenção reduz custo</span>
+      </div>
+    </section>
+
+    <div class="card">
+      <div class="section-title">Dados de custo</div>
+      <div class="muted">
+        Os valores abaixo foram reorganizados para deixar claro <strong>o contexto clínico</strong>,
+        <strong>o intervalo de tempo</strong> e, quando disponível na fonte, <strong>o número de pacientes</strong>.
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Contexto / tipo de lesão</th>
+              <th>Unidade</th>
+              <th>Valor</th>
+              <th>Amostra</th>
+              <th>Descrição</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Curativos em pacientes críticos com LPP ≥ estágio 2</strong></td>
+              <td>Por procedimento</td>
+              <td><strong>R$ 16,41 a R$ 260,18</strong></td>
+              <td><strong>15 pacientes</strong></td>
+              <td>Variação do custo direto dos curativos conforme área da lesão, categoria e cobertura utilizada.</td>
+            </tr>
+            <tr>
+              <td><strong>Tratamento hospitalar geral de LPP</strong></td>
+              <td>Custo médio diário por paciente</td>
+              <td><strong>R$ 14,24/dia</strong></td>
+              <td><strong>58 pacientes / 87 lesões</strong></td>
+              <td>Estimativa hospitalar de custo médio diário do tratamento da lesão por pressão.</td>
+            </tr>
+            <tr>
+              <td><strong>Tratamento hospitalar geral de LPP</strong></td>
+              <td>Custo total do estudo</td>
+              <td><strong>R$ 2.992,03</strong></td>
+              <td><strong>58 pacientes / 87 lesões</strong></td>
+              <td>Custo total reportado no período estudado pelo serviço hospitalar avaliado.</td>
+            </tr>
+            <tr>
+              <td><strong>LPP estágios III-IV</strong></td>
+              <td>Total / 104 curativos</td>
+              <td><strong>R$ 6.828,27</strong></td>
+              <td><strong>10 pacientes</strong></td>
+              <td>Custo direto do tratamento com materiais e coberturas em pacientes com lesões avançadas.</td>
+            </tr>
+            <tr>
+              <td><strong>LPP estágios III-IV</strong></td>
+              <td>Média diária</td>
+              <td><strong>R$ 74,22/dia</strong></td>
+              <td><strong>10 pacientes</strong></td>
+              <td>Valor diário derivado do custo total e do tempo médio de internação informado no estudo.</td>
+            </tr>
+            <tr>
+              <td><strong>Caso oncológico complexo com LPP</strong></td>
+              <td>Total / 189 dias</td>
+              <td><strong>R$ 111.254,85</strong></td>
+              <td><strong>1 paciente</strong></td>
+              <td>Estudo de caso com internação prolongada, grande demanda de materiais, profissionais e cuidado especializado.</td>
+            </tr>
+            <tr>
+              <td><strong>Caso oncológico complexo com LPP</strong></td>
+              <td>Média diária</td>
+              <td><strong>R$ 588,65/dia</strong></td>
+              <td><strong>1 paciente</strong></td>
+              <td>Média diária calculada a partir do custo total do caso e do período de internação.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="extra-content">
+        <strong>Leitura complementar:</strong> os custos não são homogêneos entre “todos os estágios”. Parte das fontes trata de
+        <strong>lesões avançadas (III-IV)</strong> e outra trata de <strong>caso complexo individual</strong>, por isso a comparação precisa ser feita por contexto.
+      </div>
+    </div>
+
+    <section class="premium-lock locked" id="premiumArea">
+      <div class="premium-content locked" id="premiumContent">
+
+        <div class="card">
+          <div class="section-title">Comparação visual por período e contexto</div>
+          <div class="muted">
+            Para evitar comparações equivocadas, os gráficos foram separados por <strong>dia</strong>, <strong>semana</strong>,
+            <strong>mês</strong> e <strong>1 ano</strong>. Também foi indicado <strong>qual lesão ou contexto clínico</strong>
+            e <strong>quantos pacientes</strong> participaram da estimativa quando a fonte trouxe essa informação.
+          </div>
+
+          <div class="procedure-box">
+            <strong>Importante:</strong> o valor de <strong>R$ 16,41 a R$ 260,18</strong> refere-se a
+            <strong>custo por procedimento de curativo</strong> em pacientes com LPP em contexto crítico, e não a custo por dia, semana, mês ou ano.
+            Por isso ele foi mantido fora dos gráficos por período.
+          </div>
+
+          <div class="period-grid">
+            <div class="period-card">
+              <h3>Por dia</h3>
+              <p>Custos diários observados ou derivados diretamente do período informado.</p>
+              <div class="period-chart">
+                <canvas id="chartDia"></canvas>
+              </div>
+              <ul class="period-list">
+                <li><strong>Tratamento hospitalar geral de LPP:</strong> R$ 14,24/dia. Amostra: 58 pacientes e 87 lesões.</li>
+                <li><strong>LPP estágios III-IV:</strong> R$ 74,22/dia. Amostra: 10 pacientes.</li>
+                <li><strong>Caso oncológico complexo com LPP:</strong> R$ 588,65/dia. Amostra: 1 paciente.</li>
+              </ul>
+            </div>
+
+            <div class="period-card">
+              <h3>Por semana</h3>
+              <p>Estimativas derivadas a partir dos custos diários multiplicados por 7 dias.</p>
+              <div class="period-chart">
+                <canvas id="chartSemana"></canvas>
+              </div>
+              <ul class="period-list">
+                <li><strong>Tratamento hospitalar geral de LPP:</strong> R$ 99,68/semana. Amostra: 58 pacientes.</li>
+                <li><strong>LPP estágios III-IV:</strong> R$ 519,54/semana. Amostra: 10 pacientes.</li>
+                <li><strong>Caso oncológico complexo com LPP:</strong> R$ 4.120,55/semana. Amostra: 1 paciente.</li>
+              </ul>
+            </div>
+
+            <div class="period-card">
+              <h3>Por mês</h3>
+              <p>Estimativas mensais úteis para comparação visual entre tratamento geral, lesões avançadas e caso complexo.</p>
+              <div class="period-chart">
+                <canvas id="chartMes"></canvas>
+              </div>
+              <ul class="period-list">
+                <li><strong>Tratamento hospitalar geral de LPP:</strong> R$ 427,20/mês. Amostra: 58 pacientes.</li>
+                <li><strong>LPP estágios III-IV:</strong> R$ 2.226,60/mês. Amostra: 10 pacientes.</li>
+                <li><strong>Caso oncológico complexo com LPP:</strong> R$ 17.659,50/mês. Amostra: 1 paciente.</li>
+              </ul>
+            </div>
+
+            <div class="period-card">
+              <h3>Por 1 ano</h3>
+              <p>Projeções anuais usadas apenas para evidenciar ordem de grandeza do custo em diferentes contextos.</p>
+              <div class="period-chart">
+                <canvas id="chartAno"></canvas>
+              </div>
+              <ul class="period-list">
+                <li><strong>Tratamento hospitalar geral de LPP:</strong> R$ 5.197,60/ano. Amostra: 58 pacientes.</li>
+                <li><strong>LPP estágios III-IV:</strong> R$ 27.090,30/ano. Amostra: 10 pacientes.</li>
+                <li><strong>Caso oncológico complexo com LPP:</strong> R$ 214.857,25/ano. Amostra: 1 paciente.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="period-note">
+            <strong>Nota metodológica importante:</strong> os valores de semana, mês e 1 ano para LPP estágios III-IV e caso complexo
+            representam <strong>estimativas derivadas</strong> dos custos diários ou do período total informado. Eles foram usados para facilitar
+            a visualização comparativa e <strong>não devem ser apresentados como seguimento real longitudinal de todas as fontes</strong>.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Prevenção versus tratamento</div>
+
+          <div class="two-cols">
+            <div class="mini">
+              <h3>Prevenção</h3>
+              <ul>
+                <li>Avaliação de risco e inspeção diária da pele.</li>
+                <li>Reposicionamento programado.</li>
+                <li>Controle de umidade e proteção cutânea.</li>
+                <li>Uso de superfícies de redistribuição de pressão quando indicado.</li>
+                <li>Potencial para reduzir custos assistenciais e tempo de internação.</li>
+              </ul>
+            </div>
+
+            <div class="mini">
+              <h3>Tratamento</h3>
+              <ul>
+                <li>Necessidade de curativos seriados e maior consumo de materiais.</li>
+                <li>Possibilidade de internação prolongada em estágios avançados.</li>
+                <li>Maior demanda de assistência multiprofissional.</li>
+                <li>Casos complexos podem alcançar valores financeiros muito elevados.</li>
+                <li>Impacto clínico e econômico mais expressivo que a prevenção.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="extra-content">
+            A comparação entre prevenção e tratamento ajuda a demonstrar que a lesão por pressão não deve ser analisada apenas como evento clínico, mas também como marcador de qualidade assistencial e eficiência no uso de recursos.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Leitura premium</div>
+          <div class="muted">
+            Em cenário institucional, a prevenção da lesão por pressão pode ser interpretada como intervenção com potencial de reduzir desperdício evitável, minimizar progressão para estágios graves e apoiar melhores indicadores de qualidade.
+          </div>
+
+          <div class="extra-content">
+            Em apresentações, TCC ou defesa de projeto, esta parte pode ser usada como argumento para relacionar segurança do paciente, gestão de custos e racionalidade assistencial.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="premium-overlay" id="premiumOverlay">
+        <div class="premium-box">
+          <div class="premium-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M8 10V7a4 4 0 1 1 8 0v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <h3>Conteúdo Premium</h3>
+          <p>
+            A comparação visual, a análise de prevenção versus tratamento e a leitura complementar detalhada
+            estão disponíveis para usuários premium.
+          </p>
+          <div class="premium-actions">
+            <a class="premium-btn primary" href="login.html?mode=signup">Desbloquear Premium</a>
+            <a class="premium-btn secondary" href="login.html?mode=login">Já tenho conta</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="card" id="referencias">
+      <div class="section-title">Referências</div>
+
+      <div class="stamp">
+        <span>Consulta realizada em</span>
+        <span id="dataHoraConsulta">—</span>
+      </div>
+
+      <ol class="refs">
+        <li>
+          PubMed. Custos diretos de curativos em lesão por pressão.
+          <a href="https://pubmed.ncbi.nlm.nih.gov/27384210/" target="_blank" rel="noopener noreferrer">
+            https://pubmed.ncbi.nlm.nih.gov/27384210/
+          </a>
+        </li>
+        <li>
+          Revista Enfermagem Atual. Custo total do tratamento hospitalar de LPP.
+          <a href="https://revistaenfermagematual.com.br/index.php/revista/article/view/93?utm_source=chatgpt.com"
+             target="_blank" rel="noopener noreferrer">
+            https://revistaenfermagematual.com.br/index.php/revista/article/view/93
+          </a>
+        </li>
+        <li>
+          Universidade Federal do Maranhão. Materiais consumidos em curativos de LPP.
+          <a href="https://monografias.ufma.br/jspui/handle/123456789/5950?utm_source=chatgpt.com"
+             target="_blank" rel="noopener noreferrer">
+            https://monografias.ufma.br/jspui/handle/123456789/5950
+          </a>
+        </li>
+        <li>
+          Anais SOBEST. Caso complexo com internação prolongada.
+          <a href="https://anais.sobest.com.br/cpe/article/view/1007?utm_source=chatgpt.com"
+             target="_blank" rel="noopener noreferrer">
+            https://anais.sobest.com.br/cpe/article/view/1007
+          </a>
+        </li>
+      </ol>
+
+      <p class="muted" style="margin-bottom:0;">
+        Nota metodológica: os valores podem variar conforme protocolo institucional, gravidade clínica,
+        perfil do paciente, tempo de internação e recursos utilizados no serviço.
+      </p>
+    </div>
+
+  </main>
+
+  <footer>
+    © 2026 - Projeto Integrador · <span id="dataHoraRodape">—</span>
+  </footer>
+
+  <div id="pwaModal" class="pwa-modal" aria-hidden="true">
+    <div class="pwa-box" role="dialog" aria-modal="true" aria-labelledby="pwaTitle">
+      <h2 id="pwaTitle" class="pwa-title">Instalar aplicativo</h2>
+      <img class="pwa-img" src="saude123.png" alt="Imagem relacionada à saúde" loading="lazy">
+      <p class="pwa-text" id="pwaHelpText">
+        No Android (Chrome): abra este site, toque no menu e escolha instalar app ou adicionar à tela inicial.
+      </p>
+      <div class="pwa-actions">
+        <button id="pwaCancel" class="pwa-btn pwa-btn-secondary">Fechar</button>
+        <button id="pwaConfirm" class="pwa-btn pwa-btn-primary">Instalar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const chartData = {
+      dia: {
+        labels: [
+          'Hospitalar geral (58 pacientes)',
+          'LPP III-IV (10 pacientes)',
+          'Caso complexo (1 paciente)'
+        ],
+        values: [14.24, 74.22, 588.65],
+        colors: ['#0b3d91', '#60a5fa', '#f59e0b']
+      },
+      semana: {
+        labels: [
+          'Hospitalar geral (58 pacientes)',
+          'LPP III-IV (10 pacientes)',
+          'Caso complexo (1 paciente)'
+        ],
+        values: [99.68, 519.54, 4120.55],
+        colors: ['#0b3d91', '#60a5fa', '#f59e0b']
+      },
+      mes: {
+        labels: [
+          'Hospitalar geral (58 pacientes)',
+          'LPP III-IV (10 pacientes)',
+          'Caso complexo (1 paciente)'
+        ],
+        values: [427.20, 2226.60, 17659.50],
+        colors: ['#0b3d91', '#60a5fa', '#f59e0b']
+      },
+      ano: {
+        labels: [
+          'Hospitalar geral (58 pacientes)',
+          'LPP III-IV (10 pacientes)',
+          'Caso complexo (1 paciente)'
+        ],
+        values: [5197.60, 27090.30, 214857.25],
+        colors: ['#0b3d91', '#60a5fa', '#f59e0b']
+      }
+    };
+
+    const valueLabelPlugin = {
+      id: 'valueLabelPlugin',
+      afterDatasetsDraw(chart) {
+        const { ctx } = chart;
+        const meta = chart.getDatasetMeta(0);
+        const values = chart.data.datasets[0].data;
+
+        ctx.save();
+        ctx.font = '700 12px Inter, system-ui, sans-serif';
+        ctx.fillStyle = '#0f172a';
+        ctx.textBaseline = 'middle';
+
+        meta.data.forEach((bar, index) => {
+          const valor = values[index];
+          const texto = 'R$ ' + Number(valor).toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          });
+
+          ctx.fillText(texto, bar.x + 8, bar.y);
+        });
+
+        ctx.restore();
+      }
+    };
+
+    function createPeriodoChart(canvasId, dataset) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas || !window.Chart) return;
+
+      new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels: dataset.labels,
+          datasets: [{
+            data: dataset.values,
+            backgroundColor: dataset.colors,
+            borderRadius: 10,
+            borderWidth: 0,
+            barThickness: 22
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          layout: {
+            padding: {
+              right: 110
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const v = context.parsed.x ?? 0;
+                  return 'R$ ' + Number(v).toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  });
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(148,163,184,.22)'
+              },
+              ticks: {
+                color: '#475569',
+                callback: (value) => 'R$ ' + Number(value).toLocaleString('pt-BR')
+              }
+            },
+            y: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                color: '#0f172a',
+                font: {
+                  size: 12,
+                  weight: '700'
+                }
+              }
+            }
+          }
+        },
+        plugins: [valueLabelPlugin]
+      });
+    }
+
+    function renderPremiumChart() {
+      createPeriodoChart('chartDia', chartData.dia);
+      createPeriodoChart('chartSemana', chartData.semana);
+      createPeriodoChart('chartMes', chartData.mes);
+      createPeriodoChart('chartAno', chartData.ano);
+    }
+
+    (function () {
+      const alvo1 = document.getElementById("dataHoraConsulta");
+      const alvo2 = document.getElementById("dataHoraRodape");
+
+      const formatar = () => {
+        try {
+          const now = new Date();
+          const fmt = new Intl.DateTimeFormat("pt-BR", {
+            timeZone: "America/Sao_Paulo",
+            dateStyle: "short",
+            timeStyle: "short"
+          });
+          return fmt.format(now) + " (America/Sao_Paulo)";
+        } catch (e) {
+          return new Date().toLocaleString("pt-BR");
+        }
+      };
+
+      const texto = formatar();
+      if (alvo1) alvo1.textContent = texto;
+      if (alvo2) alvo2.textContent = texto;
+    })();
+  </script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", async () => {
+        try {
+          const reg = await navigator.serviceWorker.register("./service-worker.js", { scope: "./" });
+          console.log("Service Worker registrado:", reg.scope);
+        } catch (e) {
+          console.log("Falha ao registrar Service Worker:", e);
+        }
+      });
+    }
+  </script>
+
+  <script>
+    let deferredPrompt = null;
+
+    const installBtn = document.getElementById("pwaInstallBtn");
+    const modal = document.getElementById("pwaModal");
+    const cancelBtn = document.getElementById("pwaCancel");
+    const confirmBtn = document.getElementById("pwaConfirm");
+    const helpText = document.getElementById("pwaHelpText");
+
+    function openModal() {
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeModal() {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+    }
+
+    window.addEventListener("load", () => {
+      installBtn.style.display = "inline-block";
+      installBtn.textContent = "📌 Como instalar no Android";
+      confirmBtn.textContent = "Entendi";
+      confirmBtn.onclick = closeModal;
+    });
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+
+      installBtn.style.display = "inline-block";
+      installBtn.textContent = "📲 Instalar aplicativo";
+
+      confirmBtn.textContent = "Instalar";
+      confirmBtn.onclick = async () => {
+        if (!deferredPrompt) return;
+        closeModal();
+        deferredPrompt.prompt();
+        try { await deferredPrompt.userChoice; }
+        finally {
+          deferredPrompt = null;
+          installBtn.style.display = "none";
+        }
+      };
+
+      helpText.innerHTML = "Clique em <b>Instalar</b> para adicionar o app à tela inicial.";
+    });
+
+    installBtn?.addEventListener("click", openModal);
+    cancelBtn?.addEventListener("click", closeModal);
+    modal?.addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
+    });
+  </script>
+
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+    const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+    const AUTH_STORAGE_KEY = "lpp-guard-pro-auth";
+    const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storageKey: AUTH_STORAGE_KEY
+      }
+    });
+
+    const userBtn = document.getElementById("userBtn");
+    const userDrop = document.getElementById("userDrop");
+
+    const userEmail = document.getElementById("userEmail");
+    const userStatus = document.getElementById("userStatus");
+
+    const dropHeadTitle = document.getElementById("dropHeadTitle");
+    const dropHeadSub = document.getElementById("dropHeadSub");
+
+    const dropLogin = document.getElementById("dropLogin");
+    const dropSignup = document.getElementById("dropSignup");
+    const dropPremium = document.getElementById("dropPremium");
+    const dropLogout = document.getElementById("dropLogout");
+
+    const premiumArea = document.getElementById("premiumArea");
+    const premiumContent = document.getElementById("premiumContent");
+
+    function openDrop() {
+      userDrop.classList.add("open");
+      userBtn.setAttribute("aria-expanded","true");
+    }
+
+    function closeDrop() {
+      userDrop.classList.remove("open");
+      userBtn.setAttribute("aria-expanded","false");
+    }
+
+    function lockPremium() {
+      premiumArea?.classList.add("locked");
+      premiumContent?.classList.add("locked");
+    }
+
+    function unlockPremium() {
+      premiumArea?.classList.remove("locked");
+      premiumContent?.classList.remove("locked");
+      renderPremiumChart();
+    }
+
+    userBtn?.addEventListener("click", () => {
+      userDrop.classList.contains("open") ? closeDrop() : openDrop();
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!userDrop.contains(e.target) && !userBtn.contains(e.target)) closeDrop();
+    });
+
+    window.addEventListener("scroll", () => {
+      if (userDrop.classList.contains("open")) closeDrop();
+    }, { passive:true });
+
+    function setLoggedOut() {
+      userEmail.textContent = "Entrar / Criar conta";
+      userStatus.innerHTML = 'Não autenticado <span class="badge">Free</span>';
+      dropHeadTitle.textContent = "Conta";
+      dropHeadSub.textContent = "Você não está autenticado";
+
+      dropLogin.style.display = "";
+      dropSignup.style.display = "";
+      dropPremium.style.display = "";
+      dropLogout.style.display = "none";
+
+      lockPremium();
+    }
+
+    async function setLoggedIn(user) {
+      const email = user?.email || "Usuário";
+      userEmail.textContent = email;
+
+      dropHeadTitle.textContent = "Conta ativa";
+      dropHeadSub.textContent = email;
+
+      dropLogin.style.display = "none";
+      dropSignup.style.display = "none";
+      dropPremium.style.display = "";
+      dropLogout.style.display = "";
+
+      userStatus.innerHTML = 'Conta ativa <span class="badge verified">✔ Verificado</span>';
+
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("premium")
+          .eq("id", user.id)
+          .single();
+
+        if (!error && data?.premium) {
+          userStatus.innerHTML = 'Premium <span class="badge premium">VIP</span> <span class="badge verified">✔ Verificado</span>';
+          dropPremium.style.display = "none";
+          unlockPremium();
+        } else {
+          userStatus.innerHTML = 'Conta ativa <span class="badge">Free</span>';
+          dropPremium.style.display = "";
+          lockPremium();
+        }
+      } catch {
+        userStatus.innerHTML = 'Conta ativa <span class="badge">Free</span>';
+        dropPremium.style.display = "";
+        lockPremium();
+      }
+    }
+
+    function withTimeout(promise, ms) {
+      return Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), ms))
+      ]);
+    }
+
+    async function renderStateSafe() {
+      userEmail.innerHTML = '<span class="skeleton"></span>';
+      userStatus.innerHTML = '<span class="skeleton small"></span>';
+      dropHeadTitle.textContent = "Conta";
+      dropHeadSub.textContent = "Verificando sessão…";
+
+      const hardFallback = setTimeout(() => {
+        if (String(userEmail.innerHTML).includes("skeleton")) setLoggedOut();
+      }, 2500);
+
+      try {
+        const sess = await withTimeout(supabase.auth.getSession(), 2500);
+        const session = sess?.data?.session;
+
+        if (!session) {
+          clearTimeout(hardFallback);
+          return setLoggedOut();
+        }
+
+        const u = await withTimeout(supabase.auth.getUser(), 3500);
+        const user = u?.data?.user;
+
+        clearTimeout(hardFallback);
+
+        if (!user) return setLoggedOut();
+        return await setLoggedIn(user);
+
+      } catch {
+        clearTimeout(hardFallback);
+        return setLoggedOut();
+      }
+    }
+
+    dropLogout?.addEventListener("click", async () => {
+      try { await supabase.auth.signOut(); } catch {}
+      closeDrop();
+      window.location.href = SITE_BASE + "index.html";
+    });
+
+    supabase.auth.onAuthStateChange(() => renderStateSafe());
+    renderStateSafe();
+  </script>
+
+</body>
+</html>

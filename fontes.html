@@ -1,0 +1,367 @@
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b3d91" />
+  <meta name="description" content="Fontes científicas e institucionais utilizadas no site sobre lesão por pressão, organizadas por página, finalidade de uso e tipo de evidência." />
+  <title>Fontes do Site - Lesão por Pressão</title>
+
+  <style>
+    :root{
+      --blue1:#0b3d91;
+      --blue2:#0a2f73;
+      --blue3:#0b5bd3;
+      --blue4:#eaf2ff;
+      --gold:#c58b18;
+      --bg:#eef2f7;
+      --text:#0f172a;
+      --muted:#475569;
+      --border:rgba(15,23,42,.08);
+      --shadow:0 14px 34px rgba(2,6,23,.10);
+      --radius:20px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+
+    body{
+      margin:0;
+      font-family:Georgia,"Times New Roman",serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.15), transparent 55%),
+        radial-gradient(900px 500px at 90% 10%, rgba(11,61,145,.14), transparent 55%),
+        var(--bg);
+    }
+
+    .header{
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,.18), transparent 42%),
+        linear-gradient(180deg,var(--blue1),#0a3790 60%, #08285f);
+      color:#fff;
+      padding:44px 16px 30px;
+      text-align:center;
+      box-shadow:0 18px 38px rgba(2,6,23,.16);
+    }
+
+    .header h1{
+      margin:0;
+      font-size:clamp(30px,4vw,46px);
+      font-weight:800;
+      letter-spacing:-.03em;
+    }
+
+    .header p{
+      max-width:860px;
+      margin:12px auto 0;
+      font-size:16px;
+      line-height:1.7;
+      opacity:.96;
+    }
+
+    .nav{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter:blur(10px);
+      background:rgba(10,47,115,.92);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .nav-inner{
+      max-width:1120px;
+      margin:0 auto;
+      padding:12px 16px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .nav a{
+      color:#fff;
+      text-decoration:none;
+      font-weight:700;
+      background:rgba(255,255,255,.10);
+      padding:10px 14px;
+      border-radius:999px;
+      display:inline-block;
+    }
+
+    main{
+      max-width:1120px;
+      margin:26px auto 64px;
+      padding:0 16px;
+    }
+
+    .hero-card,.card{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+
+    .hero-card{
+      padding:24px;
+      margin-bottom:18px;
+      background:linear-gradient(180deg,#ffffff,#fbfdff);
+    }
+
+    .card{
+      padding:22px;
+      margin:16px 0;
+    }
+
+    .title{
+      margin:0 0 10px;
+      font-size:25px;
+      color:#0b2b63;
+      font-weight:800;
+      letter-spacing:-.02em;
+    }
+
+    .subtitle{
+      margin:0;
+      color:var(--muted);
+      line-height:1.8;
+      font-size:15px;
+    }
+
+    .meta{
+      margin-top:16px;
+      padding:14px 16px;
+      border-radius:16px;
+      background:#f8fbff;
+      border:1px solid #dbeafe;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .chips{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--blue4);
+      color:#0b2b63;
+      font-size:12px;
+      font-weight:700;
+      border:1px solid #bfdbfe;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+    }
+
+    .section-title{
+      margin:0 0 8px;
+      font-size:19px;
+      color:#0b2b63;
+      font-weight:800;
+      letter-spacing:-.01em;
+    }
+
+    .section-kicker{
+      margin:0 0 14px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .refs{
+      margin:0;
+      padding-left:20px;
+      color:var(--muted);
+      line-height:1.75;
+    }
+
+    .refs li{margin:12px 0}
+
+    .refs a{
+      color:var(--blue3);
+      font-weight:700;
+      text-decoration:none;
+    }
+
+    .refs a:hover{text-decoration:underline}
+
+    .source-type{
+      display:inline-block;
+      margin-right:8px;
+      margin-bottom:6px;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      color:#6b4f00;
+      background:rgba(197,139,24,.12);
+      border:1px solid rgba(197,139,24,.22);
+    }
+
+    .footnote{
+      margin-top:10px;
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.7;
+      border-top:1px dashed rgba(15,23,42,.12);
+      padding-top:12px;
+    }
+
+    .method-list{
+      margin:0;
+      padding-left:18px;
+      color:var(--muted);
+      line-height:1.75;
+    }
+
+    .method-list li{margin:10px 0}
+
+    .footer-note{
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      margin-top:20px;
+    }
+
+    @media (max-width:860px){
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>Fontes do Site</h1>
+    <p>Compilação das referências científicas, institucionais e documentais utilizadas nas demais páginas do projeto sobre lesão por pressão, com organização por página, finalidade de uso e natureza da evidência.</p>
+  </header>
+
+  <nav class="nav" aria-label="Navegação da página de fontes">
+    <div class="nav-inner">
+      <div class="nav-links">
+        <a href="index.html">Voltar ao início</a>
+        <a href="#organizacao">Organização</a>
+        <a href="#fontes-por-pagina">Fontes por página</a>
+        <a href="#metodologia">Metodologia</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero-card" id="organizacao">
+      <h2 class="title">Critério de organização</h2>
+      <p class="subtitle">Esta página reúne as fontes que aparecem ou são declaradas como base nas demais páginas já estruturadas do projeto, especialmente página inicial, tratamento, guia simples, seleção de produtos e impacto econômico. O objetivo é fortalecer a rastreabilidade documental, a coerência metodológica e a credibilidade acadêmico-científica do site.</p>
+      <div class="chips" aria-label="Características da base documental">
+        <span class="chip">Diretrizes clínicas</span>
+        <span class="chip">Fontes institucionais</span>
+        <span class="chip">Revisões sistemáticas</span>
+        <span class="chip">Estudos econômicos</span>
+      </div>
+      <div class="meta">Consulta local registrada em <span id="stamp">—</span>. Os links abaixo foram organizados a partir das referências efetivamente utilizadas nos outros arquivos do projeto.</div>
+    </section>
+
+    <section id="fontes-por-pagina" class="grid" aria-label="Fontes por página do site">
+      <section class="card">
+        <h3 class="section-title">Página Inicial e FAQ</h3>
+        <p class="section-kicker">Referências voltadas à definição do problema, segurança do paciente, classificação básica e enquadramento ético-profissional.</p>
+        <ol class="refs">
+          <li><span class="source-type">Institucional</span>ANVISA. Nota Técnica GVIMS/GGTES/Anvisa nº 05/2023 - prevenção de lesão por pressão. <a href="https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/notas-tecnicas/notas-tecnicas-vigentes/nota-tecnica-gvims-ggtes-anvisa-no-05-2023-praticas-de-seguranca-do-paciente-em-servicos-de-saude-prevencao-de-lesao-por-pressao/view" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+          <li><span class="source-type">Organização Mundial</span>OMS. Patient safety. <a href="https://www.who.int/news-room/fact-sheets/detail/patient-safety" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+          <li><span class="source-type">Classificação</span>NPIAP. Pressure Injury Stages and Resources. <a href="https://npiap.com/page/resources" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+          <li><span class="source-type">Enfermagem</span>COFEN. Anvisa lança nota técnica que orienta a comunicar lesões por pressão. <a href="https://www.cofen.gov.br/anvisa-lanca-nota-tecnica-que-orienta-a-comunicar-lesoes-por-pressao/" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+          <li><span class="source-type">Cuidado de enfermagem</span>COREN-DF. Muda terminologia para lesão por pressão. <a href="https://www.coren-df.gov.br/muda-terminologia-para-ulcera-por-pressao/" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h3 class="section-title">Página Tratamento</h3>
+        <p class="section-kicker">Base utilizada para sustentar prevenção, avaliação clínica, cuidado local da ferida e papel da equipe de enfermagem.</p>
+        <ol class="refs">
+          <li><span class="source-type">Institucional</span>ANVISA. Nota Técnica GVIMS/GGTES/Anvisa nº 05/2023 - prevenção de lesão por pressão. <a href="https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/notas-tecnicas/notas-tecnicas-vigentes/nota-tecnica-gvims-ggtes-anvisa-no-05-2023-praticas-de-seguranca-do-paciente-em-servicos-de-saude-prevencao-de-lesao-por-pressao/view" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+          <li><span class="source-type">Diretriz clínica</span>NPIAP/EPUAP/PPPIA. <i>Prevention and Treatment of Pressure Ulcers/Injuries: Clinical Practice Guideline</i>. <a href="https://npiap.com/page/InternationalGuidelines" target="_blank" rel="noopener noreferrer">Acessar página oficial</a></li>
+          <li><span class="source-type">Enfermagem</span>COFEN. Conteúdo institucional relacionado à atuação da enfermagem na prevenção e comunicação da lesão por pressão. <a href="https://www.cofen.gov.br/anvisa-lanca-nota-tecnica-que-orienta-a-comunicar-lesoes-por-pressao/" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+          <li><span class="source-type">Cuidado de enfermagem</span>COREN-DF. Muda terminologia para lesão por pressão. <a href="https://www.coren-df.gov.br/muda-terminologia-para-ulcera-por-pressao/" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h3 class="section-title">Guia Simples</h3>
+        <p class="section-kicker">Seleção de referências para comunicação com linguagem acessível, preservando respaldo institucional, educacional e clínico.</p>
+        <ol class="refs">
+          <li><span class="source-type">Institucional</span>ANVISA. Práticas de Segurança do Paciente em Serviços de Saúde: Prevenção de Lesão por Pressão. <a href="https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/notas-tecnicas/notas-tecnicas-vigentes/nota-tecnica-gvims-ggtes-anvisa-no-05-2023-praticas-de-seguranca-do-paciente-em-servicos-de-saude-prevencao-de-lesao-por-pressao/view" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+          <li><span class="source-type">Educação em saúde</span>ANVISA. Como posso contribuir para aumentar a segurança do paciente? Orientações aos pacientes, familiares e acompanhantes. <a href="https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/publicacoes/guia-como-posso-contribuir-para-aumentar-a-seguranca-do-paciente-orientacoes-aos-pacientes-familiares-e-acompanhantes" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+          <li><span class="source-type">Organização Mundial</span>OMS. Patient safety. <a href="https://www.who.int/news-room/fact-sheets/detail/patient-safety" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+          <li><span class="source-type">Revisão sistemática</span>Thomas DC, Chui PL, Yahya A, Yap JW. <i>Systematic review of patient education for pressure injury: Evidence to guide practice</i>. PubMed PMID: 35635245. <a href="https://pubmed.ncbi.nlm.nih.gov/35635245/" target="_blank" rel="noopener noreferrer">Acessar resumo indexado</a></li>
+          <li><span class="source-type">Classificação</span>NPIAP. Pressure Injury Stages and Resources. <a href="https://npiap.com/page/resources" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h3 class="section-title">Seleção de Produtos</h3>
+        <p class="section-kicker">Referências declaradas como base para comparação de coberturas, manejo local da ferida e apoio à decisão clínica.</p>
+        <ol class="refs">
+          <li><span class="source-type">Diretriz clínica</span>EPUAP/NPIAP/PPPIA. <i>Prevention and Treatment of Pressure Ulcers/Injuries: Clinical Practice Guideline</i>. 2019. <a href="https://npiap.com/page/InternationalGuidelines" target="_blank" rel="noopener noreferrer">Acessar página oficial</a></li>
+          <li><span class="source-type">Institucional</span>ANVISA. Notas técnicas e materiais orientadores relacionados à prevenção e manejo de lesões por pressão no contexto brasileiro. <a href="https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/notas-tecnicas/notas-tecnicas-vigentes/nota-tecnica-gvims-ggtes-anvisa-no-05-2023-praticas-de-seguranca-do-paciente-em-servicos-de-saude-prevencao-de-lesao-por-pressao/view" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h3 class="section-title">Impacto Econômico</h3>
+        <p class="section-kicker">Conjunto voltado à contextualização de custos assistenciais, uso de materiais, tempo de internação e repercussões econômicas da lesão por pressão.</p>
+        <ol class="refs">
+          <li><span class="source-type">Institucional</span>ANVISA. Nota Técnica GVIMS/GGTES/Anvisa nº 05/2023 - prevenção de lesão por pressão. <a href="https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/notas-tecnicas/notas-tecnicas-vigentes/nota-tecnica-gvims-ggtes-anvisa-no-05-2023-praticas-de-seguranca-do-paciente-em-servicos-de-saude-prevencao-de-lesao-por-pressao/view" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+          <li><span class="source-type">Organização Mundial</span>OMS. Patient safety. <a href="https://www.who.int/news-room/fact-sheets/detail/patient-safety" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+          <li><span class="source-type">Artigo econômico</span>Padula WV, Delarmente BA. <i>The national cost of hospital-acquired pressure injuries in the United States</i>. PubMed PMID: 30693644. <a href="https://pubmed.ncbi.nlm.nih.gov/30693644/" target="_blank" rel="noopener noreferrer">Acessar resumo indexado</a></li>
+          <li><span class="source-type">Revisão sistemática</span>Demarre L, Verhaeghe S, Van Hecke A, et al. <i>The cost of prevention and treatment of pressure ulcers: A systematic review</i>. PubMed PMID: 26231383. <a href="https://pubmed.ncbi.nlm.nih.gov/26231383/" target="_blank" rel="noopener noreferrer">Acessar resumo indexado</a></li>
+          <li><span class="source-type">PubMed</span>Referência utilizada na página para custos diretos de curativos em lesão por pressão. <a href="https://pubmed.ncbi.nlm.nih.gov/27384210/" target="_blank" rel="noopener noreferrer">Acessar resumo indexado</a></li>
+          <li><span class="source-type">Artigo nacional</span>Revista Enfermagem Atual In Derme. Referência utilizada na página para custo total do tratamento hospitalar de LPP. <a href="https://revistaenfermagematual.com.br/index.php/revista/article/view/93" target="_blank" rel="noopener noreferrer">Acessar artigo</a></li>
+          <li><span class="source-type">Monografia</span>Universidade Federal do Maranhão. Referência utilizada na página para materiais consumidos em curativos de LPP. <a href="https://monografias.ufma.br/jspui/handle/123456789/5950" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+          <li><span class="source-type">Anais científicos</span>SOBEST. Referência utilizada na página para caso complexo com internação prolongada. <a href="https://anais.sobest.com.br/cpe/article/view/1007" target="_blank" rel="noopener noreferrer">Acessar trabalho</a></li>
+          <li><span class="source-type">Classificação</span>NPIAP. Pressure Injury Stages and Resources. <a href="https://npiap.com/page/resources" target="_blank" rel="noopener noreferrer">Acessar documento</a></li>
+        </ol>
+      </section>
+    </section>
+
+    <section class="card" id="metodologia">
+      <h3 class="section-title">Observação metodológica</h3>
+      <ol class="method-list">
+        <li>As referências foram organizadas a partir das fontes explicitamente listadas, citadas ou declaradas como base nos demais arquivos HTML do projeto.</li>
+        <li>Nem todas as páginas possuem seção formal de referências. Em alguns casos, a identificação da fonte decorreu de trechos descritivos como “baseado em”, “fonte base” ou “referências para estudo”.</li>
+        <li>Em páginas voltadas ao público leigo, o conteúdo textual pode ser simplificado, desde que mantenha correspondência conceitual com documentos institucionais e literatura técnico-científica reconhecida.</li>
+        <li>Para fortalecimento acadêmico da página, recomenda-se complementar progressivamente a lista com referências bibliográficas completas, ano, edição, DOI ou PMID, quando disponíveis.</li>
+      </ol>
+      <div class="meta">Esta seção pode servir como base para um futuro quadro de referências em padrão ABNT ou Vancouver, caso o projeto deseje ampliar a formalização acadêmica do site.</div>
+    </section>
+
+    <p class="footer-note">Projeto sobre lesão por pressão com base documental voltada à enfermagem, educação em saúde, cuidado clínico e segurança do paciente.</p>
+  </main>
+
+  <script>
+    document.getElementById('stamp').textContent =
+      new Intl.DateTimeFormat('pt-BR', {
+        timeZone:'America/Sao_Paulo',
+        dateStyle:'short',
+        timeStyle:'short'
+      }).format(new Date()) + ' (America/Sao_Paulo)';
+  </script>
+</body>
+</html>

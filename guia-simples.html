@@ -1,0 +1,1357 @@
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b3d91" />
+  <meta
+    name="description"
+    content="Guia simples sobre lesão por pressão para pacientes, familiares e cuidadores."
+  />
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="LPP" />
+
+  <title>Guia Simples - Lesão por Pressão</title>
+
+  <style>
+    :root {
+      --lpp-blue-1: #0b3d91;
+      --lpp-blue-2: #0a2f73;
+      --lpp-blue-3: #0b5bd3;
+      --lpp-blue-4: #0f6bff;
+      --lpp-bg: #eef2f7;
+      --lpp-card: #ffffff;
+      --lpp-text: #0f172a;
+      --lpp-muted: #475569;
+      --lpp-soft: #94a3b8;
+      --lpp-shadow: 0 12px 30px rgba(2, 6, 23, .10);
+      --lpp-shadow-2: 0 18px 45px rgba(2, 6, 23, .14);
+      --lpp-shadow-3: 0 28px 70px rgba(2, 6, 23, .18);
+      --lpp-shadow-soft: 0 10px 24px rgba(2, 6, 23, .08);
+      --lpp-radius: 18px;
+      --lpp-max: 1180px;
+      --lpp-ring: 0 0 0 4px rgba(56, 130, 246, .18);
+      --lpp-border: rgba(15, 23, 42, .08);
+      --guide-warning: #fff6e0;
+      --guide-danger: #fff1f2;
+      --guide-success: #eefbf3;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--lpp-text);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.15), transparent 55%),
+        radial-gradient(900px 500px at 90% 10%, rgba(11,61,145,.14), transparent 55%),
+        radial-gradient(900px 520px at 50% 110%, rgba(240,180,0,.08), transparent 55%),
+        var(--lpp-bg);
+      overflow-x: hidden;
+    }
+
+    .lpp-header {
+      background:
+        radial-gradient(circle at top center, rgba(255,255,255,.18), transparent 36%),
+        linear-gradient(180deg, var(--lpp-blue-1), #0b4ab1 58%, #0a3790 100%);
+      color: #fff;
+      padding: 30px 16px 22px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,.08);
+    }
+
+    .lpp-header::before {
+      content: "";
+      position: absolute;
+      inset: auto -120px -80px -120px;
+      height: 180px;
+      background: radial-gradient(circle at 50% 20%, rgba(255,255,255,.12), transparent 60%);
+      pointer-events: none;
+    }
+
+    .lpp-brand {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .lpp-header h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 1000;
+      letter-spacing: .2px;
+      text-shadow: 0 8px 24px rgba(2,6,23,.18);
+    }
+
+    .lpp-header p {
+      margin: 0;
+      opacity: .92;
+      font-size: 15px;
+      font-weight: 700;
+      max-width: 760px;
+      line-height: 1.6;
+    }
+
+    .header-actions {
+      margin-top: 16px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    .lpp-pill {
+      padding: 11px 14px;
+      border-radius: 999px;
+      background: #edf4ff;
+      border: 1px solid #d8e7ff;
+      color: #0b2b63;
+      font-weight: 900;
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
+      box-shadow: 0 10px 18px rgba(2,6,23,.06);
+    }
+
+    .lpp-pill:hover {
+      background: #e7f0ff;
+      transform: translateY(-1px);
+      box-shadow: 0 16px 28px rgba(2,6,23,.10);
+    }
+
+    .lpp-nav {
+      background: rgba(10,47,115,.92);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      box-shadow: 0 12px 24px rgba(2,6,23,.12);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .lpp-nav-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 10px 16px;
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .menu-shell {
+      position: relative;
+      min-width: 0;
+      overflow: hidden;
+      border-radius: 16px;
+    }
+
+    .menu-shell::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 48px;
+      background: linear-gradient(90deg, rgba(10,47,115,0), rgba(10,47,115,.92));
+      pointer-events: none;
+      opacity: .95;
+    }
+
+    .lpp-menu {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      min-width: 0;
+      padding: 2px 6px 8px 0;
+      scroll-behavior: smooth;
+    }
+
+    .lpp-menu::-webkit-scrollbar { height: 7px; }
+
+    .lpp-menu::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,.26);
+      border-radius: 999px;
+    }
+
+    .lpp-menu::-webkit-scrollbar-track { background: transparent; }
+
+    .lpp-menu a {
+      color: #eaf2ff;
+      text-decoration: none;
+      padding: 11px 14px;
+      border-radius: 14px;
+      font-weight: 900;
+      font-size: 14px;
+      line-height: 1;
+      white-space: nowrap;
+      transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
+      outline: none;
+      flex: 0 0 auto;
+      border: 1px solid transparent;
+      background: rgba(255,255,255,.04);
+    }
+
+    .lpp-menu a:hover {
+      background: rgba(255,255,255,.14);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(2,6,23,.18);
+      border-color: rgba(255,255,255,.10);
+    }
+
+    .lpp-menu a[aria-current="page"] {
+      background: rgba(255,255,255,.18);
+      border-color: rgba(255,255,255,.16);
+      box-shadow: 0 10px 18px rgba(2,6,23,.20);
+    }
+
+    .user-area {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .user-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 320px;
+      min-width: 210px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.10);
+      color: #fff;
+      font-weight: 950;
+      cursor: pointer;
+      outline: none;
+      box-shadow: 0 10px 18px rgba(2,6,23,.16);
+      transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
+    }
+
+    .user-btn:hover {
+      background: rgba(255,255,255,.16);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px rgba(2,6,23,.22);
+    }
+
+    .user-btn:focus-visible { box-shadow: var(--lpp-ring); }
+
+    .user-icon {
+      width: 30px;
+      height: 30px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: rgba(255,255,255,.22);
+      border: 1px solid rgba(255,255,255,.18);
+    }
+
+    .user-icon svg { width: 18px; height: 18px; opacity: .95; }
+
+    .user-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+      text-align: left;
+    }
+
+    .user-email {
+      font-size: 12px;
+      font-weight: 950;
+      opacity: .96;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 210px;
+    }
+
+    .user-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      font-size: 11px;
+      opacity: .90;
+      font-weight: 850;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 950;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.14);
+      color: #fff;
+    }
+
+    .badge.premium {
+      background: rgba(34,197,94,.18);
+      border-color: rgba(34,197,94,.35);
+    }
+
+    .badge.verified {
+      background: rgba(59,130,246,.18);
+      border-color: rgba(59,130,246,.32);
+    }
+
+    .guide-badge {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(11,91,211,.10);
+      color: #0b3d91;
+      font-size: 13px;
+      font-weight: 800;
+      border: 1px solid rgba(11,91,211,.14);
+    }
+
+    .caret { opacity: .9; font-size: 12px; margin-left: auto; }
+
+    .dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: min(360px, 92vw);
+      background: #fff;
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 16px;
+      box-shadow: 0 18px 45px rgba(2,6,23,.22);
+      padding: 10px;
+      opacity: 0;
+      transform: translateY(-6px) scale(.98);
+      pointer-events: none;
+      transition: opacity .14s ease, transform .14s ease;
+      z-index: 9999;
+      max-height: min(70vh, 520px);
+      overflow: auto;
+    }
+
+    .dropdown.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .drop-head {
+      padding: 10px 10px 8px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #f8fbff, #ffffff);
+      border: 1px solid rgba(15,23,42,.08);
+      margin-bottom: 10px;
+    }
+
+    .drop-head .t1 {
+      font-weight: 950;
+      color: #0b2b63;
+      font-size: 13px;
+    }
+
+    .drop-head .t2 {
+      margin-top: 4px;
+      color: #475569;
+      font-size: 12px;
+      word-break: break-all;
+    }
+
+    .drop-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(15,23,42,.08);
+      background: #fff;
+      color: #0f172a;
+      cursor: pointer;
+      font-weight: 950;
+      text-decoration: none;
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+    }
+
+    .drop-item:hover {
+      background: #f8fafc;
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(2,6,23,.10);
+    }
+
+    .drop-muted {
+      font-size: 12px;
+      color: var(--lpp-muted);
+      font-weight: 850;
+    }
+
+    .drop-sep {
+      height: 1px;
+      background: rgba(15,23,42,.10);
+      margin: 10px 4px;
+    }
+
+    .skeleton {
+      display: inline-block;
+      width: 160px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,255,255,.18), rgba(255,255,255,.28), rgba(255,255,255,.18));
+      background-size: 240px 100%;
+      animation: sk 1.1s infinite;
+    }
+
+    .skeleton.small {
+      width: 120px;
+      height: 10px;
+      opacity: .95;
+    }
+
+    @keyframes sk {
+      0% { background-position: -240px 0; }
+      100% { background-position: 240px 0; }
+    }
+
+    .guide-main {
+      max-width: 1100px;
+      margin: 24px auto 64px;
+      padding: 0 16px;
+    }
+
+    .hero-guide {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
+      margin-bottom: 10px;
+    }
+
+    .guide-card {
+      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
+      border-radius: var(--lpp-radius);
+      box-shadow: var(--lpp-shadow);
+      padding: 24px;
+      margin: 16px 0;
+      border: 1px solid var(--lpp-border);
+      position: relative;
+      overflow: hidden;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .guide-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--lpp-shadow-2);
+      border-color: rgba(11,91,211,.22);
+    }
+
+    .guide-card h2 {
+      margin: 0 0 12px;
+      font-size: clamp(20px, 3vw, 32px);
+      font-weight: 950;
+      color: #0b2b63;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .guide-card h2::before {
+      content: "";
+      width: 4px;
+      height: 22px;
+      border-radius: 999px;
+      background: var(--lpp-blue-3);
+      display: inline-block;
+      box-shadow: 0 10px 18px rgba(11,91,211,.25);
+      flex: 0 0 auto;
+    }
+
+    .guide-card p,
+    .guide-card li {
+      margin: 0;
+      color: var(--lpp-muted);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    .guide-card p + p {
+      margin-top: 12px;
+    }
+
+    .guide-card ul {
+      margin: 10px 0 0;
+      padding-left: 20px;
+    }
+
+    .guide-card li {
+      margin: 8px 0;
+    }
+
+    .hero-copy {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #0b3d91;
+      border: 1px solid #dbeafe;
+      font-weight: 900;
+      font-size: 12px;
+      margin-bottom: 14px;
+      width: fit-content;
+    }
+
+    .hero-heading {
+      margin: 0 0 10px;
+      font-size: clamp(26px, 3.5vw, 36px);
+      line-height: 1.1;
+      color: #0b2b63;
+      font-weight: 1000;
+    }
+
+    .hero-text {
+      margin: 0;
+      color: var(--lpp-muted);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    .hero-points {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .hero-point {
+      border: 1px solid #e5eaf3;
+      background: #f8fbff;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: var(--lpp-shadow-soft);
+      color: #0b2b63;
+      font-size: 13px;
+      font-weight: 850;
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+    }
+
+    .quick-panel {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .quick-box {
+      border-radius: 16px;
+      padding: 18px;
+      min-height: 110px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow: var(--lpp-shadow-soft);
+      border: 1px solid #e5eaf3;
+    }
+
+    .quick-box.blue {
+      background: linear-gradient(180deg, #0b3d91, #0a2f73);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .quick-box.light {
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+      color: #0b2b63;
+    }
+
+    .quick-box .k {
+      font-size: 12px;
+      opacity: .84;
+      font-weight: 800;
+    }
+
+    .quick-box .v {
+      margin-top: 6px;
+      font-size: 21px;
+      font-weight: 1000;
+      line-height: 1.2;
+    }
+
+    .grid2,
+    .grid3 {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .grid3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .mini-card {
+      background: rgba(255,255,255,.84);
+      border: 1px solid rgba(15,23,42,.08);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 8px 20px rgba(2,6,23,.06);
+    }
+
+    .mini-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      color: #0b2b63;
+    }
+
+    .highlight-warning {
+      background: linear-gradient(180deg, rgba(255,246,224,1), rgba(255,246,224,.88));
+      border-left: 10px solid #f0b400;
+    }
+
+    .highlight-danger {
+      background: linear-gradient(180deg, rgba(255,241,242,1), rgba(255,241,242,.92));
+      border-left: 10px solid #dc2626;
+    }
+
+    .highlight-success {
+      background: linear-gradient(180deg, rgba(238,251,243,1), rgba(238,251,243,.92));
+      border-left: 10px solid #16a34a;
+    }
+
+    .refs {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #334155;
+    }
+
+    .refs li {
+      margin-bottom: 12px;
+    }
+
+    .guide-footer {
+      text-align: center;
+      color: #64748b;
+      font-size: 13px;
+      padding: 18px 10px 30px;
+    }
+
+    .pwa-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, .55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 999999;
+    }
+
+    .pwa-modal.open { display: flex; }
+
+    .pwa-box {
+      width: min(520px, 100%);
+      background: #ffffff;
+      border-radius: 18px;
+      border: 1px solid rgba(15, 23, 42, .10);
+      box-shadow: 0 20px 55px rgba(2,6,23,.28);
+      padding: 16px;
+      transform: none !important;
+    }
+
+    .pwa-title {
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-weight: 950;
+      color: #0b2b63;
+    }
+
+    .pwa-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 14px;
+      border: 1px solid rgba(15, 23, 42, .10);
+      box-shadow: 0 12px 24px rgba(2,6,23,.12);
+      margin-bottom: 10px;
+    }
+
+    .pwa-text {
+      margin: 0 0 12px;
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: #475569;
+    }
+
+    .pwa-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .pwa-btn {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-weight: 950;
+      font-size: 14px;
+    }
+
+    .pwa-btn-primary { background: #0b3d91; color: #fff; }
+    .pwa-btn-secondary { background: #fff; border-color: #dbe3ef; color: #0f172a; }
+
+    .pwa-btn:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(56, 130, 246, .20);
+    }
+
+    @media (max-width: 980px) {
+      .lpp-nav-inner,
+      .hero-guide,
+      .grid2 {
+        grid-template-columns: 1fr;
+      }
+
+      .user-area {
+        justify-content: flex-end;
+      }
+
+      .user-btn {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .hero-points {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .grid3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .dropdown {
+        position: fixed;
+        left: 10px;
+        right: 10px;
+        top: auto;
+        bottom: 10px;
+        width: auto;
+        max-height: 55vh;
+        border-radius: 18px;
+        transform: translateY(10px);
+        transform-origin: bottom center;
+      }
+
+      .dropdown.open { transform: translateY(0); }
+
+      .guide-main {
+        padding: 0 14px;
+      }
+
+      .guide-card {
+        padding: 18px;
+      }
+
+      .hero-points {
+        grid-template-columns: 1fr;
+      }
+
+      .user-btn {
+        min-width: 0;
+      }
+
+      .user-email {
+        max-width: 160px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="lpp-header">
+    <div class="lpp-brand">
+      <h1>Lesão por Pressão</h1>
+      <p>
+        Guia simples para pacientes, familiares e cuidadores, com orientação prática,
+        linguagem acessível e base em fontes técnico-científicas.
+      </p>
+
+      <div class="header-actions">
+        <button id="pwaInstallBtn" class="lpp-pill" style="display:none;">
+          📲 Instalar aplicativo
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="lpp-nav" aria-label="Navegação principal">
+    <div class="lpp-nav-inner">
+      <div class="menu-shell">
+        <div class="lpp-menu" id="menuLinks">
+          <a href="index.html">Início</a>
+          <a href="nosso-produto.html">Nosso Produto</a>
+          <a href="tratamento.html">Tratamento</a>
+          <a href="impacto-economico.html">Impacto Econômico</a>
+          <a href="guia-simples.html" aria-current="page">Guia Simples</a>
+          <a href="selecao-produtos.html">Seleção de Produtos</a>
+          <a href="avaliacao.html">Avaliação</a>
+        </div>
+      </div>
+
+      <div class="user-area" aria-label="Área do usuário">
+        <button id="userBtn" class="user-btn" type="button" aria-expanded="false">
+          <span class="user-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 20a8 8 0 0 1 16 0" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+
+          <span class="user-text">
+            <span id="userEmail" class="user-email"><span class="skeleton"></span></span>
+            <span id="userStatus" class="user-status"><span class="skeleton small"></span></span>
+          </span>
+
+          <span class="caret">▾</span>
+        </button>
+
+        <div id="userDrop" class="dropdown" role="menu" aria-label="Menu do usuário">
+          <div class="drop-head">
+            <div class="t1" id="dropHeadTitle">Conta</div>
+            <div class="t2" id="dropHeadSub">Verificando sessão…</div>
+          </div>
+
+          <a id="dropLogin" class="drop-item" href="login.html?mode=login">
+            Entrar <span class="drop-muted">Login</span>
+          </a>
+          <a id="dropSignup" class="drop-item" href="login.html?mode=signup">
+            Criar conta <span class="drop-muted">Cadastro</span>
+          </a>
+
+          <div class="drop-sep"></div>
+
+          <a id="dropPremium" class="drop-item" href="login.html?mode=signup">
+            Premium <span class="drop-muted">Desbloquear</span>
+          </a>
+          <button id="dropLogout" class="drop-item" type="button" style="display:none;">
+            Sair <span class="drop-muted">Logout</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="guide-main">
+
+    <section class="hero-guide">
+      <article class="guide-card hero-copy highlight-success">
+        <span class="hero-label">Conteúdo para leigos</span>
+        <h2 class="hero-heading">Entenda, previna e reconheça os sinais de lesão por pressão</h2>
+        <p class="hero-text">
+          Esta página foi pensada para quem cuida em casa, acompanha pacientes ou quer
+          entender melhor o tema. O foco é ajudar a observar a pele, prevenir complicações
+          e saber quando procurar apoio profissional.
+        </p>
+
+        <div class="hero-points">
+          <div class="hero-point">Linguagem simples</div>
+          <div class="hero-point">Orientações práticas</div>
+          <div class="hero-point">Fontes técnicas identificadas</div>
+        </div>
+      </article>
+
+      <aside class="guide-card quick-panel">
+        <div class="quick-box blue">
+          <div class="k">Foco principal</div>
+          <div class="v">Prevenção e sinais iniciais</div>
+        </div>
+        <div class="quick-box light">
+          <div class="k">Público</div>
+          <div class="v">Pacientes, familiares e cuidadores</div>
+        </div>
+        <div class="quick-box light">
+          <div class="k">Base</div>
+          <div class="v">ANVISA, OMS, PubMed e NPIAP</div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="guide-card">
+      <h2>O que é lesão por pressão?</h2>
+      <p>
+        A lesão por pressão é um dano na pele e, em alguns casos, nos tecidos mais profundos.
+        Ela pode surgir quando uma parte do corpo fica muito tempo sob pressão, principalmente
+        em pessoas acamadas, sentadas por longos períodos ou com dificuldade para mudar de posição.
+      </p>
+      <p>
+        As áreas mais afetadas costumam ser aquelas em que o osso fica mais próximo da pele,
+        como sacro, calcanhares, quadris, cotovelos e tornozelos.
+      </p>
+      <span class="guide-badge">Baseado em ANVISA, OMS e NPIAP</span>
+    </section>
+
+    <section class="grid2">
+      <section class="guide-card">
+        <h2>Por que isso acontece?</h2>
+        <p>
+          Quando a mesma região do corpo fica pressionada por muito tempo, a circulação sanguínea
+          pode ficar prejudicada. Isso aumenta o risco de dano na pele, especialmente quando há
+          umidade, atrito, cisalhamento, nutrição inadequada ou mobilidade reduzida.
+        </p>
+      </section>
+
+      <section class="guide-card">
+        <h2>Quem tem mais risco?</h2>
+        <ul>
+          <li>Pessoas acamadas ou com pouca mobilidade.</li>
+          <li>Pessoas em cadeira de rodas por longos períodos.</li>
+          <li>Idosos com pele mais frágil.</li>
+          <li>Pessoas com incontinência urinária ou fecal.</li>
+          <li>Pessoas com desnutrição, desidratação ou doença grave.</li>
+        </ul>
+      </section>
+    </section>
+
+    <section class="guide-card highlight-danger">
+      <h2>Primeiros sinais de alerta</h2>
+      <ul>
+        <li>Vermelhidão que não desaparece após aliviar a pressão.</li>
+        <li>Pele mais quente, dolorida, endurecida ou inchada.</li>
+        <li>Escurecimento ou mudança de cor da pele.</li>
+        <li>Bolha, rachadura ou abertura na pele.</li>
+        <li>Ferida com secreção, mau cheiro ou piora rápida.</li>
+      </ul>
+    </section>
+
+    <section class="guide-card">
+      <h2>O que fazer em casa?</h2>
+
+      <div class="grid3">
+        <div class="mini-card">
+          <h3>Mudar de posição</h3>
+          <p>
+            Ajude a pessoa a mudar de posição com frequência, conforme orientação da equipe
+            de saúde e de acordo com a necessidade clínica.
+          </p>
+        </div>
+
+        <div class="mini-card">
+          <h3>Observar a pele</h3>
+          <p>
+            Verifique diariamente as áreas de apoio do corpo, principalmente sacro, calcanhares,
+            quadris, cotovelos e tornozelos.
+          </p>
+        </div>
+
+        <div class="mini-card">
+          <h3>Manter a pele limpa</h3>
+          <p>
+            Higiene e secagem cuidadosa ajudam a reduzir o risco de lesões, especialmente quando
+            há suor, urina ou fezes.
+          </p>
+        </div>
+
+        <div class="mini-card">
+          <h3>Evitar umidade</h3>
+          <p>
+            Troque roupas, fraldas e lençóis sempre que necessário. Pele úmida fica mais vulnerável.
+          </p>
+        </div>
+
+        <div class="mini-card">
+          <h3>Reduzir atrito</h3>
+          <p>
+            Evite arrastar a pessoa sobre a cama. Sempre que possível, use técnicas seguras para
+            mobilização e reposicionamento.
+          </p>
+        </div>
+
+        <div class="mini-card">
+          <h3>Seguir orientação profissional</h3>
+          <p>
+            Em caso de dúvida, peça orientação à enfermagem ou ao médico, principalmente se houver
+            ferida aberta ou piora da pele.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid2">
+      <section class="guide-card highlight-warning">
+        <h2>O que não fazer</h2>
+        <ul>
+          <li>Não massagear áreas avermelhadas.</li>
+          <li>Não usar pomadas, curativos ou produtos sem orientação.</li>
+          <li>Não deixar lençóis enrugados, úmidos ou sujos.</li>
+          <li>Não esperar a ferida piorar para buscar ajuda.</li>
+        </ul>
+      </section>
+
+      <section class="guide-card">
+        <h2>Quando procurar ajuda profissional?</h2>
+        <ul>
+          <li>Se a vermelhidão não desaparecer.</li>
+          <li>Se aparecer bolha, ferida ou abertura na pele.</li>
+          <li>Se houver pus, secreção ou mau cheiro.</li>
+          <li>Se a pessoa tiver febre, dor intensa ou piora geral.</li>
+          <li>Se você não souber como posicionar ou cuidar da pele com segurança.</li>
+        </ul>
+      </section>
+    </section>
+
+    <section class="guide-card">
+      <h2>Mensagem importante para familiares e cuidadores</h2>
+      <p>
+        A prevenção da lesão por pressão depende de observação diária, mudança de posição,
+        cuidado com a pele e busca precoce de orientação profissional. Pequenos sinais podem
+        indicar o início de um problema maior, por isso a atenção precoce faz diferença.
+      </p>
+      <p>
+        Este material tem caráter educativo e não substitui avaliação médica ou de enfermagem.
+      </p>
+    </section>
+
+    <section class="guide-card">
+      <h2>Fontes e referências</h2>
+      <ul class="refs">
+        <li>
+          ANVISA. <strong>Práticas de Segurança do Paciente em Serviços de Saúde: Prevenção de Lesão por Pressão</strong>.
+          Brasília: Agência Nacional de Vigilância Sanitária, 28 ago 2023.
+          Disponível em:
+          <a href="https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/notas-tecnicas/notas-tecnicas-vigentes/nota-tecnica-gvims-ggtes-anvisa-no-05-2023-praticas-de-seguranca-do-paciente-em-servicos-de-saude-prevencao-de-lesao-por-pressao/%40%40download/file" target="_blank" rel="noopener noreferrer">gov.br/anvisa</a>
+        </li>
+
+        <li>
+          ANVISA. <strong>Como posso contribuir para aumentar a segurança do paciente? Orientações aos pacientes, familiares e acompanhantes</strong>.
+          Brasília: Agência Nacional de Vigilância Sanitária, 2017.
+          Disponível em:
+          <a href="https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/publicacoes/guia-como-posso-contribuir-para-aumentar-a-seguranca-do-paciente-orientacoes-aos-pacientes-familiares-e-acompanhantes" target="_blank" rel="noopener noreferrer">gov.br/anvisa</a>
+        </li>
+
+        <li>
+          OMS. <strong>Patient safety</strong>. World Health Organization, 11 set 2023.
+          Disponível em:
+          <a href="https://www.who.int/news-room/fact-sheets/detail/patient-safety" target="_blank" rel="noopener noreferrer">who.int</a>
+        </li>
+
+        <li>
+          Thomas DC, Chui PL, Yahya A, Yap JW. <strong>Systematic review of patient education for pressure injury: Evidence to guide practice</strong>.
+          Worldviews Evid Based Nurs. 2022 Aug;19(4):267-274. Epub 30 maio 2022.
+          Disponível em:
+          <a href="https://pubmed.ncbi.nlm.nih.gov/35635245/" target="_blank" rel="noopener noreferrer">PubMed PMID: 35635245</a>
+        </li>
+
+        <li>
+          NPIAP. <strong>Pressure Injury Stages</strong>. National Pressure Injury Advisory Panel.
+          Disponível em:
+          <a href="https://npiap.com/page/PressureInjuryStages" target="_blank" rel="noopener noreferrer">npiap.com</a>
+        </li>
+      </ul>
+
+      <p style="margin-top:16px; color:#334155;">
+        <strong>Data e horário da consulta das fontes:</strong> 21/03/2026, 14:40:12 (UTC-03:00).
+      </p>
+    </section>
+
+  </main>
+
+  <footer class="guide-footer">
+    © 2026 - Projeto Integrador | Conteúdo educativo para leigos com base em ANVISA, OMS, PubMed e NPIAP.
+  </footer>
+
+  <div id="pwaModal" class="pwa-modal" aria-hidden="true">
+    <div class="pwa-box" role="dialog" aria-modal="true" aria-labelledby="pwaTitle">
+      <h2 id="pwaTitle" class="pwa-title">Instalar aplicativo</h2>
+      <img class="pwa-img" src="saude123.png" alt="Imagem relacionada à saúde" loading="lazy">
+      <p class="pwa-text" id="pwaHelpText">
+        No Android (Chrome): abra este site, toque no menu e escolha instalar app ou adicionar à tela inicial.
+      </p>
+      <div class="pwa-actions">
+        <button id="pwaCancel" class="pwa-btn pwa-btn-secondary">Fechar</button>
+        <button id="pwaConfirm" class="pwa-btn pwa-btn-primary">Instalar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", async () => {
+        try {
+          const reg = await navigator.serviceWorker.register("./service-worker.js", { scope: "./" });
+          console.log("Service Worker registrado:", reg.scope);
+        } catch (e) {
+          console.log("Falha ao registrar Service Worker:", e);
+        }
+      });
+    }
+  </script>
+
+  <script>
+    let deferredPrompt = null;
+
+    const installBtn = document.getElementById("pwaInstallBtn");
+    const modal = document.getElementById("pwaModal");
+    const cancelBtn = document.getElementById("pwaCancel");
+    const confirmBtn = document.getElementById("pwaConfirm");
+    const helpText = document.getElementById("pwaHelpText");
+
+    function openModal() {
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeModal() {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+    }
+
+    window.addEventListener("load", () => {
+      installBtn.style.display = "inline-block";
+      installBtn.textContent = "📌 Como instalar no Android";
+      confirmBtn.textContent = "Entendi";
+      confirmBtn.onclick = closeModal;
+    });
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+
+      installBtn.style.display = "inline-block";
+      installBtn.textContent = "📲 Instalar aplicativo";
+
+      confirmBtn.textContent = "Instalar";
+      confirmBtn.onclick = async () => {
+        if (!deferredPrompt) return;
+        closeModal();
+        deferredPrompt.prompt();
+        try { await deferredPrompt.userChoice; }
+        finally {
+          deferredPrompt = null;
+          installBtn.style.display = "none";
+        }
+      };
+
+      helpText.innerHTML = "Clique em <b>Instalar</b> para adicionar o app à tela inicial.";
+    });
+
+    installBtn?.addEventListener("click", openModal);
+    cancelBtn?.addEventListener("click", closeModal);
+    modal?.addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
+    });
+  </script>
+
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+    const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+    const AUTH_STORAGE_KEY = "lpp-guard-pro-auth";
+    const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storageKey: AUTH_STORAGE_KEY
+      }
+    });
+
+    const userBtn = document.getElementById("userBtn");
+    const userDrop = document.getElementById("userDrop");
+
+    const userEmail = document.getElementById("userEmail");
+    const userStatus = document.getElementById("userStatus");
+
+    const dropHeadTitle = document.getElementById("dropHeadTitle");
+    const dropHeadSub = document.getElementById("dropHeadSub");
+
+    const dropLogin = document.getElementById("dropLogin");
+    const dropSignup = document.getElementById("dropSignup");
+    const dropPremium = document.getElementById("dropPremium");
+    const dropLogout = document.getElementById("dropLogout");
+
+    function openDrop() {
+      userDrop.classList.add("open");
+      userBtn.setAttribute("aria-expanded", "true");
+    }
+
+    function closeDrop() {
+      userDrop.classList.remove("open");
+      userBtn.setAttribute("aria-expanded", "false");
+    }
+
+    userBtn?.addEventListener("click", () => {
+      userDrop.classList.contains("open") ? closeDrop() : openDrop();
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!userDrop.contains(e.target) && !userBtn.contains(e.target)) closeDrop();
+    });
+
+    window.addEventListener("scroll", () => {
+      if (userDrop.classList.contains("open")) closeDrop();
+    }, { passive: true });
+
+    function setLoggedOut() {
+      userEmail.textContent = "Entrar / Criar conta";
+      userStatus.innerHTML = 'Não autenticado <span class="badge">Free</span>';
+      dropHeadTitle.textContent = "Conta";
+      dropHeadSub.textContent = "Você não está autenticado";
+
+      dropLogin.style.display = "";
+      dropSignup.style.display = "";
+      dropPremium.style.display = "";
+      dropLogout.style.display = "none";
+    }
+
+    async function setLoggedIn(user) {
+      const email = user?.email || "Usuário";
+      userEmail.textContent = email;
+
+      dropHeadTitle.textContent = "Conta ativa";
+      dropHeadSub.textContent = email;
+
+      dropLogin.style.display = "none";
+      dropSignup.style.display = "none";
+      dropPremium.style.display = "";
+      dropLogout.style.display = "";
+
+      userStatus.innerHTML = 'Conta ativa <span class="badge verified">✔ Verificado</span>';
+
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("premium")
+          .eq("id", user.id)
+          .single();
+
+        if (!error && data?.premium) {
+          userStatus.innerHTML = 'Premium <span class="badge premium">VIP</span> <span class="badge verified">✔ Verificado</span>';
+          dropPremium.style.display = "none";
+        } else {
+          userStatus.innerHTML = 'Conta ativa <span class="badge">Free</span>';
+          dropPremium.style.display = "";
+        }
+      } catch {
+        userStatus.innerHTML = 'Conta ativa <span class="badge">Free</span>';
+        dropPremium.style.display = "";
+      }
+    }
+
+    function withTimeout(promise, ms) {
+      return Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), ms))
+      ]);
+    }
+
+    async function renderStateSafe() {
+      userEmail.innerHTML = '<span class="skeleton"></span>';
+      userStatus.innerHTML = '<span class="skeleton small"></span>';
+      dropHeadTitle.textContent = "Conta";
+      dropHeadSub.textContent = "Verificando sessão…";
+
+      const hardFallback = setTimeout(() => {
+        if (String(userEmail.innerHTML).includes("skeleton")) setLoggedOut();
+      }, 2500);
+
+      try {
+        const sess = await withTimeout(supabase.auth.getSession(), 2500);
+        const session = sess?.data?.session;
+
+        if (!session) {
+          clearTimeout(hardFallback);
+          return setLoggedOut();
+        }
+
+        const u = await withTimeout(supabase.auth.getUser(), 3500);
+        const user = u?.data?.user;
+
+        clearTimeout(hardFallback);
+
+        if (!user) return setLoggedOut();
+        return await setLoggedIn(user);
+      } catch {
+        clearTimeout(hardFallback);
+        return setLoggedOut();
+      }
+    }
+
+    dropLogout?.addEventListener("click", async () => {
+      try { await supabase.auth.signOut(); } catch {}
+      closeDrop();
+      window.location.href = SITE_BASE + "index.html";
+    });
+
+    supabase.auth.onAuthStateChange(() => renderStateSafe());
+    renderStateSafe();
+  </script>
+
+  <script>
+    async function lppHardRefresh() {
+      try {
+        if ("serviceWorker" in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(r => r.unregister()));
+        }
+        if ("caches" in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        }
+      } finally {
+        location.href = location.href.split("#")[0];
+      }
+    }
+    window.lppHardRefresh = lppHardRefresh;
+  </script>
+
+</body>
+</html>

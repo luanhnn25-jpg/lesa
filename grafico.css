@@ -1,0 +1,25 @@
+.tabela-custo {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.tabela-custo th {
+    background-color: #1b3c73;
+    color: white;
+    padding: 12px;
+}
+
+.tabela-custo td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+.tabela-custo tr:hover {
+    background-color: #f2f6fb;
+}
+
+canvas {
+    margin-top: 30px;
+}

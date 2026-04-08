@@ -1,0 +1,1204 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tratamento - Lesão por Pressão</title>
+
+<style>
+html,body{
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.14), transparent 55%),
+    radial-gradient(900px 500px at 90% 10%, rgba(11,61,145,.12), transparent 55%),
+    #eef2f6;
+  color:#0f172a;
+}
+
+:root{
+  --blue1:#0b3d91;
+  --blue2:#0f5bd3;
+  --blue3:#082c63;
+  --blue4:#eaf2ff;
+  --card:#ffffff;
+  --text:#0f172a;
+  --muted:#475569;
+  --border:rgba(15,23,42,.08);
+  --shadow:0 12px 30px rgba(2,6,23,.10);
+  --shadow2:0 18px 45px rgba(2,6,23,.14);
+  --shadow3:0 24px 60px rgba(2,6,23,.18);
+  --radius:20px;
+  --ring:0 0 0 4px rgba(56, 130, 246, .18);
+}
+
+header{
+  background:
+    radial-gradient(circle at top center, rgba(255,255,255,.18), transparent 40%),
+    linear-gradient(90deg,var(--blue1),var(--blue2));
+  color:#fff;
+  text-align:center;
+  padding:48px 16px 32px;
+  box-shadow:0 12px 25px rgba(0,0,0,.18);
+  position:relative;
+  overflow:hidden;
+}
+
+header::after{
+  content:"";
+  position:absolute;
+  inset:auto -120px -80px -120px;
+  height:180px;
+  background:radial-gradient(circle at 50% 10%, rgba(255,255,255,.12), transparent 60%);
+  pointer-events:none;
+}
+
+header h1{
+  margin:0;
+  font-size:clamp(30px,4vw,48px);
+  font-weight:1000;
+  letter-spacing:-.5px;
+  position:relative;
+  z-index:1;
+}
+
+header p{
+  margin:10px 0 0;
+  font-size:15px;
+  opacity:.94;
+  font-weight:700;
+  position:relative;
+  z-index:1;
+}
+
+.lpp-nav{
+  background:rgba(8,44,99,.94);
+  backdrop-filter:blur(10px);
+  position:sticky;
+  top:0;
+  z-index:100;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  box-shadow:0 12px 24px rgba(2,6,23,.12);
+}
+
+.lpp-nav-inner{
+  max-width:1180px;
+  margin:0 auto;
+  padding:10px 12px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:14px;
+  align-items:center;
+}
+
+.menu-shell{
+  position:relative;
+  min-width:0;
+  overflow:hidden;
+  border-radius:16px;
+}
+
+.menu-shell::after{
+  content:"";
+  position:absolute;
+  right:0;
+  top:0;
+  bottom:0;
+  width:48px;
+  background:linear-gradient(90deg, rgba(8,44,99,0), rgba(8,44,99,.94));
+  pointer-events:none;
+  opacity:.95;
+}
+
+.topnav{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:nowrap;
+  overflow-x:auto;
+  scrollbar-width:thin;
+  -webkit-overflow-scrolling:touch;
+  min-width:0;
+  padding:2px 6px 8px 0;
+}
+
+.topnav::-webkit-scrollbar{
+  height:7px;
+}
+
+.topnav::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,.26);
+  border-radius:999px;
+}
+
+.topnav::-webkit-scrollbar-track{
+  background:transparent;
+}
+
+.topnav a{
+  color:#fff;
+  text-decoration:none;
+  padding:10px 14px;
+  border-radius:12px;
+  font-weight:800;
+  font-size:14px;
+  transition:.2s ease;
+  white-space:nowrap;
+  background:rgba(255,255,255,.04);
+  flex:0 0 auto;
+}
+
+.topnav a:hover{
+  background:rgba(255,255,255,.15);
+  transform:translateY(-1px);
+}
+
+.topnav a.active{
+  background:rgba(255,255,255,.20);
+  box-shadow:0 10px 18px rgba(2,6,23,.12);
+}
+
+.user-area{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.user-btn{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  max-width:320px;
+  min-width:210px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  font-weight:950;
+  cursor:pointer;
+  outline:none;
+  box-shadow:0 10px 18px rgba(2,6,23,.16);
+  transition:transform .12s ease, background .12s ease, box-shadow .12s ease;
+}
+
+.user-btn:hover{
+  background:rgba(255,255,255,.16);
+  transform:translateY(-1px);
+  box-shadow:0 14px 26px rgba(2,6,23,.22);
+}
+
+.user-btn:focus-visible{
+  box-shadow:var(--ring);
+}
+
+.user-icon{
+  width:30px;
+  height:30px;
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  background:rgba(255,255,255,.22);
+  border:1px solid rgba(255,255,255,.18);
+}
+
+.user-icon svg{
+  width:18px;
+  height:18px;
+  opacity:.95;
+}
+
+.user-text{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  min-width:0;
+  text-align:left;
+}
+
+.user-email{
+  font-size:12px;
+  font-weight:950;
+  opacity:.96;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  max-width:210px;
+}
+
+.user-status{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+  font-size:11px;
+  opacity:.90;
+  font-weight:850;
+}
+
+.badge-status{
+  display:inline-block;
+  padding:2px 8px;
+  border-radius:999px;
+  font-size:10.5px;
+  font-weight:950;
+  border:1px solid rgba(255,255,255,.22);
+  background:rgba(255,255,255,.14);
+  color:#fff;
+}
+
+.badge-status.premium{
+  background:rgba(34,197,94,.18);
+  border-color:rgba(34,197,94,.35);
+}
+
+.badge-status.verified{
+  background:rgba(59,130,246,.18);
+  border-color:rgba(59,130,246,.32);
+}
+
+.caret{
+  opacity:.9;
+  font-size:12px;
+  margin-left:auto;
+}
+
+.dropdown{
+  position:absolute;
+  top:calc(100% + 10px);
+  right:0;
+  width:min(360px, 92vw);
+  background:#fff;
+  border:1px solid rgba(15,23,42,.10);
+  border-radius:16px;
+  box-shadow:0 18px 45px rgba(2,6,23,.22);
+  padding:10px;
+  opacity:0;
+  transform:translateY(-6px) scale(.98);
+  pointer-events:none;
+  transition:opacity .14s ease, transform .14s ease;
+  z-index:9999;
+  max-height:min(70vh, 520px);
+  overflow:auto;
+}
+
+.dropdown.open{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  pointer-events:auto;
+}
+
+.drop-head{
+  padding:10px 10px 8px;
+  border-radius:14px;
+  background:linear-gradient(180deg, #f8fbff, #ffffff);
+  border:1px solid rgba(15,23,42,.08);
+  margin-bottom:10px;
+}
+
+.drop-head .t1{
+  font-weight:950;
+  color:#0b2b63;
+  font-size:13px;
+}
+
+.drop-head .t2{
+  margin-top:4px;
+  color:#475569;
+  font-size:12px;
+  word-break:break-all;
+}
+
+.drop-item{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:11px 12px;
+  border-radius:12px;
+  border:1px solid rgba(15,23,42,.08);
+  background:#fff;
+  color:#0f172a;
+  cursor:pointer;
+  font-weight:950;
+  text-decoration:none;
+  transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+.drop-item:hover{
+  background:#f8fafc;
+  transform:translateY(-1px);
+  box-shadow:0 12px 24px rgba(2,6,23,.10);
+}
+
+.drop-muted{
+  font-size:12px;
+  color:#475569;
+  font-weight:850;
+}
+
+.drop-sep{
+  height:1px;
+  background:rgba(15,23,42,.10);
+  margin:10px 4px;
+}
+
+.skeleton{
+  display:inline-block;
+  width:160px;
+  height:12px;
+  border-radius:999px;
+  background:linear-gradient(90deg, rgba(255,255,255,.18), rgba(255,255,255,.28), rgba(255,255,255,.18));
+  background-size:240px 100%;
+  animation:sk 1.1s infinite;
+}
+
+.skeleton.small{
+  width:120px;
+  height:10px;
+  opacity:.95;
+}
+
+@keyframes sk{
+  0%{background-position:-240px 0}
+  100%{background-position:240px 0}
+}
+
+main{
+  max-width:1120px;
+  margin:auto;
+  padding:24px 16px 56px;
+}
+
+.hero{
+  background:linear-gradient(180deg,#ffffff,#fbfdff);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:28px;
+  box-shadow:var(--shadow2);
+  margin-bottom:20px;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:auto -80px -100px auto;
+  width:260px;
+  height:260px;
+  border-radius:50%;
+  background:radial-gradient(circle at center, rgba(11,91,211,.12), transparent 65%);
+  pointer-events:none;
+}
+
+.hero h2{
+  margin:0 0 10px;
+  font-size:clamp(25px,3vw,36px);
+  color:var(--blue1);
+  font-weight:1000;
+  line-height:1.1;
+  position:relative;
+  z-index:1;
+}
+
+.hero p{
+  margin:0;
+  line-height:1.75;
+  font-size:16px;
+  color:#334155;
+  max-width:75ch;
+  position:relative;
+  z-index:1;
+}
+
+.badges{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+  position:relative;
+  z-index:1;
+}
+
+.badge{
+  background:#eff6ff;
+  border:1px solid #dbeafe;
+  padding:9px 13px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:800;
+  color:var(--blue1);
+  box-shadow:0 8px 18px rgba(2,6,23,.06);
+}
+
+.grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.card{
+  background:linear-gradient(180deg,#ffffff,#fbfdff);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:24px;
+  margin-top:18px;
+  box-shadow:var(--shadow);
+  transition:.22s ease;
+  position:relative;
+  overflow:hidden;
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background:radial-gradient(700px 260px at 20% 0%, rgba(11,91,211,.08), transparent 55%);
+  opacity:0;
+  transition:.22s ease;
+  pointer-events:none;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--shadow2);
+  border-color:rgba(11,91,211,.18);
+}
+
+.card:hover::before{
+  opacity:1;
+}
+
+.card h2{
+  margin:0 0 12px;
+  color:var(--blue1);
+  font-size:23px;
+  font-weight:950;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  position:relative;
+  z-index:1;
+}
+
+.card h2::before{
+  content:"";
+  width:4px;
+  height:22px;
+  border-radius:999px;
+  background:var(--blue2);
+  box-shadow:0 8px 18px rgba(11,91,211,.25);
+  display:inline-block;
+}
+
+.card h3{
+  margin:18px 0 10px;
+  color:#0b2b63;
+  font-size:18px;
+  font-weight:900;
+  position:relative;
+  z-index:1;
+}
+
+.card p,
+.card li{
+  font-size:16px;
+  line-height:1.72;
+  color:#243042;
+  position:relative;
+  z-index:1;
+}
+
+ul{
+  padding-left:20px;
+  margin:10px 0 0;
+}
+
+li{
+  margin:7px 0;
+}
+
+.highlight{
+  background:
+    radial-gradient(circle at top left, rgba(11,91,211,.10), transparent 45%),
+    linear-gradient(180deg,#ffffff,#f8fbff);
+  border-color:rgba(11,91,211,.14);
+}
+
+.note{
+  background:linear-gradient(180deg,#fff6d9,#fff7e6);
+  border-left:6px solid #f2b705;
+  padding:14px;
+  border-radius:12px;
+  margin-top:14px;
+  box-shadow:0 8px 18px rgba(2,6,23,.06);
+}
+
+.alert-box{
+  background:linear-gradient(180deg,#fff1f2,#fff7f7);
+  border:1px solid rgba(220,38,38,.18);
+  border-left:6px solid #dc2626;
+  border-radius:14px;
+  padding:16px;
+  margin-top:14px;
+  box-shadow:0 8px 18px rgba(2,6,23,.06);
+}
+
+.alert-box h3{
+  color:#991b1b;
+  margin-top:0;
+}
+
+.safe-box{
+  background:linear-gradient(180deg,#effdf5,#f6fffb);
+  border:1px solid rgba(22,163,74,.18);
+  border-left:6px solid #16a34a;
+  border-radius:14px;
+  padding:16px;
+  margin-top:14px;
+  box-shadow:0 8px 18px rgba(2,6,23,.06);
+}
+
+.safe-box h3{
+  color:#14532d;
+  margin-top:0;
+}
+
+.table-wrap{
+  overflow-x:auto;
+  margin-top:15px;
+  border-radius:14px;
+  box-shadow:0 10px 24px rgba(2,6,23,.08);
+  position:relative;
+  z-index:1;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:800px;
+  background:#fff;
+}
+
+th{
+  background:linear-gradient(180deg,var(--blue1),#0b4ab1);
+  color:white;
+  padding:12px;
+  text-align:left;
+  font-size:14px;
+}
+
+td{
+  padding:12px;
+  border-bottom:1px solid #ddd;
+  font-size:14px;
+  line-height:1.55;
+}
+
+.refs{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:10px;
+}
+
+footer{
+  text-align:center;
+  padding:22px;
+  font-size:13px;
+  color:#475569;
+}
+
+@media (max-width:980px){
+  .lpp-nav-inner{
+    grid-template-columns:1fr;
+  }
+
+  .user-area{
+    justify-content:flex-end;
+  }
+
+  .user-btn{
+    width:100%;
+    max-width:100%;
+  }
+}
+
+@media (max-width:900px){
+  .grid-2{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (max-width:768px){
+  header h1{
+    font-size:29px;
+  }
+
+  .hero,
+  .card{
+    padding:18px;
+  }
+
+  .hero h2{
+    font-size:23px;
+  }
+
+  .card h2{
+    font-size:20px;
+  }
+
+  .card p,
+  .card li{
+    font-size:15px;
+  }
+}
+
+@media (max-width:640px){
+  .dropdown{
+    position:fixed;
+    left:10px;
+    right:10px;
+    top:auto;
+    bottom:10px;
+    width:auto;
+    max-height:55vh;
+    border-radius:18px;
+    transform:translateY(10px);
+    transform-origin:bottom center;
+  }
+
+  .dropdown.open{
+    transform:translateY(0);
+  }
+
+  .user-btn{
+    min-width:0;
+  }
+
+  .user-email{
+    max-width:160px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{
+    transition:none !important;
+    animation:none !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Tratamento da Lesão por Pressão</h1>
+  <p>Guia didático com abordagem prática, profissional e orientações para o cuidado em casa</p>
+</header>
+
+<nav class="lpp-nav" aria-label="Navegação principal">
+  <div class="lpp-nav-inner">
+
+    <div class="menu-shell">
+      <div class="topnav">
+        <a href="index.html">Início</a>
+        <a href="guia-simples.html">Guia Simples</a>
+        <a href="tratamento.html" class="active">Tratamento</a>
+        <a href="impacto-economico.html">Impacto Econômico</a>
+        <a href="selecao-produtos.html">Seleção de Produtos</a>
+      </div>
+    </div>
+
+    <div class="user-area" aria-label="Área do usuário">
+      <button id="userBtn" class="user-btn" type="button" aria-expanded="false">
+        <span class="user-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 20a8 8 0 0 1 16 0" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+
+        <span class="user-text">
+          <span id="userEmail" class="user-email"><span class="skeleton"></span></span>
+          <span id="userStatus" class="user-status"><span class="skeleton small"></span></span>
+        </span>
+
+        <span class="caret">▾</span>
+      </button>
+
+      <div id="userDrop" class="dropdown" role="menu" aria-label="Menu do usuário">
+        <div class="drop-head">
+          <div class="t1" id="dropHeadTitle">Conta</div>
+          <div class="t2" id="dropHeadSub">Verificando sessão…</div>
+        </div>
+
+        <a id="dropLogin" class="drop-item" href="login.html?mode=login">
+          Entrar <span class="drop-muted">Login</span>
+        </a>
+        <a id="dropSignup" class="drop-item" href="login.html?mode=signup">
+          Criar conta <span class="drop-muted">Cadastro</span>
+        </a>
+
+        <div class="drop-sep"></div>
+
+        <a id="dropPremium" class="drop-item" href="login.html?mode=signup">
+          Premium <span class="drop-muted">Desbloquear</span>
+        </a>
+        <button id="dropLogout" class="drop-item" type="button" style="display:none;">
+          Sair <span class="drop-muted">Logout</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+<main>
+
+  <section class="hero">
+    <h2>Condutas fundamentais no tratamento da lesão por pressão</h2>
+    <p>
+      O tratamento da lesão por pressão é construído a partir de quatro pilares:
+      alívio de pressão, manejo adequado da ferida, controle de fatores sistêmicos
+      e prevenção de complicações. A enfermagem exerce papel central na avaliação,
+      acompanhamento da evolução clínica e educação do paciente e da família.
+    </p>
+
+    <div class="badges">
+      <span class="badge">Avaliação contínua</span>
+      <span class="badge">Controle da pressão</span>
+      <span class="badge">Curativos adequados</span>
+      <span class="badge">Segurança no domicílio</span>
+    </div>
+  </section>
+
+  <section class="card highlight">
+    <h2>Avaliação inicial</h2>
+    <ul>
+      <li><b>Estágio da lesão:</b> classificação da profundidade e aspecto geral.</li>
+      <li><b>Tecido do leito:</b> granulação, epitelização, esfacelo ou necrose.</li>
+      <li><b>Exsudato:</b> quantidade, cor, consistência e odor.</li>
+      <li><b>Pele ao redor:</b> maceração, ressecamento, hiperemia e integridade.</li>
+      <li><b>Dor:</b> intensidade e necessidade de analgesia antes da troca.</li>
+      <li><b>Sinais de infecção:</b> aumento da dor, calor local, secreção purulenta ou febre.</li>
+      <li><b>Mensuração:</b> comprimento, largura, profundidade e presença de túneis.</li>
+    </ul>
+  </section>
+
+  <section class="card highlight">
+    <h2>Cuidados do técnico de enfermagem na prevenção</h2>
+    <p>
+      O técnico de enfermagem tem papel essencial na prevenção da lesão por pressão por meio da observação contínua,
+      execução dos cuidados prescritos e comunicação precoce de alterações ao enfermeiro.
+    </p>
+    <ul>
+      <li>Realizar inspeção frequente da pele, especialmente em proeminências ósseas.</li>
+      <li>Observar hiperemia, áreas quentes, endurecidas, dolorosas ou com alteração de coloração.</li>
+      <li>Executar mudança de decúbito conforme prescrição e rotina assistencial.</li>
+      <li>Evitar arrastar o paciente no leito para reduzir fricção e cisalhamento.</li>
+      <li>Manter lençóis limpos, secos, esticados e sem dobras.</li>
+      <li>Controlar umidade por suor, urina, fezes ou exsudato.</li>
+      <li>Realizar higiene corporal com suavidade, secando a pele sem fricção intensa.</li>
+      <li>Aplicar barreira protetora na pele quando indicado pelo protocolo institucional.</li>
+      <li>Auxiliar no uso correto de colchões, coxins e superfícies de redistribuição de pressão.</li>
+      <li>Estimular hidratação, aceitação alimentar e conforto do paciente, quando possível.</li>
+      <li>Registrar os cuidados realizados e qualquer alteração observada.</li>
+      <li>Comunicar imediatamente ao enfermeiro sinais sugestivos de risco ou início de lesão.</li>
+    </ul>
+
+    <div class="safe-box">
+      <h3>Condutas preventivas importantes</h3>
+      <ul>
+        <li>Reposicionar com técnica adequada e atenção à segurança.</li>
+        <li>Preservar a integridade da pele durante banho, troca de fraldas e transporte.</li>
+        <li>Observar pacientes restritos ao leito, sedados, desnutridos ou incontinentes com maior frequência.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <section class="card">
+      <h2>Alívio de pressão</h2>
+      <p>Sem redistribuição de pressão, a cicatrização tende a falhar.</p>
+      <ul>
+        <li>Reposicionamento programado conforme risco e tolerância.</li>
+        <li>Uso de colchões e superfícies especiais de redistribuição de pressão.</li>
+        <li>Redução de fricção e cisalhamento durante mobilização e higiene.</li>
+        <li>Proteção de proeminências ósseas como sacro, calcâneo e trocânteres.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Limpeza e preparo da ferida</h2>
+      <ul>
+        <li>Realizar limpeza com solução apropriada conforme protocolo.</li>
+        <li>Controlar a umidade da ferida e da pele ao redor.</li>
+        <li>Proteger a região perilesional contra maceração.</li>
+      </ul>
+
+      <div class="note">
+        <b>Objetivo:</b> remover detritos, reduzir microrganismos, proteger as bordas e favorecer a cicatrização.
+      </div>
+    </section>
+  </section>
+
+  <section class="card highlight">
+    <h2>Cuidados do técnico de enfermagem na ferida</h2>
+    <p>
+      No cuidado direto, o técnico de enfermagem deve atuar com técnica segura, observação detalhada e registro adequado,
+      sempre respeitando a prescrição e os protocolos do serviço.
+    </p>
+    <ul>
+      <li>Separar e organizar o material antes do procedimento.</li>
+      <li>Realizar higienização das mãos antes e após o cuidado.</li>
+      <li>Utilizar técnica limpa ou estéril conforme protocolo institucional.</li>
+      <li>Observar quantidade, coloração, odor e aspecto do exsudato.</li>
+      <li>Observar tecido de granulação, esfacelo, necrose e integridade das bordas.</li>
+      <li>Proteger a pele ao redor da lesão contra maceração e trauma.</li>
+      <li>Executar a troca do curativo conforme prescrição do enfermeiro ou rotina definida.</li>
+      <li>Evitar manipulação excessiva do leito da ferida.</li>
+      <li>Identificar sinais de dor durante o procedimento e relatar necessidade de analgesia.</li>
+      <li>Manter técnica segura no descarte de materiais contaminados.</li>
+      <li>Registrar o procedimento realizado e alterações encontradas.</li>
+    </ul>
+
+    <div class="note">
+      <b>Atenção:</b> o técnico de enfermagem deve comunicar alterações da ferida, piora do aspecto, aumento de exsudato,
+      odor forte, sangramento, dor importante ou sinais de infecção.
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Seleção de curativos</h2>
+    <p>
+      A escolha da cobertura depende do volume de exsudato, da profundidade da lesão
+      e do tipo de tecido presente no leito.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Achado</th>
+            <th>Objetivo</th>
+            <th>Conduta</th>
+            <th>Atenção</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Pouco exsudato</td>
+            <td>Manter umidade adequada</td>
+            <td>Coberturas protetoras e não traumáticas</td>
+            <td>Evitar ressecamento</td>
+          </tr>
+          <tr>
+            <td>Exsudato moderado</td>
+            <td>Absorver secreção</td>
+            <td>Coberturas absorventes</td>
+            <td>Proteger pele ao redor</td>
+          </tr>
+          <tr>
+            <td>Exsudato elevado</td>
+            <td>Controlar umidade</td>
+            <td>Coberturas de maior absorção</td>
+            <td>Trocas mais frequentes</td>
+          </tr>
+          <tr>
+            <td>Feridas profundas</td>
+            <td>Preencher cavidade</td>
+            <td>Curativos específicos conforme protocolo</td>
+            <td>Não compactar excessivamente</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="refs">
+      Referências para estudo: diretriz internacional EPUAP/NPIAP/PPPIA (2019) e Nota Técnica Anvisa nº 05/2023.
+    </p>
+  </section>
+
+  <section class="grid-2">
+    <section class="card">
+      <h2>Desbridamento</h2>
+      <ul>
+        <li>Indicado quando existe tecido desvitalizado e não há contraindicação.</li>
+        <li>Pode ser autolítico, enzimático, mecânico, conservador ou cirúrgico.</li>
+        <li>Necrose seca estável, especialmente em calcâneo, exige avaliação específica.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Infecção, dor e segurança</h2>
+      <ul>
+        <li><b>Dor:</b> planejar analgesia antes da troca do curativo.</li>
+        <li><b>Infecção:</b> reconhecer precocemente sinais locais e sistêmicos.</li>
+        <li><b>Segurança:</b> higienização das mãos, técnica adequada e descarte correto dos materiais.</li>
+      </ul>
+    </section>
+  </section>
+
+  <section class="card highlight">
+    <h2>Observação, registro e comunicação</h2>
+    <ul>
+      <li>Registrar localização da lesão e alterações observadas durante o plantão.</li>
+      <li>Anotar aspecto da pele, exsudato, odor, dor e reação do paciente ao procedimento.</li>
+      <li>Informar ao enfermeiro mudanças no tamanho, profundidade ou coloração da ferida.</li>
+      <li>Comunicar imediatamente piora clínica, febre, secreção purulenta ou sangramento.</li>
+      <li>Registrar dificuldades encontradas no cuidado, como recusa alimentar, baixa mobilidade ou dor intensa.</li>
+    </ul>
+
+    <div class="safe-box">
+      <h3>O técnico deve comunicar ao enfermeiro quando houver</h3>
+      <ul>
+        <li>Nova área de hiperemia ou lesão.</li>
+        <li>Piora do aspecto da ferida.</li>
+        <li>Odor forte ou exsudato purulento.</li>
+        <li>Dor intensa, febre ou alteração do estado geral.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="card highlight">
+    <h2>Cuidados em casa</h2>
+    <p>
+      Quando o cuidado é realizado no domicílio, a rotina precisa ser organizada para reduzir risco de piora,
+      contaminação e novas lesões.
+    </p>
+
+    <ul>
+      <li>Manter <b>higiene adequada das mãos</b> antes e depois do contato com a ferida.</li>
+      <li>Preparar um local limpo, bem iluminado e com materiais separados antes da troca.</li>
+      <li>Respeitar os horários de troca do curativo orientados pela equipe de saúde.</li>
+      <li>Observar diariamente a pele ao redor da lesão e outras áreas de pressão.</li>
+      <li>Evitar apoiar continuamente a região lesionada.</li>
+      <li>Fazer mudança de posição conforme orientação clínica.</li>
+      <li>Manter lençóis limpos, secos e sem dobras.</li>
+      <li>Controlar umidade causada por suor, urina ou fezes.</li>
+      <li>Estimular hidratação e alimentação adequada, quando possível.</li>
+      <li>Não usar produtos caseiros, pomadas ou soluções sem orientação profissional.</li>
+    </ul>
+
+    <div class="safe-box">
+      <h3>Cuidados importantes do cuidador e do técnico no domicílio</h3>
+      <ul>
+        <li>Não esfregar com força a pele avermelhada.</li>
+        <li>Não massagear proeminências ósseas com hiperemia.</li>
+        <li>Não apertar ou preencher excessivamente cavidades na lesão.</li>
+        <li>Registrar mudanças observadas, como dor, odor, secreção e aumento da ferida.</li>
+        <li>Manter o paciente confortável, seco e protegido de novas áreas de pressão.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Alertas importantes no domicílio</h2>
+    <p>
+      Alguns sinais indicam necessidade de avaliação profissional mais rápida e não devem ser ignorados.
+    </p>
+
+    <div class="alert-box">
+      <h3>Sinais de alerta</h3>
+      <ul>
+        <li>Aumento repentino da dor.</li>
+        <li>Odor forte persistente.</li>
+        <li>Secreção amarelada, esverdeada ou purulenta.</li>
+        <li>Febre ou piora do estado geral.</li>
+        <li>Pele muito vermelha, quente ou endurecida ao redor da lesão.</li>
+        <li>Aumento rápido do tamanho ou da profundidade da ferida.</li>
+        <li>Sangramento frequente ou escurecimento progressivo do leito.</li>
+        <li>Sonolência, confusão, fraqueza intensa ou recusa alimentar importante.</li>
+      </ul>
+    </div>
+
+    <div class="note">
+      <b>Orientação:</b> diante desses sinais, o paciente deve ser reavaliado pela equipe de saúde o mais breve possível.
+    </div>
+  </section>
+
+  <section class="card highlight">
+    <h2>Fatores sistêmicos que alteram o prognóstico</h2>
+    <ul>
+      <li><b>Nutrição:</b> risco nutricional compromete cicatrização.</li>
+      <li><b>Perfusão e oxigenação:</b> vasculopatias e hipóxia reduzem reparo tecidual.</li>
+      <li><b>Glicemia:</b> descontrole glicêmico aumenta risco de infecção e retarda cicatrização.</li>
+      <li><b>Mobilidade e adesão:</b> reabilitação e educação do paciente e da família são fundamentais.</li>
+    </ul>
+
+    <h3>Quando solicitar avaliação multiprofissional</h3>
+    <ul>
+      <li>Lesão por pressão estágio 3 ou 4, cavitária extensa ou piora rápida.</li>
+      <li>Sinais sistêmicos de infecção ou suspeita de osteomielite.</li>
+      <li>Falha terapêutica apesar do manejo adequado.</li>
+      <li>Necrose extensa, odor forte persistente ou exsudato purulento.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 - Projeto Integrador
+</footer>
+
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+  const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+  const AUTH_STORAGE_KEY = "lpp-guard-pro-auth";
+  const SITE_BASE = "https://luanhnn25-jpg.github.io/lesa/";
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+      storageKey: AUTH_STORAGE_KEY
+    }
+  });
+
+  const userBtn = document.getElementById("userBtn");
+  const userDrop = document.getElementById("userDrop");
+
+  const userEmail = document.getElementById("userEmail");
+  const userStatus = document.getElementById("userStatus");
+
+  const dropHeadTitle = document.getElementById("dropHeadTitle");
+  const dropHeadSub = document.getElementById("dropHeadSub");
+
+  const dropLogin = document.getElementById("dropLogin");
+  const dropSignup = document.getElementById("dropSignup");
+  const dropPremium = document.getElementById("dropPremium");
+  const dropLogout = document.getElementById("dropLogout");
+
+  function openDrop() {
+    userDrop.classList.add("open");
+    userBtn.setAttribute("aria-expanded","true");
+  }
+
+  function closeDrop() {
+    userDrop.classList.remove("open");
+    userBtn.setAttribute("aria-expanded","false");
+  }
+
+  userBtn?.addEventListener("click", () => {
+    userDrop.classList.contains("open") ? closeDrop() : openDrop();
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!userDrop.contains(e.target) && !userBtn.contains(e.target)) closeDrop();
+  });
+
+  window.addEventListener("scroll", () => {
+    if (userDrop.classList.contains("open")) closeDrop();
+  }, { passive:true });
+
+  function setLoggedOut() {
+    userEmail.textContent = "Entrar / Criar conta";
+    userStatus.innerHTML = 'Não autenticado <span class="badge-status">Free</span>';
+    dropHeadTitle.textContent = "Conta";
+    dropHeadSub.textContent = "Você não está autenticado";
+
+    dropLogin.style.display = "";
+    dropSignup.style.display = "";
+    dropPremium.style.display = "";
+    dropLogout.style.display = "none";
+  }
+
+  async function setLoggedIn(user) {
+    const email = user?.email || "Usuário";
+    userEmail.textContent = email;
+
+    dropHeadTitle.textContent = "Conta ativa";
+    dropHeadSub.textContent = email;
+
+    dropLogin.style.display = "none";
+    dropSignup.style.display = "none";
+    dropPremium.style.display = "";
+    dropLogout.style.display = "";
+
+    userStatus.innerHTML = 'Conta ativa <span class="badge-status verified">✔ Verificado</span>';
+
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("premium")
+        .eq("id", user.id)
+        .single();
+
+      if (!error && data?.premium) {
+        userStatus.innerHTML = 'Premium <span class="badge-status premium">VIP</span> <span class="badge-status verified">✔ Verificado</span>';
+        dropPremium.style.display = "none";
+      } else {
+        userStatus.innerHTML = 'Conta ativa <span class="badge-status">Free</span>';
+        dropPremium.style.display = "";
+      }
+    } catch {
+      userStatus.innerHTML = 'Conta ativa <span class="badge-status">Free</span>';
+      dropPremium.style.display = "";
+    }
+  }
+
+  function withTimeout(promise, ms) {
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), ms))
+    ]);
+  }
+
+  async function renderStateSafe() {
+    userEmail.innerHTML = '<span class="skeleton"></span>';
+    userStatus.innerHTML = '<span class="skeleton small"></span>';
+    dropHeadTitle.textContent = "Conta";
+    dropHeadSub.textContent = "Verificando sessão…";
+
+    const hardFallback = setTimeout(() => {
+      if (String(userEmail.innerHTML).includes("skeleton")) setLoggedOut();
+    }, 2500);
+
+    try {
+      const sess = await withTimeout(supabase.auth.getSession(), 2500);
+      const session = sess?.data?.session;
+
+      if (!session) {
+        clearTimeout(hardFallback);
+        return setLoggedOut();
+      }
+
+      const u = await withTimeout(supabase.auth.getUser(), 3500);
+      const user = u?.data?.user;
+
+      clearTimeout(hardFallback);
+
+      if (!user) return setLoggedOut();
+      return await setLoggedIn(user);
+
+    } catch {
+      clearTimeout(hardFallback);
+      return setLoggedOut();
+    }
+  }
+
+  dropLogout?.addEventListener("click", async () => {
+    try { await supabase.auth.signOut(); } catch {}
+    closeDrop();
+    window.location.href = SITE_BASE + "index.html";
+  });
+
+  supabase.auth.onAuthStateChange(() => renderStateSafe());
+  renderStateSafe();
+</script>
+
+</body>
+</html>

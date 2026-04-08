@@ -1,0 +1,104 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-color: #f4f6f9;
+
+  padding-top: 80px; /* ✅ espaço para o menu fixo não cobrir o título */
+}
+
+header {
+    background-color: #0b3d91;
+    color: white;
+    padding: 40px;
+    text-align: center;
+nav{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+
+  background: rgba(10, 35, 90, 0.92);
+  backdrop-filter: blur(8px);
+
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+
+  padding: 12px 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+}
+
+nav a{
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+nav a:hover{
+  background: rgba(255,255,255,0.12);
+}
+
+/* ✅ No celular: o menu vira “deslizável” e não quebra */
+@media (max-width: 768px){
+  body{ padding-top: 92px; }
+
+  nav{
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  nav a{ font-size: 14px; }
+}
+
+main {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    margin-bottom: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+.tabela thead th {
+    background-color: #0b3d91;
+    color: white;
+    font-weight: 600;
+}
+
+.tabela tbody tr:nth-child(even) {
+    background-color: #f2f6fb;
+}
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+.card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    margin-bottom: 25px;
+}
+
+.destaque {
+    background-color: #fff8e6;
+    border-left: 6px solid #f4b400;
+}

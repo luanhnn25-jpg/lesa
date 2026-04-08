@@ -1,0 +1,216 @@
+
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Baixar aplicativo EstudaViva</title>
+  <style>
+    :root{
+      --blue1:#0b3d91;
+      --blue2:#0b5bd3;
+      --bg:#eef2f7;
+      --text:#0f172a;
+      --muted:#475569;
+      --border:rgba(15,23,42,.08);
+      --shadow:0 14px 32px rgba(2,6,23,.10);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1000px 500px at 10% -10%, rgba(11,91,211,.12), transparent 55%),
+        radial-gradient(800px 420px at 95% 0%, rgba(11,61,145,.10), transparent 50%),
+        var(--bg);
+      color:var(--text);
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:28px 16px 50px}
+    .hero{
+      background:linear-gradient(180deg,var(--blue1),var(--blue2));
+      color:#fff;
+      border-radius:30px;
+      padding:28px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+    .hero h1{margin:0 0 10px 0;font-size:clamp(28px,4vw,42px)}
+    .hero p{margin:0;color:#e7f0ff;line-height:1.7}
+    .grid{
+      display:grid;
+      grid-template-columns:1.2fr .9fr;
+      gap:18px;
+    }
+    .card{
+      background:#fff;
+      border-radius:var(--radius);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+    .card h2{margin:0 0 12px 0;color:#0b2b63}
+    .card p{margin:0 0 12px 0;line-height:1.7;color:var(--muted)}
+    .steps{margin:0;padding-left:20px;color:#334155;line-height:1.8}
+    .steps li + li{margin-top:6px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:12px 16px;
+      border-radius:999px;
+      text-decoration:none;
+      font-weight:900;
+      border:1px solid transparent;
+    }
+    .btn-primary{background:#0b3d91;color:#fff}
+    .btn-secondary{background:#edf4ff;color:#0b2b63;border-color:#dbeafe}
+    .btn-disabled{
+      opacity:.55;
+      pointer-events:none;
+      cursor:not-allowed;
+      filter:grayscale(.15);
+    }
+    .pill-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin-top:14px;
+    }
+    .pill{
+      border-radius:18px;
+      background:#f8fbff;
+      border:1px solid #dbeafe;
+      padding:14px;
+    }
+    .pill .k{font-size:12px;font-weight:800;color:#64748b;margin-bottom:6px}
+    .pill .v{font-size:15px;font-weight:900;color:#0f172a;line-height:1.45}
+    .foot{margin-top:18px;color:#64748b;font-size:13px;line-height:1.6}
+    .status-box{
+      margin-top:16px;
+      border-radius:16px;
+      padding:14px;
+      background:#f8fbff;
+      border:1px solid #dbeafe;
+      color:#1e3a8a;
+      font-size:14px;
+      line-height:1.7;
+      font-weight:700;
+    }
+    .status-box.warn{
+      background:#fff7ed;
+      border-color:#fed7aa;
+      color:#9a3412;
+    }
+    @media (max-width:860px){
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>Baixar aplicativo EstudaViva</h1>
+      <p>
+        Pagina dedicada para instalacao do aplicativo Android atualizado do projeto. O pacote atual foi preparado para
+        testes de estudo, quiz em trilhas, medicamentos com base Anvisa, fontes brasileiras oficiais e integracao com o site.
+      </p>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Como instalar</h2>
+        <p>
+          O arquivo abaixo esta em formato APK e foi pensado para instalacao manual em Android durante a fase de validacao do novo app.
+        </p>
+        <ol class="steps">
+          <li>Baixe o arquivo APK no celular Android.</li>
+          <li>Abra o arquivo e permita a instalacao, caso o sistema solicite autorizacao.</li>
+          <li>Conclua a instalacao e abra o app.</li>
+          <li>Teste login, quiz, medicamentos, fontes oficiais e o site integrado.</li>
+        </ol>
+        <div class="actions">
+          <a class="btn btn-primary btn-disabled" id="apkDownloadLink" href="./estudaviva-android.apk" download aria-disabled="true">Verificando APK...</a>
+          <a class="btn btn-secondary" href="./index.html">Voltar ao site principal</a>
+        </div>
+        <div class="status-box" id="apkStatusBox">
+          Verificando a disponibilidade do APK publicado para download...
+        </div>
+        <p class="foot">
+          Recomendacao: para testes educativos, mantenha o aplicativo atualizado e valide os fluxos de acesso,
+          quiz, medicamentos, fontes oficiais e integracao com o site.
+        </p>
+      </article>
+
+      <aside class="card">
+        <h2>Resumo do pacote</h2>
+        <div class="pill-grid">
+          <div class="pill">
+            <div class="k">Formato</div>
+            <div class="v">APK Android de release</div>
+          </div>
+          <div class="pill">
+            <div class="k">Uso</div>
+            <div class="v">Teste, estudo e validacao</div>
+          </div>
+          <div class="pill">
+            <div class="k">Recursos</div>
+            <div class="v">Quiz, meds Anvisa, fontes e estudo</div>
+          </div>
+          <div class="pill">
+            <div class="k">Integracao</div>
+            <div class="v">Site integrado ao EstudaViva</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+  <script>
+    (function(){
+      const downloadLink = document.getElementById('apkDownloadLink');
+      const statusBox = document.getElementById('apkStatusBox');
+      if(!downloadLink || !statusBox) return;
+
+      const apkUrl = new URL(downloadLink.getAttribute('href'), window.location.href).toString();
+      const enableDownload = (message) => {
+        downloadLink.classList.remove('btn-disabled');
+        downloadLink.removeAttribute('aria-disabled');
+        downloadLink.textContent = 'Baixar APK Android';
+        statusBox.textContent = message;
+        statusBox.classList.remove('warn');
+      };
+      const disableDownload = (message) => {
+        downloadLink.classList.add('btn-disabled');
+        downloadLink.setAttribute('aria-disabled', 'true');
+        downloadLink.textContent = 'APK ainda nao publicado';
+        statusBox.textContent = message;
+        statusBox.classList.add('warn');
+      };
+
+      if(window.location.href.includes('/android_asset/')){
+        disableDownload('Dentro do aplicativo, esta pagina funciona como guia de instalacao. O arquivo APK nao fica embarcado no WebView por seguranca; use a versao publicada do site ou a copia local da pasta de distribuicao para baixar o instalador.');
+        return;
+      }
+
+      if(window.location.protocol === 'file:'){
+        enableDownload('Arquivo local de distribuicao detectado. Se o APK estiver na mesma pasta desta pagina, o download local pode ser feito normalmente.');
+        return;
+      }
+
+      fetch(apkUrl, { method: 'HEAD', cache: 'no-store' })
+        .then((response) => {
+          if(response.ok){
+            enableDownload('APK publicado e pronto para download nesta pagina.');
+          } else {
+            throw new Error(`status-${response.status}`);
+          }
+        })
+        .catch(() => {
+          disableDownload('O APK ainda nao esta sincronizado nesta hospedagem. A pagina foi carregada, mas o arquivo publicado para download nao foi encontrado. Se necessario, use a versao local do projeto ou publique o APK junto com o site.');
+        });
+    })();
+  </script>
+</body>
+</html>

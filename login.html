@@ -1,0 +1,1019 @@
+
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b3d91" />
+  <meta name="description" content="Acesso premium ao projeto sobre lesão por pressão com autenticação integrada ao Supabase." />
+  <title>Acesso • LPP Premium</title>
+
+  <style>
+    :root{
+      --bg1:#0b3d91;
+      --bg2:#08265c;
+      --bg3:#061a40;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+      --border:rgba(15,23,42,.10);
+      --shadow:0 22px 50px rgba(2,6,23,.16);
+      --shadow-strong:0 34px 90px rgba(2,6,23,.26);
+      --shadow-soft:0 14px 30px rgba(2,6,23,.10);
+      --radius:24px;
+      --primary:#2563eb;
+      --primary2:#1d4ed8;
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --bad:#dc2626;
+      --field:#f8fafc;
+      --focus:rgba(37,99,235,.18);
+      --glass:rgba(255,255,255,.12);
+      --glass-border:rgba(255,255,255,.18);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 650px at 10% 10%, rgba(255,255,255,.16), transparent 60%),
+        radial-gradient(900px 540px at 90% 14%, rgba(255,255,255,.10), transparent 60%),
+        radial-gradient(600px 300px at 50% 100%, rgba(212,167,44,.10), transparent 70%),
+        linear-gradient(180deg,var(--bg1),var(--bg2) 58%,var(--bg3));
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px 14px;
+    }
+
+    .wrap{
+      width:min(1160px,100%);
+      display:grid;
+      grid-template-columns:1.08fr .92fr;
+      gap:20px;
+      align-items:stretch;
+    }
+
+    @media (max-width: 940px){
+      .wrap{grid-template-columns:1fr}
+    }
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border-radius:var(--radius);
+      padding:28px;
+      background:var(--glass);
+      backdrop-filter:blur(16px);
+      border:1px solid var(--glass-border);
+      box-shadow:var(--shadow-strong);
+      color:#fff;
+      isolation:isolate;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:auto -120px -130px auto;
+      width:360px;
+      height:360px;
+      border-radius:50%;
+      background:radial-gradient(circle at 30% 30%, rgba(37,99,235,.50), transparent 70%);
+      pointer-events:none;
+      z-index:-1;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:22px;
+    }
+
+    .logo{
+      width:52px;
+      height:52px;
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      font-weight:1000;
+      letter-spacing:.5px;
+      background:rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.20);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.16), 0 14px 30px rgba(2,6,23,.18);
+      flex:0 0 auto;
+    }
+
+    .brand h1{margin:0;font-size:19px;font-weight:1000;letter-spacing:.2px}
+    .brand p{margin:4px 0 0;font-size:12px;opacity:.92;font-weight:700}
+
+    .hero h2{
+      margin:14px 0 10px;
+      font-size:clamp(28px,4vw,38px);
+      line-height:1.06;
+      font-weight:1000;
+      max-width:13ch;
+      letter-spacing:-.5px;
+    }
+
+    .hero .sub{
+      margin:0;
+      max-width:62ch;
+      line-height:1.72;
+      font-size:14px;
+      opacity:.96;
+    }
+
+    .badges,.actions{display:flex;flex-wrap:wrap;gap:10px}
+    .badges{margin-top:18px}
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.20);
+      font-size:12px;
+      font-weight:900;
+      box-shadow:0 10px 22px rgba(2,6,23,.10);
+    }
+
+    .features{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .feature{
+      padding:14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow:0 14px 28px rgba(2,6,23,.10);
+      font-size:13px;
+      line-height:1.65;
+      font-weight:800;
+    }
+
+    .pay{
+      margin-top:18px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:20px;
+      padding:18px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .priceRow{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .priceLabel{
+      font-size:12px;
+      font-weight:900;
+      opacity:.92;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .price{
+      margin:6px 0 0;
+      font-size:38px;
+      font-weight:1000;
+      letter-spacing:.2px;
+      line-height:1;
+    }
+
+    .mini{margin:8px 0 0;font-size:12px;opacity:.92;line-height:1.5}
+
+    .premiumPill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 13px;
+      border-radius:999px;
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.20);
+      font-size:12px;
+      font-weight:1000;
+    }
+
+    .pixBox{
+      margin-top:16px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:18px;
+      padding:14px;
+    }
+
+    .pixBox label{
+      display:block;
+      margin:0 0 8px;
+      color:#fff;
+      font-size:12px;
+      font-weight:1000;
+      opacity:.96;
+    }
+
+    .pixBox textarea{
+      width:100%;
+      min-height:86px;
+      resize:none;
+      border:none;
+      outline:none;
+      border-radius:16px;
+      padding:13px;
+      background:rgba(255,255,255,.10);
+      color:#fff;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+      font-size:13px;
+      line-height:1.45;
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .btnWide,.btn{
+      border:none;
+      cursor:pointer;
+      transition:transform .08s ease, filter .15s ease, opacity .15s ease, box-shadow .15s ease;
+      font-weight:1000;
+      border-radius:16px;
+    }
+
+    .btnWide:hover,.btn:hover{
+      filter:brightness(1.03);
+      box-shadow:0 16px 28px rgba(2,6,23,.12);
+    }
+
+    .btnWide:active,.btn:active{transform:translateY(1px)}
+
+    .btnWide{
+      flex:1 1 220px;
+      padding:14px 15px;
+      color:#fff;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.12);
+      box-shadow:var(--shadow-soft);
+    }
+
+    .btnWide.blue{background:linear-gradient(180deg,#2563eb,#1d4ed8)}
+    .btnWide.green{background:linear-gradient(180deg,#22c55e,#16a34a)}
+
+    .card{
+      background:linear-gradient(180deg,#ffffff,#fbfdff);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:24px 20px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card h3{
+      margin:0 0 8px;
+      font-size:24px;
+      font-weight:1000;
+      letter-spacing:.1px;
+      color:#0b2b63;
+      position:relative;
+      z-index:1;
+    }
+
+    .hint{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.65;
+      position:relative;
+      z-index:1;
+    }
+
+    .tabs{
+      display:flex;
+      gap:8px;
+      margin:14px 0 18px;
+      background:#f8fafc;
+      border:1px solid rgba(15,23,42,.07);
+      border-radius:999px;
+      padding:4px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+      position:relative;
+      z-index:1;
+    }
+
+    .tab{
+      flex:1;
+      border:none;
+      background:transparent;
+      padding:11px 12px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:1000;
+      font-size:13px;
+      color:var(--muted);
+      transition:all .16s ease;
+    }
+
+    .tab[aria-selected="true"]{
+      background:#fff;
+      color:var(--primary2);
+      box-shadow:0 8px 20px rgba(37,99,235,.12);
+      border:1px solid rgba(37,99,235,.12);
+    }
+
+    label{
+      display:block;
+      margin:12px 0 7px;
+      font-size:12px;
+      color:var(--muted);
+      font-weight:1000;
+      letter-spacing:.02em;
+      position:relative;
+      z-index:1;
+    }
+
+    .field{
+      width:100%;
+      padding:14px 15px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background:var(--field);
+      outline:none;
+      font-size:14px;
+      color:var(--text);
+      transition:border-color .15s ease, box-shadow .15s ease, background .15s ease, transform .15s ease;
+      position:relative;
+      z-index:1;
+    }
+
+    .field:focus{
+      background:#fff;
+      border-color:rgba(37,99,235,.45);
+      box-shadow:0 0 0 5px var(--focus);
+      transform:translateY(-1px);
+    }
+
+    .pwRow{position:relative;z-index:1}
+
+    .pwBtn{
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      border:none;
+      background:transparent;
+      cursor:pointer;
+      color:var(--primary2);
+      font-weight:1000;
+      font-size:13px;
+      padding:8px 10px;
+      border-radius:12px;
+    }
+
+    .pwBtn:hover{background:rgba(37,99,235,.08)}
+
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+      position:relative;
+      z-index:1;
+    }
+
+    .small{margin:0;font-size:12px;color:var(--muted);font-weight:800}
+
+    .link{
+      border:none;
+      background:none;
+      padding:0;
+      cursor:pointer;
+      color:var(--primary2);
+      font-size:12px;
+      font-weight:1000;
+      text-decoration:underline;
+    }
+
+    .btn{
+      width:100%;
+      padding:14px 15px;
+      color:#fff;
+      background:linear-gradient(180deg,var(--primary),var(--primary2));
+      margin-top:14px;
+      border:1px solid rgba(37,99,235,.28);
+      font-size:14px;
+      letter-spacing:.2px;
+      box-shadow:0 16px 30px rgba(37,99,235,.20);
+      position:relative;
+      z-index:1;
+    }
+
+    .btn.secondary{
+      background:#fff;
+      color:var(--primary2);
+      border:1px solid rgba(37,99,235,.18);
+      box-shadow:none;
+    }
+
+    .btn:disabled,.btnWide:disabled,.tab:disabled,.link:disabled{opacity:.65;cursor:not-allowed}
+
+    .msg{
+      margin-top:14px;
+      padding:13px 14px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      font-size:13px;
+      line-height:1.6;
+      display:none;
+      white-space:pre-wrap;
+      position:relative;
+      z-index:1;
+      box-shadow:var(--shadow-soft);
+    }
+
+    .msg.show{display:block}
+    .msg.ok{background:rgba(22,163,74,.08);border-color:rgba(22,163,74,.22);color:#14532d}
+    .msg.warn{background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.28);color:#92400e}
+    .msg.bad{background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.22);color:#7f1d1d}
+
+    .footer{margin-top:16px;text-align:center;font-size:12px;color:var(--muted);position:relative;z-index:1}
+    .statusDot{display:inline-block;width:8px;height:8px;border-radius:999px;margin-right:6px;background:currentColor;opacity:.8}
+
+    @media (max-width: 940px){
+      .features{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero" aria-label="Informações premium e pagamento">
+      <div class="brand">
+        <div class="logo">LPP</div>
+        <div>
+          <h1>Lesão por Pressão</h1>
+          <p>Área premium do projeto</p>
+        </div>
+      </div>
+
+      <h2>Acesso premium simples, rápido e profissional</h2>
+      <p class="sub">
+        Realize o pagamento via Pix, envie o comprovante pelo WhatsApp e, após a liberação do perfil,
+        o acesso ao conteúdo premium será disponibilizado automaticamente no seu login.
+      </p>
+
+      <div class="badges">
+        <span class="badge">Ambiente seguro</span>
+        <span class="badge">Liberação rápida</span>
+        <span class="badge">Suporte via WhatsApp</span>
+      </div>
+
+      <div class="features">
+        <div class="feature">Autenticação integrada ao Supabase, com persistência de sessão e controle de acesso premium.</div>
+        <div class="feature">Fluxo organizado para pagamento, validação do perfil e abertura automática do sistema quando o acesso premium estiver ativo.</div>
+      </div>
+
+      <div class="pay">
+        <div class="priceRow">
+          <div>
+            <div class="priceLabel">Valor de acesso</div>
+            <div class="price">R$ 2,00</div>
+            <p class="mini">Pagamento exclusivo via Pix para ativação do perfil premium.</p>
+          </div>
+          <div class="premiumPill">Premium</div>
+        </div>
+
+        <div class="pixBox">
+          <label for="pixPayload">Chave Pix</label>
+          <textarea id="pixPayload" readonly>28d39758-0fe0-47f1-9c7c-9cb6e032c5cf</textarea>
+
+          <div class="actions">
+            <button id="btnCopyPix" class="btnWide blue" type="button">Copiar chave Pix</button>
+            <button id="btnWhats" class="btnWide green" type="button">Enviar comprovante</button>
+          </div>
+
+          <p class="mini">
+            Após o pagamento, envie o comprovante e em seguida faça login para validar o acesso ao conteúdo premium.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <main class="card" aria-label="Acesso de usuário">
+      <h3>Entrar ou criar conta</h3>
+      <p class="hint">
+        Caso a confirmação por e-mail esteja ativada no Supabase, você receberá um link para concluir o cadastro antes do primeiro acesso.
+      </p>
+
+      <div class="tabs" role="tablist" aria-label="Alternar modo">
+        <button class="tab" id="tabLogin" type="button" role="tab" aria-selected="true">Login</button>
+        <button class="tab" id="tabSignup" type="button" role="tab" aria-selected="false">Criar conta</button>
+      </div>
+
+      <label for="email">E-mail</label>
+      <input id="email" class="field" type="email" inputmode="email" autocomplete="email" placeholder="seuemail@exemplo.com" />
+
+      <label for="password">Senha</label>
+      <div class="pwRow">
+        <input id="password" class="field" type="password" placeholder="Mínimo de 6 caracteres" autocomplete="current-password" />
+        <button id="btnTogglePw" class="pwBtn" type="button" aria-label="Mostrar ou ocultar senha">Mostrar</button>
+      </div>
+
+      <div class="row">
+        <p class="small" id="modeHint"><span class="statusDot"></span>Modo: Login</p>
+        <button class="link" id="btnForgot" type="button">Esqueci minha senha</button>
+      </div>
+
+      <button class="btn" id="btnPrimary" type="button">Entrar</button>
+      <button class="btn secondary" id="btnOpenSystem" type="button" style="display:none;">Abrir sistema</button>
+      <button class="btn secondary" id="btnGoHome" type="button">Voltar ao site</button>
+
+      <div class="msg" id="msg" role="status" aria-live="polite"></div>
+
+      <div class="footer">© 2026 • Projeto Integrador</div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+    const SUPABASE_URL = "https://owpswekkfaleauwjmahc.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq";
+    const AUTH_STORAGE_KEY = "lpp-guard-pro-auth";
+
+    const baseUrl = new URL("./", window.location.href);
+    const origin = window.location.origin;
+    const CONFIRM_URL = new URL("confirm.html", baseUrl).href;
+    const HOME_URL = new URL("index.html", baseUrl).href;
+    const DEFAULT_GO = "software-dispositivo.html";
+    const WHATS_NUMBER = "5515988119989";
+    const PIX_KEY = "28d39758-0fe0-47f1-9c7c-9cb6e032c5cf";
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storageKey: AUTH_STORAGE_KEY
+      }
+    });
+
+    const $ = (id) => document.getElementById(id);
+
+    const emailInput = $("email");
+    const passwordInput = $("password");
+    const msgBox = $("msg");
+    const btnPrimary = $("btnPrimary");
+    const btnOpenSystem = $("btnOpenSystem");
+    const btnForgot = $("btnForgot");
+    const btnGoHome = $("btnGoHome");
+    const tabLogin = $("tabLogin");
+    const tabSignup = $("tabSignup");
+    const modeHint = $("modeHint");
+    const btnTogglePw = $("btnTogglePw");
+    const btnCopyPix = $("btnCopyPix");
+    const btnWhats = $("btnWhats");
+    const pixPayload = $("pixPayload");
+
+    let mode = "login";
+    let cooldownUntil = 0;
+    let redirecting = false;
+    let bootstrapping = true;
+
+    const params = new URLSearchParams(window.location.search);
+    const goParam = params.get("go") || DEFAULT_GO;
+    localStorage.setItem("lpp_go_after_auth", goParam);
+
+    function getGoUrl() {
+      const go = localStorage.getItem("lpp_go_after_auth") || DEFAULT_GO;
+      const cleanGo = String(go).trim();
+
+      if (/^https?:\/\//i.test(cleanGo)) {
+        try {
+          const absolute = new URL(cleanGo);
+          if (absolute.origin === origin) return absolute.href;
+        } catch {}
+        return new URL(DEFAULT_GO, baseUrl).href;
+      }
+
+      return new URL(cleanGo.replace(/^\/+/, ""), baseUrl).href;
+    }
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function setMsg(text, type = "warn") {
+      msgBox.textContent = text;
+      msgBox.className = `msg show ${type}`;
+    }
+
+    function clearMsg() {
+      msgBox.textContent = "";
+      msgBox.className = "msg";
+    }
+
+    function setBusy(state) {
+      const disabled = Boolean(state);
+      btnPrimary.disabled = disabled;
+      btnOpenSystem.disabled = disabled;
+      btnForgot.disabled = disabled;
+      btnGoHome.disabled = disabled;
+      tabLogin.disabled = disabled;
+      tabSignup.disabled = disabled;
+      btnCopyPix.disabled = disabled;
+      btnWhats.disabled = disabled;
+    }
+
+    function startCooldown(ms) {
+      cooldownUntil = Date.now() + ms;
+      const step = () => {
+        const left = cooldownUntil - Date.now();
+        if (left <= 0) {
+          btnPrimary.disabled = false;
+          btnPrimary.textContent = mode === "login" ? "Entrar" : "Criar conta";
+          return;
+        }
+        btnPrimary.disabled = true;
+        btnPrimary.textContent = `Aguarde ${Math.ceil(left / 1000)}s…`;
+        requestAnimationFrame(step);
+      };
+      step();
+    }
+
+    function setMode(nextMode) {
+      mode = nextMode;
+      clearMsg();
+      btnOpenSystem.style.display = "none";
+      const isLogin = mode === "login";
+      tabLogin.setAttribute("aria-selected", String(isLogin));
+      tabSignup.setAttribute("aria-selected", String(!isLogin));
+      passwordInput.setAttribute("autocomplete", isLogin ? "current-password" : "new-password");
+      modeHint.innerHTML = `<span class="statusDot"></span>Modo: ${isLogin ? "Login" : "Criar conta"}`;
+      btnPrimary.textContent = isLogin ? "Entrar" : "Criar conta";
+    }
+
+    async function waitForLocalSession(maxAttempts = 10, delayMs = 400) {
+      for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+        const { data, error } = await supabase.auth.getSession();
+        if (!error && data?.session?.user) return data.session;
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+      }
+      return null;
+    }
+
+    async function safeNetworkCheck() {
+      try {
+        const res = await fetch(`${SUPABASE_URL}/auth/v1/health`, {
+          method: "GET",
+          headers: { apikey: SUPABASE_ANON_KEY }
+        });
+        return res.ok;
+      } catch {
+        return false;
+      }
+    }
+
+    function humanizeAuthError(error) {
+      const raw = String(error?.message || "").toLowerCase();
+
+      if (raw.includes("failed to fetch")) {
+        return "Não foi possível conectar ao servidor de autenticação.\n\nVerifique a conexão com a internet, a configuração do Supabase e se o projeto está ativo.";
+      }
+      if (raw.includes("email not confirmed") || raw.includes("confirm")) {
+        return "Seu e-mail ainda não foi confirmado. Confira a caixa de entrada e também a pasta de spam.";
+      }
+      if (raw.includes("invalid login credentials")) {
+        return "E-mail ou senha inválidos.";
+      }
+      if (raw.includes("user already registered")) {
+        return "Este e-mail já está cadastrado. Tente entrar ou recuperar a senha.";
+      }
+      if (raw.includes("password should be at least")) {
+        return "A senha deve conter pelo menos 6 caracteres.";
+      }
+      return error?.message || "Ocorreu um erro inesperado.";
+    }
+
+    async function getAuthenticatedUser() {
+      const session = await waitForLocalSession();
+      const sessionUser = session?.user || null;
+      const { data: authData, error: authError } = await supabase.auth.getUser();
+
+      if (authError && !sessionUser) {
+        throw new Error("Não foi possível identificar o usuário autenticado.");
+      }
+
+      return authData?.user || sessionUser || null;
+    }
+
+    async function verifyPremium() {
+      const user = await getAuthenticatedUser();
+      if (!user?.id) {
+        throw new Error("Sessão não localizada. Faça login novamente.");
+      }
+
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("premium")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (profileError) {
+        throw new Error("Não foi possível consultar o status premium. " + profileError.message);
+      }
+
+      return profile?.premium === true;
+    }
+
+    function showPremiumReady() {
+      setMsg("Acesso premium confirmado. Redirecionando automaticamente para o sistema...", "ok");
+      btnOpenSystem.style.display = "block";
+    }
+
+    function openSystem() {
+      if (redirecting) return;
+      redirecting = true;
+      window.location.href = getGoUrl();
+    }
+
+    function redirectSoon(delayMs = 900) {
+      showPremiumReady();
+      window.setTimeout(openSystem, delayMs);
+    }
+
+    async function handleLogin(email, password) {
+      setBusy(true);
+      setMsg("Entrando...", "warn");
+
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          setBusy(false);
+          setMsg(humanizeAuthError(error), "bad");
+          startCooldown(2500);
+          return;
+        }
+
+        if (data?.session?.access_token && data?.session?.refresh_token) {
+          const { error: persistError } = await supabase.auth.setSession({
+            access_token: data.session.access_token,
+            refresh_token: data.session.refresh_token
+          });
+          if (persistError) {
+            setBusy(false);
+            setMsg("O login foi aceito, mas a sessão não pôde ser persistida localmente.\n" + persistError.message, "bad");
+            startCooldown(2500);
+            return;
+          }
+        }
+
+        const persistedSession = await waitForLocalSession();
+        if (!persistedSession?.user) {
+          setBusy(false);
+          setMsg("O login foi aceito, mas a sessão não ficou disponível localmente. Tente novamente.", "bad");
+          startCooldown(2500);
+          return;
+        }
+
+        const hasPremium = await verifyPremium();
+        setBusy(false);
+
+        if (hasPremium) {
+          redirectSoon();
+          return;
+        }
+
+        setMsg("Sua conta existe, mas ainda não possui acesso premium. O acesso ao sistema permanece bloqueado até a liberação.", "warn");
+      } catch (err) {
+        setBusy(false);
+        setMsg(humanizeAuthError(err), "bad");
+        startCooldown(3000);
+      }
+    }
+
+    async function handleSignup(email, password) {
+      setBusy(true);
+      setMsg("Criando conta...", "warn");
+
+      try {
+        const online = await safeNetworkCheck();
+        if (!online) {
+          setBusy(false);
+          setMsg("Não foi possível alcançar o servidor do Supabase.\n\nConfira a URL do projeto, a chave pública e se o projeto está ativo.", "bad");
+          startCooldown(4000);
+          return;
+        }
+
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { emailRedirectTo: CONFIRM_URL }
+        });
+
+        setBusy(false);
+
+        if (error) {
+          setMsg(humanizeAuthError(error), "bad");
+          startCooldown(5000);
+          return;
+        }
+
+        if (!data?.session) {
+          setMsg("Conta criada com sucesso.\n\nAgora confirme seu e-mail para finalizar o acesso.\nVerifique também a pasta de spam.", "ok");
+          startCooldown(4000);
+          return;
+        }
+
+        try {
+          const hasPremium = await verifyPremium();
+          if (hasPremium) {
+            redirectSoon();
+            return;
+          }
+        } catch {}
+
+        setMsg("Conta criada e sessão iniciada. Quando o premium for liberado, o sistema poderá ser aberto automaticamente no próximo acesso.", "ok");
+      } catch (err) {
+        setBusy(false);
+        setMsg(humanizeAuthError(err), "bad");
+        startCooldown(5000);
+      }
+    }
+
+    async function handleForgotPassword() {
+      if (Date.now() < cooldownUntil) return;
+      clearMsg();
+
+      const email = emailInput.value.trim();
+      if (!email || !isValidEmail(email)) {
+        setMsg("Informe um e-mail válido para recuperação.", "bad");
+        return;
+      }
+
+      setBusy(true);
+      setMsg("Enviando link de recuperação...", "warn");
+
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: CONFIRM_URL
+        });
+
+        setBusy(false);
+
+        if (error) {
+          setMsg(humanizeAuthError(error), "bad");
+          startCooldown(3000);
+          return;
+        }
+
+        setMsg("Link de recuperação enviado com sucesso.\nVerifique sua caixa de entrada e a pasta de spam.", "ok");
+        startCooldown(2500);
+      } catch (err) {
+        setBusy(false);
+        setMsg(humanizeAuthError(err), "bad");
+        startCooldown(3000);
+      }
+    }
+
+    function handlePrimaryAction() {
+      if (Date.now() < cooldownUntil || redirecting) return;
+      clearMsg();
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!email || !isValidEmail(email)) {
+        setMsg("Informe um e-mail válido.", "bad");
+        return;
+      }
+
+      if (!password || password.length < 6) {
+        setMsg("A senha deve ter pelo menos 6 caracteres.", "bad");
+        return;
+      }
+
+      if (mode === "login") {
+        handleLogin(email, password);
+      } else {
+        handleSignup(email, password);
+      }
+    }
+
+    async function copyPix() {
+      try {
+        await navigator.clipboard.writeText(pixPayload.value.trim());
+        setMsg("Chave Pix copiada com sucesso.\nAgora realize o pagamento e envie o comprovante pelo WhatsApp.", "ok");
+      } catch {
+        setMsg("Não foi possível copiar automaticamente. Copie a chave manualmente.", "warn");
+      }
+    }
+
+    async function openWhatsApp() {
+      let email = emailInput.value.trim();
+      let uid = "";
+
+      try {
+        const { data } = await supabase.auth.getUser();
+        uid = data?.user?.id || "";
+        email = email || data?.user?.email || "";
+      } catch {}
+
+      const text =
+        "Olá! Realizei o pagamento do Premium LPP via Pix.%0A" +
+        `Chave Pix: ${encodeURIComponent(PIX_KEY)}%0A` +
+        (email ? `E-mail: ${encodeURIComponent(email)}%0A` : "") +
+        (uid ? `UID: ${encodeURIComponent(uid)}%0A` : "") +
+        "Vou enviar o comprovante nesta conversa.";
+
+      window.open(`https://wa.me/${WHATS_NUMBER}?text=${text}`, "_blank", "noopener,noreferrer");
+    }
+
+    function goHome() {
+      window.location.href = HOME_URL;
+    }
+
+    function togglePassword() {
+      const isPassword = passwordInput.type === "password";
+      passwordInput.type = isPassword ? "text" : "password";
+      btnTogglePw.textContent = isPassword ? "Ocultar" : "Mostrar";
+    }
+
+    function handleEnterKey(event) {
+      if (event.key === "Enter") {
+        handlePrimaryAction();
+      }
+    }
+
+    async function bootstrapSession() {
+      setBusy(true);
+      setMsg("Verificando sessão atual...", "warn");
+
+      try {
+        const session = await waitForLocalSession();
+        if (!session?.user) {
+          clearMsg();
+          setBusy(false);
+          setMsg("Sistema pronto. Escolha entre login ou criação de conta.", "warn");
+          return;
+        }
+
+        const hasPremium = await verifyPremium();
+        setBusy(false);
+
+        if (hasPremium) {
+          redirectSoon(700);
+          return;
+        }
+
+        setMsg("Sessão encontrada, mas o acesso premium ainda não está liberado.", "warn");
+      } catch (err) {
+        setBusy(false);
+        setMsg(humanizeAuthError(err), "bad");
+      } finally {
+        bootstrapping = false;
+      }
+    }
+
+    tabLogin.addEventListener("click", () => setMode("login"));
+    tabSignup.addEventListener("click", () => setMode("signup"));
+    btnPrimary.addEventListener("click", handlePrimaryAction);
+    btnOpenSystem.addEventListener("click", openSystem);
+    btnForgot.addEventListener("click", handleForgotPassword);
+    btnGoHome.addEventListener("click", goHome);
+    btnTogglePw.addEventListener("click", togglePassword);
+    btnCopyPix.addEventListener("click", copyPix);
+    btnWhats.addEventListener("click", openWhatsApp);
+    emailInput.addEventListener("keydown", handleEnterKey);
+    passwordInput.addEventListener("keydown", handleEnterKey);
+
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      if (bootstrapping || redirecting || !session?.user) return;
+      if (!["SIGNED_IN", "TOKEN_REFRESHED", "INITIAL_SESSION"].includes(event)) return;
+
+      try {
+        const hasPremium = await verifyPremium();
+        if (hasPremium) redirectSoon(500);
+      } catch {}
+    });
+
+    const initialMode = params.get("mode");
+    setMode(initialMode === "signup" ? "signup" : "login");
+    bootstrapSession();
+  </script>
+</body>
+</html>
