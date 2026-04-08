@@ -1,9 +1,9 @@
 {
   "versionCode": 2,
   "versionName": "1.0.1",
-  "apkUrl": "https://luanhnn25-jpg.github.io/lesa/lpp-livre-android.apk",
-  "notes": "Atualizacao com instalacao interna, verificacao de nova versao na tela inicial e melhorias de estabilidade da IA.",
-  "publishedAt": "2026-04-07",
+  "packageName": "br.com.estudasaude.app",
+  "apkUrl": "https://luanhnn25-jpg.github.io/lesa/estudaviva-android.apk",
+  "notes": "Atualizacao do EstudaViva com quiz em trilhas, medicamentos com base Anvisa, fontes brasileiras oficiais e melhorias gerais no fluxo de estudo.",
+  "publishedAt": "2026-04-08",
   "mandatory": false
 }
-
