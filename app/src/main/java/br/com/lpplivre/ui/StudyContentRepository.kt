@@ -970,13 +970,13 @@ object StudyContentRepository {
                 aiAnswers.first { it.title == "Tecnica intramuscular e escolha do sitio" }
             normalizedQuestion.hasKeyword("intramuscular", "agulha intramuscular", "agulhas intramuscular", "deltoide", "ventroglutea", "vasto lateral", "injecao im", "via im") ->
                 aiAnswers.first { it.title == "Agulhas para intramuscular" }
-            normalizedQuestion.hasKeyword("materiais para puncao", "material para puncao", "bandeja para puncao", "materiais puncao venosa", "agulha para puncao venosa", "cateter sobre agulha", "jelco", "scalp", "abocath", "materiais acesso venoso") ->
+            normalizedQuestion.hasKeyword("materiais para puncao", "material para puncao", "bandeja para puncao", "materiais puncao venosa", "agulha para puncao venosa", "cateter sobre agulha", "jelco", "scalp", "abocath", "materiais acesso venoso", "seringa", "calibre") ->
                 aiAnswers.first { it.title == "Materiais para puncao venosa periferica" }
             normalizedQuestion.hasKeyword("subcutanea", "subcutaneo", "via sc", "insulina subcutanea", "hipoderme") ->
                 aiAnswers.first { it.title == "Via subcutanea" }
             normalizedQuestion.hasKeyword("intradermica", "intradermico", "via id", "bcg", "teste cutaneo", "derme") ->
                 aiAnswers.first { it.title == "Via intradermica" }
-            normalizedQuestion.hasKeyword("puncao venosa", "acesso venoso periferico", "cateter periferico", "veia periferica", "venopuncao") ->
+            normalizedQuestion.hasKeyword("puncao venosa", "acesso venoso periferico", "cateter periferico", "veia periferica", "venopuncao", "flebite", "infiltracao", "extravasamento") ->
                 aiAnswers.first { it.title == "Puncao venosa periferica" }
             normalizedQuestion.hasKeyword("compatibilidade", "diluicao endovenosa", "diluicao intravenosa", "compatibilidade endovenosa", "medicamentos no mesmo acesso", "misturar medicacao no soro", "misturar medicamentos no soro", "mesmo soro", "diluente", "preparo endovenoso") ->
                 aiAnswers.first { it.title == "Diluicao e compatibilidade na via endovenosa" }

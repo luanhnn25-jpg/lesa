@@ -167,6 +167,25 @@ class StudyContentRepositoryTest {
     }
 
     @Test
+    fun `advanced battery keeps vaccine venous and device questions in the right topics`() {
+        val cases = listOf(
+            "Como escolher agulha para vacina intramuscular?" to "Agulhas para intramuscular",
+            "O que estudar sobre vacinacao na enfermagem?" to "Vacinacao em enfermagem",
+            "Quais sinais de flebite devo vigiar no acesso venoso?" to "Puncao venosa periferica",
+            "O que observar se houver infiltracao ou extravasamento no cateter periferico?" to "Puncao venosa periferica",
+            "Qual seringa e calibre devo pensar na puncao venosa periferica?" to "Materiais para puncao venosa periferica",
+            "Como revisar cateter sobre agulha para acesso periferico?" to "Materiais para puncao venosa periferica",
+            "Quais cuidados basicos na administracao intravenosa?" to "Administracao endovenosa",
+            "Como conferir se dois medicamentos podem correr no mesmo acesso venoso?" to "Diluicao e compatibilidade na via endovenosa",
+        )
+
+        cases.forEach { (question, expectedTitle) ->
+            val answer = StudyContentRepository.answerStudyQuestion(question)
+            assertEquals(question, expectedTitle, answer.title)
+        }
+    }
+
+    @Test
     fun `insulin question returns educational answer with monitoring`() {
         val answer = StudyContentRepository.answerStudyQuestion("Como estudar insulina na enfermagem?")
 
