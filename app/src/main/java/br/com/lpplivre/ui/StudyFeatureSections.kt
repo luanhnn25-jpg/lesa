@@ -126,12 +126,20 @@ fun AiStudySection() {
                         question = "Quais agulhas usar na intramuscular?"
                         answer = StudyContentRepository.answerStudyQuestion(question)
                     }
+                    AiQuickQuestion("Sitio IM") {
+                        question = "Como escolher o sitio da intramuscular?"
+                        answer = StudyContentRepository.answerStudyQuestion(question)
+                    }
                     AiQuickQuestion("Subcutanea") {
                         question = "Como revisar a via subcutanea?"
                         answer = StudyContentRepository.answerStudyQuestion(question)
                     }
                     AiQuickQuestion("Endovenosa") {
                         question = "Quais cuidados basicos na via endovenosa?"
+                        answer = StudyContentRepository.answerStudyQuestion(question)
+                    }
+                    AiQuickQuestion("Materiais EV") {
+                        question = "Quais materiais separar para puncao venosa periferica?"
                         answer = StudyContentRepository.answerStudyQuestion(question)
                     }
                     AiQuickQuestion("Calculo") {

@@ -78,6 +78,16 @@ class StudyContentRepositoryTest {
     }
 
     @Test
+    fun `intramuscular technique question returns site selection answer`() {
+        val answer = StudyContentRepository.answerStudyQuestion("Como escolher o sitio da intramuscular?")
+
+        assertEquals("Tecnica intramuscular e escolha do sitio", answer.title)
+        assertEquals("Cofen", answer.source.authority)
+        assertTrue(answer.body.contains("ventroglutea") || answer.body.contains("vasto lateral"))
+        assertTrue(answer.body.contains("referencias anatomicas"))
+    }
+
+    @Test
     fun `subcutaneous route question returns official answer with angle and volume guidance`() {
         val answer = StudyContentRepository.answerStudyQuestion("Como revisar a via subcutanea na enfermagem?")
 
@@ -110,9 +120,19 @@ class StudyContentRepositoryTest {
         val answer = StudyContentRepository.answerStudyQuestion("Quais cuidados na puncao venosa periferica?")
 
         assertEquals("Puncao venosa periferica", answer.title)
-        assertEquals("Ministerio da Saude", answer.source.authority)
+        assertEquals("Cofen", answer.source.authority)
         assertTrue(answer.body.contains("tecnica asseptica"))
         assertTrue(answer.body.contains("Como aprender melhor:"))
+    }
+
+    @Test
+    fun `venous puncture materials question returns official device guidance`() {
+        val answer = StudyContentRepository.answerStudyQuestion("Quais materiais separar para puncao venosa periferica?")
+
+        assertEquals("Materiais para puncao venosa periferica", answer.title)
+        assertEquals("Cofen", answer.source.authority)
+        assertTrue(answer.body.contains("cateter sobre agulha"))
+        assertTrue(answer.body.contains("perfurocortante"))
     }
 
     @Test

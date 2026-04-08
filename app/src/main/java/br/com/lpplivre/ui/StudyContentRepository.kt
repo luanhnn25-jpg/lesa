@@ -150,6 +150,27 @@ object StudyContentRepository {
             summary = "Material oficial com fundamentos tecnicos de enfermagem, calculo de medicacao, diluicao, gotejamento, sondas e cateteres.",
             url = "https://bvsms.saude.gov.br/bvs/publicacoes/profae/fundamentos_enfermagem.pdf",
         ),
+        OfficialStudySource(
+            id = "cofen_puncao_periferica",
+            title = "Cofen - Parecer de Camara Tecnica 0112/2020",
+            authority = "Cofen",
+            summary = "Parecer tecnico oficial sobre realizacao de puncao venosa periferica com cateter sobre agulha e seguranca do procedimento.",
+            url = "https://www.cofen.gov.br/parecer-de-camara-tecnica-no-0112-2020-ctas-cofen/",
+        ),
+        OfficialStudySource(
+            id = "cofen_guia_tecnicas_2024",
+            title = "Cofen - Guia Pratico Tecnicas de Enfermagem",
+            authority = "Cofen",
+            summary = "Guia oficial com orientacoes praticas sobre puncao venosa, selecao de cateter, materiais e monitorizacao de complicacoes.",
+            url = "https://biblioteca.cofen.gov.br/wp-content/uploads/2024/07/guia-pratico-tecnicas-de-enfermagem.pdf",
+        ),
+        OfficialStudySource(
+            id = "anvisa_cateter_periferico",
+            title = "Anvisa - Medidas de Prevencao de Infeccao Relacionada a Assistencia a Saude",
+            authority = "Anvisa",
+            summary = "Caderno oficial com recomendacoes para permanencia, avaliacao diaria e cuidado seguro com cateter venoso periferico.",
+            url = "https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/publicacoes/caderno-4-medidas-de-prevencao-de-infeccao-relacionada-a-assistencia-a-saude.pdf/%40%40download/file",
+        ),
     )
 
     val medications = listOf(
@@ -707,8 +728,13 @@ object StudyContentRepository {
         ),
         AiStudyAnswer(
             title = "Agulhas para intramuscular",
-            body = "Para responder qual agulha usar em via intramuscular, a primeira regra e nao pensar em uma medida unica para todos. Os materiais oficiais brasileiros orientam que a escolha depende do sitio de aplicacao, da idade, da massa muscular, da espessura do tecido subcutaneo, do volume a ser administrado e da viscosidade da solucao. O manual do Cofen reforca que a regiao deve ser escolhida considerando volume e caracteristicas anatomicas, enquanto o manual do Ministerio da Saude para vacinacao traz medidas praticas muito usadas em via IM, como 20 x 5,5 mm, 25 x 6 mm, 25 x 7 mm, 25 x 8 mm, 30 x 7 mm e 30 x 8 mm, sempre conforme avaliacao da faixa etaria e do biotipo. Para estudar de forma segura, memorize assim: deltoide costuma pedir menor volume e agulhas mais curtas; vasto lateral e ventroglutea suportam melhor cenarios em que e preciso mais profundidade; e a escolha final deve confirmar se a ponta realmente alcanca o musculo sem exagerar o trauma. Em prova e pratica, o mais correto e responder que a agulha intramuscular precisa ser individualizada e validada pelo protocolo institucional e pela avaliacao do paciente, nao escolhida so pelo nome do medicamento.",
+            body = "Para responder qual agulha usar em via intramuscular, a primeira regra e nao pensar em uma medida unica para todos. Os materiais oficiais brasileiros orientam que a escolha depende do sitio de aplicacao, da idade, da massa muscular, da espessura do tecido subcutaneo, do volume a ser administrado e da viscosidade da solucao. O manual do Cofen reforca que a regiao deve ser escolhida considerando volume e caracteristicas anatomicas, enquanto o manual do Ministerio da Saude para vacinacao traz medidas praticas muito usadas em via IM, como 20 x 5,5 mm, 25 x 6 mm, 25 x 7 mm, 25 x 8 mm, 30 x 7 mm e 30 x 8 mm, sempre conforme avaliacao da faixa etaria e do biotipo. Para estudar de forma segura, memorize assim: deltoide costuma pedir menor volume e agulhas mais curtas; vasto lateral e ventroglutea suportam melhor cenarios em que e preciso mais profundidade; e a escolha final deve confirmar se a ponta realmente alcanca o musculo sem exagerar o trauma. A resposta mais segura em prova e pratica e dizer que a agulha intramuscular precisa ser individualizada e validada pelo protocolo institucional e pela avaliacao do paciente, nao escolhida so pelo nome do medicamento. Tambem vale associar a escolha da agulha ao conjunto do preparo: seringa com capacidade compativel com o volume, medicamento corretamente identificado, material para antissepsia e descarte imediato em perfurocortante.",
             source = officialSources.first { it.id == "ms_vacinacao" },
+        ),
+        AiStudyAnswer(
+            title = "Tecnica intramuscular e escolha do sitio",
+            body = "Na intramuscular, estudar so a agulha nao basta. O raciocinio correto une sitio, volume, anatomia, conforto e risco. O manual do Cofen orienta que a escolha do sitio considere massa muscular, idade, biotipo, volume e estruturas anatomicas proximas. Em termos didaticos, pense assim: deltoide costuma ser escolhido para volumes menores e exige avaliacao mais cuidadosa da massa muscular; vasto lateral e ventroglutea costumam oferecer area muscular mais segura em muitos cenarios; e a decisao final depende de inspeção, palpacao anatomica e protocolo institucional. Para responder bem, organize a tecnica em etapas: confirmar prescricao e via, reunir material, identificar referencias anatomicas, escolher o sitio mais seguro, administrar com tecnica limpa e observar dor, sangramento, endurecimento, hematoma ou resposta adversa apos o procedimento.",
+            source = officialSources.first { it.id == "cofen_intramuscular" },
         ),
         AiStudyAnswer(
             title = "Via subcutanea",
@@ -737,8 +763,13 @@ object StudyContentRepository {
         ),
         AiStudyAnswer(
             title = "Puncao venosa periferica",
-            body = "Na puncao venosa periferica, a enfermagem precisa pensar em preparo, escolha da veia, tecnica asseptica, fixacao e vigilancia do acesso. O material oficial do Ministerio da Saude destaca que o cateter periferico e muito manipulado pela equipe, o que aumenta a importancia da higiene das maos, da antissepsia local, da escolha de um sitio que preserve o conforto e da observacao frequente do local. Para estudar de forma didatica, organize a resposta assim: primeiro, verificar indicacao e material; depois, avaliar rede venosa e evitar articulacoes quando possivel; em seguida, realizar tecnica com assepsia e fixacao seguras; e por fim monitorar dor, hiperemia, edema, extravasamento, obstrucao e sinais de infeccao. O ponto de ensino mais importante e entender que um acesso venoso bom nao e so o que punciona, mas o que permanece seguro, permeavel e bem monitorado durante a terapia.",
-            source = officialSources.first { it.id == "ms_fundamentos" },
+            body = "Na puncao venosa periferica, a enfermagem precisa pensar em preparo, escolha da veia, tecnica asseptica, fixacao e vigilancia do acesso. O material oficial do Ministerio da Saude destaca que o cateter periferico e muito manipulado pela equipe, o que aumenta a importancia da higiene das maos, da antissepsia local, da escolha de um sitio que preserve o conforto e da observacao frequente do local. O Cofen e a Anvisa ajudam a completar esse raciocinio lembrando que a manutencao do acesso e tao importante quanto a puncao: o sitio deve ser protegido, reavaliado diariamente e removido assim que deixar de ser necessario. Para estudar de forma didatica, organize a resposta assim: primeiro, verificar indicacao e material; depois, avaliar rede venosa e evitar articulacoes quando possivel; em seguida, realizar tecnica com assepsia e fixacao seguras; e por fim monitorar dor, hiperemia, edema, extravasamento, obstrucao e sinais de infeccao. O ponto de ensino mais importante e entender que um acesso venoso bom nao e so o que punciona, mas o que permanece seguro, permeavel e bem monitorado durante a terapia.",
+            source = officialSources.first { it.id == "cofen_puncao_periferica" },
+        ),
+        AiStudyAnswer(
+            title = "Materiais para puncao venosa periferica",
+            body = "Quando a pergunta for sobre materiais para puncao venosa periferica, a resposta deve sair da logica de preparo seguro e nao de uma lista solta. Os guias oficiais brasileiros apontam como base: higiene das maos, luvas de procedimento, garrote, antisseptico institucional, gaze ou algodao conforme protocolo, cateter sobre agulha no menor calibre adequado ao objetivo da terapia, seringa quando indicada, equipo ou conector, cobertura para estabilizacao, identificacao do acesso e descarte em coletor perfurocortante. O Cofen reforca que o calibre do dispositivo deve ser compatibilizado com o objetivo clinico e a condicao da rede venosa; em muitos adultos, o raciocinio pratico gira em torno de cateteres sobre agulha 18 a 24G, enquanto cateter agulhado tipo scalp tende a ficar mais ligado a coleta ou dose unica, nao a permanencia prolongada. Para estudar bem, memorize em quatro blocos: preparo e barreira, dispositivo e calibre, fixacao e identificacao, e monitorizacao de complicacoes.",
+            source = officialSources.first { it.id == "cofen_guia_tecnicas_2024" },
         ),
         AiStudyAnswer(
             title = "Insulina e tecnica subcutanea",
@@ -930,8 +961,12 @@ object StudyContentRepository {
 
     private fun basicNursingAnswer(normalizedQuestion: String): AiStudyAnswer? {
         return when {
+            normalizedQuestion.hasKeyword("tecnica intramuscular", "sitio intramuscular", "sitios intramuscular", "ventroglutea", "vasto lateral", "deltoide", "regiao intramuscular", "local intramuscular") ->
+                aiAnswers.first { it.title == "Tecnica intramuscular e escolha do sitio" }
             normalizedQuestion.hasKeyword("intramuscular", "agulha intramuscular", "agulhas intramuscular", "deltoide", "ventroglutea", "vasto lateral", "injecao im", "via im") ->
                 aiAnswers.first { it.title == "Agulhas para intramuscular" }
+            normalizedQuestion.hasKeyword("materiais para puncao", "material para puncao", "bandeja para puncao", "materiais puncao venosa", "agulha para puncao venosa", "cateter sobre agulha", "jelco", "scalp", "abocath", "materiais acesso venoso") ->
+                aiAnswers.first { it.title == "Materiais para puncao venosa periferica" }
             normalizedQuestion.hasKeyword("subcutanea", "subcutaneo", "via sc", "insulina subcutanea", "hipoderme") ->
                 aiAnswers.first { it.title == "Via subcutanea" }
             normalizedQuestion.hasKeyword("intradermica", "intradermico", "via id", "bcg", "teste cutaneo", "derme") ->
@@ -1059,11 +1094,13 @@ object StudyContentRepository {
         val studyGuide = when (answer.title) {
             "Agulhas para intramuscular" ->
                 "Como aprender melhor: compare sitio, volume, massa muscular e profundidade antes de decorar medida de agulha."
+            "Tecnica intramuscular e escolha do sitio" ->
+                "Como aprender melhor: organize a resposta em prescricao, referencias anatomicas, escolha do sitio, execucao e observacao apos a aplicacao."
             "Via subcutanea", "Via intradermica", "Administracao endovenosa" ->
                 "Como aprender melhor: revise indicacao da via, volume, angulo ou velocidade, e o que a enfermagem precisa monitorar logo apos administrar."
             "Calculo e diluicao de medicamentos", "Gotejamento venoso", "Bomba de infusao e controle de velocidade" ->
                 "Como aprender melhor: refaca a conta passo a passo, confira unidade, volume final e relacione o calculo com seguranca da administracao."
-            "Sondas e cateteres", "Puncao venosa periferica", "Curativos e cuidado com feridas" ->
+            "Sondas e cateteres", "Puncao venosa periferica", "Materiais para puncao venosa periferica", "Curativos e cuidado com feridas" ->
                 "Como aprender melhor: pense sempre em indicacao, tecnica, risco, sinais de complicacao e registro do cuidado."
             "Insulina e tecnica subcutanea" ->
                 "Como aprender melhor: una tecnica de aplicacao, horario, dose, monitorizacao glicemica e prevencao de hipoglicemia."
@@ -1083,12 +1120,14 @@ object StudyContentRepository {
         "Sinais vitais" -> listOf("pressao arterial", "temperatura", "frequencia cardiaca", "frequencia respiratoria")
         "Administracao segura de medicamentos" -> listOf("administracao de medicamentos", "medicacao segura", "dose via horario")
         "Agulhas para intramuscular" -> listOf("agulha intramuscular", "via intramuscular", "injecao intramuscular", "deltoide", "ventroglutea", "vasto lateral")
+        "Tecnica intramuscular e escolha do sitio" -> listOf("tecnica intramuscular", "sitio intramuscular", "regiao ventroglutea", "regiao deltoidea", "vasto lateral", "escolha do sitio")
         "Via subcutanea" -> listOf("via sc", "subcutanea", "hipoderme", "insulina subcutanea")
         "Via intradermica" -> listOf("via id", "intradermica", "bcg", "teste cutaneo")
         "Administracao endovenosa" -> listOf("via ev", "via iv", "endovenosa", "acesso venoso", "cateter periferico")
         "Calculo e diluicao de medicamentos" -> listOf("calculo de medicacao", "regra de tres", "diluicao", "rediluicao")
         "Gotejamento venoso" -> listOf("gotejamento", "gotas por minuto", "microgotas", "infusao venosa")
         "Puncao venosa periferica" -> listOf("puncao venosa", "venopuncao", "acesso venoso periferico", "cateter periferico")
+        "Materiais para puncao venosa periferica" -> listOf("materiais para puncao", "bandeja de puncao", "cateter sobre agulha", "jelco", "scalp", "abocath", "materiais acesso venoso")
         "Insulina e tecnica subcutanea" -> listOf("insulina", "nph", "regular", "aplicacao de insulina")
         "Vacinacao em enfermagem" -> listOf("vacina", "vacinacao", "imunizacao", "imunobiologico")
         "Curativos e cuidado com feridas" -> listOf("curativo", "ferida", "cobertura", "troca de curativo")
