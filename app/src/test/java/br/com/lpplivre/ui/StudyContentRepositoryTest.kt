@@ -186,6 +186,25 @@ class StudyContentRepositoryTest {
     }
 
     @Test
+    fun `specialized battery keeps infusion route and vaccine route questions in the right topics`() {
+        val cases = listOf(
+            "Como estudar bomba de infusao na enfermagem?" to "Bomba de infusao e controle de velocidade",
+            "Como calcular macrogotas por minuto?" to "Gotejamento venoso",
+            "Como calcular microgotas por minuto?" to "Gotejamento venoso",
+            "Qual a diferenca entre vacina subcutanea e intramuscular?" to "Vacinacao em enfermagem",
+            "Quais cuidados na via intradermica para BCG?" to "Via intradermica",
+            "Quais cuidados na via subcutanea para vacina?" to "Via subcutanea",
+            "Medicacao vesicante no acesso venoso exige quais cuidados?" to "Diluicao e compatibilidade na via endovenosa",
+            "Como estudar acesso venoso central na enfermagem?" to "Sondas e cateteres",
+        )
+
+        cases.forEach { (question, expectedTitle) ->
+            val answer = StudyContentRepository.answerStudyQuestion(question)
+            assertEquals(question, expectedTitle, answer.title)
+        }
+    }
+
+    @Test
     fun `insulin question returns educational answer with monitoring`() {
         val answer = StudyContentRepository.answerStudyQuestion("Como estudar insulina na enfermagem?")
 

@@ -966,6 +966,23 @@ object StudyContentRepository {
 
     private fun basicNursingAnswer(normalizedQuestion: String): AiStudyAnswer? {
         return when {
+            normalizedQuestion.contains("diferenca") &&
+                normalizedQuestion.contains("vacina") &&
+                (normalizedQuestion.contains("subcutanea") || normalizedQuestion.contains("intradermica")) &&
+                normalizedQuestion.contains("intramuscular") ->
+                aiAnswers.first { it.title == "Vacinacao em enfermagem" }
+            normalizedQuestion.hasKeyword("vacina", "vacinacao", "imunizacao", "imunobiologico") &&
+                normalizedQuestion.hasKeyword("agulha", "seringa", "intramuscular", "via im") ->
+                aiAnswers.first { it.title == "Agulhas para intramuscular" }
+            normalizedQuestion.hasKeyword("vacina", "vacinacao", "imunizacao", "imunobiologico") &&
+                normalizedQuestion.hasKeyword("subcutanea", "via sc", "hipoderme") ->
+                aiAnswers.first { it.title == "Via subcutanea" }
+            normalizedQuestion.hasKeyword("vacina", "vacinacao", "imunizacao", "imunobiologico") &&
+                normalizedQuestion.hasKeyword("intradermica", "via id", "bcg", "teste cutaneo") ->
+                aiAnswers.first { it.title == "Via intradermica" }
+            normalizedQuestion.hasKeyword("vacina", "vacinacao", "imunizacao", "imunobiologico", "sala de vacina") &&
+                normalizedQuestion.hasKeyword("diferenca", "comparacao", "comparar", "qual via", "escolha da via") ->
+                aiAnswers.first { it.title == "Vacinacao em enfermagem" }
             normalizedQuestion.hasKeyword("tecnica intramuscular", "sitio intramuscular", "sitios intramuscular", "ventroglutea", "vasto lateral", "deltoide", "regiao intramuscular", "local intramuscular", "onde aplicar intramuscular", "local de aplicacao intramuscular") ->
                 aiAnswers.first { it.title == "Tecnica intramuscular e escolha do sitio" }
             normalizedQuestion.hasKeyword("intramuscular", "agulha intramuscular", "agulhas intramuscular", "deltoide", "ventroglutea", "vasto lateral", "injecao im", "via im") ->
@@ -978,10 +995,12 @@ object StudyContentRepository {
                 aiAnswers.first { it.title == "Via intradermica" }
             normalizedQuestion.hasKeyword("puncao venosa", "acesso venoso periferico", "cateter periferico", "veia periferica", "venopuncao", "flebite", "infiltracao", "extravasamento") ->
                 aiAnswers.first { it.title == "Puncao venosa periferica" }
-            normalizedQuestion.hasKeyword("compatibilidade", "diluicao endovenosa", "diluicao intravenosa", "compatibilidade endovenosa", "medicamentos no mesmo acesso", "misturar medicacao no soro", "misturar medicamentos no soro", "mesmo soro", "diluente", "preparo endovenoso") ->
+            normalizedQuestion.hasKeyword("compatibilidade", "diluicao endovenosa", "diluicao intravenosa", "compatibilidade endovenosa", "medicamentos no mesmo acesso", "misturar medicacao no soro", "misturar medicamentos no soro", "mesmo soro", "diluente", "preparo endovenoso", "vesicante", "medicacao vesicante") ->
                 aiAnswers.first { it.title == "Diluicao e compatibilidade na via endovenosa" }
             normalizedQuestion.hasKeyword("gotejamento", "gotas por minuto", "microgotas", "infusao venosa", "equipo") ->
                 aiAnswers.first { it.title == "Gotejamento venoso" }
+            normalizedQuestion.hasKeyword("acesso venoso central", "cateter venoso central", "cvc", "picc", "acesso central") ->
+                aiAnswers.first { it.title == "Sondas e cateteres" }
             normalizedQuestion.hasKeyword("endovenosa", "intravenosa", "intravenoso", "via ev", "via iv", "punção venosa", "puncao venosa", "acesso venoso", "cateter periferico") ->
                 aiAnswers.first { it.title == "Administracao endovenosa" }
             normalizedQuestion.hasKeyword("calculo de medicacao", "calculo de medicamento", "diluicao", "regra de tres", "rediluicao", "dose em ml") ->
