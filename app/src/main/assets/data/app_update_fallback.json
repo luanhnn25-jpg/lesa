@@ -1,0 +1,9 @@
+{
+  "packageName": "br.com.estudasaude.app",
+  "versionCode": 2,
+  "versionName": "1.0.1",
+  "apkUrl": "https://example.com/estudasaude/app-debug.apk",
+  "notes": "Estrutura de atualizacao interna pronta. Publique o manifesto remoto do EstudaViva para ativar o fluxo de update pelo proprio app.",
+  "publishedAt": "2026-04-08",
+  "mandatory": false
+}

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#14324d" />
+  <title>Baixar EstudaSaude</title>
+  <style>
+    :root{--ink:#14324d;--ink-2:#48637d;--paper:#fffdf8;--sky:#dff3ff;--mint:#d9f5e5;--sun:#ffd66e;--line:rgba(20,50,77,.10);--shadow:0 20px 56px rgba(20,50,77,.12);--radius:30px}
+    *{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:radial-gradient(circle at top left, rgba(255,214,110,.38), transparent 26%),radial-gradient(circle at top right, rgba(217,245,229,.55), transparent 24%),linear-gradient(180deg,#f4fbff,#fffdf8 60%)}
+    .shell{max-width:1100px;margin:0 auto;padding:28px 18px 70px}.hero,.card{background:rgba(255,255,255,.80);border:1px solid var(--line);border-radius:34px;box-shadow:var(--shadow)}.hero{padding:28px;display:grid;grid-template-columns:1fr .9fr;gap:18px;align-items:center}.hero h1{margin:0 0 10px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(34px,5vw,58px);line-height:.96}.hero p{margin:0;color:var(--ink-2);line-height:1.75;font-size:17px;font-weight:600;max-width:58ch}.hero img{width:100%;border-radius:26px;border:1px solid var(--line);background:#fff}
+    .grid{display:grid;grid-template-columns:1.06fr .94fr;gap:18px;margin-top:20px}.card{padding:24px}.card h2{margin:0 0 10px;font-family:Georgia,"Times New Roman",serif;font-size:30px}.card p,.card li{color:var(--ink-2);line-height:1.75;font-weight:600}.card ol{margin:0;padding-left:20px}.card li+li{margin-top:8px}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 18px;border-radius:18px;font-weight:900;text-decoration:none;border:1px solid transparent;box-shadow:0 14px 24px rgba(20,50,77,.10)}.btn-primary{background:#14324d;color:#fff}.btn-soft{background:#fff;color:var(--ink);border-color:var(--line)}.btn-disabled{opacity:.55;pointer-events:none}
+    .facts{display:grid;gap:12px;margin-top:12px}.fact{border-radius:22px;padding:16px;background:#fff;border:1px solid var(--line)}.fact strong{display:block;font-size:13px;text-transform:uppercase;color:#5f7a92;margin-bottom:6px}.status{margin-top:16px;padding:15px 16px;border-radius:18px;background:var(--sky);color:var(--ink);line-height:1.7;font-weight:700}
+    @media (max-width:920px){.hero,.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <h1>Baixar a nova fase do EstudaSaude</h1>
+        <p>O aplicativo esta em transicao de uma estrutura mais clinica para uma plataforma de estudo. A base atual ainda carrega o APK antigo, mas a identidade e os materiais ja estao sendo reorganizados em torno de IA, quiz, medicamentos, fontes oficiais e comunidade.</p>
+      </div>
+      <img src="./img/modules-collage.svg" alt="Colagem visual do app de estudo" />
+    </section>
+    <section class="grid">
+      <article class="card">
+        <h2>Como instalar</h2>
+        <ol>
+          <li>Baixe o APK no dispositivo Android.</li>
+          <li>Permita a instalacao manual se o sistema solicitar.</li>
+          <li>Abra o app e valide login, IA, quiz, medicamentos e materiais.</li>
+          <li>Use esta versao como base para a futura reformulacao completa.</li>
+        </ol>
+        <div class="actions">
+          <a class="btn btn-primary btn-disabled" id="apkDownloadLink" href="./lpp-livre-android.apk" download aria-disabled="true">Verificando APK...</a>
+          <a class="btn btn-soft" href="./index.html">Voltar</a>
+        </div>
+        <div class="status" id="apkStatusBox">Verificando disponibilidade do APK publicado para download.</div>
+      </article>
+      <aside class="card">
+        <h2>O que esta sendo preservado</h2>
+        <div class="facts">
+          <div class="fact"><strong>IA</strong>Assistente local e hibrido para estudo guiado.</div>
+          <div class="fact"><strong>Quiz</strong>Base pronta para desafios, revisao e progresso.</div>
+          <div class="fact"><strong>Medicamentos</strong>Hub de estudo mantido para revisao rapida.</div>
+          <div class="fact"><strong>Fontes</strong>Linha oficial brasileira em crescimento.</div>
+        </div>
+      </aside>
+    </section>
+  </main>
+  <script>
+    (function(){
+      const downloadLink = document.getElementById('apkDownloadLink');
+      const statusBox = document.getElementById('apkStatusBox');
+      if(!downloadLink || !statusBox) return;
+      const apkUrl = new URL(downloadLink.getAttribute('href'), window.location.href).toString();
+      const enableDownload = (message) => {
+        downloadLink.classList.remove('btn-disabled');
+        downloadLink.removeAttribute('aria-disabled');
+        downloadLink.textContent = 'Baixar APK Android';
+        statusBox.textContent = message;
+      };
+      const disableDownload = (message) => {
+        downloadLink.classList.add('btn-disabled');
+        downloadLink.setAttribute('aria-disabled', 'true');
+        downloadLink.textContent = 'APK ainda nao publicado';
+        statusBox.textContent = message;
+      };
+      if(window.location.href.includes('/android_asset/')){
+        disableDownload('Dentro do aplicativo esta pagina funciona como guia. O APK nao fica embarcado no WebView por seguranca.');
+        return;
+      }
+      if(window.location.protocol === 'file:'){
+        enableDownload('Arquivo local detectado. Se o APK estiver na mesma pasta, o download local pode ser feito normalmente.');
+        return;
+      }
+      fetch(apkUrl, { method: 'HEAD', cache: 'no-store' })
+        .then((response) => {
+          if(response.ok){ enableDownload('APK publicado e disponivel para download.'); }
+          else { throw new Error(String(response.status)); }
+        })
+        .catch(() => {
+          disableDownload('O APK ainda nao esta sincronizado nesta hospedagem. Use a copia local do projeto se necessario.');
+        });
+    })();
+  </script>
+</body>
+</html>
