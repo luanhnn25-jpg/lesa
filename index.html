@@ -1,5 +1,6 @@
 
 
+
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -1193,7 +1194,6 @@
           <a href="#conceito">Conceito</a>
           <a href="#prevencao">Prevenção</a>
           <a href="#faq">FAQ</a>
-          <a href="#ia-enfermagem">Assistente</a>
           <a href="#fontes">Fontes</a>
           <a href="acesso.html?mode=login">Acesso</a>
         </div>
@@ -1282,24 +1282,24 @@
       <div class="app-download-grid">
         <div class="download-panel">
           <div class="download-kicker">Aplicativo Android em teste</div>
-          <h2 class="download-title">Baixar o aplicativo LPP Livre</h2>
+          <h2 class="download-title">Baixar o aplicativo EstudaViva</h2>
           <p class="download-copy">
-            O aplicativo Android do projeto ja pode ser baixado para avaliacao. Ele reune acompanhamento clinico,
-            estudo guiado, quiz, interacoes medicamentosas, materiais oficiais, IA educativa e integracao com o site.
+            O aplicativo Android em teste agora e o EstudaViva. Esta versao atualizada foi preparada para estudo,
+            quiz em trilhas tematicas, medicamentos com base Anvisa, fontes brasileiras oficiais e integracao com o site.
           </p>
           <ol class="download-steps">
             <li>Baixe o arquivo APK no celular Android.</li>
             <li>Autorize a instalacao do arquivo, se o sistema solicitar.</li>
-            <li>Abra o app e teste cadastro, estudo, quiz e o site integrado.</li>
+            <li>Abra o app e teste login, estudo, quiz, medicamentos e biblioteca oficial.</li>
             <li>Se preferir, consulte a pagina dedicada de instalacao com orientacoes resumidas.</li>
           </ol>
           <div class="download-actions">
             <a class="lpp-pill lpp-pill-link" href="./download-app.html">Baixar APK Android</a>
             <a class="lpp-pill lpp-pill-link" href="./download-app.html">Abrir pagina de instalacao</a>
-            <a class="lpp-pill lpp-pill-link" href="#ia-enfermagem">Abrir assistente</a>
+            <a class="lpp-pill lpp-pill-link" href="acesso.html?mode=login">Abrir area de acesso</a>
           </div>
           <div class="download-note">
-            Observacao: o APK atual e de teste. O download foi preparado para instalacao manual em Android e para validacao do fluxo clinico e educativo.
+            Observacao: o APK atual e de teste. O download foi preparado para instalacao manual em Android e para validacao do novo fluxo educacional do EstudaViva.
           </div>
         </div>
 
@@ -1316,7 +1316,7 @@
             </div>
             <div class="download-metric">
               <div class="k">Conteudo</div>
-              <div class="v">Quiz, IA, guias e acompanhamento</div>
+              <div class="v">Quiz, meds Anvisa, fontes e estudo</div>
             </div>
             <div class="download-metric">
               <div class="k">Integracao</div>
@@ -1487,67 +1487,6 @@
       </ul>
 
       <p class="lpp-text" style="margin-top:12px;">Consulta realizada em <span class="timestamp auto-timestamp">—</span>.</p>
-    </section>
-    <section class="lpp-card ai-assistant" id="ia-enfermagem">
-      <div class="ai-head">
-        <div class="ai-head-copy">
-          <h2 class="lpp-title">Assistente de enfermagem e farmacologia</h2>
-          <p>
-            Assistente educativo para apoio ao estudo e à revisão profissional em enfermagem. A proposta é responder de forma
-            mais clara, acolhedora e tecnicamente organizada sobre lesão por pressão, administração de medicamentos,
-            farmacologia, segurança do paciente, curativos, sinais vitais, urgência e dúvidas frequentes da prática clínica.
-          </p>
-        </div>
-        <div class="ai-summary">
-          <div class="ai-summary-card">
-            <strong>Escopo</strong>
-            <span>Lesão por pressão, processo de enfermagem, medicação, curativos, sinais vitais e urgência.</span>
-          </div>
-          <div class="ai-summary-card">
-            <strong>Estilo</strong>
-            <span>Resposta direta, com raciocínio clínico básico, foco em segurança e linguagem profissional.</span>
-          </div>
-          <div class="ai-summary-card">
-            <strong>Base</strong>
-            <span>Conteúdo local curado com apoio em ANVISA, OMS, NPIAP, Coren-SP e referências técnicas oficiais.</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="ai-grid">
-        <div class="ai-controls">
-          <input id="aiRole" type="hidden" value="enfermagem">
-          <input id="aiScope" type="hidden" value="enfermagem">
-
-          <div class="ai-helper">
-            Pode perguntar sobre sinais vitais, administração de medicamentos, segurança do paciente, oxigenoterapia,
-            acesso venoso, sepse, curativos, lesão por pressão, diluição, monitorização e condutas educativas.
-          </div>
-
-          <div class="ai-quick">
-            <button class="ai-chip" type="button" data-ai-question="Quais sinais indicam piora da lesão por pressão e necessidade de avaliação rápida?">Piora da lesão</button>
-            <button class="ai-chip" type="button" data-ai-question="Explique por que varfarina e ibuprofeno não devem ser associados e quais são os riscos.">Varfarina + ibuprofeno</button>
-            <button class="ai-chip" type="button" data-ai-question="Como funciona a escala de Braden e como ela orienta a prevenção?">Escala de Braden</button>
-            <button class="ai-chip" type="button" data-ai-question="Quais são os 9 certos da administração de medicamentos e por que isso importa?">9 certos da medicação</button>
-            <button class="ai-chip" type="button" data-ai-question="O que a enfermagem deve monitorar na sepse e quais sinais sugerem gravidade?">Sepse e monitorização</button>
-            <button class="ai-chip" type="button" data-ai-question="Explique a diferença entre creme barreira, hidrogel, colagenase e sulfadiazina de prata.">Curativos e coberturas</button>
-          </div>
-
-          <label for="aiQuestion" style="margin-top:14px;">Pergunta clínica ou educativa</label>
-          <textarea id="aiQuestion" class="ai-textarea" placeholder="Ex.: Qual agulha usar na intramuscular? O que a enfermagem precisa monitorar na sepse? Quando usar hidrogel?"></textarea>
-
-          <div class="ai-actions">
-            <button class="ai-btn primary" id="btnAiAsk" type="button">Perguntar</button>
-            <button class="ai-btn secondary" id="btnAiClear" type="button">Limpar conversa</button>
-          </div>
-
-          <div class="ai-status" id="aiStatus">Pronta para responder com base educativa local e linguagem mais clara.</div>
-        </div>
-
-        <div class="ai-chat">
-          <div class="ai-feed" id="aiFeed" aria-live="polite"></div>
-        </div>
-      </div>
     </section>
   </main>
 
@@ -2325,7 +2264,7 @@
           <a href="premium.html">Premium</a>
           <a href="selecao-produtos.html">Sele&ccedil;&atilde;o de produtos</a>
           <a href="#aplicativo">Aplicativo</a>
-          <a href="#ia-enfermagem">Assistente</a>
+          <a href="./download-app.html">Baixar app</a>
           <a href="acesso.html?mode=login">Acesso</a>
         `;
       }
@@ -2990,4 +2929,3 @@
   </script>
 </body>
 </html>
-
