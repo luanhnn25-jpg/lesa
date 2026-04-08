@@ -966,7 +966,7 @@ object StudyContentRepository {
 
     private fun basicNursingAnswer(normalizedQuestion: String): AiStudyAnswer? {
         return when {
-            normalizedQuestion.hasKeyword("tecnica intramuscular", "sitio intramuscular", "sitios intramuscular", "ventroglutea", "vasto lateral", "deltoide", "regiao intramuscular", "local intramuscular") ->
+            normalizedQuestion.hasKeyword("tecnica intramuscular", "sitio intramuscular", "sitios intramuscular", "ventroglutea", "vasto lateral", "deltoide", "regiao intramuscular", "local intramuscular", "onde aplicar intramuscular", "local de aplicacao intramuscular") ->
                 aiAnswers.first { it.title == "Tecnica intramuscular e escolha do sitio" }
             normalizedQuestion.hasKeyword("intramuscular", "agulha intramuscular", "agulhas intramuscular", "deltoide", "ventroglutea", "vasto lateral", "injecao im", "via im") ->
                 aiAnswers.first { it.title == "Agulhas para intramuscular" }
@@ -978,14 +978,14 @@ object StudyContentRepository {
                 aiAnswers.first { it.title == "Via intradermica" }
             normalizedQuestion.hasKeyword("puncao venosa", "acesso venoso periferico", "cateter periferico", "veia periferica", "venopuncao") ->
                 aiAnswers.first { it.title == "Puncao venosa periferica" }
-            normalizedQuestion.hasKeyword("compatibilidade", "diluicao endovenosa", "diluicao intravenosa", "compatibilidade endovenosa", "medicamentos no mesmo acesso", "misturar medicacao no soro", "diluente", "preparo endovenoso") ->
+            normalizedQuestion.hasKeyword("compatibilidade", "diluicao endovenosa", "diluicao intravenosa", "compatibilidade endovenosa", "medicamentos no mesmo acesso", "misturar medicacao no soro", "misturar medicamentos no soro", "mesmo soro", "diluente", "preparo endovenoso") ->
                 aiAnswers.first { it.title == "Diluicao e compatibilidade na via endovenosa" }
+            normalizedQuestion.hasKeyword("gotejamento", "gotas por minuto", "microgotas", "infusao venosa", "equipo") ->
+                aiAnswers.first { it.title == "Gotejamento venoso" }
             normalizedQuestion.hasKeyword("endovenosa", "intravenosa", "intravenoso", "via ev", "via iv", "punção venosa", "puncao venosa", "acesso venoso", "cateter periferico") ->
                 aiAnswers.first { it.title == "Administracao endovenosa" }
             normalizedQuestion.hasKeyword("calculo de medicacao", "calculo de medicamento", "diluicao", "regra de tres", "rediluicao", "dose em ml") ->
                 aiAnswers.first { it.title == "Calculo e diluicao de medicamentos" }
-            normalizedQuestion.hasKeyword("gotejamento", "gotas por minuto", "microgotas", "infusao venosa", "equipo") ->
-                aiAnswers.first { it.title == "Gotejamento venoso" }
             normalizedQuestion.hasKeyword("puncao venosa", "punção venosa", "acesso venoso periferico", "cateter periferico", "veia periferica", "venopuncao", "venopunção") ->
                 aiAnswers.first { it.title == "Puncao venosa periferica" }
             normalizedQuestion.hasKeyword("insulina", "nph", "regular", "aplicacao de insulina", "dose de insulina") ->
@@ -1131,7 +1131,7 @@ object StudyContentRepository {
         "Via subcutanea" -> listOf("via sc", "subcutanea", "hipoderme", "insulina subcutanea")
         "Via intradermica" -> listOf("via id", "intradermica", "bcg", "teste cutaneo")
         "Administracao endovenosa" -> listOf("via ev", "via iv", "endovenosa", "acesso venoso", "cateter periferico")
-        "Diluicao e compatibilidade na via endovenosa" -> listOf("compatibilidade", "diluicao endovenosa", "diluente", "medicamentos no mesmo acesso", "mistura no soro")
+        "Diluicao e compatibilidade na via endovenosa" -> listOf("compatibilidade", "diluicao endovenosa", "diluente", "medicamentos no mesmo acesso", "mistura no soro", "mesmo soro")
         "Calculo e diluicao de medicamentos" -> listOf("calculo de medicacao", "regra de tres", "diluicao", "rediluicao")
         "Gotejamento venoso" -> listOf("gotejamento", "gotas por minuto", "microgotas", "infusao venosa")
         "Puncao venosa periferica" -> listOf("puncao venosa", "venopuncao", "acesso venoso periferico", "cateter periferico")

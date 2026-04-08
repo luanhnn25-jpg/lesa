@@ -146,6 +146,27 @@ class StudyContentRepositoryTest {
     }
 
     @Test
+    fun `intramuscular and venous access natural language battery keeps returning expected topics`() {
+        val cases = listOf(
+            "Quais agulhas usar para aplicacao intramuscular em adulto?" to "Agulhas para intramuscular",
+            "Onde aplicar uma injecao intramuscular com mais seguranca?" to "Tecnica intramuscular e escolha do sitio",
+            "Qual a diferenca entre jelco e scalp na enfermagem?" to "Materiais para puncao venosa periferica",
+            "Quais materiais preciso separar para fazer um acesso venoso periferico?" to "Materiais para puncao venosa periferica",
+            "Quais cuidados observar depois da puncao venosa periferica?" to "Puncao venosa periferica",
+            "Como estudar a via intravenosa na enfermagem?" to "Administracao endovenosa",
+            "Posso misturar medicamentos no mesmo soro?" to "Diluicao e compatibilidade na via endovenosa",
+            "Como escolher o diluente de uma medicacao EV?" to "Diluicao e compatibilidade na via endovenosa",
+            "Como calcular gotejamento venoso em gotas por minuto?" to "Gotejamento venoso",
+            "Como estudar rediluicao de medicamentos?" to "Calculo e diluicao de medicamentos",
+        )
+
+        cases.forEach { (question, expectedTitle) ->
+            val answer = StudyContentRepository.answerStudyQuestion(question)
+            assertEquals(question, expectedTitle, answer.title)
+        }
+    }
+
+    @Test
     fun `insulin question returns educational answer with monitoring`() {
         val answer = StudyContentRepository.answerStudyQuestion("Como estudar insulina na enfermagem?")
 
