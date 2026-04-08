@@ -142,6 +142,10 @@ fun AiStudySection() {
                         question = "Quais materiais separar para puncao venosa periferica?"
                         answer = StudyContentRepository.answerStudyQuestion(question)
                     }
+                    AiQuickQuestion("Compat. EV") {
+                        question = "Como estudar compatibilidade e diluicao na via endovenosa?"
+                        answer = StudyContentRepository.answerStudyQuestion(question)
+                    }
                     AiQuickQuestion("Calculo") {
                         question = "Como estudar calculo e diluicao de medicamentos?"
                         answer = StudyContentRepository.answerStudyQuestion(question)

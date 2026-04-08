@@ -752,6 +752,11 @@ object StudyContentRepository {
             source = officialSources.first { it.id == "cofen_basicos" },
         ),
         AiStudyAnswer(
+            title = "Diluicao e compatibilidade na via endovenosa",
+            body = "Quando a duvida for sobre diluicao e compatibilidade na via endovenosa, o raciocinio oficial deve comecar pela prescricao, pela apresentacao do medicamento e pela orientacao da fonte primaria do produto. Em enfermagem, isso significa conferir dose, concentracao disponivel, diluente permitido, volume final, velocidade de infusao e se o medicamento pode correr no mesmo acesso com outras solucoes. O material do Ministerio da Saude sobre fundamentos de enfermagem ajuda no calculo e na rediluicao quando o volume aspirado e muito pequeno, enquanto a Anvisa deve ser consultada para detalhes finos de preparo e estabilidade na bula do produto. Para estudar bem, monte sempre esta sequencia: conferir o farmaco, calcular o volume, revisar diluente e tempo, avaliar o acesso venoso e confirmar compatibilidade antes de instalar ou administrar. Em prova e pratica, a resposta mais segura nao e decorar misturas, e sim dizer que compatibilidade e diluicao precisam ser verificadas antes da administracao para evitar precipitado, perda de efeito, flebite, extravasamento e evento adverso.",
+            source = officialSources.first { it.id == "ms_fundamentos" },
+        ),
+        AiStudyAnswer(
             title = "Calculo e diluicao de medicamentos",
             body = "Para calculo e diluicao, o material oficial do Ministerio da Saude orienta raciocinio simples e seguro: primeiro conferir dose prescrita, apresentacao disponivel, unidade de medida e volume final; depois transformar grandezas quando necessario e montar a regra de tres simples. O mesmo material mostra que, quando o volume calculado e pequeno demais para aspiracao segura, a rediluicao pode ser necessaria para melhorar a precisao, sempre respeitando o diluente e a estabilidade do medicamento. Em enfermagem, estudar calculo nao e decorar conta isolada, e sim entender sequencia: dose prescrita, concentracao do frasco, quanto cada mL contem, qual volume aspirar e se a seringa permite essa aspiracao com seguranca. Em prova e pratica, revise conversao entre g e mg, mg e mL, unidades internacionais, e tenha o habito de reconferir o resultado antes de preparar a medicacao.",
             source = officialSources.first { it.id == "ms_fundamentos" },
@@ -973,6 +978,8 @@ object StudyContentRepository {
                 aiAnswers.first { it.title == "Via intradermica" }
             normalizedQuestion.hasKeyword("puncao venosa", "acesso venoso periferico", "cateter periferico", "veia periferica", "venopuncao") ->
                 aiAnswers.first { it.title == "Puncao venosa periferica" }
+            normalizedQuestion.hasKeyword("compatibilidade", "diluicao endovenosa", "diluicao intravenosa", "compatibilidade endovenosa", "medicamentos no mesmo acesso", "misturar medicacao no soro", "diluente", "preparo endovenoso") ->
+                aiAnswers.first { it.title == "Diluicao e compatibilidade na via endovenosa" }
             normalizedQuestion.hasKeyword("endovenosa", "intravenosa", "intravenoso", "via ev", "via iv", "punção venosa", "puncao venosa", "acesso venoso", "cateter periferico") ->
                 aiAnswers.first { it.title == "Administracao endovenosa" }
             normalizedQuestion.hasKeyword("calculo de medicacao", "calculo de medicamento", "diluicao", "regra de tres", "rediluicao", "dose em ml") ->
@@ -1096,7 +1103,7 @@ object StudyContentRepository {
                 "Como aprender melhor: compare sitio, volume, massa muscular e profundidade antes de decorar medida de agulha."
             "Tecnica intramuscular e escolha do sitio" ->
                 "Como aprender melhor: organize a resposta em prescricao, referencias anatomicas, escolha do sitio, execucao e observacao apos a aplicacao."
-            "Via subcutanea", "Via intradermica", "Administracao endovenosa" ->
+            "Via subcutanea", "Via intradermica", "Administracao endovenosa", "Diluicao e compatibilidade na via endovenosa" ->
                 "Como aprender melhor: revise indicacao da via, volume, angulo ou velocidade, e o que a enfermagem precisa monitorar logo apos administrar."
             "Calculo e diluicao de medicamentos", "Gotejamento venoso", "Bomba de infusao e controle de velocidade" ->
                 "Como aprender melhor: refaca a conta passo a passo, confira unidade, volume final e relacione o calculo com seguranca da administracao."
@@ -1124,6 +1131,7 @@ object StudyContentRepository {
         "Via subcutanea" -> listOf("via sc", "subcutanea", "hipoderme", "insulina subcutanea")
         "Via intradermica" -> listOf("via id", "intradermica", "bcg", "teste cutaneo")
         "Administracao endovenosa" -> listOf("via ev", "via iv", "endovenosa", "acesso venoso", "cateter periferico")
+        "Diluicao e compatibilidade na via endovenosa" -> listOf("compatibilidade", "diluicao endovenosa", "diluente", "medicamentos no mesmo acesso", "mistura no soro")
         "Calculo e diluicao de medicamentos" -> listOf("calculo de medicacao", "regra de tres", "diluicao", "rediluicao")
         "Gotejamento venoso" -> listOf("gotejamento", "gotas por minuto", "microgotas", "infusao venosa")
         "Puncao venosa periferica" -> listOf("puncao venosa", "venopuncao", "acesso venoso periferico", "cateter periferico")

@@ -136,6 +136,16 @@ class StudyContentRepositoryTest {
     }
 
     @Test
+    fun `endovenous compatibility question returns dilution safety answer`() {
+        val answer = StudyContentRepository.answerStudyQuestion("Como estudar compatibilidade e diluicao na via endovenosa?")
+
+        assertEquals("Diluicao e compatibilidade na via endovenosa", answer.title)
+        assertEquals("Ministerio da Saude", answer.source.authority)
+        assertTrue(answer.body.contains("diluente"))
+        assertTrue(answer.body.contains("compatibilidade"))
+    }
+
+    @Test
     fun `insulin question returns educational answer with monitoring`() {
         val answer = StudyContentRepository.answerStudyQuestion("Como estudar insulina na enfermagem?")
 
