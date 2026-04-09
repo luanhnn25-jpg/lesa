@@ -82,8 +82,8 @@ fun AiStudySection() {
 
     Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
         SectionHeroCard(
-            title = "IA clinica de enfermagem",
-            body = "Assistente visual para revisar condutas, procedimentos, farmacologia e raciocinio clinico com base em fontes oficiais.",
+            title = "IA assistencial de enfermagem",
+            body = "Especialista em enfermagem assistencial com foco tecnico, seguro, humanizado e alinhado a fontes oficiais brasileiras.",
             accent = listOf(Color(0xFF0F4C81), Color(0xFF55B5FF)),
             imageRes = R.drawable.study_feature_banner,
         )
@@ -113,14 +113,14 @@ fun AiStudySection() {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Text("Central de estudo com IA", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
                         Text(
-                            "Em vez de abrir respondendo algo salvo, a IA agora comeca guiando a conversa para descobrir exatamente o que voce quer revisar.",
+                            "A IA responde com cabeca de enfermeiro e orientacao pratica para o trabalho do tecnico, sempre com limites profissionais, seguranca do paciente e escalonamento correto.",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                            MetricMiniCard("Perfil", "Especialista", MaterialTheme.colorScheme.primaryContainer, ui.info, Modifier.weight(1f))
-                            MetricMiniCard("Foco", "Brasil", MaterialTheme.colorScheme.secondaryContainer, ui.accent, Modifier.weight(1f))
-                            MetricMiniCard("Base", "Oficial", Color(0xFF1E4A33).copy(alpha = 0.18f), ui.success, Modifier.weight(1f))
+                            MetricMiniCard("Perfil", "Assistencial", MaterialTheme.colorScheme.primaryContainer, ui.info, Modifier.weight(1f))
+                            MetricMiniCard("Foco", "Seguranca", MaterialTheme.colorScheme.secondaryContainer, ui.accent, Modifier.weight(1f))
+                            MetricMiniCard("Base", "Brasil", Color(0xFF1E4A33).copy(alpha = 0.18f), ui.success, Modifier.weight(1f))
                         }
                     }
                 }
@@ -242,7 +242,7 @@ fun AiStudySection() {
                         ) {
                             Text("Pronta para te orientar", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
                             Text(
-                                "Escolha um atalho ou escreva sua duvida. A resposta aparece aqui com foco clinico, estrutura organizada e fonte oficial.",
+                                "Escolha um atalho ou escreva sua duvida. A resposta aparece aqui com resumo do quadro, observacao, cuidados, momento de avisar o enfermeiro e quando acionar medico ou emergencia.",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -1078,12 +1078,13 @@ private fun MedicationInfoLine(label: String, value: String) {
 
 @Composable
 private fun MedicationBlock(title: String, accent: Color, items: List<String>) {
-    val titleColor = medicationReadableTextColor(accent)
-    val bodyColor = medicationReadableBodyColor(accent)
-    val bulletColor = medicationReadableBulletColor(accent)
+    val background = medicationReadableContainer(accent)
+    val titleColor = medicationReadableTextColor(background)
+    val bodyColor = medicationReadableBodyColor(background)
+    val bulletColor = medicationReadableBulletColor(background)
     Card(
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = accent),
+        colors = CardDefaults.cardColors(containerColor = background),
         modifier = Modifier.fillMaxWidth(),
     ) {
         Column(
@@ -1101,20 +1102,40 @@ private fun MedicationBlock(title: String, accent: Color, items: List<String>) {
     }
 }
 
+@Composable
+private fun medicationReadableContainer(background: Color): Color {
+    return if (androidx.compose.foundation.isSystemInDarkTheme()) {
+        blendMedicationColor(background, Color(0xFF162534), 0.84f)
+    } else {
+        background
+    }
+}
+
 private fun medicationReadableTextColor(background: Color): Color {
-    return if (medicationBrightness(background) > 0.78f) Color(0xFF13263A) else Color.White
+    return if (medicationBrightness(background) > 0.68f) Color(0xFF13263A) else Color(0xFFF7FBFF)
 }
 
 private fun medicationReadableBodyColor(background: Color): Color {
-    return if (medicationBrightness(background) > 0.78f) Color(0xFF22364A) else Color(0xFFF4F8FD)
+    return if (medicationBrightness(background) > 0.68f) Color(0xFF22364A) else Color(0xFFEAF4FF)
 }
 
 private fun medicationReadableBulletColor(background: Color): Color {
-    return if (medicationBrightness(background) > 0.78f) Color(0xFF6B37D1) else Color(0xFFFFE082)
+    return if (medicationBrightness(background) > 0.68f) Color(0xFF6B37D1) else Color(0xFFFFD58A)
 }
 
 private fun medicationBrightness(background: Color): Float {
     return (background.red * 0.299f) + (background.green * 0.587f) + (background.blue * 0.114f)
+}
+
+private fun blendMedicationColor(foreground: Color, background: Color, foregroundWeight: Float): Color {
+    val weight = foregroundWeight.coerceIn(0f, 1f)
+    val inverse = 1f - weight
+    return Color(
+        red = (foreground.red * weight) + (background.red * inverse),
+        green = (foreground.green * weight) + (background.green * inverse),
+        blue = (foreground.blue * weight) + (background.blue * inverse),
+        alpha = 1f,
+    )
 }
 
 @Composable

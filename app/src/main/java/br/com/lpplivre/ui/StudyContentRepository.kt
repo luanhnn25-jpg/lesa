@@ -884,12 +884,12 @@ object StudyContentRepository {
     )
 
     fun answerStudyQuestion(question: String): AiStudyAnswer {
-        if (question.isBlank()) return enrichAnswer(aiAnswers.first())
+        if (question.isBlank()) return enrichAnswer(aiAnswers.first { it.title == "Sinais vitais" }, normalize(question))
 
         val normalized = normalize(question)
         val queryTokens = significantTokens(normalized)
 
-        basicNursingAnswer(normalized)?.let { return enrichAnswer(it) }
+        basicNursingAnswer(normalized)?.let { return enrichAnswer(it, normalized) }
 
         val medicationMatch = medications
             .map { medication ->
@@ -907,7 +907,8 @@ object StudyContentRepository {
                     title = medicationMatch.title,
                     body = "Tema encontrado na base de medicamentos. Estude ${medicationMatch.activeIngredient}, ${medicationMatch.therapeuticEffect.lowercase()} e revise reacoes esperadas, inesperadas e interacoes na fonte oficial da Anvisa.",
                     source = officialSources.first { it.id == "anvisa_bulario" },
-                )
+                ),
+                normalized,
             )
         }
 
@@ -917,7 +918,7 @@ object StudyContentRepository {
             .firstOrNull { it.second > 0 }
             ?.first
 
-        return enrichAnswer(rankedTopic ?: aiAnswers.first { it.title == "Administracao segura de medicamentos" })
+        return enrichAnswer(rankedTopic ?: aiAnswers.first { it.title == "Administracao segura de medicamentos" }, normalized)
     }
 
     fun medicationsFor(query: String, selectedClass: String?): List<StudyMedication> {
@@ -1175,12 +1176,55 @@ object StudyContentRepository {
         return answer.copy(body = "${answer.body}\n\n$studyGuide")
     }
 
-    private fun enrichAnswer(answer: AiStudyAnswer): AiStudyAnswer {
-        return withClinicalFramework(withTeachingGuide(answer))
+    private fun enrichAnswer(answer: AiStudyAnswer, normalizedQuestion: String): AiStudyAnswer {
+        return withClinicalFramework(withTeachingGuide(answer), normalizedQuestion)
     }
 
-    private fun withClinicalFramework(answer: AiStudyAnswer): AiStudyAnswer {
-        if (answer.body.contains("Explicacao tecnica:")) return answer
+    private fun withClinicalFramework(answer: AiStudyAnswer, normalizedQuestion: String): AiStudyAnswer {
+        if (answer.body.contains("[Resumo do quadro]")) return answer
+
+        val highRisk = normalizedQuestion.hasKeyword(
+            "falta de ar",
+            "dor no peito",
+            "convulsao",
+            "desmaio",
+            "rebaixamento de consciencia",
+            "rebaixamento",
+            "saturacao 88",
+            "saturacao baixa",
+            "pressao muito baixa",
+            "sangramento intenso",
+            "avc",
+            "sepse",
+            "anafilaxia",
+            "parada cardiorrespiratoria",
+        )
+
+        val summary = when {
+            highRisk ->
+                "Ha indicio de situacao potencialmente grave. A prioridade da enfermagem e reconhecer instabilidade, manter seguranca imediata, monitorizar e escalar o atendimento sem demora."
+            answer.title == "Urgencia e emergencia com ABCDE" || answer.title == "Urgencia e emergencia em enfermagem" ->
+                "O tema envolve avaliacao rapida, priorizacao e resposta organizada da equipe diante de risco clinico."
+            answer.title == "Hipoglicemia" ->
+                "O quadro exige reconhecimento precoce, confirmacao quando possivel e intervencao segura seguida de reavaliacao."
+            answer.title == "Sinais vitais" ->
+                "O foco e interpretar sinais vitais dentro do contexto clinico, observando tendencia, resposta do paciente e risco de deterioracao."
+            else ->
+                "A resposta abaixo organiza o tema com foco assistencial, seguranca do paciente, limites de atuacao e comunicacao adequada da equipe de enfermagem."
+        }
+
+        val observe = when {
+            highRisk ->
+                "Padrao respiratorio, saturacao, nivel de consciencia, perfusao, dor, sangramento ativo, tendencia dos sinais vitais e resposta imediata do paciente."
+            answer.title == "Hipoglicemia" ->
+                "Sinais autonomicos, alteracao de comportamento, sudorese, tremor, glicemia capilar quando disponivel, horario da ultima refeicao e resposta apos a intervencao."
+            answer.title == "Sinais vitais" ->
+                "Valores medidos, tendencia, condicoes da afericao, dor, perfusao, estado mental e sinais associados de piora."
+            answer.title == "Administracao segura de medicamentos" ->
+                "Prescricao, identificacao correta, alergias, via, horario, efeito esperado, reacao adversa e sinais de resposta ou falha."
+            else ->
+                "Achados clinicos relevantes, resposta do paciente, sinais associados, fatores de risco e mudancas em relacao ao estado anterior."
+        }
 
         val conduct = when (answer.title) {
             "SAE com NANDA NIC e NOC", "Processo de Enfermagem" ->
@@ -1199,6 +1243,44 @@ object StudyContentRepository {
                 "Organizar material, aplicar tecnica segura, vigiar complicacoes locais e registrar condicoes do dispositivo."
             else ->
                 "Integrar avaliacao clinica, seguranca do paciente, intervencao de enfermagem e reavaliacao continua."
+        }
+
+        val notifyNurse = when {
+            highRisk ->
+                "Imediatamente, diante de qualquer sinal de instabilidade, piora respiratoria, alteracao neurologica, hipotensao, sangramento ou saturacao baixa."
+            answer.title == "Administracao segura de medicamentos" || answer.title == "Calculo e diluicao de medicamentos" ->
+                "Sempre que houver duvida sobre dose, via, compatibilidade, evento adverso, alergia, erro potencial ou resposta inesperada."
+            answer.title == "Puncao venosa periferica" || answer.title == "Sondas e cateteres" ->
+                "Ao observar dor intensa, hiperemia, edema, extravasamento, obstrucao, sangramento, deslocamento ou suspeita de infeccao."
+            else ->
+                "Quando houver alteracao clinica, intercorrencia, duvida tecnica relevante, resposta inesperada ou necessidade de reavaliacao do plano de cuidado."
+        }
+
+        val callDoctor = when {
+            highRisk ->
+                "Acione medico ou emergencia imediatamente em caso de falta de ar, dor toracica, convulsao, rebaixamento de consciencia, saturacao baixa persistente, sinais de choque, sangramento intenso ou deterioracao rapida."
+            answer.title == "Hipoglicemia" ->
+                "Se houver rebaixamento de consciencia, convulsao, ausencia de melhora apos a conduta inicial ou recorrencia com instabilidade."
+            answer.title == "Urgencia e emergencia com ABCDE" || answer.title == "Urgencia e emergencia em enfermagem" ->
+                "Diante de qualquer sinal de insuficiencia respiratoria, instabilidade hemodinamica, piora neurologica, dor intensa ou risco de vida."
+            else ->
+                "Acione medico ou suporte de emergencia se houver instabilidade, deterioracao rapida, falha de resposta inicial ou sinais criticos fora do esperado."
+        }
+
+        val nurseRole = when (answer.title) {
+            "SAE com NANDA NIC e NOC", "Processo de Enfermagem", "Documentacao clinica e comunicacao SBAR" ->
+                "Avaliar globalmente, priorizar problemas, planejar a assistencia, registrar de forma estruturada e coordenar a comunicacao da equipe."
+            "Urgencia e emergencia com ABCDE", "Urgencia e emergencia em enfermagem" ->
+                "Liderar a avaliacao inicial de enfermagem, reconhecer gravidade, priorizar recursos e organizar o escalonamento rapido."
+            else ->
+                "Avaliar o paciente de forma global, identificar riscos, definir prioridades, supervisionar a equipe e decidir o plano assistencial de enfermagem."
+        }
+
+        val technicianRole = when (answer.title) {
+            "Administracao segura de medicamentos", "Puncao venosa periferica", "Sondas e cateteres", "Curativos e cuidado com feridas" ->
+                "Executar o cuidado com tecnica segura, observar sinais e sintomas, monitorizar resposta do paciente e comunicar intercorrencias imediatamente ao enfermeiro."
+            else ->
+                "Executar os cuidados prescritos, observar continuamente o paciente, registrar achados e informar qualquer alteracao ao enfermeiro responsavel."
         }
 
         val risks = when (answer.title) {
@@ -1220,13 +1302,27 @@ object StudyContentRepository {
 
         return answer.copy(
             body = buildString {
-                append("Explicacao tecnica:\n")
+                append("[Resumo do quadro]\n")
+                append(summary)
+                append("\n\n[O que observar]\n")
+                append(observe)
+                append("\n\n[Cuidados de enfermagem]\n")
                 append(answer.body)
-                append("\n\nConduta de enfermagem:\n")
+                append("\n\nConduta geral:\n")
                 append(conduct)
-                append("\n\nRiscos e complicacoes:\n")
+                append("\n\n[Papel do enfermeiro]\n")
+                append(nurseRole)
+                append("\n\n[Papel do tecnico de enfermagem]\n")
+                append(technicianRole)
+                append("\n\n[Quando avisar o enfermeiro]\n")
+                append(notifyNurse)
+                append("\n\n[Quando chamar medico ou emergencia]\n")
+                append(callDoctor)
+                append("\n\n[Riscos e complicacoes]\n")
                 append(risks)
-                append("\n\nFonte oficial:\n")
+                append("\n\n[Seguranca]\n")
+                append("Esta orientacao apoia o cuidado, mas nao substitui avaliacao presencial, protocolos institucionais e julgamento clinico da equipe responsavel.")
+                append("\n\n[Fonte oficial]\n")
                 append("${answer.source.authority} - ${answer.source.title}")
             },
         )

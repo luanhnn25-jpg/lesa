@@ -229,9 +229,10 @@ class StudyContentRepositoryTest {
         val answer = StudyContentRepository.answerStudyQuestion("Como aplicar SAE com NANDA NIC e NOC?")
 
         assertEquals("SAE com NANDA NIC e NOC", answer.title)
-        assertTrue(answer.body.contains("Explicacao tecnica:"))
-        assertTrue(answer.body.contains("Conduta de enfermagem:"))
-        assertTrue(answer.body.contains("Riscos e complicacoes:"))
+        assertTrue(answer.body.contains("[Resumo do quadro]"))
+        assertTrue(answer.body.contains("[Papel do enfermeiro]"))
+        assertTrue(answer.body.contains("[Papel do tecnico de enfermagem]"))
+        assertTrue(answer.body.contains("[Quando avisar o enfermeiro]"))
     }
 
     @Test
@@ -249,7 +250,25 @@ class StudyContentRepositoryTest {
 
         assertEquals("Documentacao clinica e comunicacao SBAR", answer.title)
         assertTrue(answer.body.contains("SBAR"))
-        assertTrue(answer.body.contains("Fonte oficial:"))
+        assertTrue(answer.body.contains("[Fonte oficial]"))
+    }
+
+    @Test
+    fun `high risk question escalates immediately with emergency guidance`() {
+        val answer = StudyContentRepository.answerStudyQuestion("Paciente com saturacao 88 e falta de ar, o que fazer?")
+
+        assertTrue(answer.body.contains("situacao potencialmente grave"))
+        assertTrue(answer.body.contains("[Quando chamar medico ou emergencia]"))
+        assertTrue(answer.body.contains("saturacao baixa"))
+    }
+
+    @Test
+    fun `blank question starts with assistential nursing structure instead of saved topic`() {
+        val answer = StudyContentRepository.answerStudyQuestion("")
+
+        assertEquals("Sinais vitais", answer.title)
+        assertTrue(answer.body.contains("[Resumo do quadro]"))
+        assertTrue(answer.body.contains("[Seguranca]"))
     }
 
     @Test

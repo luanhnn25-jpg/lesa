@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -151,22 +150,21 @@ private fun StudyHomeScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState())
                         .padding(horizontal = 8.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     StudySection.entries.forEach { section ->
                         val selected = selectedSection == section
                         Column(
                             modifier = Modifier
-                                .width(96.dp)
+                                .width(50.dp)
                                 .clip(RoundedCornerShape(18.dp))
                                 .background(
                                     if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.14f)
                                     else Color.Transparent,
                                 )
                                 .clickable { selectedSection = section }
-                                .padding(horizontal = 10.dp, vertical = 10.dp),
+                                .padding(horizontal = 4.dp, vertical = 10.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
@@ -179,6 +177,8 @@ private fun StudyHomeScreen(
                                 text = section.label,
                                 color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
                             )
                         }
                     }
