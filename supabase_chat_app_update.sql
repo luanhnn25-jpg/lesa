@@ -31,15 +31,15 @@ alter table if exists public.lpp_public_chat_messages
 alter table if exists public.lpp_public_chat_messages
   add column if not exists metadata jsonb not null default '{}'::jsonb;
 
+alter table public.lpp_public_chat_messages
+  drop constraint if exists lpp_public_chat_messages_room_chk;
+
 update public.lpp_public_chat_messages
 set room = public.lpp_normalize_public_chat_room(room)
 where room is distinct from public.lpp_normalize_public_chat_room(room);
 
 alter table public.lpp_public_chat_messages
   alter column room set default 'comunidade';
-
-alter table public.lpp_public_chat_messages
-  drop constraint if exists lpp_public_chat_messages_room_chk;
 
 alter table public.lpp_public_chat_messages
   add constraint lpp_public_chat_messages_room_chk
