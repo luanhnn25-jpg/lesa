@@ -1,5 +1,8 @@
 package br.com.lpplivre.ui
 
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.Image
@@ -32,6 +35,7 @@ import androidx.compose.material.icons.rounded.SystemUpdateAlt
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -77,13 +81,21 @@ import kotlinx.coroutines.withContext
 @Composable
 fun EstudaSaudeApp(
     loggedIn: Boolean,
-    onLoginClick: () -> Unit,
+    initialEmail: String,
+    initialRememberAccess: Boolean,
+    onLoginClick: (String, Boolean) -> Unit,
+    onExploreClick: () -> Unit,
     onLogoutClick: () -> Unit,
 ) {
     if (loggedIn) {
         StudyHomeScreen(onLogoutClick = onLogoutClick)
     } else {
-        StudyLoginScreen(onLoginClick = onLoginClick)
+        StudyLoginScreen(
+            initialEmail = initialEmail,
+            initialRememberAccess = initialRememberAccess,
+            onLoginClick = onLoginClick,
+            onExploreClick = onExploreClick,
+        )
     }
 }
 
@@ -258,8 +270,10 @@ private fun UpdateCenterCard() {
     var isChecking by remember { mutableStateOf(false) }
     var isDownloading by remember { mutableStateOf(false) }
     var downloadProgress by remember { mutableStateOf(0) }
+    var installPermissionGranted by remember { mutableStateOf(context.packageManager.canRequestPackageInstalls()) }
 
     LaunchedEffect(Unit) {
+        installPermissionGranted = context.packageManager.canRequestPackageInstalls()
         isChecking = true
         updateResult = withContext(Dispatchers.IO) { AppUpdateRepository.checkForUpdates(context) }
         isChecking = false
@@ -324,6 +338,27 @@ private fun UpdateCenterCard() {
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     if (result.isUpdateAvailable) {
+                        if (!installPermissionGranted) {
+                            Text(
+                                "Antes da primeira instalacao, libere neste aparelho a opcao de instalar apps do EstudaViva.",
+                                color = ui.warning,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            OutlinedButton(
+                                onClick = {
+                                    val intent = Intent(
+                                        Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                                        Uri.parse("package:${context.packageName}"),
+                                    ).apply {
+                                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    }
+                                    context.startActivity(intent)
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+                                Text("Liberar instalacao neste aparelho")
+                            }
+                        }
                         if (isDownloading) {
                             Text(
                                 "Baixando atualizacao: $downloadProgress%",
@@ -358,10 +393,18 @@ private fun UpdateCenterCard() {
                         ) {
                             Text("Baixar e instalar pelo app")
                         }
+                        if (installPermissionGranted) {
+                            Text(
+                                "Permissao de instalacao pronta neste aparelho.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = ui.info,
+                            )
+                        }
                     } else {
                         OutlinedButton(
                             onClick = {
                                 scope.launch {
+                                    installPermissionGranted = context.packageManager.canRequestPackageInstalls()
                                     isChecking = true
                                     updateResult = withContext(Dispatchers.IO) { AppUpdateRepository.checkForUpdates(context) }
                                     isChecking = false
@@ -541,9 +584,15 @@ private fun StudyRoadmapCard() {
 }
 
 @Composable
-private fun StudyLoginScreen(onLoginClick: () -> Unit) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+private fun StudyLoginScreen(
+    initialEmail: String,
+    initialRememberAccess: Boolean,
+    onLoginClick: (String, Boolean) -> Unit,
+    onExploreClick: () -> Unit,
+) {
+    var email by rememberSaveable { mutableStateOf(initialEmail) }
+    var password by rememberSaveable { mutableStateOf("") }
+    var rememberAccess by rememberSaveable { mutableStateOf(initialRememberAccess) }
     val ui = studyUiTokens()
 
     Box(
@@ -642,15 +691,36 @@ private fun StudyLoginScreen(onLoginClick: () -> Unit) {
                         shape = RoundedCornerShape(20.dp),
                         singleLine = true,
                     )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Checkbox(
+                            checked = rememberAccess,
+                            onCheckedChange = { rememberAccess = it },
+                        )
+                        Column {
+                            Text(
+                                text = "Manter login salvo neste aparelho",
+                                fontWeight = FontWeight.SemiBold,
+                            )
+                            Text(
+                                text = "Assim o app abre direto sem pedir entrada toda vez.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
                     Button(
-                        onClick = onLoginClick,
+                        onClick = { onLoginClick(email.trim(), rememberAccess) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(18.dp),
                     ) {
                         Text("Entrar para estudar")
                     }
                     OutlinedButton(
-                        onClick = onLoginClick,
+                        onClick = onExploreClick,
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(18.dp),
                     ) {
