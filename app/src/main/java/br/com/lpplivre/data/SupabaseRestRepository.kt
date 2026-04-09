@@ -73,6 +73,45 @@ object SupabaseRestRepository {
         )
     }
 
+    fun refreshSession(session: UserSession): UserSession {
+        ensureConfigured()
+        val refreshToken = session.refreshToken
+            ?: error("Sessao sem refresh token para renovacao automatica.")
+
+        val response = requestJsonObject(
+            method = "POST",
+            path = "/auth/v1/token?grant_type=refresh_token",
+            body = JSONObject()
+                .put("refresh_token", refreshToken)
+                .toString(),
+            bearerToken = null,
+        )
+
+        val accessToken = response.optString("access_token")
+        require(accessToken.isNotBlank()) { "Nao foi possivel renovar a sessao." }
+        val user = response.optJSONObject("user")
+        val refreshedUserId = user?.optString("id").orEmpty().ifBlank { session.userId }
+        val refreshedEmail = user?.optString("email").orEmpty().ifBlank { session.email }
+        val metadata = user?.optJSONObject("user_metadata") ?: JSONObject()
+        val profile = loadOwnProfile(accessToken, refreshedUserId)
+
+        return UserSession(
+            userId = refreshedUserId,
+            name = profile.first.ifBlank {
+                metadata.optString("full_name")
+                    .ifBlank { metadata.optString("name") }
+                    .ifBlank { session.name }
+            },
+            email = refreshedEmail,
+            role = profile.second.ifBlank {
+                metadata.optString("role").ifBlank { session.role }
+            },
+            accessToken = accessToken,
+            refreshToken = response.optString("refresh_token").takeIf { it.isNotBlank() } ?: refreshToken,
+            isEmailConfirmed = user?.optString("email_confirmed_at")?.isNotBlank() ?: session.isEmailConfirmed,
+        )
+    }
+
     fun loadPublicChatMessages(accessToken: String, room: String): List<PublicChatMessage> {
         ensureConfigured()
         val encodedRoom = encode(room)
@@ -271,4 +310,11 @@ object SupabaseRestRepository {
     }
 
     private fun encode(value: String): String = URLEncoder.encode(value, Charsets.UTF_8.name())
+
+    fun shouldRefreshSession(error: Throwable): Boolean {
+        val message = error.message.orEmpty()
+        return message.contains("jwt expired", ignoreCase = true) ||
+            message.contains("invalid jwt", ignoreCase = true) ||
+            message.contains("401")
+    }
 }

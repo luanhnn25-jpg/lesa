@@ -656,7 +656,10 @@ fun OfficialSourcesSection() {
 }
 
 @Composable
-fun CommunityStudySection(currentSession: UserSession?) {
+fun CommunityStudySection(
+    currentSession: UserSession?,
+    onSessionRefresh: (UserSession) -> Unit,
+) {
     val ui = studyUiTokens()
     val scope = rememberCoroutineScope()
     val rooms = remember { SupabaseRestRepository.publicChatRooms }
@@ -668,25 +671,44 @@ fun CommunityStudySection(currentSession: UserSession?) {
     val messages = remember { mutableStateListOf<PublicChatMessage>() }
     val selectedRoomMeta = rooms.firstOrNull { it.value == selectedRoom } ?: rooms.first()
 
+    suspend fun <T> runWithFreshSession(action: (UserSession) -> T): Result<Pair<UserSession, T>> {
+        val session = currentSession ?: return Result.failure(IllegalStateException("Sessao indisponivel no momento."))
+        val firstAttempt = runCatching { action(session) }
+        if (firstAttempt.isSuccess) {
+            return Result.success(session to firstAttempt.getOrThrow())
+        }
+
+        val initialError = firstAttempt.exceptionOrNull() ?: return Result.failure(IllegalStateException("Falha inesperada ao validar a sessao."))
+        if (!SupabaseRestRepository.shouldRefreshSession(initialError)) {
+            return Result.failure(initialError)
+        }
+
+        val refreshedSession = runCatching { SupabaseRestRepository.refreshSession(session) }
+            .getOrElse { return Result.failure(it) }
+
+        onSessionRefresh(refreshedSession)
+        return runCatching { refreshedSession to action(refreshedSession) }
+    }
+
     LaunchedEffect(currentSession?.userId, selectedRoom) {
-        val session = currentSession ?: return@LaunchedEffect
+        currentSession ?: return@LaunchedEffect
         isLoading = true
         feedback = "Carregando mensagens do chat..."
         val result = withContext(Dispatchers.IO) {
-            runCatching {
-                SupabaseRestRepository.touchLastSeen(session.accessToken)
-                SupabaseRestRepository.loadPublicChatMessages(session.accessToken, selectedRoom)
+            runWithFreshSession {
+                SupabaseRestRepository.touchLastSeen(it.accessToken)
+                SupabaseRestRepository.loadPublicChatMessages(it.accessToken, selectedRoom)
             }
         }
         isLoading = false
         result
             .onSuccess {
                 messages.clear()
-                messages.addAll(it)
-                feedback = if (it.isEmpty()) {
+                messages.addAll(it.second)
+                feedback = if (it.second.isEmpty()) {
                 "O chat ainda nao tem mensagens. Voce pode iniciar a conversa."
             } else {
-                "Chat atualizado com ${it.size} mensagens."
+                "Chat atualizado com ${it.second.size} mensagens."
             }
             }
             .onFailure {
@@ -792,9 +814,9 @@ fun CommunityStudySection(currentSession: UserSession?) {
                             onReport = {
                                 scope.launch {
                                     val result = withContext(Dispatchers.IO) {
-                                        runCatching {
+                                        runWithFreshSession {
                                         SupabaseRestRepository.createPublicChatReport(
-                                            accessToken = currentSession.accessToken,
+                                            accessToken = it.accessToken,
                                             messageId = message.id,
                                             reason = "Conteudo inadequado no chat",
                                         )
@@ -827,9 +849,9 @@ fun CommunityStudySection(currentSession: UserSession?) {
                             scope.launch {
                                 isSending = true
                                 val result = withContext(Dispatchers.IO) {
-                                    runCatching {
+                                    runWithFreshSession {
                                         SupabaseRestRepository.sendPublicChatMessage(
-                                            session = currentSession,
+                                            session = it,
                                             room = selectedRoom,
                                             message = text,
                                         )
@@ -839,7 +861,7 @@ fun CommunityStudySection(currentSession: UserSession?) {
                                 result
                                     .onSuccess {
                                         draft = ""
-                                        messages.add(it)
+                                        messages.add(it.second)
                                         feedback = "Mensagem enviada no chat."
                                     }
                                     .onFailure {
@@ -857,13 +879,15 @@ fun CommunityStudySection(currentSession: UserSession?) {
                             scope.launch {
                                 isLoading = true
                                 val result = withContext(Dispatchers.IO) {
-                                    runCatching { SupabaseRestRepository.loadPublicChatMessages(currentSession.accessToken, selectedRoom) }
+                                    runWithFreshSession {
+                                        SupabaseRestRepository.loadPublicChatMessages(it.accessToken, selectedRoom)
+                                    }
                                 }
                                 isLoading = false
                                 result
                                     .onSuccess {
                                         messages.clear()
-                                        messages.addAll(it)
+                                        messages.addAll(it.second)
                                 feedback = "Chat atualizado manualmente."
                             }
                                     .onFailure {

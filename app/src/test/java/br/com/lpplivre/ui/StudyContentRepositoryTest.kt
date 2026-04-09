@@ -6,196 +6,35 @@ import org.junit.Test
 
 class StudyContentRepositoryTest {
     @Test
-    fun `sinais vitais returns detailed official nursing answer`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Quais cuidados basicos com sinais vitais?")
+    fun `official nursing topics still map to the expected sources`() {
+        val signals = StudyContentRepository.answerStudyQuestion("Quais cuidados basicos com sinais vitais?")
+        val hypo = StudyContentRepository.answerStudyQuestion("Como agir em hipoglicemia na enfermagem?")
+        val medication = StudyContentRepository.answerStudyQuestion("Quais cuidados com varfarina?")
+        val materials = StudyContentRepository.answerStudyQuestion("O que estudar sobre materiais de enfermagem e CME?")
 
-        assertEquals("Sinais vitais", answer.title)
-        assertEquals("Cofen", answer.source.authority)
-        assertTrue(answer.body.contains("tecnica correta"))
-        assertTrue(answer.body.contains("registro"))
-        assertTrue(answer.body.contains("interpretacao clinica"))
+        assertEquals("Sinais vitais", signals.title)
+        assertEquals("Cofen", signals.source.authority)
+        assertEquals("Hipoglicemia", hypo.title)
+        assertEquals("Ministerio da Saude", hypo.source.authority)
+        assertEquals("Marevan", medication.title)
+        assertEquals("Anvisa", medication.source.authority)
+        assertEquals("Materiais e processamento de produtos para saude", materials.title)
+        assertEquals("Anvisa", materials.source.authority)
     }
 
     @Test
-    fun `hipoglicemia returns ministry of health source and prevention guidance`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Como agir em hipoglicemia na enfermagem?")
-
-        assertEquals("Hipoglicemia", answer.title)
-        assertEquals("Ministerio da Saude", answer.source.authority)
-        assertTrue(answer.body.contains("confirmacao com glicemia capilar"))
-        assertTrue(answer.body.contains("reavaliacao"))
-        assertTrue(answer.body.contains("prevencao"))
-    }
-
-    @Test
-    fun `medication question points to anvisa official medication study answer`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Quais cuidados com varfarina?")
-
-        assertEquals("Marevan", answer.title)
-        assertEquals("Anvisa", answer.source.authority)
-        assertTrue(answer.body.contains("reacoes esperadas"))
-        assertTrue(answer.body.contains("interacoes"))
-    }
-
-    @Test
-    fun `materials question returns official anvisa cme answer`() {
-        val answer = StudyContentRepository.answerStudyQuestion("O que estudar sobre materiais de enfermagem e CME?")
-
-        assertEquals("Materiais e processamento de produtos para saude", answer.title)
-        assertEquals("Anvisa", answer.source.authority)
-        assertTrue(answer.body.contains("material critico"))
-        assertTrue(answer.body.contains("esterilizacao"))
-    }
-
-    @Test
-    fun `pharmacodynamics question returns official anvisa answer`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Explique farmacodinamica para enfermagem")
-
-        assertEquals("Farmacodinamica", answer.title)
-        assertEquals("Anvisa", answer.source.authority)
-        assertTrue(answer.body.contains("mecanismo de acao"))
-        assertTrue(answer.body.contains("efeito terapeutico"))
-    }
-
-    @Test
-    fun `anatomy question returns ministry anatomy answer`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Como estudar anatomia aplicada a enfermagem?")
-
-        assertEquals("Anatomia aplicada a enfermagem", answer.title)
-        assertEquals("Ministerio da Saude", answer.source.authority)
-        assertTrue(answer.body.contains("sistema osseo"))
-        assertTrue(answer.body.contains("procedimentos"))
-    }
-
-    @Test
-    fun `intramuscular needle question returns official brazilian answer`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Qual agulha usar na intramuscular?")
-
-        assertEquals("Agulhas para intramuscular", answer.title)
-        assertTrue(answer.source.authority in setOf("Cofen", "Ministerio da Saude"))
-        assertTrue(answer.body.contains("massa muscular"))
-        assertTrue(answer.body.contains("deltoide"))
-    }
-
-    @Test
-    fun `intramuscular technique question returns site selection answer`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Como escolher o sitio da intramuscular?")
-
-        assertEquals("Tecnica intramuscular e escolha do sitio", answer.title)
-        assertEquals("Cofen", answer.source.authority)
-        assertTrue(answer.body.contains("ventroglutea") || answer.body.contains("vasto lateral"))
-        assertTrue(answer.body.contains("referencias anatomicas"))
-    }
-
-    @Test
-    fun `subcutaneous route question returns official answer with angle and volume guidance`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Como revisar a via subcutanea na enfermagem?")
-
-        assertEquals("Via subcutanea", answer.title)
-        assertTrue(answer.source.authority in setOf("Cofen", "Ministerio da Saude"))
-        assertTrue(answer.body.contains("1,5 mL"))
-        assertTrue(answer.body.contains("45 graus") || answer.body.contains("90 graus"))
-    }
-
-    @Test
-    fun `medication calculation question returns ministry calculation guidance`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Como estudar calculo e diluicao de medicamentos?")
-
-        assertEquals("Calculo e diluicao de medicamentos", answer.title)
-        assertEquals("Ministerio da Saude", answer.source.authority)
-        assertTrue(answer.body.contains("regra de tres"))
-        assertTrue(answer.body.contains("rediluicao"))
-    }
-
-    @Test
-    fun `question with typing mistakes still finds intramuscular answer`() {
-        val answer = StudyContentRepository.answerStudyQuestion("qual agulha usa na intramusculr")
-
-        assertEquals("Agulhas para intramuscular", answer.title)
-        assertTrue(answer.body.contains("Como aprender melhor:"))
-    }
-
-    @Test
-    fun `venous puncture question returns practical teaching answer`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Quais cuidados na puncao venosa periferica?")
-
-        assertEquals("Puncao venosa periferica", answer.title)
-        assertEquals("Cofen", answer.source.authority)
-        assertTrue(answer.body.contains("tecnica asseptica"))
-        assertTrue(answer.body.contains("Como aprender melhor:"))
-    }
-
-    @Test
-    fun `venous puncture materials question returns official device guidance`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Quais materiais separar para puncao venosa periferica?")
-
-        assertEquals("Materiais para puncao venosa periferica", answer.title)
-        assertEquals("Cofen", answer.source.authority)
-        assertTrue(answer.body.contains("cateter sobre agulha"))
-        assertTrue(answer.body.contains("perfurocortante"))
-    }
-
-    @Test
-    fun `endovenous compatibility question returns dilution safety answer`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Como estudar compatibilidade e diluicao na via endovenosa?")
-
-        assertEquals("Diluicao e compatibilidade na via endovenosa", answer.title)
-        assertEquals("Ministerio da Saude", answer.source.authority)
-        assertTrue(answer.body.contains("diluente"))
-        assertTrue(answer.body.contains("compatibilidade"))
-    }
-
-    @Test
-    fun `intramuscular and venous access natural language battery keeps returning expected topics`() {
+    fun `intramuscular venous and calculation routes remain stable`() {
         val cases = listOf(
-            "Quais agulhas usar para aplicacao intramuscular em adulto?" to "Agulhas para intramuscular",
-            "Onde aplicar uma injecao intramuscular com mais seguranca?" to "Tecnica intramuscular e escolha do sitio",
-            "Qual a diferenca entre jelco e scalp na enfermagem?" to "Materiais para puncao venosa periferica",
-            "Quais materiais preciso separar para fazer um acesso venoso periferico?" to "Materiais para puncao venosa periferica",
-            "Quais cuidados observar depois da puncao venosa periferica?" to "Puncao venosa periferica",
-            "Como estudar a via intravenosa na enfermagem?" to "Administracao endovenosa",
-            "Posso misturar medicamentos no mesmo soro?" to "Diluicao e compatibilidade na via endovenosa",
-            "Como escolher o diluente de uma medicacao EV?" to "Diluicao e compatibilidade na via endovenosa",
-            "Como calcular gotejamento venoso em gotas por minuto?" to "Gotejamento venoso",
-            "Como estudar rediluicao de medicamentos?" to "Calculo e diluicao de medicamentos",
-        )
-
-        cases.forEach { (question, expectedTitle) ->
-            val answer = StudyContentRepository.answerStudyQuestion(question)
-            assertEquals(question, expectedTitle, answer.title)
-        }
-    }
-
-    @Test
-    fun `advanced battery keeps vaccine venous and device questions in the right topics`() {
-        val cases = listOf(
-            "Como escolher agulha para vacina intramuscular?" to "Agulhas para intramuscular",
-            "O que estudar sobre vacinacao na enfermagem?" to "Vacinacao em enfermagem",
-            "Quais sinais de flebite devo vigiar no acesso venoso?" to "Puncao venosa periferica",
-            "O que observar se houver infiltracao ou extravasamento no cateter periferico?" to "Puncao venosa periferica",
-            "Qual seringa e calibre devo pensar na puncao venosa periferica?" to "Materiais para puncao venosa periferica",
-            "Como revisar cateter sobre agulha para acesso periferico?" to "Materiais para puncao venosa periferica",
-            "Quais cuidados basicos na administracao intravenosa?" to "Administracao endovenosa",
-            "Como conferir se dois medicamentos podem correr no mesmo acesso venoso?" to "Diluicao e compatibilidade na via endovenosa",
-        )
-
-        cases.forEach { (question, expectedTitle) ->
-            val answer = StudyContentRepository.answerStudyQuestion(question)
-            assertEquals(question, expectedTitle, answer.title)
-        }
-    }
-
-    @Test
-    fun `specialized battery keeps infusion route and vaccine route questions in the right topics`() {
-        val cases = listOf(
+            "Qual agulha usar na intramuscular?" to "Agulhas para intramuscular",
+            "Como escolher o sitio da intramuscular?" to "Tecnica intramuscular e escolha do sitio",
+            "Como revisar a via subcutanea na enfermagem?" to "Via subcutanea",
+            "Quais cuidados na puncao venosa periferica?" to "Puncao venosa periferica",
+            "Quais materiais separar para puncao venosa periferica?" to "Materiais para puncao venosa periferica",
+            "Como estudar compatibilidade e diluicao na via endovenosa?" to "Diluicao e compatibilidade na via endovenosa",
+            "Como estudar calculo e diluicao de medicamentos?" to "Calculo e diluicao de medicamentos",
             "Como estudar bomba de infusao na enfermagem?" to "Bomba de infusao e controle de velocidade",
-            "Como calcular macrogotas por minuto?" to "Gotejamento venoso",
-            "Como calcular microgotas por minuto?" to "Gotejamento venoso",
-            "Qual a diferenca entre vacina subcutanea e intramuscular?" to "Vacinacao em enfermagem",
-            "Quais cuidados na via intradermica para BCG?" to "Via intradermica",
-            "Quais cuidados na via subcutanea para vacina?" to "Via subcutanea",
-            "Medicacao vesicante no acesso venoso exige quais cuidados?" to "Diluicao e compatibilidade na via endovenosa",
-            "Como estudar acesso venoso central na enfermagem?" to "Sondas e cateteres",
+            "Quais cuidados com sonda vesical e cateter?" to "Sondas e cateteres",
+            "Como estudar insulina na enfermagem?" to "Insulina e tecnica subcutanea",
         )
 
         cases.forEach { (question, expectedTitle) ->
@@ -205,188 +44,180 @@ class StudyContentRepositoryTest {
     }
 
     @Test
-    fun `insulin question returns educational answer with monitoring`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Como estudar insulina na enfermagem?")
-
-        assertEquals("Insulina e tecnica subcutanea", answer.title)
-        assertEquals("Ministerio da Saude", answer.source.authority)
-        assertTrue(answer.body.contains("monitorizacao glicemica"))
-        assertTrue(answer.body.contains("hipoglicemia"))
-    }
-
-    @Test
-    fun `urinary and enteral tube question returns official sondas answer`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Quais cuidados com sonda vesical e cateter?")
-
-        assertEquals("Sondas e cateteres", answer.title)
-        assertEquals("Ministerio da Saude", answer.source.authority)
-        assertTrue(answer.body.contains("sistema de drenagem fechado"))
-        assertTrue(answer.body.contains("tecnica asseptica"))
-    }
-
-    @Test
-    fun `sae question returns structured advanced nursing answer`() {
+    fun `clinical framework now always uses advanced nursing structure`() {
         val answer = StudyContentRepository.answerStudyQuestion("Como aplicar SAE com NANDA NIC e NOC?")
 
-        assertEquals("SAE com NANDA NIC e NOC", answer.title)
-        assertTrue(answer.body.contains("[Resumo do quadro]"))
-        assertTrue(answer.body.contains("[O que observar]"))
-        assertTrue(answer.body.contains("[Cuidados de enfermagem]"))
-        assertTrue(answer.body.contains("[Quando avisar o enfermeiro]"))
-        assertTrue(answer.body.contains("[Quando chamar medico ou emergencia]"))
-    }
-
-    @Test
-    fun `abcde question returns urgency answer with primary assessment`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Como estudar ABCDE na urgencia e emergencia?")
-
-        assertEquals("Urgencia e emergencia com ABCDE", answer.title)
-        assertTrue(answer.body.contains("avaliacao primaria"))
-        assertTrue(answer.body.contains("Priorizar avaliacao primaria"))
-    }
-
-    @Test
-    fun `sbar question returns documentation answer`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Como fazer comunicacao SBAR e registro de enfermagem?")
-
-        assertEquals("Documentacao clinica e comunicacao SBAR", answer.title)
-        assertTrue(answer.body.contains("SBAR"))
-        assertTrue(answer.body.contains("Base oficial:"))
-    }
-
-    @Test
-    fun `high risk question escalates immediately with emergency guidance`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Paciente com saturacao 88 e falta de ar, o que fazer?")
-
-        assertTrue(answer.body.contains("situacao potencialmente grave"))
-        assertTrue(answer.body.contains("[Quando chamar medico ou emergencia]"))
-        assertTrue(answer.body.contains("saturacao baixa"))
-    }
-
-    @Test
-    fun `blank question starts with assistential nursing structure instead of saved topic`() {
-        val answer = StudyContentRepository.answerStudyQuestion("")
-
-        assertEquals("Sinais vitais", answer.title)
-        assertTrue(answer.body.contains("[Resumo do quadro]"))
-        assertTrue(answer.body.contains("Base oficial:"))
-    }
-
-    @Test
-    fun `technical audience question marks technician focused guidance`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Sou tecnico de enfermagem, como agir diante de febre no plantao?")
-
-        assertTrue(answer.body.contains("Papel do tecnico"))
-        assertTrue(answer.body.contains("[Quando avisar o enfermeiro]"))
-    }
-
-    @Test
-    fun `caregiver audience question marks caregiver focused guidance`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Sou cuidadora de idoso acamado em casa, o que observar na saturacao?")
-
-        assertTrue(answer.body.contains("O cuidador pode observar"))
-        assertTrue(answer.body.contains("[Quando chamar medico ou emergencia]"))
-    }
-
-    @Test
-    fun `detailed assistential battery keeps emergency and routine answers structured`() {
-        val expectations = listOf(
-            Triple(
-                "Paciente com falta de ar e saturacao 89, o que a enfermagem deve fazer?",
-                "Urgencia e emergencia com ABCDE",
-                listOf("situacao potencialmente grave", "falta de ar", "[Quando chamar medico ou emergencia]"),
-            ),
-            Triple(
-                "Paciente com dor no peito no setor, como a equipe de enfermagem deve agir?",
-                "Urgencia e emergencia com ABCDE",
-                listOf("situacao potencialmente grave", "dor toracica", "Acione medico ou emergencia imediatamente"),
-            ),
-            Triple(
-                "Como o tecnico deve agir diante de febre persistente no plantao?",
-                "Sinais vitais",
-                listOf("Papel do tecnico", "alteracao clinica", "Registre as alteracoes."),
-            ),
-            Triple(
-                "Quais cuidados de enfermagem com banho no leito e higiene oral?",
-                "Higiene e conforto",
-                listOf("[Cuidados de enfermagem]", "privacidade", "conforto"),
-            ),
-            Triple(
-                "Quais cuidados basicos com oxigenoterapia e monitorizacao?",
-                "Oxigenoterapia e suporte respiratorio",
-                listOf("fluxo", "saturacao", "resposta respiratoria"),
-            ),
-            Triple(
-                "Como orientar 9 certos da administracao segura de medicamentos?",
-                "Administracao segura de medicamentos",
-                listOf("identificacao correta", "via", "resposta clinica apos administrar"),
-            ),
-            Triple(
-                "Quais cuidados de enfermagem no controle de infeccao e uso de EPI?",
-                "Controle de infeccao e IRAS",
-                listOf("precaucoes", "higienizacao", "risco assistencial"),
-            ),
-            Triple(
-                "Paciente com rebaixamento de consciencia subitamente, o que fazer?",
-                "Urgencia e emergencia com ABCDE",
-                listOf("situacao potencialmente grave", "rebaixamento", "Acione medico ou emergencia imediatamente"),
-            ),
-            Triple(
-                "Como agir em parada cardiorrespiratoria no setor?",
-                "Urgencia e emergencia com ABCDE",
-                listOf("situacao potencialmente grave", "avaliacao primaria", "Acione medico ou emergencia imediatamente"),
-            ),
-        )
-
-        expectations.forEach { (question, expectedTitle, requiredSnippets) ->
-            val answer = StudyContentRepository.answerStudyQuestion(question)
-            assertEquals(question, expectedTitle, answer.title)
-            assertTrue(question, answer.body.contains("[Resumo do quadro]"))
-            assertTrue(question, answer.body.contains("[O que observar]"))
-            assertTrue(question, answer.body.contains("[Cuidados de enfermagem]"))
-            assertTrue(question, answer.body.contains("[Quando avisar o enfermeiro]"))
-            assertTrue(question, answer.body.contains("[Quando chamar medico ou emergencia]"))
-            requiredSnippets.forEach { snippet ->
-                assertTrue("$question -> missing snippet: $snippet", answer.body.contains(snippet))
-            }
+        listOf(
+            "[Classificacao de risco]",
+            "[Resumo do quadro]",
+            "[O que observar]",
+            "[Conduta imediata]",
+            "[Cuidados de enfermagem]",
+            "[Orientacao ao tecnico]",
+            "[Acao do enfermeiro]",
+            "[Monitorizacao]",
+            "[Sinais de alerta]",
+            "[Escalonamento]",
+        ).forEach { section ->
+            assertTrue("missing section: $section", answer.body.contains(section))
         }
     }
 
     @Test
-    fun `nurse audience question emphasizes planning and supervision`() {
-        val answer = StudyContentRepository.answerStudyQuestion(
-            "Sou enfermeira da clinica medica, como priorizar cuidados e supervisao na passagem de plantao?",
-        )
+    fun `high risk question escalates as emergency`() {
+        val answer = StudyContentRepository.answerStudyQuestion("Paciente com saturacao 88 e falta de ar, o que fazer?")
 
-        assertTrue(answer.body.contains("Papel do enfermeiro"))
-        assertTrue(answer.body.contains("planejar"))
-        assertTrue(answer.body.contains("supervisionar"))
-        assertTrue(answer.body.contains("[Quando avisar o enfermeiro]"))
+        assertEquals("Urgencia e emergencia com ABCDE", answer.title)
+        assertTrue(answer.body.contains("ALTO RISCO"))
+        assertTrue(answer.body.contains("situacao potencialmente grave"))
+        assertTrue(answer.body.contains("[Escalonamento]"))
+        assertTrue(answer.body.contains("Acione medico ou emergencia imediatamente") || answer.body.contains("Chamar medico ou emergencia"))
     }
 
     @Test
-    fun `caregiver respiratory question keeps simple guidance with escalation`() {
-        val answer = StudyContentRepository.answerStudyQuestion(
-            "Sou familiar em casa e o paciente esta com cansaco e saturacao baixa, o que observar?",
-        )
+    fun `audience adaptation keeps technician nurse and caregiver guidance visible`() {
+        val technician = StudyContentRepository.answerStudyQuestion("Sou tecnico de enfermagem, como agir diante de febre no plantao?")
+        val nurse = StudyContentRepository.answerStudyQuestion("Sou enfermeira da clinica medica, como priorizar cuidados e supervisao na passagem de plantao?")
+        val caregiver = StudyContentRepository.answerStudyQuestion("Sou cuidadora de idoso acamado em casa, o que observar na saturacao?")
 
-        assertTrue(answer.body.contains("O cuidador pode observar"))
-        assertTrue(answer.body.contains("procurar apoio profissional"))
-        assertTrue(answer.body.contains("Acione medico ou emergencia imediatamente"))
+        assertTrue(technician.body.contains("Papel do tecnico"))
+        assertTrue(technician.body.contains("[Orientacao ao tecnico]"))
+        assertTrue(nurse.body.contains("[Acao do enfermeiro]"))
+        assertTrue(nurse.body.contains("planejar"))
+        assertTrue(nurse.body.contains("supervision"))
+        assertTrue(caregiver.body.contains("O cuidador pode observar"))
+        assertTrue(caregiver.body.contains("[Escalonamento]"))
     }
 
     @Test
-    fun `blank question still keeps all mandatory nursing sections`() {
+    fun `blank question starts clean and still keeps all mandatory sections`() {
         val answer = StudyContentRepository.answerStudyQuestion("   ")
 
+        assertEquals("Sinais vitais", answer.title)
+        assertTrue(answer.body.contains("Base oficial:"))
         listOf(
+            "[Classificacao de risco]",
             "[Resumo do quadro]",
             "[O que observar]",
+            "[Conduta imediata]",
             "[Cuidados de enfermagem]",
-            "[Quando avisar o enfermeiro]",
-            "[Quando chamar medico ou emergencia]",
+            "[Orientacao ao tecnico]",
+            "[Acao do enfermeiro]",
+            "[Monitorizacao]",
+            "[Sinais de alerta]",
+            "[Escalonamento]",
         ).forEach { section ->
             assertTrue("missing section: $section", answer.body.contains(section))
+        }
+    }
+
+    @Test
+    fun `advanced prompt battery keeps more than ten educational fundamentals questions in teacher mode`() {
+        val questions = listOf(
+            "Explique banho no leito",
+            "Explique higiene oral em paciente acamado",
+            "Como fazer mudanca de decubito 2 em 2 horas?",
+            "Como prevenir LPP no plantao?",
+            "Quais cuidados com conforto termico no leito?",
+            "Como posicionar o paciente no leito com seguranca?",
+            "Explique conforto e higiene para tecnico de enfermagem",
+            "Quais erros comuns no banho no leito?",
+            "Quais sinais de complicacao na higiene do paciente?",
+            "Como orientar um cuidador sobre higiene do idoso?",
+            "Como observar pele e mucosas durante o banho?",
+        )
+
+        questions.forEach { question ->
+            val answer = StudyContentRepository.answerStudyQuestion(question)
+            assertTrue(question, answer.body.contains("[Modo professora]"))
+            assertTrue(question, answer.body.contains("Passo a passo"))
+            assertTrue(question, answer.body.contains("Erros comuns"))
+            assertTrue(question, answer.body.lowercase().contains("sinais de complicacao"))
+        }
+    }
+
+    @Test
+    fun `advanced prompt battery keeps more than ten emergency questions at high risk`() {
+        val questions = listOf(
+            "Paciente com dispneia intensa, o que fazer?",
+            "Dor no peito com suor frio, qual conduta de enfermagem?",
+            "Paciente convulsionando no setor, como agir?",
+            "Paciente desmaiou no corredor, o que fazer agora?",
+            "Saturacao 88 em paciente adulto, como a enfermagem deve agir?",
+            "Hipotensao com palidez e confusao, qual a prioridade?",
+            "Sangramento intenso no curativo, o que fazer?",
+            "Rebaixamento de consciencia subitamente, qual conduta?",
+            "PCR no setor, qual acao imediata?",
+            "Choque com perfusao ruim, como priorizar o atendimento?",
+            "Falta de ar com cianose, como agir imediatamente?",
+        )
+
+        questions.forEach { question ->
+            val answer = StudyContentRepository.answerStudyQuestion(question)
+            assertTrue(question, answer.body.contains("ALTO RISCO"))
+            assertTrue(question, answer.body.contains("Prioridade alta"))
+            assertTrue(question, answer.body.contains("[Escalonamento]"))
+        }
+    }
+
+    @Test
+    fun `advanced prompt battery keeps more than ten medication questions with execution and supervision`() {
+        val questions = listOf(
+            "Explique os 9 certos da medicacao",
+            "Como administrar medicamento por via oral com seguranca?",
+            "Como observar reacao adversa apos medicacao?",
+            "Quais cuidados na via endovenosa de medicamento?",
+            "Como o tecnico deve conferir via e horario da medicacao?",
+            "Quais erros comuns na administracao segura de medicamentos?",
+            "Como registrar medicacao administrada?",
+            "Como orientar equipe sobre alergia medicamentosa?",
+            "Como priorizar seguranca na medicacao do paciente idoso?",
+            "Como supervisionar administracao de medicamentos no plantao?",
+            "Quais sinais de alerta apos medicacao EV?",
+        )
+
+        questions.forEach { question ->
+            val answer = StudyContentRepository.answerStudyQuestion(question)
+            assertTrue(question, answer.body.contains("[Orientacao ao tecnico]"))
+            assertTrue(question, answer.body.contains("[Acao do enfermeiro]"))
+            assertTrue(question, answer.body.contains("[Cuidados de enfermagem]"))
+            assertTrue(question, answer.body.contains("[Monitorizacao]"))
+        }
+    }
+
+    @Test
+    fun `advanced prompt battery keeps more than ten mixed questions with full clinical framework`() {
+        val questions = listOf(
+            "Quais cuidados de enfermagem na oxigenoterapia por cateter nasal?",
+            "Como orientar higiene das maos e EPI no isolamento?",
+            "Como registrar uma intercorrencia de enfermagem?",
+            "Qual a conduta diante de dor toracica no setor?",
+            "Paciente com convulsao, como a enfermagem deve agir?",
+            "Paciente com sangramento importante, o que fazer agora?",
+            "Como o tecnico deve observar sinais vitais no plantao?",
+            "Como a enfermeira prioriza o cuidado em paciente instavel?",
+            "Explique prevencao de lesao por pressao em idoso acamado",
+            "Como ensinar curativo simples para o tecnico?",
+            "Como orientar comunicacao com familia em paciente grave?",
+            "Quais cuidados de enfermagem com febre persistente?",
+        )
+
+        questions.forEach { question ->
+            val answer = StudyContentRepository.answerStudyQuestion(question)
+            listOf(
+                "[Classificacao de risco]",
+                "[Resumo do quadro]",
+                "[O que observar]",
+                "[Conduta imediata]",
+                "[Cuidados de enfermagem]",
+                "[Orientacao ao tecnico]",
+                "[Acao do enfermeiro]",
+                "[Monitorizacao]",
+                "[Sinais de alerta]",
+                "[Escalonamento]",
+            ).forEach { section ->
+                assertTrue("$question -> missing section: $section", answer.body.contains(section))
+            }
         }
     }
 

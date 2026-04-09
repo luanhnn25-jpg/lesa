@@ -86,12 +86,14 @@ fun EstudaSaudeApp(
     initialEmail: String,
     initialRememberAccess: Boolean,
     onLoginClick: (UserSession, String, Boolean) -> Unit,
+    onSessionRefresh: (UserSession) -> Unit,
     onExploreClick: () -> Unit,
     onLogoutClick: () -> Unit,
 ) {
     if (loggedIn) {
         StudyHomeScreen(
             currentSession = currentSession,
+            onSessionRefresh = onSessionRefresh,
             onLogoutClick = onLogoutClick,
         )
     } else {
@@ -108,6 +110,7 @@ fun EstudaSaudeApp(
 @Composable
 private fun StudyHomeScreen(
     currentSession: UserSession?,
+    onSessionRefresh: (UserSession) -> Unit,
     onLogoutClick: () -> Unit,
 ) {
     var selectedSection by rememberSaveable { mutableStateOf(StudySection.Home) }
@@ -225,7 +228,12 @@ private fun StudyHomeScreen(
                 }
 
                 StudySection.Community -> {
-                    item { CommunityStudySection(currentSession = currentSession) }
+                    item {
+                        CommunityStudySection(
+                            currentSession = currentSession,
+                            onSessionRefresh = onSessionRefresh,
+                        )
+                    }
                 }
 
                 StudySection.Meds -> {

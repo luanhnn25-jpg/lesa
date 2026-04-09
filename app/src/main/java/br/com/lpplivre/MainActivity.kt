@@ -43,6 +43,13 @@ class MainActivity : ComponentActivity() {
                         currentSession = session
                         loggedIn = true
                     },
+                    onSessionRefresh = { refreshedSession ->
+                        AppSessionStorage.updateAuthenticatedSession(
+                            context = this@MainActivity,
+                            session = refreshedSession,
+                        )
+                        currentSession = refreshedSession
+                    },
                     onExploreClick = {
                         AppSessionStorage.saveVisitor(this@MainActivity)
                         currentSession = null

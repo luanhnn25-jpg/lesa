@@ -54,6 +54,7 @@ private data class NursingAiProfile(
     val missionSummary: String,
     val mandatorySections: List<String>,
     val highRiskKeywords: List<String>,
+    val mediumRiskKeywords: List<String>,
     val standardPhrases: List<String>,
 )
 
@@ -62,29 +63,60 @@ object StudyContentRepository {
         identitySummary = "IA especialista em enfermagem assistencial no Brasil, com pensamento clinico de enfermeiro e orientacao pratica para tecnico de enfermagem, sempre dentro de limites eticos e profissionais.",
         missionSummary = "Responder duvidas, orientar cuidados, reforcar seguranca do paciente e indicar escalonamento correto com linguagem clara, tecnica e humanizada.",
         mandatorySections = listOf(
+            "[Classificacao de risco]",
             "[Resumo do quadro]",
             "[O que observar]",
+            "[Conduta imediata]",
             "[Cuidados de enfermagem]",
-            "[Quando avisar o enfermeiro]",
-            "[Quando chamar medico ou emergencia]",
+            "[Orientacao ao tecnico]",
+            "[Acao do enfermeiro]",
+            "[Monitorizacao]",
+            "[Sinais de alerta]",
+            "[Escalonamento]",
         ),
         highRiskKeywords = listOf(
             "falta de ar",
+            "dispneia",
             "dor no peito",
             "convulsao",
+            "convulsionando",
             "desmaio",
             "rebaixamento de consciencia",
             "rebaixamento",
             "saturacao 88",
             "saturacao baixa",
             "pressao muito baixa",
+            "choque",
+            "perfusao ruim",
             "sangramento intenso",
             "avc",
             "sepse",
             "anafilaxia",
             "parada cardiorrespiratoria",
+            "pcr",
             "confusao mental",
             "hipotensao",
+        ),
+        mediumRiskKeywords = listOf(
+            "febre",
+            "dor",
+            "hipoglicemia",
+            "glicemia",
+            "cateter",
+            "punção",
+            "puncao",
+            "curativo",
+            "lesao por pressao",
+            "oxigenoterapia",
+            "medicacao",
+            "medicamento",
+            "higiene",
+            "banho no leito",
+            "sonda",
+            "infeccao",
+            "epi",
+            "registro",
+            "evolucao",
         ),
         standardPhrases = listOf(
             "Comunique o enfermeiro responsavel.",
@@ -1274,6 +1306,28 @@ object StudyContentRepository {
         val audience = inferAudience(normalizedQuestion)
 
         val highRisk = normalizedQuestion.hasKeyword(*nursingAiProfile.highRiskKeywords.toTypedArray())
+        val mediumRisk = !highRisk && normalizedQuestion.hasKeyword(*nursingAiProfile.mediumRiskKeywords.toTypedArray())
+        val educationalMode = normalizedQuestion.hasKeyword(
+            "como",
+            "quais",
+            "explique",
+            "o que e",
+            "definicao",
+            "conceito",
+            "passo a passo",
+            "como fazer",
+            "como estudar",
+            "quais cuidados",
+        )
+
+        val riskClassification = when {
+            highRisk ->
+                "🔴 ALTO RISCO. Ha sinais que podem indicar instabilidade respiratoria, circulatoria, neurologica ou deterioracao rapida, exigindo atendimento imediato."
+            mediumRisk ->
+                "🟡 MEDIO RISCO. O quadro pede avaliacao rapida, observacao continua, prevencao de piora e comunicacao oportuna com o enfermeiro."
+            else ->
+                "🟢 BAIXO RISCO. O foco principal e educacao, organizacao do cuidado, tecnica correta e prevencao de erros."
+        }
 
         val summary = when {
             highRisk ->
@@ -1318,6 +1372,15 @@ object StudyContentRepository {
                 "Organizar material, aplicar tecnica segura, vigiar complicacoes locais e registrar condicoes do dispositivo."
             else ->
                 "Integrar avaliacao clinica, seguranca do paciente, intervencao de enfermagem e reavaliacao continua."
+        }
+
+        val immediateAction = when {
+            highRisk ->
+                "Atender imediatamente. Prioridade alta. Garantir seguranca, posicionar o paciente conforme necessidade, checar sinais vitais e comunicar enfermeiro e equipe medica sem demora."
+            mediumRisk ->
+                "Realizar avaliacao inicial rapida, organizar os cuidados prioritarios, monitorar sinais relevantes e comunicar o enfermeiro agora se houver piora ou intercorrencia."
+            else ->
+                "Conduzir o cuidado de rotina com tecnica segura, confirmar prescricao e objetivo assistencial, orientar o paciente e prevenir erros evitaveis."
         }
 
         val notifyNurse = when {
@@ -1385,25 +1448,84 @@ object StudyContentRepository {
             else -> answer.body
         }
 
+        val monitoring = when {
+            highRisk ->
+                "Acompanhar continuamente nivel de consciencia, FR, SpO2, PA, FC, perfusao, resposta as condutas iniciais e tendencia de piora."
+            answer.title == "Oxigenoterapia e suporte respiratorio" ->
+                "Monitorar saturacao, frequencia respiratoria, conforto, uso do dispositivo, fluxo prescrito e resposta respiratoria apos a instalacao."
+            answer.title == "Administracao segura de medicamentos" ->
+                "Acompanhar efeito esperado, sinais adversos, horario, via, resposta clinica e necessidade de reavaliacao apos administrar."
+            answer.title == "Higiene e conforto" ->
+                "Acompanhar tolerancia ao cuidado, integridade da pele, dor, eliminacoes, conforto, temperatura e necessidade de reposicionamento."
+            else ->
+                "Acompanhar sinais clinicos relevantes, resposta do paciente, seguranca do cuidado, horario das condutas e necessidade de reavaliacao."
+        }
+
+        val warningSigns = when {
+            highRisk ->
+                "Piora da falta de ar, queda da saturacao, dor intensa, cianose, confusao, rebaixamento de consciencia, convulsao, sangramento, hipotensao ou deterioracao rapida."
+            answer.title == "Hipoglicemia" ->
+                "Sudorese intensa, tremor, confusao, sonolencia, convulsao, rebaixamento ou ausencia de melhora apos a conduta inicial."
+            answer.title == "Puncao venosa periferica" || answer.title == "Sondas e cateteres" ->
+                "Dor, hiperemia, edema, extravasamento, secrecao, febre, obstrucao, sangramento, deslocamento ou perda de permeabilidade."
+            else ->
+                "Piora clinica, dor crescente, febre persistente, alteracao importante de sinais vitais, reducao da resposta ao cuidado ou qualquer intercorrencia fora do esperado."
+        }
+
+        val escalation = when {
+            highRisk ->
+                "Chamar medico ou emergencia imediatamente. ${nursingAiProfile.standardPhrases[2]} ${nursingAiProfile.standardPhrases[3]}"
+            mediumRisk ->
+                "Comunicar enfermeiro agora se houver piora, sinais de instabilidade, falha da conduta inicial ou necessidade de reavaliacao medica."
+            else ->
+                "Escalar para o enfermeiro se houver duvida tecnica, resposta inesperada, dificuldade de execucao ou mudanca do quadro clinico."
+        }
+
+        val teachingMode = if (educationalMode) {
+            when (audience) {
+                NursingAudience.CAREGIVER ->
+                    "\n\n[Modo professora]\nDefinicao: explique o tema em linguagem simples e segura. Objetivo: orientar cuidado, conforto e observacao sem substituir avaliacao profissional. Passo a passo: siga as etapas praticas com calma e registre horarios importantes. Cuidados de enfermagem: priorize seguranca, higiene, conforto e comunicacao. Erros comuns: improvisar tecnica, ignorar piora e atrasar comunicacao. Sinais de complicacao: piora clinica, dor intensa, febre persistente, sangramento ou rebaixamento."
+                else ->
+                    "\n\n[Modo professora]\nDefinicao: apresente o conceito central do tema e sua aplicacao assistencial. Objetivo: relacione o procedimento ou quadro ao cuidado seguro. Passo a passo: organize preparo, execucao, observacao e registro. Cuidados de enfermagem: destaque tecnica, seguranca, comunicacao e prevencao de erros. Erros comuns: falha de conferencia, tecnica incompleta, monitorizacao insuficiente e omissao de intercorrencias. Sinais de complicacao: mostre os achados que exigem reavaliacao e escalonamento."
+            }
+        } else {
+            ""
+        }
+
         return answer.copy(
             body = buildString {
-                append("[Resumo do quadro]\n")
+                append("[Classificacao de risco]\n")
+                append(riskClassification)
+                append("\n\n[Resumo do quadro]\n")
                 append(summary)
                 append("\n\nIdentidade assistencial: ")
                 append(nursingAiProfile.identitySummary)
                 append("\n\n[O que observar]\n")
                 append(observe)
+                append("\n\n[Conduta imediata]\n")
+                append(immediateAction)
                 append("\n\n[Cuidados de enfermagem]\n")
                 append(practicalBody)
                 append("\n\n")
                 append(conduct)
-                append("\n\n")
-                append(roleGuidance)
+                append(teachingMode)
+                append("\n\n[Orientacao ao tecnico]\n")
+                append(technicianRole)
                 append("\n\n")
                 append(documentationAndSafety)
-                append("\n\n[Quando avisar o enfermeiro]\n")
+                append("\n\n[Acao do enfermeiro]\n")
+                append(nurseRole)
+                append("\n\n")
+                append(roleGuidance)
+                append("\n\n[Monitorizacao]\n")
+                append(monitoring)
+                append("\n\n[Sinais de alerta]\n")
+                append(warningSigns)
+                append("\n\n[Escalonamento]\n")
+                append(escalation)
+                append("\n\nCritério para avisar o enfermeiro: ")
                 append(notifyNurse)
-                append("\n\n[Quando chamar medico ou emergencia]\n")
+                append("\n\nCritério para chamar medico ou emergencia: ")
                 append(callDoctor)
                 append("\n\nMissao da IA: ")
                 append(nursingAiProfile.missionSummary)

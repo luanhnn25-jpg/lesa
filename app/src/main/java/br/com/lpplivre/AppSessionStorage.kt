@@ -54,6 +54,16 @@ object AppSessionStorage {
             .commit()
     }
 
+    fun updateAuthenticatedSession(context: Context, session: UserSession) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        if (!prefs.getBoolean(KEY_REMEMBER_ACCESS, true)) return
+        prefs.edit()
+            .putBoolean(KEY_LOGGED_IN, true)
+            .putBoolean(KEY_GUEST_ACCESS, false)
+            .putString(KEY_AUTH_SESSION, encodeSession(session))
+            .commit()
+    }
+
     fun saveVisitor(context: Context) {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
