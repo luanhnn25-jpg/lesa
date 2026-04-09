@@ -67,11 +67,23 @@ fun AiStudySection() {
     val ui = studyUiTokens()
     var question by rememberSaveable { mutableStateOf("Processo de Enfermagem") }
     var answer by remember { mutableStateOf(StudyContentRepository.answerStudyQuestion(question)) }
+    val quickPrompts = remember {
+        listOf(
+            "SAE" to "Como aplicar SAE com NANDA, NIC e NOC na pratica?",
+            "ABCDE" to "Como revisar avaliacao primaria ABCDE na urgencia?",
+            "Intramuscular" to "Quais agulhas usar na intramuscular?",
+            "Sitio IM" to "Como escolher o sitio da intramuscular?",
+            "Puncao EV" to "Quais cuidados na puncao venosa periferica?",
+            "Compat. EV" to "Como estudar compatibilidade e diluicao na via endovenosa?",
+            "SBAR" to "Como documentar e comunicar usando SBAR na enfermagem?",
+            "IRAS" to "Quais cuidados de controle de infeccao e IRAS?",
+        )
+    }
 
     Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
         SectionHeroCard(
-            title = "IA de estudo com fonte oficial",
-            body = "Resposta local guiada por fontes brasileiras oficiais, agora melhor para perguntas basicas de enfermagem.",
+            title = "IA clinica de enfermagem",
+            body = "Assistente visual para revisar condutas, procedimentos, farmacologia e raciocinio clinico com base em fontes oficiais.",
             accent = listOf(Color(0xFF0F4C81), Color(0xFF55B5FF)),
             imageRes = R.drawable.study_feature_banner,
         )
@@ -83,33 +95,90 @@ fun AiStudySection() {
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
-                Text("Pergunte para a IA", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(
+                            brush = Brush.linearGradient(
+                                listOf(
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.16f),
+                                    ui.accent.copy(alpha = 0.14f),
+                                    ui.info.copy(alpha = 0.16f),
+                                ),
+                            ),
+                        )
+                        .padding(18.dp),
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Text("Central de estudo com IA", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                        Text(
+                            "Use perguntas livres ou atalhos prontos para revisar farmacologia, procedimentos, urgencia, SAE e seguranca do paciente.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            MetricMiniCard("Perfil", "Especialista", MaterialTheme.colorScheme.primaryContainer, ui.info, Modifier.weight(1f))
+                            MetricMiniCard("Foco", "Brasil", MaterialTheme.colorScheme.secondaryContainer, ui.accent, Modifier.weight(1f))
+                            MetricMiniCard("Base", "Oficial", Color(0xFF1E4A33).copy(alpha = 0.18f), ui.success, Modifier.weight(1f))
+                        }
+                    }
+                }
                 OutlinedTextField(
                     value = question,
                     onValueChange = { question = it },
-                    label = { Text("Tema ou pergunta") },
+                    label = { Text("Tema, pergunta ou conduta") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(18.dp),
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Button(onClick = { answer = StudyContentRepository.answerStudyQuestion(question) }) {
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        onClick = { answer = StudyContentRepository.answerStudyQuestion(question) },
+                    ) {
                         Text("Responder")
                     }
-                    OutlinedButton(onClick = {
-                        question = "Quais cuidados basicos com sinais vitais?"
-                        answer = StudyContentRepository.answerStudyQuestion(question)
-                    }) {
+                    OutlinedButton(
+                        modifier = Modifier.weight(1f),
+                        onClick = {
+                            question = "Quais cuidados basicos com sinais vitais?"
+                            answer = StudyContentRepository.answerStudyQuestion(question)
+                        },
+                    ) {
                         Text("Usar exemplo")
+                    }
+                }
+                Card(
+                    shape = RoundedCornerShape(22.dp),
+                    colors = CardDefaults.cardColors(containerColor = ui.cardAlt),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        Text("Atalhos clinicos", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
+                        Text(
+                            "Toque em um tema para preencher a pergunta rapidamente e testar a IA como se fosse um painel de apoio ao estudo.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Row(
+                            modifier = Modifier.horizontalScroll(rememberScrollState()),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        ) {
+                            quickPrompts.forEach { (label, prompt) ->
+                                AiQuickQuestion(label) {
+                                    question = prompt
+                                    answer = StudyContentRepository.answerStudyQuestion(question)
+                                }
+                            }
+                        }
                     }
                 }
                 Row(
                     modifier = Modifier.horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
-                    AiQuickQuestion("Sinais vitais") {
-                        question = "Quais cuidados basicos com sinais vitais?"
-                        answer = StudyContentRepository.answerStudyQuestion(question)
-                    }
                     AiQuickQuestion("Hipoglicemia") {
                         question = "O que revisar sobre hipoglicemia?"
                         answer = StudyContentRepository.answerStudyQuestion(question)
@@ -118,11 +187,7 @@ fun AiStudySection() {
                         question = "Quais cuidados basicos com lesao por pressao?"
                         answer = StudyContentRepository.answerStudyQuestion(question)
                     }
-                    AiQuickQuestion("Materiais") {
-                        question = "O que estudar sobre materiais de enfermagem e CME?"
-                        answer = StudyContentRepository.answerStudyQuestion(question)
-                    }
-                    AiQuickQuestion("Farmacodinamica") {
+                    AiQuickQuestion("Farmacologia") {
                         question = "Explique farmacodinamica para enfermagem"
                         answer = StudyContentRepository.answerStudyQuestion(question)
                     }
@@ -130,40 +195,8 @@ fun AiStudySection() {
                         question = "Como estudar anatomia aplicada a enfermagem?"
                         answer = StudyContentRepository.answerStudyQuestion(question)
                     }
-                    AiQuickQuestion("Intramuscular") {
-                        question = "Quais agulhas usar na intramuscular?"
-                        answer = StudyContentRepository.answerStudyQuestion(question)
-                    }
-                    AiQuickQuestion("Sitio IM") {
-                        question = "Como escolher o sitio da intramuscular?"
-                        answer = StudyContentRepository.answerStudyQuestion(question)
-                    }
-                    AiQuickQuestion("Subcutanea") {
-                        question = "Como revisar a via subcutanea?"
-                        answer = StudyContentRepository.answerStudyQuestion(question)
-                    }
-                    AiQuickQuestion("Endovenosa") {
-                        question = "Quais cuidados basicos na via endovenosa?"
-                        answer = StudyContentRepository.answerStudyQuestion(question)
-                    }
-                    AiQuickQuestion("Materiais EV") {
-                        question = "Quais materiais separar para puncao venosa periferica?"
-                        answer = StudyContentRepository.answerStudyQuestion(question)
-                    }
-                    AiQuickQuestion("Compat. EV") {
-                        question = "Como estudar compatibilidade e diluicao na via endovenosa?"
-                        answer = StudyContentRepository.answerStudyQuestion(question)
-                    }
-                    AiQuickQuestion("Calculo") {
-                        question = "Como estudar calculo e diluicao de medicamentos?"
-                        answer = StudyContentRepository.answerStudyQuestion(question)
-                    }
                     AiQuickQuestion("Sondas") {
                         question = "Quais cuidados com sondas e cateteres?"
-                        answer = StudyContentRepository.answerStudyQuestion(question)
-                    }
-                    AiQuickQuestion("Puncao") {
-                        question = "Quais cuidados na puncao venosa periferica?"
                         answer = StudyContentRepository.answerStudyQuestion(question)
                     }
                     AiQuickQuestion("Insulina") {
@@ -181,10 +214,23 @@ fun AiStudySection() {
                 ) {
                     Column(
                         modifier = Modifier.padding(18.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
-                        Text(answer.title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
-                        Text(answer.body, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text("Resposta guiada", style = MaterialTheme.typography.labelLarge, color = ui.accent, fontWeight = FontWeight.Bold)
+                        Text(answer.title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                        Card(
+                            shape = RoundedCornerShape(18.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.55f),
+                            ),
+                        ) {
+                            Text(
+                                text = answer.body,
+                                modifier = Modifier.padding(16.dp),
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                        }
                         SourceLinkChip(label = "${answer.source.authority}: ${answer.source.title}") {
                             uriHandler.openUri(answer.source.url)
                         }
@@ -575,14 +621,14 @@ fun CommunityStudySection(currentSession: UserSession?) {
     var draft by rememberSaveable { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var isSending by remember { mutableStateOf(false) }
-    var feedback by remember { mutableStateOf("Conecte-se com outros usuarios do app pelos canais da comunidade EstudaViva.") }
+    var feedback by remember { mutableStateOf("Conecte-se com outros usuarios do app para conversar na comunidade EstudaViva.") }
     val messages = remember { mutableStateListOf<PublicChatMessage>() }
     val selectedRoomMeta = rooms.firstOrNull { it.value == selectedRoom } ?: rooms.first()
 
     LaunchedEffect(currentSession?.userId, selectedRoom) {
         val session = currentSession ?: return@LaunchedEffect
         isLoading = true
-        feedback = "Carregando mensagens de ${selectedRoomMeta.label.lowercase()}..."
+        feedback = "Carregando mensagens da comunidade..."
         val result = withContext(Dispatchers.IO) {
             runCatching {
                 SupabaseRestRepository.touchLastSeen(session.accessToken)
@@ -595,9 +641,9 @@ fun CommunityStudySection(currentSession: UserSession?) {
                 messages.clear()
                 messages.addAll(it)
                 feedback = if (it.isEmpty()) {
-                "Esse canal ainda nao tem mensagens. Voce pode iniciar a conversa."
+                "A comunidade ainda nao tem mensagens. Voce pode iniciar a conversa."
             } else {
-                "${selectedRoomMeta.label} atualizado com ${it.size} mensagens."
+                "Comunidade atualizada com ${it.size} mensagens."
             }
             }
             .onFailure {
@@ -608,7 +654,7 @@ fun CommunityStudySection(currentSession: UserSession?) {
     Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
         SectionHeroCard(
             title = "Comunidade EstudaViva",
-            body = "Canais publicos para acolhimento, duvidas, revisao e avisos da comunidade do aplicativo.",
+            body = "Um chat unico para acolhimento, troca de experiencia, duvidas e novidades entre as pessoas que usam o aplicativo.",
             accent = listOf(Color(0xFF7A3CFF), Color(0xFF3B82F6)),
             imageRes = R.drawable.study_feature_banner,
         )
@@ -646,23 +692,15 @@ fun CommunityStudySection(currentSession: UserSession?) {
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
-                Text("Canais do chat", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
-                Text(
-                    text = "Conectado como ${currentSession.name.ifBlank { currentSession.email }} (${currentSession.role})",
-                    color = ui.accent,
-                    fontWeight = FontWeight.Bold,
-                )
-                Row(
-                    modifier = Modifier.horizontalScroll(rememberScrollState()),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                ) {
-                    rooms.forEach { room ->
-                        FilterChip(
-                            selected = selectedRoom == room.value,
-                            onClick = { selectedRoom = room.value },
-                            label = { Text(room.label) },
-                        )
-                    }
+                    Text("Chat da comunidade", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                    Text(
+                        text = "Conectado como ${currentSession.name.ifBlank { currentSession.email }} (${currentSession.role})",
+                        color = ui.accent,
+                        fontWeight = FontWeight.Bold,
+                    )
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text("Sala ativa:", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    AssistChip(onClick = {}, label = { Text(selectedRoomMeta.label) })
                 }
                 Text(
                     text = selectedRoomMeta.description,
@@ -683,7 +721,7 @@ fun CommunityStudySection(currentSession: UserSession?) {
                         colors = CardDefaults.cardColors(containerColor = ui.cardAlt),
                     ) {
                         Text(
-                            text = "Nenhuma mensagem ainda neste canal.",
+                            text = "Nenhuma mensagem ainda na comunidade.",
                             modifier = Modifier.padding(16.dp),
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -744,7 +782,7 @@ fun CommunityStudySection(currentSession: UserSession?) {
                                     .onSuccess {
                                         draft = ""
                                         messages.add(it)
-                                        feedback = "Mensagem enviada para ${selectedRoomMeta.label.lowercase()}."
+                                        feedback = "Mensagem enviada para a comunidade."
                                     }
                                     .onFailure {
                                         feedback = "Nao foi possivel enviar: ${it.message}"
@@ -768,7 +806,7 @@ fun CommunityStudySection(currentSession: UserSession?) {
                                     .onSuccess {
                                         messages.clear()
                                         messages.addAll(it)
-                                feedback = "${selectedRoomMeta.label} atualizado manualmente."
+                                feedback = "Comunidade atualizada manualmente."
                             }
                                     .onFailure {
                                         feedback = "Nao foi possivel atualizar: ${it.message}"

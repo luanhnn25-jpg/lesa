@@ -115,11 +115,11 @@ private fun StudyHomeScreen(
     val ui = studyUiTokens()
     val modules = remember {
         listOf(
-            StudyModule("IA de Estudo", "Responde com foco em temas oficiais brasileiros.", Icons.Rounded.Psychology, Color(0xFFD8F7EE), Color(0xFF0F4C81)),
+            StudyModule("IA de Estudo", "Assistente visual de enfermagem com resposta guiada por fontes oficiais.", Icons.Rounded.Psychology, Color(0xFFD8F7EE), Color(0xFF0F4C81)),
             StudyModule("Quiz", "Perguntas com gabarito e explicacao por fonte oficial.", Icons.Rounded.Quiz, Color(0xFFFFEDB6), Color(0xFF8D5200)),
             StudyModule("Medicamentos", "Cards de estudo com base e links da Anvisa.", Icons.Rounded.LocalHospital, Color(0xFFFFDCCD), Color(0xFFB44A27)),
             StudyModule("Fontes Oficiais", "Biblioteca brasileira clicavel e rastreavel.", Icons.Rounded.AutoStories, Color(0xFFD8EFFF), Color(0xFF205FA3)),
-            StudyModule("Comunidade", "Chat entre usuarios com salas publicas por perfil de estudo.", Icons.AutoMirrored.Rounded.Chat, Color(0xFFF2DEFF), Color(0xFF6B37D1)),
+            StudyModule("Comunidade", "Chat unico para trocar duvidas, apoio e novidades com quem usa o app.", Icons.AutoMirrored.Rounded.Chat, Color(0xFFF2DEFF), Color(0xFF6B37D1)),
         )
     }
 

@@ -29,22 +29,7 @@ object SupabaseRestRepository {
         PublicChatRoom(
             value = "comunidade",
             label = "Comunidade",
-            description = "Conversa aberta sobre rotina, acolhimento e convivencia no app.",
-        ),
-        PublicChatRoom(
-            value = "duvidas",
-            label = "Duvidas",
-            description = "Perguntas rapidas sobre estudo, pratica e uso do aplicativo.",
-        ),
-        PublicChatRoom(
-            value = "revisao",
-            label = "Revisao",
-            description = "Troca de resumos, revisao guiada e apoio para quiz e IA.",
-        ),
-        PublicChatRoom(
-            value = "avisos",
-            label = "Avisos",
-            description = "Comunicados, novidades e mensagens importantes da comunidade.",
+            description = "Espaco unico para trocar duvidas, acolhimento, revisao e novidades dentro do app.",
         ),
     )
 
