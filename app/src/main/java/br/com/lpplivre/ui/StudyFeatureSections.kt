@@ -531,25 +531,19 @@ fun OfficialSourcesSection() {
 fun CommunityStudySection(currentSession: UserSession?) {
     val ui = studyUiTokens()
     val scope = rememberCoroutineScope()
-    val rooms = remember {
-        listOf(
-            "general" to "Geral",
-            "patients" to "Pacientes",
-            "caregivers" to "Cuidadores",
-            "professionals" to "Profissionais",
-        )
-    }
-    var selectedRoom by rememberSaveable { mutableStateOf("general") }
+    val rooms = remember { SupabaseRestRepository.publicChatRooms }
+    var selectedRoom by rememberSaveable { mutableStateOf(rooms.first().value) }
     var draft by rememberSaveable { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var isSending by remember { mutableStateOf(false) }
-    var feedback by remember { mutableStateOf("Conecte-se com outros usuarios do app pelas salas publicas do EstudaViva.") }
+    var feedback by remember { mutableStateOf("Conecte-se com outros usuarios do app pelos canais da comunidade EstudaViva.") }
     val messages = remember { mutableStateListOf<PublicChatMessage>() }
+    val selectedRoomMeta = rooms.firstOrNull { it.value == selectedRoom } ?: rooms.first()
 
     LaunchedEffect(currentSession?.userId, selectedRoom) {
         val session = currentSession ?: return@LaunchedEffect
         isLoading = true
-        feedback = "Carregando mensagens da sala..."
+        feedback = "Carregando mensagens de ${selectedRoomMeta.label.lowercase()}..."
         val result = withContext(Dispatchers.IO) {
             runCatching {
                 SupabaseRestRepository.touchLastSeen(session.accessToken)
@@ -562,10 +556,10 @@ fun CommunityStudySection(currentSession: UserSession?) {
                 messages.clear()
                 messages.addAll(it)
                 feedback = if (it.isEmpty()) {
-                    "Essa sala ainda nao tem mensagens. Voce pode iniciar a conversa."
-                } else {
-                    "Sala atualizada com ${it.size} mensagens."
-                }
+                "Esse canal ainda nao tem mensagens. Voce pode iniciar a conversa."
+            } else {
+                "${selectedRoomMeta.label} atualizado com ${it.size} mensagens."
+            }
             }
             .onFailure {
                 feedback = "Nao foi possivel carregar o chat: ${it.message}"
@@ -575,7 +569,7 @@ fun CommunityStudySection(currentSession: UserSession?) {
     Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
         SectionHeroCard(
             title = "Comunidade EstudaViva",
-            body = "Salas publicas para pacientes, cuidadores e profissionais trocarem experiencias, duvidas e revisao em conjunto.",
+            body = "Canais publicos para acolhimento, duvidas, revisao e avisos da comunidade do aplicativo.",
             accent = listOf(Color(0xFF7A3CFF), Color(0xFF3B82F6)),
             imageRes = R.drawable.study_feature_banner,
         )
@@ -613,7 +607,7 @@ fun CommunityStudySection(currentSession: UserSession?) {
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
-                Text("Salas do chat", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                Text("Canais do chat", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
                 Text(
                     text = "Conectado como ${currentSession.name.ifBlank { currentSession.email }} (${currentSession.role})",
                     color = ui.accent,
@@ -623,14 +617,19 @@ fun CommunityStudySection(currentSession: UserSession?) {
                     modifier = Modifier.horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
-                    rooms.forEach { (value, label) ->
+                    rooms.forEach { room ->
                         FilterChip(
-                            selected = selectedRoom == value,
-                            onClick = { selectedRoom = value },
-                            label = { Text(label) },
+                            selected = selectedRoom == room.value,
+                            onClick = { selectedRoom = room.value },
+                            label = { Text(room.label) },
                         )
                     }
                 }
+                Text(
+                    text = selectedRoomMeta.description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
                 Text(
                     text = feedback,
                     style = MaterialTheme.typography.bodyMedium,
@@ -645,7 +644,7 @@ fun CommunityStudySection(currentSession: UserSession?) {
                         colors = CardDefaults.cardColors(containerColor = ui.cardAlt),
                     ) {
                         Text(
-                            text = "Nenhuma mensagem ainda nesta sala.",
+                            text = "Nenhuma mensagem ainda neste canal.",
                             modifier = Modifier.padding(16.dp),
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -659,13 +658,13 @@ fun CommunityStudySection(currentSession: UserSession?) {
                                 scope.launch {
                                     val result = withContext(Dispatchers.IO) {
                                         runCatching {
-                                            SupabaseRestRepository.createPublicChatReport(
-                                                accessToken = currentSession.accessToken,
-                                                messageId = message.id,
-                                                reason = "Conteudo inadequado no chat publico",
-                                            )
-                                        }
+                                        SupabaseRestRepository.createPublicChatReport(
+                                            accessToken = currentSession.accessToken,
+                                            messageId = message.id,
+                                            reason = "Conteudo inadequado no chat da comunidade",
+                                        )
                                     }
+                                }
                                     feedback = result.fold(
                                         onSuccess = { "Mensagem denunciada para revisao." },
                                         onFailure = { "Nao foi possivel denunciar: ${it.message}" },
@@ -706,7 +705,7 @@ fun CommunityStudySection(currentSession: UserSession?) {
                                     .onSuccess {
                                         draft = ""
                                         messages.add(it)
-                                        feedback = "Mensagem enviada para a sala."
+                                        feedback = "Mensagem enviada para ${selectedRoomMeta.label.lowercase()}."
                                     }
                                     .onFailure {
                                         feedback = "Nao foi possivel enviar: ${it.message}"
@@ -730,8 +729,8 @@ fun CommunityStudySection(currentSession: UserSession?) {
                                     .onSuccess {
                                         messages.clear()
                                         messages.addAll(it)
-                                        feedback = "Sala atualizada manualmente."
-                                    }
+                                feedback = "${selectedRoomMeta.label} atualizado manualmente."
+                            }
                                     .onFailure {
                                         feedback = "Nao foi possivel atualizar: ${it.message}"
                                     }

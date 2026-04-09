@@ -16,8 +16,37 @@ data class PublicChatMessage(
     val createdAt: String,
 )
 
+data class PublicChatRoom(
+    val value: String,
+    val label: String,
+    val description: String,
+)
+
 object SupabaseRestRepository {
     private val jsonContentType = "application/json; charset=utf-8"
+
+    val publicChatRooms: List<PublicChatRoom> = listOf(
+        PublicChatRoom(
+            value = "comunidade",
+            label = "Comunidade",
+            description = "Conversa aberta sobre rotina, acolhimento e convivencia no app.",
+        ),
+        PublicChatRoom(
+            value = "duvidas",
+            label = "Duvidas",
+            description = "Perguntas rapidas sobre estudo, pratica e uso do aplicativo.",
+        ),
+        PublicChatRoom(
+            value = "revisao",
+            label = "Revisao",
+            description = "Troca de resumos, revisao guiada e apoio para quiz e IA.",
+        ),
+        PublicChatRoom(
+            value = "avisos",
+            label = "Avisos",
+            description = "Comunicados, novidades e mensagens importantes da comunidade.",
+        ),
+    )
 
     fun signIn(email: String, password: String): Result<UserSession> = runCatching {
         require(email.isNotBlank()) { "Informe o e-mail para entrar." }
