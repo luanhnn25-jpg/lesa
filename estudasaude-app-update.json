@@ -1,0 +1,9 @@
+{
+  "versionCode": 3,
+  "versionName": "1.0.2",
+  "packageName": "br.com.estudasaude.app",
+  "apkUrl": "https://luanhnn25-jpg.github.io/lesa/estudasaude-app-v1.0.2.apk",
+  "notes": "Atualizacao do EstudaViva com melhorias na IA de enfermagem, refinamento do tema claro e escuro e fluxo remoto de atualizacao ativado.",
+  "publishedAt": "2026-04-09",
+  "mandatory": false
+}
