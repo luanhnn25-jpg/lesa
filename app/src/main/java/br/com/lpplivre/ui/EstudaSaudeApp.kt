@@ -5,7 +5,9 @@ import android.net.Uri
 import android.provider.Settings
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,9 +20,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -37,8 +39,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -73,6 +73,8 @@ import br.com.lpplivre.AppUpdateRepository
 import br.com.lpplivre.InAppUpdateInstaller
 import br.com.lpplivre.UpdateCheckResult
 import br.com.lpplivre.R
+import br.com.lpplivre.data.SupabaseRestRepository
+import br.com.lpplivre.data.UserSession
 import br.com.lpplivre.ui.theme.studyUiTokens
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -81,14 +83,18 @@ import kotlinx.coroutines.withContext
 @Composable
 fun EstudaSaudeApp(
     loggedIn: Boolean,
+    currentSession: UserSession?,
     initialEmail: String,
     initialRememberAccess: Boolean,
-    onLoginClick: (String, Boolean) -> Unit,
+    onLoginClick: (UserSession, String, Boolean) -> Unit,
     onExploreClick: () -> Unit,
     onLogoutClick: () -> Unit,
 ) {
     if (loggedIn) {
-        StudyHomeScreen(onLogoutClick = onLogoutClick)
+        StudyHomeScreen(
+            currentSession = currentSession,
+            onLogoutClick = onLogoutClick,
+        )
     } else {
         StudyLoginScreen(
             initialEmail = initialEmail,
@@ -101,7 +107,10 @@ fun EstudaSaudeApp(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun StudyHomeScreen(onLogoutClick: () -> Unit) {
+private fun StudyHomeScreen(
+    currentSession: UserSession?,
+    onLogoutClick: () -> Unit,
+) {
     var selectedSection by rememberSaveable { mutableStateOf(StudySection.Home) }
     val ui = studyUiTokens()
     val modules = remember {
@@ -110,7 +119,7 @@ private fun StudyHomeScreen(onLogoutClick: () -> Unit) {
             StudyModule("Quiz", "Perguntas com gabarito e explicacao por fonte oficial.", Icons.Rounded.Quiz, Color(0xFFFFEDB6), Color(0xFF8D5200)),
             StudyModule("Medicamentos", "Cards de estudo com base e links da Anvisa.", Icons.Rounded.LocalHospital, Color(0xFFFFDCCD), Color(0xFFB44A27)),
             StudyModule("Fontes Oficiais", "Biblioteca brasileira clicavel e rastreavel.", Icons.Rounded.AutoStories, Color(0xFFD8EFFF), Color(0xFF205FA3)),
-            StudyModule("Comunidade", "Espaco reservado para bate-papo e revisao colaborativa.", Icons.AutoMirrored.Rounded.Chat, Color(0xFFF2DEFF), Color(0xFF6B37D1)),
+            StudyModule("Comunidade", "Chat entre usuarios com salas publicas por perfil de estudo.", Icons.AutoMirrored.Rounded.Chat, Color(0xFFF2DEFF), Color(0xFF6B37D1)),
         )
     }
 
@@ -138,19 +147,41 @@ private fun StudyHomeScreen(onLogoutClick: () -> Unit) {
             )
         },
         bottomBar = {
-            NavigationBar {
-                StudySection.entries.forEach { section ->
-                    NavigationBarItem(
-                        selected = selectedSection == section,
-                        onClick = { selectedSection = section },
-                        icon = {
+            Surface(color = MaterialTheme.colorScheme.surface) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState())
+                        .padding(horizontal = 8.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    StudySection.entries.forEach { section ->
+                        val selected = selectedSection == section
+                        Column(
+                            modifier = Modifier
+                                .width(96.dp)
+                                .clip(RoundedCornerShape(18.dp))
+                                .background(
+                                    if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.14f)
+                                    else Color.Transparent,
+                                )
+                                .clickable { selectedSection = section }
+                                .padding(horizontal = 10.dp, vertical = 10.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
                             androidx.compose.material3.Icon(
                                 imageVector = section.icon,
                                 contentDescription = section.label,
+                                tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                             )
-                        },
-                        label = { Text(section.label) },
-                    )
+                            Text(
+                                text = section.label,
+                                color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+                            )
+                        }
+                    }
                 }
             }
         },
@@ -191,6 +222,10 @@ private fun StudyHomeScreen(onLogoutClick: () -> Unit) {
 
                 StudySection.Quiz -> {
                     item { QuizStudySection() }
+                }
+
+                StudySection.Community -> {
+                    item { CommunityStudySection(currentSession = currentSession) }
                 }
 
                 StudySection.Meds -> {
@@ -587,12 +622,15 @@ private fun StudyRoadmapCard() {
 private fun StudyLoginScreen(
     initialEmail: String,
     initialRememberAccess: Boolean,
-    onLoginClick: (String, Boolean) -> Unit,
+    onLoginClick: (UserSession, String, Boolean) -> Unit,
     onExploreClick: () -> Unit,
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     var email by rememberSaveable { mutableStateOf(initialEmail) }
     var password by rememberSaveable { mutableStateOf("") }
     var rememberAccess by rememberSaveable { mutableStateOf(initialRememberAccess) }
+    var isSigningIn by remember { mutableStateOf(false) }
     val ui = studyUiTokens()
 
     Box(
@@ -713,11 +751,41 @@ private fun StudyLoginScreen(
                         }
                     }
                     Button(
-                        onClick = { onLoginClick(email.trim(), rememberAccess) },
+                        enabled = !isSigningIn,
+                        onClick = {
+                            val cleanEmail = email.trim()
+                            if (cleanEmail.isBlank() || password.isBlank()) {
+                                Toast.makeText(
+                                    context,
+                                    "Preencha e-mail e senha para entrar. Se preferir, use o modo visitante.",
+                                    Toast.LENGTH_LONG,
+                                ).show()
+                                return@Button
+                            }
+                            scope.launch {
+                                isSigningIn = true
+                                val result = withContext(Dispatchers.IO) {
+                                    SupabaseRestRepository.signIn(cleanEmail, password)
+                                }
+                                isSigningIn = false
+                                result
+                                    .onSuccess { session ->
+                                        password = ""
+                                        onLoginClick(session, cleanEmail, rememberAccess)
+                                    }
+                                    .onFailure {
+                                        Toast.makeText(
+                                            context,
+                                            "Nao foi possivel entrar: ${it.message}",
+                                            Toast.LENGTH_LONG,
+                                        ).show()
+                                    }
+                            }
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(18.dp),
                     ) {
-                        Text("Entrar para estudar")
+                        Text(if (isSigningIn) "Entrando..." else "Entrar para estudar")
                     }
                     OutlinedButton(
                         onClick = onExploreClick,
@@ -795,6 +863,7 @@ private enum class StudySection(
     Home("Inicio", Icons.Rounded.Home),
     AI("IA", Icons.Rounded.Psychology),
     Quiz("Quiz", Icons.Rounded.Quiz),
+    Community("Chat", Icons.AutoMirrored.Rounded.Chat),
     Meds("Anvisa", Icons.Rounded.LocalHospital),
     Library("Fontes", Icons.Rounded.AutoStories),
 }

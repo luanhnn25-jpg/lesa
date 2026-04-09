@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import br.com.lpplivre.data.UserSession
 import br.com.lpplivre.ui.EstudaSaudeApp
 import br.com.lpplivre.ui.theme.EstudaSaudeTheme
 
@@ -19,29 +20,37 @@ class MainActivity : ComponentActivity() {
             EstudaSaudeTheme {
                 val savedState = remember { AppSessionStorage.read(this) }
                 var loggedIn by remember { mutableStateOf(savedState.isLoggedIn) }
+                var currentSession by remember { mutableStateOf<UserSession?>(savedState.authSession) }
 
                 LaunchedEffect(Unit) {
-                    loggedIn = AppSessionStorage.read(this@MainActivity).isLoggedIn
+                    val latestState = AppSessionStorage.read(this@MainActivity)
+                    loggedIn = latestState.isLoggedIn
+                    currentSession = latestState.authSession
                 }
 
                 EstudaSaudeApp(
                     loggedIn = loggedIn,
+                    currentSession = currentSession,
                     initialEmail = savedState.savedEmail,
                     initialRememberAccess = savedState.rememberAccess,
-                    onLoginClick = { email, rememberAccess ->
-                        AppSessionStorage.saveLogin(
+                    onLoginClick = { session, email, rememberAccess ->
+                        AppSessionStorage.saveAuthenticatedLogin(
                             context = this@MainActivity,
+                            session = session,
                             email = email,
                             rememberAccess = rememberAccess,
                         )
+                        currentSession = session
                         loggedIn = true
                     },
                     onExploreClick = {
                         AppSessionStorage.saveVisitor(this@MainActivity)
+                        currentSession = null
                         loggedIn = true
                     },
                     onLogoutClick = {
                         AppSessionStorage.clearLogin(this@MainActivity)
+                        currentSession = null
                         loggedIn = false
                     },
                 )

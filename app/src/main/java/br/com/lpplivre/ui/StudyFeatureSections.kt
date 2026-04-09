@@ -32,10 +32,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,7 +53,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import br.com.lpplivre.R
+import br.com.lpplivre.data.PublicChatMessage
+import br.com.lpplivre.data.SupabaseRestRepository
+import br.com.lpplivre.data.UserSession
 import br.com.lpplivre.ui.theme.studyUiTokens
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun AiStudySection() {
@@ -520,6 +528,226 @@ fun OfficialSourcesSection() {
 }
 
 @Composable
+fun CommunityStudySection(currentSession: UserSession?) {
+    val ui = studyUiTokens()
+    val scope = rememberCoroutineScope()
+    val rooms = remember {
+        listOf(
+            "general" to "Geral",
+            "patients" to "Pacientes",
+            "caregivers" to "Cuidadores",
+            "professionals" to "Profissionais",
+        )
+    }
+    var selectedRoom by rememberSaveable { mutableStateOf("general") }
+    var draft by rememberSaveable { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
+    var isSending by remember { mutableStateOf(false) }
+    var feedback by remember { mutableStateOf("Conecte-se com outros usuarios do app pelas salas publicas do EstudaViva.") }
+    val messages = remember { mutableStateListOf<PublicChatMessage>() }
+
+    LaunchedEffect(currentSession?.userId, selectedRoom) {
+        val session = currentSession ?: return@LaunchedEffect
+        isLoading = true
+        feedback = "Carregando mensagens da sala..."
+        val result = withContext(Dispatchers.IO) {
+            runCatching {
+                SupabaseRestRepository.touchLastSeen(session.accessToken)
+                SupabaseRestRepository.loadPublicChatMessages(session.accessToken, selectedRoom)
+            }
+        }
+        isLoading = false
+        result
+            .onSuccess {
+                messages.clear()
+                messages.addAll(it)
+                feedback = if (it.isEmpty()) {
+                    "Essa sala ainda nao tem mensagens. Voce pode iniciar a conversa."
+                } else {
+                    "Sala atualizada com ${it.size} mensagens."
+                }
+            }
+            .onFailure {
+                feedback = "Nao foi possivel carregar o chat: ${it.message}"
+            }
+    }
+
+    Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
+        SectionHeroCard(
+            title = "Comunidade EstudaViva",
+            body = "Salas publicas para pacientes, cuidadores e profissionais trocarem experiencias, duvidas e revisao em conjunto.",
+            accent = listOf(Color(0xFF7A3CFF), Color(0xFF3B82F6)),
+            imageRes = R.drawable.study_feature_banner,
+        )
+        if (currentSession == null) {
+            Card(
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = ui.card),
+            ) {
+                Column(
+                    modifier = Modifier.padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    Text("Chat disponivel com conta real", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                    Text(
+                        "O visitante continua estudando normalmente, mas o chat usa o Supabase e so libera leitura e envio para usuarios autenticados.",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Text(
+                        "Entre com e-mail e senha na tela inicial para conversar com outras pessoas dentro do app.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = ui.accent,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            }
+            return@Column
+        }
+
+        Card(
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(containerColor = ui.card),
+        ) {
+            Column(
+                modifier = Modifier.padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp),
+            ) {
+                Text("Salas do chat", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                Text(
+                    text = "Conectado como ${currentSession.name.ifBlank { currentSession.email }} (${currentSession.role})",
+                    color = ui.accent,
+                    fontWeight = FontWeight.Bold,
+                )
+                Row(
+                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    rooms.forEach { (value, label) ->
+                        FilterChip(
+                            selected = selectedRoom == value,
+                            onClick = { selectedRoom = value },
+                            label = { Text(label) },
+                        )
+                    }
+                }
+                Text(
+                    text = feedback,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                if (isLoading) {
+                    Text("Atualizando mensagens...", color = ui.info, fontWeight = FontWeight.Bold)
+                }
+                if (messages.isEmpty()) {
+                    Card(
+                        shape = RoundedCornerShape(20.dp),
+                        colors = CardDefaults.cardColors(containerColor = ui.cardAlt),
+                    ) {
+                        Text(
+                            text = "Nenhuma mensagem ainda nesta sala.",
+                            modifier = Modifier.padding(16.dp),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                } else {
+                    messages.takeLast(40).forEach { message ->
+                        PublicChatMessageCard(
+                            message = message,
+                            isOwnMessage = message.senderId == currentSession.userId,
+                            onReport = {
+                                scope.launch {
+                                    val result = withContext(Dispatchers.IO) {
+                                        runCatching {
+                                            SupabaseRestRepository.createPublicChatReport(
+                                                accessToken = currentSession.accessToken,
+                                                messageId = message.id,
+                                                reason = "Conteudo inadequado no chat publico",
+                                            )
+                                        }
+                                    }
+                                    feedback = result.fold(
+                                        onSuccess = { "Mensagem denunciada para revisao." },
+                                        onFailure = { "Nao foi possivel denunciar: ${it.message}" },
+                                    )
+                                }
+                            },
+                        )
+                    }
+                }
+                OutlinedTextField(
+                    value = draft,
+                    onValueChange = { draft = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Escreva sua mensagem") },
+                    shape = RoundedCornerShape(18.dp),
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Button(
+                        onClick = {
+                            val text = draft.trim()
+                            if (text.isBlank()) {
+                                feedback = "Digite uma mensagem antes de enviar."
+                                return@Button
+                            }
+                            scope.launch {
+                                isSending = true
+                                val result = withContext(Dispatchers.IO) {
+                                    runCatching {
+                                        SupabaseRestRepository.sendPublicChatMessage(
+                                            session = currentSession,
+                                            room = selectedRoom,
+                                            message = text,
+                                        )
+                                    }
+                                }
+                                isSending = false
+                                result
+                                    .onSuccess {
+                                        draft = ""
+                                        messages.add(it)
+                                        feedback = "Mensagem enviada para a sala."
+                                    }
+                                    .onFailure {
+                                        feedback = "Nao foi possivel enviar: ${it.message}"
+                                    }
+                            }
+                        },
+                        enabled = !isSending,
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text(if (isSending) "Enviando..." else "Enviar")
+                    }
+                    OutlinedButton(
+                        onClick = {
+                            scope.launch {
+                                isLoading = true
+                                val result = withContext(Dispatchers.IO) {
+                                    runCatching { SupabaseRestRepository.loadPublicChatMessages(currentSession.accessToken, selectedRoom) }
+                                }
+                                isLoading = false
+                                result
+                                    .onSuccess {
+                                        messages.clear()
+                                        messages.addAll(it)
+                                        feedback = "Sala atualizada manualmente."
+                                    }
+                                    .onFailure {
+                                        feedback = "Nao foi possivel atualizar: ${it.message}"
+                                    }
+                            }
+                        },
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text("Atualizar")
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun MedicationStudyCard(
     medication: StudyMedication,
     onOpenBulario: () -> Unit,
@@ -594,6 +822,51 @@ private fun MedicationStudyCard(
             Text(
                 text = "Observacao: o link direto usa o nome oficial do produto na busca da Anvisa para cair ja no medicamento ou no resultado desse produto.",
                 style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
+private fun PublicChatMessageCard(
+    message: PublicChatMessage,
+    isOwnMessage: Boolean,
+    onReport: () -> Unit,
+) {
+    val ui = studyUiTokens()
+    Card(
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isOwnMessage) ui.inputHighlight else ui.cardAlt,
+        ),
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column {
+                    Text(message.senderName, fontWeight = FontWeight.Black)
+                    Text(
+                        text = "${message.senderRole} • ${message.createdAt.take(16).replace('T', ' ')}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                if (!isOwnMessage) {
+                    OutlinedButton(onClick = onReport) {
+                        Text("Denunciar")
+                    }
+                }
+            }
+            Text(
+                text = message.message,
+                style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
