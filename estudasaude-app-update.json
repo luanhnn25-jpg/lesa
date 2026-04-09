@@ -1,9 +1,9 @@
 {
-  "versionCode": 4,
-  "versionName": "1.0.3",
+  "versionCode": 5,
+  "versionName": "1.0.4",
   "packageName": "br.com.estudasaude.app",
-  "apkUrl": "https://luanhnn25-jpg.github.io/lesa/estudasaude-app-v1.0.3.apk",
-  "notes": "Atualizacao do EstudaViva com chat comunitario remodelado, novas salas de comunidade e base alinhada com o aplicativo mais recente.",
+  "apkUrl": "https://luanhnn25-jpg.github.io/lesa/estudasaude-app-v1.0.4.apk",
+  "notes": "Atualizacao do EstudaViva com tela de login renovada, copia interna do site alinhada ao app e publicacao sincronizada com a build mais recente.",
   "publishedAt": "2026-04-09",
   "mandatory": false
 }

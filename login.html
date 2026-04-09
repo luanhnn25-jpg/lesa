@@ -1,4 +1,4 @@
-
+Ôªø
 
 <!doctype html>
 <html lang="pt-BR">
@@ -6,8 +6,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#0b3d91" />
-  <meta name="description" content="Acesso premium ao projeto sobre les„o por press„o com autenticaÁ„o integrada ao Supabase." />
-  <title>Acesso ï LPP Premium</title>
+  <meta name="description" content="Acesso ao EstudaViva com login, cadastro e libera√ß√£o premium integrados ao Supabase." />
+  <title>Acesso ‚Ä¢ EstudaViva Premium</title>
 
   <style>
     :root{
@@ -77,6 +77,20 @@
       isolation:isolate;
     }
 
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:22px 22px auto auto;
+      width:120px;
+      height:120px;
+      border-radius:32px;
+      background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.14);
+      transform:rotate(18deg);
+      pointer-events:none;
+      z-index:-1;
+    }
+
     .hero::before{
       content:"";
       position:absolute;
@@ -112,6 +126,19 @@
 
     .brand h1{margin:0;font-size:19px;font-weight:1000;letter-spacing:.2px}
     .brand p{margin:4px 0 0;font-size:12px;opacity:.92;font-weight:700}
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.16);
+      font-size:12px;
+      font-weight:1000;
+      margin-top:4px;
+    }
 
     .hero h2{
       margin:14px 0 10px;
@@ -162,6 +189,53 @@
       font-size:13px;
       line-height:1.65;
       font-weight:800;
+    }
+
+    .pulseDot{
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#4ade80;
+      box-shadow:0 0 0 0 rgba(74,222,128,.65);
+      animation:pulse 1.8s infinite;
+    }
+
+    @keyframes pulse{
+      0%{box-shadow:0 0 0 0 rgba(74,222,128,.55)}
+      70%{box-shadow:0 0 0 10px rgba(74,222,128,0)}
+      100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}
+    }
+
+    .journey{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .journeyStep{
+      padding:14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow:0 14px 28px rgba(2,6,23,.10);
+    }
+
+    .journeyStep strong{
+      display:block;
+      font-size:12px;
+      margin-bottom:6px;
+      font-weight:1000;
+      opacity:.96;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+    }
+
+    .journeyStep span{
+      font-size:13px;
+      line-height:1.55;
+      font-weight:800;
+      opacity:.96;
     }
 
     .pay{
@@ -282,6 +356,17 @@
       overflow:hidden;
     }
 
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-80px auto auto -80px;
+      width:200px;
+      height:200px;
+      border-radius:50%;
+      background:radial-gradient(circle at center, rgba(37,99,235,.10), transparent 70%);
+      pointer-events:none;
+    }
+
     .card h3{
       margin:0 0 8px;
       font-size:24px;
@@ -299,6 +384,40 @@
       line-height:1.65;
       position:relative;
       z-index:1;
+    }
+
+    .microStats{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+      margin:0 0 16px;
+      position:relative;
+      z-index:1;
+    }
+
+    .microStat{
+      padding:12px;
+      border-radius:16px;
+      background:linear-gradient(180deg,#f8fbff,#ffffff);
+      border:1px solid rgba(37,99,235,.10);
+      box-shadow:var(--shadow-soft);
+    }
+
+    .microStat strong{
+      display:block;
+      color:#0b2b63;
+      font-size:12px;
+      font-weight:1000;
+      margin-bottom:5px;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+
+    .microStat span{
+      font-size:13px;
+      line-height:1.5;
+      color:var(--muted);
+      font-weight:800;
     }
 
     .tabs{
@@ -396,6 +515,49 @@
       z-index:1;
     }
 
+    .smartTips{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:14px;
+      position:relative;
+      z-index:1;
+    }
+
+    .smartTip{
+      border:none;
+      cursor:pointer;
+      border-radius:999px;
+      padding:10px 12px;
+      background:#eef4ff;
+      color:#1d4ed8;
+      font-size:12px;
+      font-weight:1000;
+      box-shadow:0 10px 18px rgba(37,99,235,.10);
+    }
+
+    .smartTip:hover{
+      background:#dbeafe;
+    }
+
+    .liveNote{
+      margin-top:14px;
+      padding:13px 14px;
+      border-radius:16px;
+      background:linear-gradient(180deg,#f8fbff,#ffffff);
+      border:1px solid rgba(37,99,235,.12);
+      color:#334155;
+      font-size:13px;
+      line-height:1.6;
+      font-weight:800;
+      position:relative;
+      z-index:1;
+    }
+
+    .liveNote strong{
+      color:#0b2b63;
+    }
+
     .small{margin:0;font-size:12px;color:var(--muted);font-weight:800}
 
     .link{
@@ -456,35 +618,53 @@
 
     @media (max-width: 940px){
       .features{grid-template-columns:1fr}
+      .journey{grid-template-columns:1fr}
+      .microStats{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <section class="hero" aria-label="InformaÁıes premium e pagamento">
+    <section class="hero" aria-label="Informa√ß√µes premium e pagamento">
       <div class="brand">
         <div class="logo">LPP</div>
         <div>
-          <h1>Les„o por Press„o</h1>
-          <p>¡rea premium do projeto</p>
+          <h1>EstudaViva</h1>
+          <p>Acesso premium do projeto</p>
         </div>
       </div>
 
-      <h2>Acesso premium simples, r·pido e profissional</h2>
+      <span class="eyebrow"><span class="pulseDot" aria-hidden="true"></span> Ambiente ativo e pronto para autentica√ß√£o</span>
+
+      <h2>Entre, libere seu acesso e continue estudando sem perder tempo</h2>
       <p class="sub">
-        Realize o pagamento via Pix, envie o comprovante pelo WhatsApp e, apÛs a liberaÁ„o do perfil,
-        o acesso ao conte˙do premium ser· disponibilizado automaticamente no seu login.
+        Fa√ßa login, crie sua conta ou conclua a ativa√ß√£o premium em um fluxo simples. O pagamento √© feito via Pix e a libera√ß√£o acontece ap√≥s o envio do comprovante pelo WhatsApp.
       </p>
 
       <div class="badges">
-        <span class="badge">Ambiente seguro</span>
-        <span class="badge">LiberaÁ„o r·pida</span>
-        <span class="badge">Suporte via WhatsApp</span>
+        <span class="badge">Login seguro</span>
+        <span class="badge">Ativa√ß√£o por Pix</span>
+        <span class="badge">Suporte r√°pido no WhatsApp</span>
       </div>
 
       <div class="features">
-        <div class="feature">AutenticaÁ„o integrada ao Supabase, com persistÍncia de sess„o e controle de acesso premium.</div>
-        <div class="feature">Fluxo organizado para pagamento, validaÁ„o do perfil e abertura autom·tica do sistema quando o acesso premium estiver ativo.</div>
+        <div class="feature">Autentica√ß√£o integrada ao Supabase com sess√£o persistente, recupera√ß√£o de senha e verifica√ß√£o autom√°tica do perfil.</div>
+        <div class="feature">Fluxo pensado para o app e para o site, com ativa√ß√£o premium, checagem de acesso e abertura autom√°tica do sistema quando o perfil estiver liberado.</div>
+      </div>
+
+      <div class="journey" aria-label="Como funciona">
+        <div class="journeyStep">
+          <strong>1. Entrar</strong>
+          <span>Use seu e-mail e senha para acessar sua conta ou criar um novo perfil.</span>
+        </div>
+        <div class="journeyStep">
+          <strong>2. Ativar</strong>
+          <span>Copie a chave Pix, realize o pagamento e envie o comprovante pelo WhatsApp.</span>
+        </div>
+        <div class="journeyStep">
+          <strong>3. Continuar</strong>
+          <span>Assim que o premium for liberado, o sistema abre automaticamente para voc√™.</span>
+        </div>
       </div>
 
       <div class="pay">
@@ -492,7 +672,7 @@
           <div>
             <div class="priceLabel">Valor de acesso</div>
             <div class="price">R$ 2,00</div>
-            <p class="mini">Pagamento exclusivo via Pix para ativaÁ„o do perfil premium.</p>
+            <p class="mini">Pagamento via Pix para ativar o perfil premium e liberar os recursos do sistema.</p>
           </div>
           <div class="premiumPill">Premium</div>
         </div>
@@ -503,21 +683,36 @@
 
           <div class="actions">
             <button id="btnCopyPix" class="btnWide blue" type="button">Copiar chave Pix</button>
-            <button id="btnWhats" class="btnWide green" type="button">Enviar comprovante</button>
+            <button id="btnWhats" class="btnWide green" type="button">Enviar comprovante no WhatsApp</button>
           </div>
 
           <p class="mini">
-            ApÛs o pagamento, envie o comprovante e em seguida faÁa login para validar o acesso ao conte˙do premium.
+            Depois do pagamento, envie o comprovante e volte para esta p√°gina para entrar e validar a libera√ß√£o do acesso premium.
           </p>
         </div>
       </div>
     </section>
 
-    <main class="card" aria-label="Acesso de usu·rio">
-      <h3>Entrar ou criar conta</h3>
+    <main class="card" aria-label="Acesso de usu√°rio">
+      <h3>Entrar ou criar sua conta</h3>
       <p class="hint">
-        Caso a confirmaÁ„o por e-mail esteja ativada no Supabase, vocÍ receber· um link para concluir o cadastro antes do primeiro acesso.
+        Se a confirma√ß√£o por e-mail estiver ativa no Supabase, voc√™ receber√° um link para concluir o cadastro antes do primeiro acesso.
       </p>
+
+      <div class="microStats" aria-label="Resumo do acesso">
+        <div class="microStat">
+          <strong>Login</strong>
+          <span>Acesse com sua conta e continue do ponto em que parou.</span>
+        </div>
+        <div class="microStat">
+          <strong>Cadastro</strong>
+          <span>Crie seu perfil com e-mail e senha em poucos segundos.</span>
+        </div>
+        <div class="microStat">
+          <strong>Recupera√ß√£o</strong>
+          <span>Envie um link de redefini√ß√£o de senha quando precisar.</span>
+        </div>
+      </div>
 
       <div class="tabs" role="tablist" aria-label="Alternar modo">
         <button class="tab" id="tabLogin" type="button" role="tab" aria-selected="true">Login</button>
@@ -529,7 +724,7 @@
 
       <label for="password">Senha</label>
       <div class="pwRow">
-        <input id="password" class="field" type="password" placeholder="MÌnimo de 6 caracteres" autocomplete="current-password" />
+        <input id="password" class="field" type="password" placeholder="M√≠nimo de 6 caracteres" autocomplete="current-password" />
         <button id="btnTogglePw" class="pwBtn" type="button" aria-label="Mostrar ou ocultar senha">Mostrar</button>
       </div>
 
@@ -538,13 +733,23 @@
         <button class="link" id="btnForgot" type="button">Esqueci minha senha</button>
       </div>
 
+      <div class="smartTips" aria-label="Atalhos r√°pidos">
+        <button class="smartTip" type="button" data-fill="login">Quero entrar</button>
+        <button class="smartTip" type="button" data-fill="signup">Quero criar conta</button>
+        <button class="smartTip" type="button" data-fill="premium">J√° paguei o Premium</button>
+      </div>
+
+      <div class="liveNote" id="liveNote">
+        <strong>Dica r√°pida:</strong> entre com seu e-mail para verificar se o acesso premium j√° foi liberado no seu perfil.
+      </div>
+
       <button class="btn" id="btnPrimary" type="button">Entrar</button>
       <button class="btn secondary" id="btnOpenSystem" type="button" style="display:none;">Abrir sistema</button>
       <button class="btn secondary" id="btnGoHome" type="button">Voltar ao site</button>
 
       <div class="msg" id="msg" role="status" aria-live="polite"></div>
 
-      <div class="footer">© 2026 ï Projeto Integrador</div>
+      <div class="footer">¬© 2026 ‚Ä¢ Projeto Integrador</div>
     </main>
   </div>
 
@@ -588,6 +793,8 @@
     const btnCopyPix = $("btnCopyPix");
     const btnWhats = $("btnWhats");
     const pixPayload = $("pixPayload");
+    const liveNote = $("liveNote");
+    const smartTips = Array.from(document.querySelectorAll("[data-fill]"));
 
     let mode = "login";
     let cooldownUntil = 0;
@@ -649,7 +856,7 @@
           return;
         }
         btnPrimary.disabled = true;
-        btnPrimary.textContent = `Aguarde ${Math.ceil(left / 1000)}sÖ`;
+        btnPrimary.textContent = `Aguarde ${Math.ceil(left / 1000)}s‚Ä¶`;
         requestAnimationFrame(step);
       };
       step();
@@ -665,6 +872,30 @@
       passwordInput.setAttribute("autocomplete", isLogin ? "current-password" : "new-password");
       modeHint.innerHTML = `<span class="statusDot"></span>Modo: ${isLogin ? "Login" : "Criar conta"}`;
       btnPrimary.textContent = isLogin ? "Entrar" : "Criar conta";
+      if (liveNote) {
+        liveNote.innerHTML = isLogin
+          ? "<strong>Dica r√°pida:</strong> entre com seu e-mail para verificar se o acesso premium j√° foi liberado no seu perfil."
+          : "<strong>Dica r√°pida:</strong> crie sua conta com um e-mail v√°lido para receber confirma√ß√£o e recupera√ß√£o de senha quando necess√°rio.";
+      }
+    }
+
+    function applyQuickTip(kind) {
+      if (kind === "login") {
+        setMode("login");
+        emailInput.focus();
+        return;
+      }
+      if (kind === "signup") {
+        setMode("signup");
+        emailInput.focus();
+        return;
+      }
+      if (kind === "premium") {
+        setMode("login");
+        if (liveNote) {
+          liveNote.innerHTML = "<strong>Pr√≥ximo passo:</strong> se voc√™ j√° pagou, envie o comprovante no WhatsApp e depois fa√ßa login para validar a libera√ß√£o do premium.";
+        }
+      }
     }
 
     async function waitForLocalSession(maxAttempts = 10, delayMs = 400) {
@@ -692,16 +923,16 @@
       const raw = String(error?.message || "").toLowerCase();
 
       if (raw.includes("failed to fetch")) {
-        return "N„o foi possÌvel conectar ao servidor de autenticaÁ„o.\n\nVerifique a conex„o com a internet, a configuraÁ„o do Supabase e se o projeto est· ativo.";
+        return "N√£o foi poss√≠vel conectar ao servidor de autentica√ß√£o.\n\nVerifique a conex√£o com a internet, a configura√ß√£o do Supabase e se o projeto est√° ativo.";
       }
       if (raw.includes("email not confirmed") || raw.includes("confirm")) {
-        return "Seu e-mail ainda n„o foi confirmado. Confira a caixa de entrada e tambÈm a pasta de spam.";
+        return "Seu e-mail ainda n√£o foi confirmado. Confira a caixa de entrada e tamb√©m a pasta de spam.";
       }
       if (raw.includes("invalid login credentials")) {
-        return "E-mail ou senha inv·lidos.";
+        return "E-mail ou senha inv√°lidos.";
       }
       if (raw.includes("user already registered")) {
-        return "Este e-mail j· est· cadastrado. Tente entrar ou recuperar a senha.";
+        return "Este e-mail j√° est√° cadastrado. Tente entrar ou recuperar a senha.";
       }
       if (raw.includes("password should be at least")) {
         return "A senha deve conter pelo menos 6 caracteres.";
@@ -715,7 +946,7 @@
       const { data: authData, error: authError } = await supabase.auth.getUser();
 
       if (authError && !sessionUser) {
-        throw new Error("N„o foi possÌvel identificar o usu·rio autenticado.");
+        throw new Error("N√£o foi poss√≠vel identificar o usu√°rio autenticado.");
       }
 
       return authData?.user || sessionUser || null;
@@ -724,7 +955,7 @@
     async function verifyPremium() {
       const user = await getAuthenticatedUser();
       if (!user?.id) {
-        throw new Error("Sess„o n„o localizada. FaÁa login novamente.");
+        throw new Error("Sess√£o n√£o localizada. Fa√ßa login novamente.");
       }
 
       const { data: profile, error: profileError } = await supabase
@@ -734,7 +965,7 @@
         .maybeSingle();
 
       if (profileError) {
-        throw new Error("N„o foi possÌvel consultar o status premium. " + profileError.message);
+        throw new Error("N√£o foi poss√≠vel consultar o status premium. " + profileError.message);
       }
 
       return profile?.premium === true;
@@ -776,7 +1007,7 @@
           });
           if (persistError) {
             setBusy(false);
-            setMsg("O login foi aceito, mas a sess„o n„o pÙde ser persistida localmente.\n" + persistError.message, "bad");
+            setMsg("O login foi aceito, mas a sess√£o n√£o p√¥de ser persistida localmente.\n" + persistError.message, "bad");
             startCooldown(2500);
             return;
           }
@@ -785,7 +1016,7 @@
         const persistedSession = await waitForLocalSession();
         if (!persistedSession?.user) {
           setBusy(false);
-          setMsg("O login foi aceito, mas a sess„o n„o ficou disponÌvel localmente. Tente novamente.", "bad");
+          setMsg("O login foi aceito, mas a sess√£o n√£o ficou dispon√≠vel localmente. Tente novamente.", "bad");
           startCooldown(2500);
           return;
         }
@@ -798,7 +1029,7 @@
           return;
         }
 
-        setMsg("Sua conta existe, mas ainda n„o possui acesso premium. O acesso ao sistema permanece bloqueado atÈ a liberaÁ„o.", "warn");
+        setMsg("Sua conta existe, mas ainda n√£o possui acesso premium. O acesso ao sistema permanece bloqueado at√© a libera√ß√£o.", "warn");
       } catch (err) {
         setBusy(false);
         setMsg(humanizeAuthError(err), "bad");
@@ -814,7 +1045,7 @@
         const online = await safeNetworkCheck();
         if (!online) {
           setBusy(false);
-          setMsg("N„o foi possÌvel alcanÁar o servidor do Supabase.\n\nConfira a URL do projeto, a chave p˙blica e se o projeto est· ativo.", "bad");
+          setMsg("N√£o foi poss√≠vel alcan√ßar o servidor do Supabase.\n\nConfira a URL do projeto, a chave p√∫blica e se o projeto est√° ativo.", "bad");
           startCooldown(4000);
           return;
         }
@@ -834,7 +1065,7 @@
         }
 
         if (!data?.session) {
-          setMsg("Conta criada com sucesso.\n\nAgora confirme seu e-mail para finalizar o acesso.\nVerifique tambÈm a pasta de spam.", "ok");
+          setMsg("Conta criada com sucesso.\n\nAgora confirme seu e-mail para finalizar o acesso.\nVerifique tamb√©m a pasta de spam.", "ok");
           startCooldown(4000);
           return;
         }
@@ -847,7 +1078,7 @@
           }
         } catch {}
 
-        setMsg("Conta criada e sess„o iniciada. Quando o premium for liberado, o sistema poder· ser aberto automaticamente no prÛximo acesso.", "ok");
+        setMsg("Conta criada e sess√£o iniciada. Quando o premium for liberado, o sistema poder√° ser aberto automaticamente no pr√≥ximo acesso.", "ok");
       } catch (err) {
         setBusy(false);
         setMsg(humanizeAuthError(err), "bad");
@@ -861,12 +1092,12 @@
 
       const email = emailInput.value.trim();
       if (!email || !isValidEmail(email)) {
-        setMsg("Informe um e-mail v·lido para recuperaÁ„o.", "bad");
+        setMsg("Informe um e-mail v√°lido para recupera√ß√£o.", "bad");
         return;
       }
 
       setBusy(true);
-      setMsg("Enviando link de recuperaÁ„o...", "warn");
+      setMsg("Enviando link de recupera√ß√£o...", "warn");
 
       try {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -881,7 +1112,7 @@
           return;
         }
 
-        setMsg("Link de recuperaÁ„o enviado com sucesso.\nVerifique sua caixa de entrada e a pasta de spam.", "ok");
+        setMsg("Link de recupera√ß√£o enviado com sucesso.\nVerifique sua caixa de entrada e a pasta de spam.", "ok");
         startCooldown(2500);
       } catch (err) {
         setBusy(false);
@@ -898,7 +1129,7 @@
       const password = passwordInput.value;
 
       if (!email || !isValidEmail(email)) {
-        setMsg("Informe um e-mail v·lido.", "bad");
+        setMsg("Informe um e-mail v√°lido.", "bad");
         return;
       }
 
@@ -919,7 +1150,7 @@
         await navigator.clipboard.writeText(pixPayload.value.trim());
         setMsg("Chave Pix copiada com sucesso.\nAgora realize o pagamento e envie o comprovante pelo WhatsApp.", "ok");
       } catch {
-        setMsg("N„o foi possÌvel copiar automaticamente. Copie a chave manualmente.", "warn");
+        setMsg("N√£o foi poss√≠vel copiar automaticamente. Copie a chave manualmente.", "warn");
       }
     }
 
@@ -934,7 +1165,7 @@
       } catch {}
 
       const text =
-        "Ol·! Realizei o pagamento do Premium LPP via Pix.%0A" +
+        "Ol√°! Realizei o pagamento do Premium LPP via Pix.%0A" +
         `Chave Pix: ${encodeURIComponent(PIX_KEY)}%0A` +
         (email ? `E-mail: ${encodeURIComponent(email)}%0A` : "") +
         (uid ? `UID: ${encodeURIComponent(uid)}%0A` : "") +
@@ -961,14 +1192,14 @@
 
     async function bootstrapSession() {
       setBusy(true);
-      setMsg("Verificando sess„o atual...", "warn");
+      setMsg("Verificando sess√£o atual...", "warn");
 
       try {
         const session = await waitForLocalSession();
         if (!session?.user) {
           clearMsg();
           setBusy(false);
-          setMsg("Sistema pronto. Escolha entre login ou criaÁ„o de conta.", "warn");
+          setMsg("Sistema pronto. Escolha entre login ou cria√ß√£o de conta.", "warn");
           return;
         }
 
@@ -980,7 +1211,7 @@
           return;
         }
 
-        setMsg("Sess„o encontrada, mas o acesso premium ainda n„o est· liberado.", "warn");
+        setMsg("Sess√£o encontrada, mas o acesso premium ainda n√£o est√° liberado.", "warn");
       } catch (err) {
         setBusy(false);
         setMsg(humanizeAuthError(err), "bad");
@@ -1000,6 +1231,9 @@
     btnWhats.addEventListener("click", openWhatsApp);
     emailInput.addEventListener("keydown", handleEnterKey);
     passwordInput.addEventListener("keydown", handleEnterKey);
+    smartTips.forEach((button) => {
+      button.addEventListener("click", () => applyQuickTip(button.dataset.fill || ""));
+    });
 
     supabase.auth.onAuthStateChange(async (event, session) => {
       if (bootstrapping || redirecting || !session?.user) return;
@@ -1014,7 +1248,22 @@
     const initialMode = params.get("mode");
     setMode(initialMode === "signup" ? "signup" : "login");
     bootstrapSession();
+
+    const rotatingNotes = [
+      "Use um e-mail v√°lido para receber confirma√ß√£o de cadastro e recupera√ß√£o de senha.",
+      "Se o premium j√° foi liberado no seu perfil, o sistema abre automaticamente ap√≥s o login.",
+      "Depois do pagamento via Pix, envie o comprovante no WhatsApp para agilizar a valida√ß√£o."
+    ];
+
+    let rotatingIndex = 0;
+    window.setInterval(() => {
+      if (!liveNote) return;
+      const prefix = mode === "login" ? "Dica r√°pida" : "Cadastro";
+      rotatingIndex = (rotatingIndex + 1) % rotatingNotes.length;
+      liveNote.innerHTML = `<strong>${prefix}:</strong> ${rotatingNotes[rotatingIndex]}`;
+    }, 5500);
   </script>
 </body>
 </html>
+
 
