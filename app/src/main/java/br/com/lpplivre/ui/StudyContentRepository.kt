@@ -856,15 +856,40 @@ object StudyContentRepository {
             body = "Anatomia, para enfermagem, deve ser estudada de forma aplicada ao cuidado. Em vez de decorar estruturas isoladas, organize o estudo por regioes e sistemas: eixo corporal, cabeca, tronco, membros, sistema osseo, cardiovascular e respiratorio. O material oficial do Ministerio da Saude ajuda a revisar essa organizacao corporal e a entender onde estao estruturas importantes para avaliacao, monitorizacao e procedimentos. Na pratica de estudo, sempre conecte anatomia com tecnica: onde auscultar, onde palpar, onde observar sinais, quais referencias anatomicas orientam puncao, curativo, mobilizacao e vigilancia clinica.",
             source = officialSources.first { it.id == "ms_anatomia" },
         ),
+        AiStudyAnswer(
+            title = "SAE com NANDA NIC e NOC",
+            body = "Na SAE, o raciocinio deve sair da coleta solta de dados e caminhar ate diagnosticos, resultados e intervencoes articulados. Pela Resolucao Cofen 736/2024, o Processo de Enfermagem precisa aparecer na pratica como coleta estruturada, julgamento clinico, planejamento, implementacao e avaliacao. Para estudar com profundidade, conecte os achados do exame fisico e da anamnese com diagnosticos de enfermagem, defina prioridades, escolha resultados esperados mensuraveis e descreva intervencoes coerentes com seguranca e contexto do paciente. Em prova e pratica, o ponto forte e mostrar relacao entre problema identificado, meta assistencial, intervencao e reavaliacao continua.",
+            source = officialSources.first { it.id == "cofen_736" },
+        ),
+        AiStudyAnswer(
+            title = "Urgencia e emergencia com ABCDE",
+            body = "Na urgencia e emergencia, a enfermagem precisa reconhecer risco imediato, priorizar e comunicar sem perder a sistematizacao. O estudo do ABCDE ajuda a organizar a avaliacao primaria em via aerea, respiracao, circulacao, estado neurologico e exposicao, sempre com reavaliacao seriada e identificacao de sinais de deterioracao. Para estudar bem, una esse roteiro a classificacao de risco, monitorizacao, suporte inicial, preparo de materiais, comunicacao efetiva e registro das mudancas do quadro. O mais importante e entender que o dado isolado nao basta: tendencia clinica, perfusao, padrao respiratorio e nivel de consciencia mudam a prioridade do cuidado.",
+            source = officialSources.first { it.id == "ms_dengue" },
+        ),
+        AiStudyAnswer(
+            title = "Controle de infeccao e IRAS",
+            body = "No controle de infeccao, a base do raciocinio de enfermagem precisa integrar higiene das maos, precaucoes padrao e especificas, uso correto de EPIs, processamento de materiais e vigilancia de risco assistencial. As orientacoes da Anvisa tratam higiene das maos e processamento de produtos como medidas centrais para prevenir infeccoes relacionadas a assistencia. Para estudo tecnico, organize em indicacao da medida, tecnica correta, momento de aplicar, falhas frequentes, complicacoes possiveis e impacto na seguranca do paciente. Em pratica e prova, destaque que prevencao de IRAS depende de adesao sistematica e nao de conduta pontual.",
+            source = officialSources.first { it.id == "anvisa_higiene_maos" },
+        ),
+        AiStudyAnswer(
+            title = "Documentacao clinica e comunicacao SBAR",
+            body = "Documentacao clinica de enfermagem deve ser estudada como ferramenta assistencial, etica e legal. O registro precisa ser claro, cronologico, objetivo, coerente com o quadro clinico e capaz de sustentar continuidade do cuidado e rastreabilidade da decisao. Para estudar melhor, ligue evolucao, prescricao, checagem, intercorrencias e reavaliacao a comunicacao efetiva com a equipe. Um bom treino e usar a logica SBAR para organizar situacao, contexto, avaliacao e recomendacao quando for passar caso, escalar risco ou registrar mudanca importante do paciente.",
+            source = officialSources.first { it.id == "cofen_736" },
+        ),
+        AiStudyAnswer(
+            title = "Etica e legislacao em enfermagem",
+            body = "Etica e legislacao em enfermagem exigem estudo tecnico e aplicacao pratica. O profissional precisa relacionar sigilo, responsabilidade, limites de competencia, consentimento, registro adequado e seguranca do paciente com cada decisao assistencial. Em estudo de casos, esse tema aparece quando a equipe precisa escolher entre agir rapidamente, respeitar autonomia, comunicar risco e manter documentacao correta. Para responder bem, mostre sempre o elo entre dever etico, respaldo legal, protecao do paciente e responsabilidade profissional.",
+            source = officialSources.first { it.id == "cofen_736" },
+        ),
     )
 
     fun answerStudyQuestion(question: String): AiStudyAnswer {
-        if (question.isBlank()) return withTeachingGuide(aiAnswers.first())
+        if (question.isBlank()) return enrichAnswer(aiAnswers.first())
 
         val normalized = normalize(question)
         val queryTokens = significantTokens(normalized)
 
-        basicNursingAnswer(normalized)?.let { return withTeachingGuide(it) }
+        basicNursingAnswer(normalized)?.let { return enrichAnswer(it) }
 
         val medicationMatch = medications
             .map { medication ->
@@ -877,12 +902,12 @@ object StudyContentRepository {
             ?.first
 
         if (medicationMatch != null) {
-            return withTeachingGuide(
+            return enrichAnswer(
                 AiStudyAnswer(
-                title = medicationMatch.title,
-                body = "Tema encontrado na base de medicamentos. Estude ${medicationMatch.activeIngredient}, ${medicationMatch.therapeuticEffect.lowercase()} e revise reacoes esperadas, inesperadas e interacoes na fonte oficial da Anvisa.",
-                source = officialSources.first { it.id == "anvisa_bulario" },
-            )
+                    title = medicationMatch.title,
+                    body = "Tema encontrado na base de medicamentos. Estude ${medicationMatch.activeIngredient}, ${medicationMatch.therapeuticEffect.lowercase()} e revise reacoes esperadas, inesperadas e interacoes na fonte oficial da Anvisa.",
+                    source = officialSources.first { it.id == "anvisa_bulario" },
+                )
             )
         }
 
@@ -892,7 +917,7 @@ object StudyContentRepository {
             .firstOrNull { it.second > 0 }
             ?.first
 
-        return withTeachingGuide(rankedTopic ?: aiAnswers.first { it.title == "Administracao segura de medicamentos" })
+        return enrichAnswer(rankedTopic ?: aiAnswers.first { it.title == "Administracao segura de medicamentos" })
     }
 
     fun medicationsFor(query: String, selectedClass: String?): List<StudyMedication> {
@@ -966,6 +991,16 @@ object StudyContentRepository {
 
     private fun basicNursingAnswer(normalizedQuestion: String): AiStudyAnswer? {
         return when {
+            normalizedQuestion.hasKeyword("sbar", "evolucao de enfermagem", "registro de enfermagem", "documentacao clinica", "prontuario", "passagem de plantao") ->
+                aiAnswers.first { it.title == "Documentacao clinica e comunicacao SBAR" }
+            normalizedQuestion.hasKeyword("abcde", "avaliacao primaria", "reanimacao", "parada cardiorrespiratoria", "choque", "trauma") ->
+                aiAnswers.first { it.title == "Urgencia e emergencia com ABCDE" }
+            normalizedQuestion.hasKeyword("sae", "nanda", "nic", "noc", "diagnostico de enfermagem", "diagnosticos de enfermagem") ->
+                aiAnswers.first { it.title == "SAE com NANDA NIC e NOC" }
+            normalizedQuestion.hasKeyword("iras", "controle de infeccao", "epi", "epis", "precaucoes", "5 momentos") ->
+                aiAnswers.first { it.title == "Controle de infeccao e IRAS" }
+            normalizedQuestion.hasKeyword("codigo de etica", "sigilo profissional", "consentimento informado", "responsabilidade civil", "responsabilidade penal", "legislacao de enfermagem") ->
+                aiAnswers.first { it.title == "Etica e legislacao em enfermagem" }
             normalizedQuestion.contains("diferenca") &&
                 normalizedQuestion.contains("vacina") &&
                 (normalizedQuestion.contains("subcutanea") || normalizedQuestion.contains("intradermica")) &&
@@ -1140,6 +1175,63 @@ object StudyContentRepository {
         return answer.copy(body = "${answer.body}\n\n$studyGuide")
     }
 
+    private fun enrichAnswer(answer: AiStudyAnswer): AiStudyAnswer {
+        return withClinicalFramework(withTeachingGuide(answer))
+    }
+
+    private fun withClinicalFramework(answer: AiStudyAnswer): AiStudyAnswer {
+        if (answer.body.contains("Explicacao tecnica:")) return answer
+
+        val conduct = when (answer.title) {
+            "SAE com NANDA NIC e NOC", "Processo de Enfermagem" ->
+                "Relacionar dados coletados, diagnosticos, prioridades, resultados esperados, prescricoes e reavaliacao documentada."
+            "Urgencia e emergencia com ABCDE", "Urgencia e emergencia em enfermagem" ->
+                "Priorizar avaliacao primaria, reconhecer gravidade, comunicar rapidamente e preparar suporte imediato conforme protocolo."
+            "Controle de infeccao e IRAS", "Higiene das Maos", "Materiais e processamento de produtos para saude" ->
+                "Aplicar precaucoes, higienizacao correta, tecnica limpa ou asseptica e rastrear falhas que aumentem risco assistencial."
+            "Documentacao clinica e comunicacao SBAR" ->
+                "Registrar dados objetivos, intervencoes, resposta do paciente e comunicar mudancas relevantes usando estrutura clara."
+            "Etica e legislacao em enfermagem" ->
+                "Atuar dentro da competencia profissional, preservar sigilo, documentar decisao e proteger autonomia e seguranca do paciente."
+            "Administracao segura de medicamentos", "Calculo e diluicao de medicamentos", "Diluicao e compatibilidade na via endovenosa" ->
+                "Conferir prescricao, dose, via, diluente, compatibilidade, identificacao do paciente e resposta clinica apos administrar."
+            "Puncao venosa periferica", "Materiais para puncao venosa periferica", "Sondas e cateteres" ->
+                "Organizar material, aplicar tecnica segura, vigiar complicacoes locais e registrar condicoes do dispositivo."
+            else ->
+                "Integrar avaliacao clinica, seguranca do paciente, intervencao de enfermagem e reavaliacao continua."
+        }
+
+        val risks = when (answer.title) {
+            "Urgencia e emergencia com ABCDE", "Urgencia e emergencia em enfermagem" ->
+                "Atraso no reconhecimento de deterioracao, instabilidade hemodinamica, insuficiencia respiratoria e piora rapida do quadro."
+            "Controle de infeccao e IRAS", "Higiene das Maos", "Materiais e processamento de produtos para saude" ->
+                "Contaminacao cruzada, IRAS, falha de barreira, colonizacao de dispositivos e dano evitavel ao paciente."
+            "Administracao segura de medicamentos", "Agulhas para intramuscular", "Tecnica intramuscular e escolha do sitio", "Via subcutanea", "Via intradermica", "Administracao endovenosa" ->
+                "Erro de dose, via inadequada, lesao tecidual, evento adverso, flebite, infiltracao, extravasamento ou resposta clinica inesperada."
+            "Calculo e diluicao de medicamentos", "Gotejamento venoso", "Bomba de infusao e controle de velocidade" ->
+                "Infusao incorreta, subdose, sobredose, instabilidade da solucao e atraso na identificacao de reacoes adversas."
+            "Sondas e cateteres", "Puncao venosa periferica" ->
+                "Infeccao, obstrucao, deslocamento, extravasamento, trauma local e falha de monitorizacao."
+            "Documentacao clinica e comunicacao SBAR" ->
+                "Perda de continuidade do cuidado, erro de comunicacao, fragilidade legal e atraso em intervencoes importantes."
+            else ->
+                "Complicacoes evitaveis aparecem quando a tecnica, a vigilancia e o registro nao acompanham a complexidade do caso."
+        }
+
+        return answer.copy(
+            body = buildString {
+                append("Explicacao tecnica:\n")
+                append(answer.body)
+                append("\n\nConduta de enfermagem:\n")
+                append(conduct)
+                append("\n\nRiscos e complicacoes:\n")
+                append(risks)
+                append("\n\nFonte oficial:\n")
+                append("${answer.source.authority} - ${answer.source.title}")
+            },
+        )
+    }
+
     private fun topicAliases(title: String): List<String> = when (title) {
         "Processo de Enfermagem" -> listOf("sistematizacao", "sae", "processo de enfermagem")
         "Higiene das Maos" -> listOf("lavagem das maos", "higienizacao das maos", "higiene das maos")
@@ -1171,6 +1263,11 @@ object StudyContentRepository {
         "Farmacodinamica" -> listOf("mecanismo de acao", "efeito do remedio", "resposta farmacologica")
         "Farmacocinetica" -> listOf("absorcao", "distribuicao", "metabolismo", "eliminacao")
         "Anatomia aplicada a enfermagem" -> listOf("anatomia", "corpo humano", "sistema cardiovascular", "sistema respiratorio", "sistema osseo")
+        "SAE com NANDA NIC e NOC" -> listOf("sae", "nanda", "nic", "noc", "diagnostico de enfermagem")
+        "Urgencia e emergencia com ABCDE" -> listOf("abcde", "avaliacao primaria", "parada cardiorrespiratoria", "choque", "trauma")
+        "Controle de infeccao e IRAS" -> listOf("iras", "controle de infeccao", "epi", "precaucoes", "5 momentos")
+        "Documentacao clinica e comunicacao SBAR" -> listOf("sbar", "registro de enfermagem", "prontuario", "evolucao de enfermagem")
+        "Etica e legislacao em enfermagem" -> listOf("codigo de etica", "sigilo profissional", "consentimento informado", "legislacao")
         else -> emptyList()
     }
 

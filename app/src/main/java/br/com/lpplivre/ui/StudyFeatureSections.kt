@@ -349,6 +349,7 @@ fun MedicationStudySection() {
     var query by rememberSaveable { mutableStateOf("") }
     var selectedClass by rememberSaveable { mutableStateOf<String?>(null) }
     var officialVisibleCount by rememberSaveable(query, selectedClass) { mutableStateOf(24) }
+    var officialCatalogExpanded by rememberSaveable { mutableStateOf(false) }
     val medications = remember(query, selectedClass) {
         StudyContentRepository.medicationsFor(query = query, selectedClass = selectedClass)
     }
@@ -358,8 +359,13 @@ fun MedicationStudySection() {
             .distinct()
             .sorted()
     }
-    val officialMatches = remember(query, selectedClass, officialCatalog) {
+    val shouldShowOfficialCatalog = officialCatalogExpanded || query.trim().length >= 2 || !selectedClass.isNullOrBlank()
+    val officialMatches = remember(query, selectedClass, officialCatalog, shouldShowOfficialCatalog, officialVisibleCount) {
+        if (!shouldShowOfficialCatalog) return@remember emptyList()
         val normalizedQuery = query.trim().lowercase()
+        if (normalizedQuery.isBlank() && selectedClass.isNullOrBlank()) {
+            return@remember officialCatalog.take(officialVisibleCount)
+        }
         officialCatalog.filter { item ->
             val classMatches = selectedClass.isNullOrBlank() || item.therapeuticClass == selectedClass
             val queryMatches = normalizedQuery.isBlank() ||
@@ -368,6 +374,25 @@ fun MedicationStudySection() {
                     .lowercase()
                     .contains(normalizedQuery)
             classMatches && queryMatches
+        }
+    }
+    val totalOfficialResults = remember(query, selectedClass, officialCatalog, shouldShowOfficialCatalog) {
+        if (!shouldShowOfficialCatalog) {
+            0
+        } else {
+            val normalizedQuery = query.trim().lowercase()
+            when {
+                normalizedQuery.isBlank() && selectedClass.isNullOrBlank() -> officialCatalog.size
+                else -> officialCatalog.count { item ->
+                    val classMatches = selectedClass.isNullOrBlank() || item.therapeuticClass == selectedClass
+                    val queryMatches = normalizedQuery.isBlank() ||
+                        listOf(item.product, item.substance, item.presentation, item.therapeuticClass, item.laboratory)
+                            .joinToString(" ")
+                            .lowercase()
+                            .contains(normalizedQuery)
+                    classMatches && queryMatches
+                }
+            }
         }
     }
     val visibleOfficialCount = minOf(officialVisibleCount, officialMatches.size)
@@ -393,7 +418,10 @@ fun MedicationStudySection() {
                 Text("Busca de medicamentos", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
                 OutlinedTextField(
                     value = query,
-                    onValueChange = { query = it },
+                    onValueChange = {
+                        query = it
+                        if (it.trim().length >= 2) officialCatalogExpanded = true
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(18.dp),
                     label = { Text("Pesquisar medicamento, principio ativo ou classe") },
@@ -418,21 +446,32 @@ fun MedicationStudySection() {
                     allClasses.forEach { medicationClass ->
                         FilterChip(
                             selected = selectedClass == medicationClass,
-                            onClick = { selectedClass = medicationClass },
+                            onClick = {
+                                selectedClass = medicationClass
+                                officialCatalogExpanded = true
+                            },
                             label = { Text(medicationClass) },
                         )
                     }
                 }
                 Text(
-                    text = "Detalhados: ${medications.size} | Catalogo oficial: ${officialMatches.size}",
+                    text = "Detalhados: ${medications.size} | Catalogo oficial: ${if (shouldShowOfficialCatalog) totalOfficialResults else "sob demanda"}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
-                    text = "A base oficial da Anvisa carregada no app usa a planilha CMED de 09/03/2026 com 24.664 apresentacoes. Todo item do catalogo pode abrir no mesmo formato detalhado dos medicamentos principais, com carregamento progressivo para manter a tela leve e facil de estudar.",
+                    text = "A base oficial da Anvisa carregada no app usa a planilha CMED de 09/03/2026 com 24.664 apresentacoes. O catalogo oficial agora abre sob demanda para evitar travadas na entrada da tela e manter a revisao mais leve.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+                if (!shouldShowOfficialCatalog) {
+                    OutlinedButton(
+                        onClick = { officialCatalogExpanded = true },
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Text("Abrir catalogo oficial da Anvisa")
+                    }
+                }
             }
         }
         medications.forEach { medication ->
@@ -442,7 +481,7 @@ fun MedicationStudySection() {
                 onOpenSearch = { uriHandler.openUri(medication.anvisaSearchUrl) },
             )
         }
-        if (officialPreview.isNotEmpty()) {
+        if (shouldShowOfficialCatalog && officialPreview.isNotEmpty()) {
             Card(
                 shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(containerColor = ui.card),
@@ -465,15 +504,15 @@ fun MedicationStudySection() {
                             onOpenSearch = { uriHandler.openUri(detailedItem.anvisaSearchUrl) },
                         )
                     }
-                    if (officialMatches.size > officialPreview.size) {
+                    if (totalOfficialResults > officialPreview.size) {
                         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                             Text(
-                                text = "Mostrando ${officialPreview.size} de ${officialMatches.size} resultados. Use a busca e os filtros para chegar rapido no medicamento desejado.",
+                                text = "Mostrando ${officialPreview.size} de $totalOfficialResults resultados. Use a busca e os filtros para chegar rapido no medicamento desejado.",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                             Button(
-                                onClick = { officialVisibleCount = (officialVisibleCount + 24).coerceAtMost(officialMatches.size) },
+                                onClick = { officialVisibleCount = (officialVisibleCount + 24).coerceAtMost(totalOfficialResults) },
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
                                 Text("Mostrar mais medicamentos")
@@ -481,7 +520,7 @@ fun MedicationStudySection() {
                         }
                     } else if (officialMatches.isNotEmpty()) {
                         Text(
-                            text = "Todos os ${officialMatches.size} resultados filtrados estao visiveis no mesmo formato de estudo.",
+                            text = "Todos os $totalOfficialResults resultados filtrados estao visiveis no mesmo formato de estudo.",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -887,7 +926,7 @@ private fun OfficialCatalogDetailedCard(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Text(medication.title, fontWeight = FontWeight.Black)
+            Text(medication.title, fontWeight = FontWeight.Black, color = MaterialTheme.colorScheme.onSurface)
             MedicationInfoLine("Principio ativo", medication.activeIngredient)
             MedicationInfoLine("Referencia oficial", medication.referenceProduct)
             MedicationInfoLine("Forma", medication.form)
@@ -936,30 +975,49 @@ private fun MedicationInfoLine(label: String, value: String) {
     val ui = studyUiTokens()
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(label, fontWeight = FontWeight.Bold, color = ui.accent)
-        Text(value, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(value, color = MaterialTheme.colorScheme.onSurface)
     }
 }
 
 @Composable
 private fun MedicationBlock(title: String, accent: Color, items: List<String>) {
-    val ui = studyUiTokens()
+    val titleColor = medicationReadableTextColor(accent)
+    val bodyColor = medicationReadableBodyColor(accent)
+    val bulletColor = medicationReadableBulletColor(accent)
     Card(
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = accent),
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Text(title, fontWeight = FontWeight.Black, color = MaterialTheme.colorScheme.onSurface)
+            Text(title, fontWeight = FontWeight.Black, color = titleColor)
             items.forEach { item ->
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.Top) {
-                    Text("-", fontWeight = FontWeight.Black, color = ui.accent)
-                    Text(item, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text("-", fontWeight = FontWeight.Black, color = bulletColor)
+                    Text(item, color = bodyColor)
                 }
             }
         }
     }
+}
+
+private fun medicationReadableTextColor(background: Color): Color {
+    return if (medicationBrightness(background) > 0.78f) Color(0xFF13263A) else Color.White
+}
+
+private fun medicationReadableBodyColor(background: Color): Color {
+    return if (medicationBrightness(background) > 0.78f) Color(0xFF22364A) else Color(0xFFF4F8FD)
+}
+
+private fun medicationReadableBulletColor(background: Color): Color {
+    return if (medicationBrightness(background) > 0.78f) Color(0xFF6B37D1) else Color(0xFFFFE082)
+}
+
+private fun medicationBrightness(background: Color): Float {
+    return (background.red * 0.299f) + (background.green * 0.587f) + (background.blue * 0.114f)
 }
 
 @Composable

@@ -225,6 +225,34 @@ class StudyContentRepositoryTest {
     }
 
     @Test
+    fun `sae question returns structured advanced nursing answer`() {
+        val answer = StudyContentRepository.answerStudyQuestion("Como aplicar SAE com NANDA NIC e NOC?")
+
+        assertEquals("SAE com NANDA NIC e NOC", answer.title)
+        assertTrue(answer.body.contains("Explicacao tecnica:"))
+        assertTrue(answer.body.contains("Conduta de enfermagem:"))
+        assertTrue(answer.body.contains("Riscos e complicacoes:"))
+    }
+
+    @Test
+    fun `abcde question returns urgency answer with primary assessment`() {
+        val answer = StudyContentRepository.answerStudyQuestion("Como estudar ABCDE na urgencia e emergencia?")
+
+        assertEquals("Urgencia e emergencia com ABCDE", answer.title)
+        assertTrue(answer.body.contains("avaliacao primaria"))
+        assertTrue(answer.body.contains("Priorizar avaliacao primaria"))
+    }
+
+    @Test
+    fun `sbar question returns documentation answer`() {
+        val answer = StudyContentRepository.answerStudyQuestion("Como fazer comunicacao SBAR e registro de enfermagem?")
+
+        assertEquals("Documentacao clinica e comunicacao SBAR", answer.title)
+        assertTrue(answer.body.contains("SBAR"))
+        assertTrue(answer.body.contains("Fonte oficial:"))
+    }
+
+    @Test
     fun `quiz bank is large and uses only official brazilian authorities`() {
         assertTrue(StudyContentRepository.quizQuestions.size >= 40)
         assertTrue(
