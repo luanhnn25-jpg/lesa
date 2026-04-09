@@ -55,6 +55,35 @@
     .steps{margin:0;padding-left:20px;color:#334155;line-height:1.8}
     .steps li + li{margin-top:6px}
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .password-box{
+      margin-top:18px;
+      padding:16px;
+      border-radius:20px;
+      background:#f8fbff;
+      border:1px solid #dbeafe;
+    }
+    .password-box label{
+      display:block;
+      font-size:14px;
+      font-weight:800;
+      color:#1e3a8a;
+      margin-bottom:10px;
+    }
+    .password-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .password-input{
+      flex:1 1 240px;
+      min-height:52px;
+      border-radius:16px;
+      border:1px solid #cbd5e1;
+      padding:0 16px;
+      font-size:16px;
+      color:var(--text);
+      background:#fff;
+    }
     .btn{
       display:inline-flex;
       align-items:center;
@@ -135,6 +164,13 @@
           <a class="btn btn-primary btn-disabled" id="apkDownloadLink" href="./estudasaude-app-v1.0.3.apk" download aria-disabled="true">Verificando APK...</a>
           <a class="btn btn-secondary" href="./index.html">Voltar ao site principal</a>
         </div>
+        <div class="password-box">
+          <label for="apkPasswordInput">Senha para liberar o download</label>
+          <div class="password-row">
+            <input class="password-input" id="apkPasswordInput" type="password" inputmode="numeric" placeholder="Digite a senha" />
+            <button class="btn btn-secondary" id="apkUnlockButton" type="button">Liberar download</button>
+          </div>
+        </div>
         <div class="status-box" id="apkStatusBox">
           Verificando a disponibilidade do APK publicado para download...
         </div>
@@ -171,22 +207,57 @@
     (function(){
       const downloadLink = document.getElementById('apkDownloadLink');
       const statusBox = document.getElementById('apkStatusBox');
-      if(!downloadLink || !statusBox) return;
+      const passwordInput = document.getElementById('apkPasswordInput');
+      const unlockButton = document.getElementById('apkUnlockButton');
+      if(!downloadLink || !statusBox || !passwordInput || !unlockButton) return;
 
       const apkUrl = new URL(downloadLink.getAttribute('href'), window.location.href).toString();
+      let apkAvailable = false;
+      let passwordUnlocked = false;
+
+      const renderDownloadState = (message, warn) => {
+        statusBox.textContent = message;
+        statusBox.classList.toggle('warn', Boolean(warn));
+        if(apkAvailable && passwordUnlocked){
+          downloadLink.classList.remove('btn-disabled');
+          downloadLink.removeAttribute('aria-disabled');
+          downloadLink.textContent = 'Baixar APK Android';
+        } else {
+          downloadLink.classList.add('btn-disabled');
+          downloadLink.setAttribute('aria-disabled', 'true');
+          downloadLink.textContent = apkAvailable ? 'Informe a senha para baixar' : 'APK ainda nao publicado';
+        }
+      };
+
+      const setAvailable = (message) => {
+        apkAvailable = true;
+        renderDownloadState(message, false);
+      };
+
+      const setUnavailable = (message) => {
+        apkAvailable = false;
+        passwordUnlocked = false;
+        renderDownloadState(message, true);
+      };
+
+      unlockButton.addEventListener('click', () => {
+        if(passwordInput.value === '1030'){
+          passwordUnlocked = true;
+          renderDownloadState('Senha correta. O APK publicado foi liberado para download.', false);
+        } else {
+          passwordUnlocked = false;
+          renderDownloadState('Senha incorreta. Digite a senha valida para liberar o APK.', true);
+        }
+      });
+
       const enableDownload = (message) => {
         downloadLink.classList.remove('btn-disabled');
         downloadLink.removeAttribute('aria-disabled');
         downloadLink.textContent = 'Baixar APK Android';
-        statusBox.textContent = message;
-        statusBox.classList.remove('warn');
+        renderDownloadState(message, false);
       };
       const disableDownload = (message) => {
-        downloadLink.classList.add('btn-disabled');
-        downloadLink.setAttribute('aria-disabled', 'true');
-        downloadLink.textContent = 'APK ainda nao publicado';
-        statusBox.textContent = message;
-        statusBox.classList.add('warn');
+        setUnavailable(message);
       };
 
       if(window.location.href.includes('/android_asset/')){
@@ -195,14 +266,14 @@
       }
 
       if(window.location.protocol === 'file:'){
-        enableDownload('Arquivo local de distribuicao detectado. Se o APK estiver na mesma pasta desta pagina, o download local pode ser feito normalmente.');
+        setAvailable('Arquivo local de distribuicao detectado. Digite a senha 1030 para liberar o download local do APK.');
         return;
       }
 
       fetch(apkUrl, { method: 'HEAD', cache: 'no-store' })
         .then((response) => {
           if(response.ok){
-            enableDownload('APK publicado e pronto para download nesta pagina.');
+            setAvailable('APK publicado e pronto para download. Digite a senha 1030 para liberar o arquivo.');
           } else {
             throw new Error(`status-${response.status}`);
           }

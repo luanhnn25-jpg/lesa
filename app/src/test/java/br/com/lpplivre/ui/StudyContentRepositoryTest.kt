@@ -230,9 +230,10 @@ class StudyContentRepositoryTest {
 
         assertEquals("SAE com NANDA NIC e NOC", answer.title)
         assertTrue(answer.body.contains("[Resumo do quadro]"))
-        assertTrue(answer.body.contains("[Papel do enfermeiro]"))
-        assertTrue(answer.body.contains("[Papel do tecnico de enfermagem]"))
+        assertTrue(answer.body.contains("[O que observar]"))
+        assertTrue(answer.body.contains("[Cuidados de enfermagem]"))
         assertTrue(answer.body.contains("[Quando avisar o enfermeiro]"))
+        assertTrue(answer.body.contains("[Quando chamar medico ou emergencia]"))
     }
 
     @Test
@@ -250,7 +251,7 @@ class StudyContentRepositoryTest {
 
         assertEquals("Documentacao clinica e comunicacao SBAR", answer.title)
         assertTrue(answer.body.contains("SBAR"))
-        assertTrue(answer.body.contains("[Fonte oficial]"))
+        assertTrue(answer.body.contains("Base oficial:"))
     }
 
     @Test
@@ -268,7 +269,125 @@ class StudyContentRepositoryTest {
 
         assertEquals("Sinais vitais", answer.title)
         assertTrue(answer.body.contains("[Resumo do quadro]"))
-        assertTrue(answer.body.contains("[Seguranca]"))
+        assertTrue(answer.body.contains("Base oficial:"))
+    }
+
+    @Test
+    fun `technical audience question marks technician focused guidance`() {
+        val answer = StudyContentRepository.answerStudyQuestion("Sou tecnico de enfermagem, como agir diante de febre no plantao?")
+
+        assertTrue(answer.body.contains("Papel do tecnico"))
+        assertTrue(answer.body.contains("[Quando avisar o enfermeiro]"))
+    }
+
+    @Test
+    fun `caregiver audience question marks caregiver focused guidance`() {
+        val answer = StudyContentRepository.answerStudyQuestion("Sou cuidadora de idoso acamado em casa, o que observar na saturacao?")
+
+        assertTrue(answer.body.contains("O cuidador pode observar"))
+        assertTrue(answer.body.contains("[Quando chamar medico ou emergencia]"))
+    }
+
+    @Test
+    fun `detailed assistential battery keeps emergency and routine answers structured`() {
+        val expectations = listOf(
+            Triple(
+                "Paciente com falta de ar e saturacao 89, o que a enfermagem deve fazer?",
+                "Urgencia e emergencia com ABCDE",
+                listOf("situacao potencialmente grave", "falta de ar", "[Quando chamar medico ou emergencia]"),
+            ),
+            Triple(
+                "Paciente com dor no peito no setor, como a equipe de enfermagem deve agir?",
+                "Urgencia e emergencia com ABCDE",
+                listOf("situacao potencialmente grave", "dor toracica", "Acione medico ou emergencia imediatamente"),
+            ),
+            Triple(
+                "Como o tecnico deve agir diante de febre persistente no plantao?",
+                "Sinais vitais",
+                listOf("Papel do tecnico", "alteracao clinica", "Registre as alteracoes."),
+            ),
+            Triple(
+                "Quais cuidados de enfermagem com banho no leito e higiene oral?",
+                "Higiene e conforto",
+                listOf("[Cuidados de enfermagem]", "privacidade", "conforto"),
+            ),
+            Triple(
+                "Quais cuidados basicos com oxigenoterapia e monitorizacao?",
+                "Oxigenoterapia e suporte respiratorio",
+                listOf("fluxo", "saturacao", "resposta respiratoria"),
+            ),
+            Triple(
+                "Como orientar 9 certos da administracao segura de medicamentos?",
+                "Administracao segura de medicamentos",
+                listOf("identificacao correta", "via", "resposta clinica apos administrar"),
+            ),
+            Triple(
+                "Quais cuidados de enfermagem no controle de infeccao e uso de EPI?",
+                "Controle de infeccao e IRAS",
+                listOf("precaucoes", "higienizacao", "risco assistencial"),
+            ),
+            Triple(
+                "Paciente com rebaixamento de consciencia subitamente, o que fazer?",
+                "Urgencia e emergencia com ABCDE",
+                listOf("situacao potencialmente grave", "rebaixamento", "Acione medico ou emergencia imediatamente"),
+            ),
+            Triple(
+                "Como agir em parada cardiorrespiratoria no setor?",
+                "Urgencia e emergencia com ABCDE",
+                listOf("situacao potencialmente grave", "avaliacao primaria", "Acione medico ou emergencia imediatamente"),
+            ),
+        )
+
+        expectations.forEach { (question, expectedTitle, requiredSnippets) ->
+            val answer = StudyContentRepository.answerStudyQuestion(question)
+            assertEquals(question, expectedTitle, answer.title)
+            assertTrue(question, answer.body.contains("[Resumo do quadro]"))
+            assertTrue(question, answer.body.contains("[O que observar]"))
+            assertTrue(question, answer.body.contains("[Cuidados de enfermagem]"))
+            assertTrue(question, answer.body.contains("[Quando avisar o enfermeiro]"))
+            assertTrue(question, answer.body.contains("[Quando chamar medico ou emergencia]"))
+            requiredSnippets.forEach { snippet ->
+                assertTrue("$question -> missing snippet: $snippet", answer.body.contains(snippet))
+            }
+        }
+    }
+
+    @Test
+    fun `nurse audience question emphasizes planning and supervision`() {
+        val answer = StudyContentRepository.answerStudyQuestion(
+            "Sou enfermeira da clinica medica, como priorizar cuidados e supervisao na passagem de plantao?",
+        )
+
+        assertTrue(answer.body.contains("Papel do enfermeiro"))
+        assertTrue(answer.body.contains("planejar"))
+        assertTrue(answer.body.contains("supervisionar"))
+        assertTrue(answer.body.contains("[Quando avisar o enfermeiro]"))
+    }
+
+    @Test
+    fun `caregiver respiratory question keeps simple guidance with escalation`() {
+        val answer = StudyContentRepository.answerStudyQuestion(
+            "Sou familiar em casa e o paciente esta com cansaco e saturacao baixa, o que observar?",
+        )
+
+        assertTrue(answer.body.contains("O cuidador pode observar"))
+        assertTrue(answer.body.contains("procurar apoio profissional"))
+        assertTrue(answer.body.contains("Acione medico ou emergencia imediatamente"))
+    }
+
+    @Test
+    fun `blank question still keeps all mandatory nursing sections`() {
+        val answer = StudyContentRepository.answerStudyQuestion("   ")
+
+        listOf(
+            "[Resumo do quadro]",
+            "[O que observar]",
+            "[Cuidados de enfermagem]",
+            "[Quando avisar o enfermeiro]",
+            "[Quando chamar medico ou emergencia]",
+        ).forEach { section ->
+            assertTrue("missing section: $section", answer.body.contains(section))
+        }
     }
 
     @Test

@@ -43,7 +43,58 @@ data class AiStudyAnswer(
     val source: OfficialStudySource,
 )
 
+private enum class NursingAudience {
+    TECHNICIAN,
+    NURSE,
+    CAREGIVER,
+}
+
+private data class NursingAiProfile(
+    val identitySummary: String,
+    val missionSummary: String,
+    val mandatorySections: List<String>,
+    val highRiskKeywords: List<String>,
+    val standardPhrases: List<String>,
+)
+
 object StudyContentRepository {
+    private val nursingAiProfile = NursingAiProfile(
+        identitySummary = "IA especialista em enfermagem assistencial no Brasil, com pensamento clinico de enfermeiro e orientacao pratica para tecnico de enfermagem, sempre dentro de limites eticos e profissionais.",
+        missionSummary = "Responder duvidas, orientar cuidados, reforcar seguranca do paciente e indicar escalonamento correto com linguagem clara, tecnica e humanizada.",
+        mandatorySections = listOf(
+            "[Resumo do quadro]",
+            "[O que observar]",
+            "[Cuidados de enfermagem]",
+            "[Quando avisar o enfermeiro]",
+            "[Quando chamar medico ou emergencia]",
+        ),
+        highRiskKeywords = listOf(
+            "falta de ar",
+            "dor no peito",
+            "convulsao",
+            "desmaio",
+            "rebaixamento de consciencia",
+            "rebaixamento",
+            "saturacao 88",
+            "saturacao baixa",
+            "pressao muito baixa",
+            "sangramento intenso",
+            "avc",
+            "sepse",
+            "anafilaxia",
+            "parada cardiorrespiratoria",
+            "confusao mental",
+            "hipotensao",
+        ),
+        standardPhrases = listOf(
+            "Comunique o enfermeiro responsavel.",
+            "Esse sinal exige atencao.",
+            "Procure atendimento imediato.",
+            "Mantenha monitorizacao.",
+            "Registre as alteracoes.",
+        ),
+    )
+
     val officialSources = listOf(
         OfficialStudySource(
             id = "cofen_736",
@@ -717,9 +768,19 @@ object StudyContentRepository {
             source = officialSources.first { it.id == "anvisa_higiene_maos" },
         ),
         AiStudyAnswer(
+            title = "Higiene e conforto",
+            body = "Na higiene e conforto, a enfermagem precisa unir tecnica, privacidade, observacao clinica e prevencao de complicacoes. O banho no leito, a higiene oral, a troca de roupas, o posicionamento e a mudanca de decubito devem ser realizados com respeito, comunicacao clara, organizacao do material e avaliacao da tolerancia do paciente. Em pratica segura, esse cuidado tambem serve para observar pele, hidratacao, dor, dispositivos, eliminacoes, odor, integridade de mucosas e sinais de desconforto. Para estudar bem, organize o tema em preparo do ambiente, acolhimento e privacidade, execucao tecnica, observacao da pele e registro do que foi encontrado e realizado.",
+            source = officialSources.first { it.id == "ms_fundamentos" },
+        ),
+        AiStudyAnswer(
             title = "Sinais vitais",
             body = "Para estudo basico de enfermagem, organize sinais vitais em quatro blocos: tecnica correta, frequencia de monitorizacao, registro e interpretacao clinica. Revise temperatura, frequencia cardiaca, frequencia respiratoria, pressao arterial, saturacao quando disponivel e nivel de consciencia dentro do contexto do cuidado. Mais importante do que decorar numero isolado e acompanhar tendencia, comparar com estado clinico, observar sinais associados e registrar horario, condicao do paciente e resposta apos intervencao. Quando estudar, ligue sinais vitais a priorizacao do cuidado: alteracoes sustentadas, piora progressiva e incompatibilidade entre dado medido e quadro clinico exigem nova avaliacao e comunicacao oportuna.",
             source = officialSources.first { it.id == "cofen_736" },
+        ),
+        AiStudyAnswer(
+            title = "Oxigenoterapia e suporte respiratorio",
+            body = "Na oxigenoterapia, a enfermagem precisa relacionar indicacao, dispositivo, fluxo prescrito, conforto do paciente e monitorizacao da resposta respiratoria. O cuidado seguro inclui conferir fonte de oxigenio, dispositivo instalado, ajuste do fluxo conforme prescricao, permeabilidade do sistema, integridade da pele e saturacao, frequencia respiratoria, uso de musculatura acessoria e tolerancia do paciente. Em estudo e pratica, vale organizar o raciocinio em preparo do material, instalacao correta, observacao continua, prevencao de lesao por dispositivo e registro da resposta clinica. Mais do que instalar oxigenio, o ponto central e reconhecer melhora, ausencia de resposta ou piora respiratoria e escalar o atendimento sem demora.",
+            source = officialSources.first { it.id == "ms_fundamentos" },
         ),
         AiStudyAnswer(
             title = "Administracao segura de medicamentos",
@@ -992,11 +1053,34 @@ object StudyContentRepository {
 
     private fun basicNursingAnswer(normalizedQuestion: String): AiStudyAnswer? {
         return when {
+            normalizedQuestion.hasKeyword(
+                "falta de ar",
+                "dispneia",
+                "dor no peito",
+                "dor toracica",
+                "saturacao baixa",
+                "saturacao 88",
+                "rebaixamento",
+                "rebaixamento de consciencia",
+                "convulsao",
+                "desmaio",
+                "sangramento intenso",
+                "parada cardiorrespiratoria",
+                "pcr",
+            ) ->
+                aiAnswers.first { it.title == "Urgencia e emergencia com ABCDE" }
             normalizedQuestion.hasKeyword("sbar", "evolucao de enfermagem", "registro de enfermagem", "documentacao clinica", "prontuario", "passagem de plantao") ->
                 aiAnswers.first { it.title == "Documentacao clinica e comunicacao SBAR" }
+            normalizedQuestion.hasKeyword("banho no leito", "higiene oral", "higiene e conforto", "mudanca de decubito", "posicionamento no leito", "conforto do paciente", "higiene corporal") ->
+                aiAnswers.first { it.title == "Higiene e conforto" }
+            normalizedQuestion.hasKeyword("oxigenoterapia", "oxigenio", "cateter nasal", "mascara de oxigenio", "suporte respiratorio", "spo2") ->
+                aiAnswers.first { it.title == "Oxigenoterapia e suporte respiratorio" }
+            normalizedQuestion.hasKeyword("febre", "temperatura axilar", "temperatura corporal", "monitorizacao de temperatura") ->
+                aiAnswers.first { it.title == "Sinais vitais" }
             normalizedQuestion.hasKeyword("abcde", "avaliacao primaria", "reanimacao", "parada cardiorrespiratoria", "choque", "trauma") ->
                 aiAnswers.first { it.title == "Urgencia e emergencia com ABCDE" }
-            normalizedQuestion.hasKeyword("sae", "nanda", "nic", "noc", "diagnostico de enfermagem", "diagnosticos de enfermagem") ->
+            normalizedQuestion.hasKeyword("diagnostico de enfermagem", "diagnosticos de enfermagem") ||
+                normalizedQuestion.hasExactToken("sae", "nanda", "nic", "noc") ->
                 aiAnswers.first { it.title == "SAE com NANDA NIC e NOC" }
             normalizedQuestion.hasKeyword("iras", "controle de infeccao", "epi", "epis", "precaucoes", "5 momentos") ->
                 aiAnswers.first { it.title == "Controle de infeccao e IRAS" }
@@ -1117,6 +1201,11 @@ object StudyContentRepository {
         }
     }
 
+    private fun String.hasExactToken(vararg keywords: String): Boolean {
+        val tokens = split(" ").filter { it.isNotBlank() }
+        return keywords.any { keyword -> tokens.contains(normalize(keyword)) }
+    }
+
     private fun significantTokens(normalizedValue: String): List<String> {
         val stopwords = setOf(
             "como", "quais", "qual", "para", "com", "sem", "uma", "uns", "umas",
@@ -1182,23 +1271,9 @@ object StudyContentRepository {
 
     private fun withClinicalFramework(answer: AiStudyAnswer, normalizedQuestion: String): AiStudyAnswer {
         if (answer.body.contains("[Resumo do quadro]")) return answer
+        val audience = inferAudience(normalizedQuestion)
 
-        val highRisk = normalizedQuestion.hasKeyword(
-            "falta de ar",
-            "dor no peito",
-            "convulsao",
-            "desmaio",
-            "rebaixamento de consciencia",
-            "rebaixamento",
-            "saturacao 88",
-            "saturacao baixa",
-            "pressao muito baixa",
-            "sangramento intenso",
-            "avc",
-            "sepse",
-            "anafilaxia",
-            "parada cardiorrespiratoria",
-        )
+        val highRisk = normalizedQuestion.hasKeyword(*nursingAiProfile.highRiskKeywords.toTypedArray())
 
         val summary = when {
             highRisk ->
@@ -1283,49 +1358,73 @@ object StudyContentRepository {
                 "Executar os cuidados prescritos, observar continuamente o paciente, registrar achados e informar qualquer alteracao ao enfermeiro responsavel."
         }
 
-        val risks = when (answer.title) {
-            "Urgencia e emergencia com ABCDE", "Urgencia e emergencia em enfermagem" ->
-                "Atraso no reconhecimento de deterioracao, instabilidade hemodinamica, insuficiencia respiratoria e piora rapida do quadro."
-            "Controle de infeccao e IRAS", "Higiene das Maos", "Materiais e processamento de produtos para saude" ->
-                "Contaminacao cruzada, IRAS, falha de barreira, colonizacao de dispositivos e dano evitavel ao paciente."
-            "Administracao segura de medicamentos", "Agulhas para intramuscular", "Tecnica intramuscular e escolha do sitio", "Via subcutanea", "Via intradermica", "Administracao endovenosa" ->
-                "Erro de dose, via inadequada, lesao tecidual, evento adverso, flebite, infiltracao, extravasamento ou resposta clinica inesperada."
-            "Calculo e diluicao de medicamentos", "Gotejamento venoso", "Bomba de infusao e controle de velocidade" ->
-                "Infusao incorreta, subdose, sobredose, instabilidade da solucao e atraso na identificacao de reacoes adversas."
-            "Sondas e cateteres", "Puncao venosa periferica" ->
-                "Infeccao, obstrucao, deslocamento, extravasamento, trauma local e falha de monitorizacao."
-            "Documentacao clinica e comunicacao SBAR" ->
-                "Perda de continuidade do cuidado, erro de comunicacao, fragilidade legal e atraso em intervencoes importantes."
-            else ->
-                "Complicacoes evitaveis aparecem quando a tecnica, a vigilancia e o registro nao acompanham a complexidade do caso."
+        val documentationAndSafety = when (audience) {
+            NursingAudience.TECHNICIAN ->
+                "Registrar horario, sinais observados, condutas realizadas e comunicar intercorrencias ao enfermeiro responsavel. ${nursingAiProfile.standardPhrases[0]} ${nursingAiProfile.standardPhrases[4]}"
+            NursingAudience.NURSE ->
+                "Documentar avaliacao, prioridades, condutas e resposta do paciente, organizando comunicacao clara com a equipe e definindo escalonamento quando necessario."
+            NursingAudience.CAREGIVER ->
+                "Observar sinais, anotar horario e mudancas importantes, manter o paciente seguro e procurar apoio profissional sempre que houver duvida ou piora."
+        }
+
+        val roleGuidance = when (audience) {
+            NursingAudience.TECHNICIAN ->
+                "Papel do tecnico: executar cuidados com tecnica segura, monitorizar continuamente e informar alteracoes. Papel do enfermeiro: avaliar globalmente, priorizar riscos e decidir a conduta assistencial."
+            NursingAudience.NURSE ->
+                "Papel do enfermeiro: avaliar, priorizar, planejar e supervisionar a equipe. Papel do tecnico: executar os cuidados, observar respostas e comunicar intercorrencias."
+            NursingAudience.CAREGIVER ->
+                "O cuidador pode observar, oferecer conforto, ajudar na seguranca e comunicar alteracoes. A avaliacao clinica e a tomada de decisao cabem a equipe de enfermagem e medica."
+        }
+
+        val practicalBody = when (audience) {
+            NursingAudience.CAREGIVER ->
+                answer.body
+                    .replace("monitorizacao", "observacao")
+                    .replace("reavaliacao", "nova avaliacao")
+                    .replace("intervencao", "conduta")
+            else -> answer.body
         }
 
         return answer.copy(
             body = buildString {
                 append("[Resumo do quadro]\n")
                 append(summary)
+                append("\n\nIdentidade assistencial: ")
+                append(nursingAiProfile.identitySummary)
                 append("\n\n[O que observar]\n")
                 append(observe)
                 append("\n\n[Cuidados de enfermagem]\n")
-                append(answer.body)
-                append("\n\nConduta geral:\n")
+                append(practicalBody)
+                append("\n\n")
                 append(conduct)
-                append("\n\n[Papel do enfermeiro]\n")
-                append(nurseRole)
-                append("\n\n[Papel do tecnico de enfermagem]\n")
-                append(technicianRole)
+                append("\n\n")
+                append(roleGuidance)
+                append("\n\n")
+                append(documentationAndSafety)
                 append("\n\n[Quando avisar o enfermeiro]\n")
                 append(notifyNurse)
                 append("\n\n[Quando chamar medico ou emergencia]\n")
                 append(callDoctor)
-                append("\n\n[Riscos e complicacoes]\n")
-                append(risks)
-                append("\n\n[Seguranca]\n")
-                append("Esta orientacao apoia o cuidado, mas nao substitui avaliacao presencial, protocolos institucionais e julgamento clinico da equipe responsavel.")
-                append("\n\n[Fonte oficial]\n")
-                append("${answer.source.authority} - ${answer.source.title}")
+                append("\n\nMissao da IA: ")
+                append(nursingAiProfile.missionSummary)
+                append("\n\nBase oficial: ")
+                append("${answer.source.authority} - ${answer.source.title}. ")
+                append("Esta orientacao nao substitui avaliacao presencial, protocolo institucional ou decisao medica.")
             },
         )
+    }
+
+    private fun inferAudience(normalizedQuestion: String): NursingAudience {
+        return when {
+            normalizedQuestion.hasKeyword("tecnico de enfermagem", "tecnica de enfermagem", "no plantao", "como o tecnico", "sou tecnico") ->
+                NursingAudience.TECHNICIAN
+            normalizedQuestion.hasKeyword("enfermeiro", "enfermeira", "evolucao de enfermagem", "prescricao de enfermagem", "supervisao") ||
+                normalizedQuestion.hasExactToken("sae", "nanda", "nic", "noc") ->
+                NursingAudience.NURSE
+            normalizedQuestion.hasKeyword("cuidador", "cuidadora", "mae", "pai", "familiar", "em casa", "home care", "idoso acamado", "paciente acamado") ->
+                NursingAudience.CAREGIVER
+            else -> NursingAudience.TECHNICIAN
+        }
     }
 
     private fun topicAliases(title: String): List<String> = when (title) {
