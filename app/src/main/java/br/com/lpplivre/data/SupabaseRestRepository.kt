@@ -28,7 +28,7 @@ object SupabaseRestRepository {
     val publicChatRooms: List<PublicChatRoom> = listOf(
         PublicChatRoom(
             value = "comunidade",
-            label = "Comunidade",
+            label = "Chat",
             description = "Espaco unico para trocar duvidas, acolhimento, revisao e novidades dentro do app.",
         ),
     )
@@ -90,7 +90,7 @@ object SupabaseRestRepository {
                         room = item.optString("room"),
                         senderId = item.optString("sender_id"),
                         senderName = item.optString("sender_name"),
-                        senderRole = item.optString("sender_role"),
+                        senderRole = "Chat",
                         message = item.optString("message"),
                         createdAt = item.optString("created_at"),
                     ),
@@ -127,7 +127,7 @@ object SupabaseRestRepository {
             room = item.optString("room"),
             senderId = item.optString("sender_id"),
             senderName = item.optString("sender_name"),
-            senderRole = item.optString("sender_role"),
+            senderRole = "Chat",
             message = item.optString("message"),
             createdAt = item.optString("created_at"),
         )

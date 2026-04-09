@@ -65,8 +65,8 @@ import kotlinx.coroutines.withContext
 fun AiStudySection() {
     val uriHandler = LocalUriHandler.current
     val ui = studyUiTokens()
-    var question by rememberSaveable { mutableStateOf("Processo de Enfermagem") }
-    var answer by remember { mutableStateOf(StudyContentRepository.answerStudyQuestion(question)) }
+    var question by rememberSaveable { mutableStateOf("") }
+    var answer by remember { mutableStateOf<AiStudyAnswer?>(null) }
     val quickPrompts = remember {
         listOf(
             "SAE" to "Como aplicar SAE com NANDA, NIC e NOC na pratica?",
@@ -113,7 +113,7 @@ fun AiStudySection() {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Text("Central de estudo com IA", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
                         Text(
-                            "Use perguntas livres ou atalhos prontos para revisar farmacologia, procedimentos, urgencia, SAE e seguranca do paciente.",
+                            "Em vez de abrir respondendo algo salvo, a IA agora comeca guiando a conversa para descobrir exatamente o que voce quer revisar.",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -127,25 +127,48 @@ fun AiStudySection() {
                 OutlinedTextField(
                     value = question,
                     onValueChange = { question = it },
-                    label = { Text("Tema, pergunta ou conduta") },
+                    label = { Text("O que voce quer revisar agora?") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(18.dp),
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Button(
                         modifier = Modifier.weight(1f),
-                        onClick = { answer = StudyContentRepository.answerStudyQuestion(question) },
+                        onClick = {
+                            val cleanedQuestion = question.trim()
+                            if (cleanedQuestion.isNotBlank()) {
+                                answer = StudyContentRepository.answerStudyQuestion(cleanedQuestion)
+                            }
+                        },
+                        enabled = question.isNotBlank(),
                     ) {
-                        Text("Responder")
+                        Text("Quero revisar")
                     }
                     OutlinedButton(
                         modifier = Modifier.weight(1f),
                         onClick = {
-                            question = "Quais cuidados basicos com sinais vitais?"
-                            answer = StudyContentRepository.answerStudyQuestion(question)
+                            question = ""
+                            answer = null
                         },
                     ) {
-                        Text("Usar exemplo")
+                        Text("Limpar")
+                    }
+                }
+                Card(
+                    shape = RoundedCornerShape(22.dp),
+                    colors = CardDefaults.cardColors(containerColor = ui.inputHighlight),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        Text("A IA comeca perguntando", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
+                        guidedAiQuestions(question).forEach { guidedQuestion ->
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.Top) {
+                                Text("•", color = ui.accent, fontWeight = FontWeight.Black)
+                                Text(guidedQuestion, color = MaterialTheme.colorScheme.onSurface)
+                            }
+                        }
                     }
                 }
                 Card(
@@ -208,31 +231,51 @@ fun AiStudySection() {
                         answer = StudyContentRepository.answerStudyQuestion(question)
                     }
                 }
-                Card(
-                    shape = RoundedCornerShape(22.dp),
-                    colors = CardDefaults.cardColors(containerColor = ui.inputHighlight),
-                ) {
-                    Column(
-                        modifier = Modifier.padding(18.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                if (answer == null) {
+                    Card(
+                        shape = RoundedCornerShape(22.dp),
+                        colors = CardDefaults.cardColors(containerColor = ui.cardAlt),
                     ) {
-                        Text("Resposta guiada", style = MaterialTheme.typography.labelLarge, color = ui.accent, fontWeight = FontWeight.Bold)
-                        Text(answer.title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
-                        Card(
-                            shape = RoundedCornerShape(18.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.55f),
-                            ),
+                        Column(
+                            modifier = Modifier.padding(18.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
                         ) {
+                            Text("Pronta para te orientar", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
                             Text(
-                                text = answer.body,
-                                modifier = Modifier.padding(16.dp),
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurface,
+                                "Escolha um atalho ou escreva sua duvida. A resposta aparece aqui com foco clinico, estrutura organizada e fonte oficial.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
-                        SourceLinkChip(label = "${answer.source.authority}: ${answer.source.title}") {
-                            uriHandler.openUri(answer.source.url)
+                    }
+                } else {
+                    val currentAnswer = answer ?: return@Column
+                    Card(
+                        shape = RoundedCornerShape(22.dp),
+                        colors = CardDefaults.cardColors(containerColor = ui.inputHighlight),
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(18.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            Text("Resposta guiada", style = MaterialTheme.typography.labelLarge, color = ui.accent, fontWeight = FontWeight.Bold)
+                            Text(currentAnswer.title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                            Card(
+                                shape = RoundedCornerShape(18.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.55f),
+                                ),
+                            ) {
+                                Text(
+                                    text = currentAnswer.body,
+                                    modifier = Modifier.padding(16.dp),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                )
+                            }
+                            SourceLinkChip(label = "${currentAnswer.source.authority}: ${currentAnswer.source.title}") {
+                                uriHandler.openUri(currentAnswer.source.url)
+                            }
                         }
                     }
                 }
@@ -621,14 +664,14 @@ fun CommunityStudySection(currentSession: UserSession?) {
     var draft by rememberSaveable { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var isSending by remember { mutableStateOf(false) }
-    var feedback by remember { mutableStateOf("Conecte-se com outros usuarios do app para conversar na comunidade EstudaViva.") }
+    var feedback by remember { mutableStateOf("Conecte-se com outros usuarios do app para entrar no chat.") }
     val messages = remember { mutableStateListOf<PublicChatMessage>() }
     val selectedRoomMeta = rooms.firstOrNull { it.value == selectedRoom } ?: rooms.first()
 
     LaunchedEffect(currentSession?.userId, selectedRoom) {
         val session = currentSession ?: return@LaunchedEffect
         isLoading = true
-        feedback = "Carregando mensagens da comunidade..."
+        feedback = "Carregando mensagens do chat..."
         val result = withContext(Dispatchers.IO) {
             runCatching {
                 SupabaseRestRepository.touchLastSeen(session.accessToken)
@@ -641,9 +684,9 @@ fun CommunityStudySection(currentSession: UserSession?) {
                 messages.clear()
                 messages.addAll(it)
                 feedback = if (it.isEmpty()) {
-                "A comunidade ainda nao tem mensagens. Voce pode iniciar a conversa."
+                "O chat ainda nao tem mensagens. Voce pode iniciar a conversa."
             } else {
-                "Comunidade atualizada com ${it.size} mensagens."
+                "Chat atualizado com ${it.size} mensagens."
             }
             }
             .onFailure {
@@ -653,8 +696,8 @@ fun CommunityStudySection(currentSession: UserSession?) {
 
     Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
         SectionHeroCard(
-            title = "Comunidade EstudaViva",
-            body = "Um chat unico para acolhimento, troca de experiencia, duvidas e novidades entre as pessoas que usam o aplicativo.",
+            title = "Chat EstudaViva",
+            body = "Espaco unico para conversas, troca de experiencia e apoio entre as pessoas que usam o aplicativo.",
             accent = listOf(Color(0xFF7A3CFF), Color(0xFF3B82F6)),
             imageRes = R.drawable.study_feature_banner,
         )
@@ -669,7 +712,7 @@ fun CommunityStudySection(currentSession: UserSession?) {
                 ) {
                     Text("Chat disponivel com conta real", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
                     Text(
-                        "O visitante continua estudando normalmente, mas o chat usa o Supabase e so libera leitura e envio para usuarios autenticados.",
+                        "O visitante continua estudando normalmente, mas o chat so libera leitura e envio para usuarios autenticados.",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -692,15 +735,30 @@ fun CommunityStudySection(currentSession: UserSession?) {
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
-                    Text("Chat da comunidade", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
-                    Text(
-                        text = "Conectado como ${currentSession.name.ifBlank { currentSession.email }} (${currentSession.role})",
-                        color = ui.accent,
-                        fontWeight = FontWeight.Bold,
-                    )
-                Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Text("Sala ativa:", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    AssistChip(onClick = {}, label = { Text(selectedRoomMeta.label) })
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(22.dp))
+                        .background(
+                            Brush.linearGradient(
+                                listOf(
+                                    ui.accent.copy(alpha = 0.16f),
+                                    ui.info.copy(alpha = 0.14f),
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.18f),
+                                ),
+                            ),
+                        )
+                        .padding(16.dp),
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Text("Chat", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                        Text(
+                            text = "Conectado como ${currentSession.name.ifBlank { currentSession.email }}",
+                            color = ui.accent,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        AssistChip(onClick = {}, label = { Text(selectedRoomMeta.label) })
+                    }
                 }
                 Text(
                     text = selectedRoomMeta.description,
@@ -721,7 +779,7 @@ fun CommunityStudySection(currentSession: UserSession?) {
                         colors = CardDefaults.cardColors(containerColor = ui.cardAlt),
                     ) {
                         Text(
-                            text = "Nenhuma mensagem ainda na comunidade.",
+                            text = "Nenhuma mensagem ainda no chat.",
                             modifier = Modifier.padding(16.dp),
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -738,7 +796,7 @@ fun CommunityStudySection(currentSession: UserSession?) {
                                         SupabaseRestRepository.createPublicChatReport(
                                             accessToken = currentSession.accessToken,
                                             messageId = message.id,
-                                            reason = "Conteudo inadequado no chat da comunidade",
+                                            reason = "Conteudo inadequado no chat",
                                         )
                                     }
                                 }
@@ -782,7 +840,7 @@ fun CommunityStudySection(currentSession: UserSession?) {
                                     .onSuccess {
                                         draft = ""
                                         messages.add(it)
-                                        feedback = "Mensagem enviada para a comunidade."
+                                        feedback = "Mensagem enviada no chat."
                                     }
                                     .onFailure {
                                         feedback = "Nao foi possivel enviar: ${it.message}"
@@ -806,7 +864,7 @@ fun CommunityStudySection(currentSession: UserSession?) {
                                     .onSuccess {
                                         messages.clear()
                                         messages.addAll(it)
-                                feedback = "Comunidade atualizada manualmente."
+                                feedback = "Chat atualizado manualmente."
                             }
                                     .onFailure {
                                         feedback = "Nao foi possivel atualizar: ${it.message}"
@@ -916,6 +974,7 @@ private fun PublicChatMessageCard(
         colors = CardDefaults.cardColors(
             containerColor = if (isOwnMessage) ui.inputHighlight else ui.cardAlt,
         ),
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -929,7 +988,7 @@ private fun PublicChatMessageCard(
                 Column {
                     Text(message.senderName, fontWeight = FontWeight.Black)
                     Text(
-                        text = "${message.senderRole} • ${message.createdAt.take(16).replace('T', ' ')}",
+                        text = formatChatTimestamp(message.createdAt),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -943,7 +1002,7 @@ private fun PublicChatMessageCard(
             Text(
                 text = message.message,
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurface,
             )
         }
     }
@@ -1079,6 +1138,41 @@ private fun MetricMiniCard(
             Text(label, color = textColor)
         }
     }
+}
+
+private fun guidedAiQuestions(question: String): List<String> {
+    val normalized = question.trim().lowercase()
+    return when {
+        normalized.isBlank() -> listOf(
+            "Qual tema voce quer revisar agora: medicacao, procedimento, urgencia, SAE ou infeccao?",
+            "Voce quer uma revisao rapida, passo a passo tecnico ou raciocinio clinico aplicado?",
+            "Quer foco em prova, pratica assistencial ou seguranca do paciente?",
+        )
+        "intramuscular" in normalized || "agulha" in normalized || "im" in normalized -> listOf(
+            "Voce quer revisar sitio, material, volume, tecnica ou complicacoes da intramuscular?",
+            "A duvida e sobre medicacao IM geral ou vacinacao?",
+            "Quer uma resposta mais pratica ou mais baseada em anatomia e seguranca?",
+        )
+        "venosa" in normalized || "endovenosa" in normalized || "puncao" in normalized || "ev" in normalized -> listOf(
+            "Seu foco e puncao, materiais, compatibilidade, diluicao ou complicacoes do acesso?",
+            "Voce quer revisar punção periferica, cateter ou administracao da medicacao?",
+            "Quer uma resposta objetiva ou um passo a passo completo?",
+        )
+        "sae" in normalized || "nanda" in normalized || "nic" in normalized || "noc" in normalized -> listOf(
+            "Voce quer ajuda para montar diagnostico, resultado esperado ou intervencao?",
+            "Essa revisao e para prova, evolucao clinica ou caso pratico?",
+            "Quer a resposta ligada a coleta de dados, planejamento ou avaliacao?",
+        )
+        else -> listOf(
+            "Qual parte desse tema voce quer aprofundar primeiro?",
+            "Voce quer uma explicacao tecnica, um resumo rapido ou conduta de enfermagem?",
+            "Quer que a resposta priorize sinais e sintomas, intervencoes ou riscos?",
+        )
+    }
+}
+
+private fun formatChatTimestamp(createdAt: String): String {
+    return createdAt.take(16).replace('T', ' ')
 }
 
 @Composable
