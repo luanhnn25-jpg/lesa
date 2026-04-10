@@ -1,6 +1,8 @@
 package br.com.lpplivre.ui
 
 import android.webkit.WebView
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebViewClient
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -681,13 +683,6 @@ fun OfficialSourcesSection() {
                 )
             }
         }
-        selectedBook?.let { book ->
-            LibraryReaderCard(
-                book = book,
-                onClose = { selectedBook = null },
-                onOpenExternal = { uriHandler.openUri(book.url) },
-            )
-        }
         if (books.isEmpty()) {
             Card(
                 shape = RoundedCornerShape(24.dp),
@@ -703,8 +698,21 @@ fun OfficialSourcesSection() {
             books.forEach { book ->
                 NursingBookCard(
                     book = book,
-                    onOpenInside = { selectedBook = book },
+                    onOpenInside = {
+                        selectedBook = if (selectedBook?.id == book.id) null else book
+                    },
                     onOpenExternal = { uriHandler.openUri(book.url) },
+                    readerContent = if (selectedBook?.id == book.id) {
+                        {
+                            LibraryReaderCard(
+                                book = book,
+                                onClose = { selectedBook = null },
+                                onOpenExternal = { uriHandler.openUri(book.url) },
+                            )
+                        }
+                    } else {
+                        null
+                    },
                 )
             }
         }
@@ -716,6 +724,7 @@ private fun NursingBookCard(
     book: NursingLibraryBook,
     onOpenInside: () -> Unit,
     onOpenExternal: () -> Unit,
+    readerContent: (@Composable () -> Unit)? = null,
 ) {
     val ui = studyUiTokens()
     Card(
@@ -743,8 +752,9 @@ private fun NursingBookCard(
                     AssistChip(onClick = {}, label = { Text(book.subcategory) })
                 }
                 Button(onClick = onOpenInside, modifier = Modifier.fillMaxWidth()) {
-                    Text("Abrir e visualizar no app")
+                    Text(if (readerContent == null) "Abrir e visualizar no app" else "Fechar leitor interno")
                 }
+                readerContent?.invoke()
                 OutlinedButton(onClick = onOpenExternal, modifier = Modifier.fillMaxWidth()) {
                     Icon(Icons.AutoMirrored.Rounded.OpenInNew, contentDescription = "Abrir externo")
                     Spacer(modifier = Modifier.width(8.dp))
@@ -812,6 +822,7 @@ private fun LibraryReaderCard(
 ) {
     val ui = studyUiTokens()
     val readerUrl = remember(book.url) { libraryReaderUrl(book.url) }
+    var readerStatus by remember(book.url) { mutableStateOf("Abrindo visualizacao interna...") }
     Card(
         shape = RoundedCornerShape(26.dp),
         colors = CardDefaults.cardColors(containerColor = ui.cardAlt),
@@ -832,6 +843,31 @@ private fun LibraryReaderCard(
                     Text("Fechar")
                 }
             }
+            Card(
+                shape = RoundedCornerShape(18.dp),
+                colors = CardDefaults.cardColors(containerColor = ui.card),
+            ) {
+                Column(
+                    modifier = Modifier.padding(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(book.description, style = MaterialTheme.typography.bodyMedium)
+                    MedicationInfoLine("Tema", book.theme)
+                    MedicationInfoLine("Categoria", "${book.category} / ${book.subcategory}")
+                    MedicationInfoLine("Fonte", book.authority)
+                    Text(
+                        text = readerStatus,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = ui.accent,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Text(
+                        text = "Se o arquivo for PDF e o visualizador demorar, use o botao abaixo para abrir a fonte original.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
             AndroidView(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -839,7 +875,21 @@ private fun LibraryReaderCard(
                     .clip(RoundedCornerShape(18.dp)),
                 factory = { context ->
                     WebView(context).apply {
-                        webViewClient = WebViewClient()
+                        webViewClient = object : WebViewClient() {
+                            override fun onPageFinished(view: WebView?, url: String?) {
+                                readerStatus = "Livro carregado no leitor interno."
+                            }
+
+                            override fun onReceivedError(
+                                view: WebView?,
+                                request: WebResourceRequest?,
+                                error: WebResourceError?,
+                            ) {
+                                if (request?.isForMainFrame != false) {
+                                    readerStatus = "Nao foi possivel carregar o leitor interno. Abra a fonte original pelo botao abaixo."
+                                }
+                            }
+                        }
                         settings.javaScriptEnabled = true
                         settings.domStorageEnabled = true
                         settings.builtInZoomControls = true
@@ -1206,6 +1256,9 @@ private fun OfficialMedicationCompactCard(
     onOpenSearch: () -> Unit,
 ) {
     val ui = studyUiTokens()
+    val study = remember(item.registration, item.product, item.therapeuticClass) {
+        MedicationEnrichmentEngine.enrich(item)
+    }
     Card(
         shape = RoundedCornerShape(22.dp),
         colors = CardDefaults.cardColors(containerColor = ui.card),
@@ -1220,6 +1273,23 @@ private fun OfficialMedicationCompactCard(
             MedicationInfoLine("Apresentacao", item.presentation)
             MedicationInfoLine("Laboratorio", item.laboratory)
             MedicationInfoLine("Registro", item.registration)
+            MedicationInfoLine("Efeito terapeutico", study.therapeuticEffect)
+            MedicationInfoLine("Foco de estudo", study.studyFocus)
+            MedicationBlock(
+                title = "Ajuda para estudar: reacoes esperadas",
+                accent = Color(0xFFE8FFF3),
+                items = study.expectedReactions.take(3),
+            )
+            MedicationBlock(
+                title = "Alertas para memorizar",
+                accent = Color(0xFFFFF6DA),
+                items = (study.unexpectedReactions + study.interactionAlerts).distinct().take(4),
+            )
+            MedicationBlock(
+                title = "Nao associar sem avaliacao",
+                accent = Color(0xFFE8F4FF),
+                items = study.avoidWith.map { avoid -> "${item.product} + $avoid" }.take(3),
+            )
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 OutlinedButton(onClick = onOpenBulario, modifier = Modifier.weight(1f)) {
                     Text("Bula")
@@ -1228,6 +1298,11 @@ private fun OfficialMedicationCompactCard(
                     Text("Registro")
                 }
             }
+            Text(
+                text = "Estudo baseado no catalogo oficial Anvisa/CMED e em regras locais de apoio. Confirme detalhes individuais na bula oficial.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
     }
 }
