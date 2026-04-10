@@ -11,8 +11,8 @@ android {
         applicationId = "br.com.estudasaude.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 10
-        versionName = "1.0.9"
+        versionCode = 12
+        versionName = "1.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

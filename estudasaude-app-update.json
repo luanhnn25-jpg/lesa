@@ -1,9 +1,9 @@
 {
-  "versionCode": 10,
-  "versionName": "1.0.9",
+  "versionCode": 12,
+  "versionName": "1.1.1",
   "packageName": "br.com.estudasaude.app",
-  "apkUrl": "https://luanhnn25-jpg.github.io/lesa/estudasaude-app-v1.0.9.apk",
-  "notes": "Atualizacao do EstudaViva com modo estudo restaurado nos medicamentos por classe terapeutica e leitor da biblioteca mais estavel.",
+  "apkUrl": "https://luanhnn25-jpg.github.io/lesa/estudasaude-app-v1.1.1.apk",
+  "notes": "Atualizacao do EstudaViva com interacoes importantes mais especificas por principio ativo, leitor interno de PDF e biblioteca refinada.",
   "publishedAt": "2026-04-10",
   "mandatory": false
 }

@@ -1,5 +1,10 @@
 package br.com.lpplivre.ui
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.pdf.PdfRenderer
+import android.os.ParcelFileDescriptor
+import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -13,6 +18,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,6 +40,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -49,6 +56,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -57,12 +65,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
 import br.com.lpplivre.R
 import br.com.lpplivre.data.PublicChatMessage
 import br.com.lpplivre.data.SupabaseRestRepository
 import br.com.lpplivre.data.UserSession
 import br.com.lpplivre.ui.theme.studyUiTokens
+import java.io.File
+import java.io.FileOutputStream
+import java.net.HttpURLConnection
 import java.net.URLEncoder
+import java.net.URL
 import java.nio.charset.StandardCharsets
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -683,6 +696,13 @@ fun OfficialSourcesSection() {
                 )
             }
         }
+        selectedBook?.let { book ->
+            LibraryReaderDialog(
+                book = book,
+                onClose = { selectedBook = null },
+                onOpenExternal = { uriHandler.openUri(book.url) },
+            )
+        }
         if (books.isEmpty()) {
             Card(
                 shape = RoundedCornerShape(24.dp),
@@ -698,21 +718,8 @@ fun OfficialSourcesSection() {
             books.forEach { book ->
                 NursingBookCard(
                     book = book,
-                    onOpenInside = {
-                        selectedBook = if (selectedBook?.id == book.id) null else book
-                    },
+                    onOpenInside = { selectedBook = book },
                     onOpenExternal = { uriHandler.openUri(book.url) },
-                    readerContent = if (selectedBook?.id == book.id) {
-                        {
-                            LibraryReaderCard(
-                                book = book,
-                                onClose = { selectedBook = null },
-                                onOpenExternal = { uriHandler.openUri(book.url) },
-                            )
-                        }
-                    } else {
-                        null
-                    },
                 )
             }
         }
@@ -724,10 +731,12 @@ private fun NursingBookCard(
     book: NursingLibraryBook,
     onOpenInside: () -> Unit,
     onOpenExternal: () -> Unit,
-    readerContent: (@Composable () -> Unit)? = null,
 ) {
     val ui = studyUiTokens()
     Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onOpenInside),
         shape = RoundedCornerShape(26.dp),
         colors = CardDefaults.cardColors(containerColor = ui.card),
     ) {
@@ -752,11 +761,10 @@ private fun NursingBookCard(
                     AssistChip(onClick = {}, label = { Text(book.subcategory) })
                 }
                 Button(onClick = onOpenInside, modifier = Modifier.fillMaxWidth()) {
-                    Text(if (readerContent == null) "Abrir e visualizar no app" else "Fechar leitor interno")
+                    Text("Abrir livro no app")
                 }
-                readerContent?.invoke()
                 OutlinedButton(onClick = onOpenExternal, modifier = Modifier.fillMaxWidth()) {
-                    Icon(Icons.AutoMirrored.Rounded.OpenInNew, contentDescription = "Abrir externo")
+                    Icon(Icons.AutoMirrored.Rounded.OpenInNew, contentDescription = "Abrir fonte")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Abrir fonte original")
                 }
@@ -815,16 +823,67 @@ private fun DigitalBookCover(book: NursingLibraryBook) {
 }
 
 @Composable
+private fun LibraryReaderDialog(
+    book: NursingLibraryBook,
+    onClose: () -> Unit,
+    onOpenExternal: () -> Unit,
+) {
+    Dialog(onDismissRequest = onClose) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = Color(0xFF071A2B),
+        ) {
+            LibraryReaderCard(
+                book = book,
+                onClose = onClose,
+                onOpenExternal = onOpenExternal,
+            )
+        }
+    }
+}
+
+@Composable
 private fun LibraryReaderCard(
     book: NursingLibraryBook,
     onClose: () -> Unit,
     onOpenExternal: () -> Unit,
 ) {
+    val context = LocalContext.current
     val ui = studyUiTokens()
     val readerUrl = remember(book.url) { libraryReaderUrl(book.url) }
-    var readerStatus by remember(book.url) { mutableStateOf("Abrindo visualizacao interna...") }
+    val directPdf = remember(book.url) { isDirectPdfUrl(book.url) }
+    var readerStatus by remember(book.url) { mutableStateOf(if (directPdf) "Preparando leitor PDF integrado..." else "Abrindo visualizacao interna...") }
+    var embeddedPdf by remember(book.url) { mutableStateOf<EmbeddedPdfDocument?>(null) }
+    var pdfFallback by remember(book.url) { mutableStateOf(false) }
+
+    LaunchedEffect(book.url) {
+        embeddedPdf = null
+        pdfFallback = false
+        if (directPdf) {
+            val result = runCatching {
+                withContext(Dispatchers.IO) {
+                    cacheEmbeddedPdf(context, book)
+                }
+            }
+            result
+                .onSuccess {
+                    embeddedPdf = it
+                    readerStatus = "PDF carregado no leitor integrado."
+                }
+                .onFailure {
+                    pdfFallback = true
+                    readerStatus = "Falha no modo PDF nativo. Abrindo a visualizacao interna alternativa."
+                }
+        } else {
+            readerStatus = "Abrindo visualizacao interna..."
+        }
+    }
+
     Card(
-        shape = RoundedCornerShape(26.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(12.dp),
+        shape = RoundedCornerShape(30.dp),
         colors = CardDefaults.cardColors(containerColor = ui.cardAlt),
     ) {
         Column(
@@ -836,76 +895,45 @@ private fun LibraryReaderCard(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Leitor interno", style = MaterialTheme.typography.labelLarge, color = ui.accent, fontWeight = FontWeight.Bold)
+                    Text("Leitor PDF", style = MaterialTheme.typography.labelLarge, color = ui.accent, fontWeight = FontWeight.Bold)
                     Text(book.title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
                 }
                 OutlinedButton(onClick = onClose) {
                     Text("Fechar")
                 }
             }
-            Card(
-                shape = RoundedCornerShape(18.dp),
-                colors = CardDefaults.cardColors(containerColor = ui.card),
-            ) {
-                Column(
-                    modifier = Modifier.padding(14.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Text(book.description, style = MaterialTheme.typography.bodyMedium)
-                    MedicationInfoLine("Tema", book.theme)
-                    MedicationInfoLine("Categoria", "${book.category} / ${book.subcategory}")
-                    MedicationInfoLine("Fonte", book.authority)
-                    Text(
-                        text = readerStatus,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = ui.accent,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        text = "Se o arquivo for PDF e o visualizador demorar, use o botao abaixo para abrir a fonte original.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                AssistChip(onClick = {}, label = { Text(book.category) })
+                AssistChip(onClick = {}, label = { Text(book.authority) })
+                AssistChip(onClick = {}, label = { Text(book.theme) })
             }
-            AndroidView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(520.dp)
-                    .clip(RoundedCornerShape(18.dp)),
-                factory = { context ->
-                    WebView(context).apply {
-                        webViewClient = object : WebViewClient() {
-                            override fun onPageFinished(view: WebView?, url: String?) {
-                                readerStatus = "Livro carregado no leitor interno."
-                            }
+              Text(
+                  text = readerStatus,
+                  style = MaterialTheme.typography.bodySmall,
+                  color = ui.accent,
+                  fontWeight = FontWeight.Bold,
+              )
+              when {
+                  directPdf && embeddedPdf != null && !pdfFallback -> {
+                      EmbeddedPdfReader(
+                          document = embeddedPdf!!,
+                          onStatusChange = { readerStatus = it },
+                      )
+                  }
 
-                            override fun onReceivedError(
-                                view: WebView?,
-                                request: WebResourceRequest?,
-                                error: WebResourceError?,
-                            ) {
-                                if (request?.isForMainFrame != false) {
-                                    readerStatus = "Nao foi possivel carregar o leitor interno. Abra a fonte original pelo botao abaixo."
-                                }
-                            }
-                        }
-                        settings.javaScriptEnabled = true
-                        settings.domStorageEnabled = true
-                        settings.builtInZoomControls = true
-                        settings.displayZoomControls = false
-                        loadUrl(readerUrl)
-                    }
-                },
-                update = { webView ->
-                    if (webView.url != readerUrl) webView.loadUrl(readerUrl)
-                },
-            )
-            OutlinedButton(onClick = onOpenExternal, modifier = Modifier.fillMaxWidth()) {
-                Icon(Icons.AutoMirrored.Rounded.OpenInNew, contentDescription = "Abrir externo")
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Se nao carregar, abrir no navegador")
-            }
+                  else -> {
+                      EmbeddedWebReader(
+                          readerUrl = readerUrl,
+                          onLoaded = { readerStatus = if (directPdf) "Modo alternativo aberto dentro do app." else "Livro carregado no leitor interno." },
+                          onError = { readerStatus = "Nao foi possivel carregar o leitor interno. Abra a fonte original pelo botao abaixo." },
+                      )
+                  }
+              }
+              OutlinedButton(onClick = onOpenExternal, modifier = Modifier.fillMaxWidth()) {
+                  Icon(Icons.AutoMirrored.Rounded.OpenInNew, contentDescription = "Abrir externo")
+                  Spacer(modifier = Modifier.width(8.dp))
+                  Text("Abrir PDF na fonte original")
+              }
         }
     }
 }
@@ -916,6 +944,181 @@ private fun libraryReaderUrl(url: String): String {
     if (!lower.contains(".pdf")) return cleanUrl
     val encoded = URLEncoder.encode(cleanUrl, StandardCharsets.UTF_8.toString())
     return "https://docs.google.com/gview?embedded=1&url=$encoded"
+}
+
+@Composable
+private fun EmbeddedWebReader(
+    readerUrl: String,
+    onLoaded: () -> Unit,
+    onError: () -> Unit,
+) {
+    AndroidView(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(520.dp)
+            .clip(RoundedCornerShape(18.dp)),
+        factory = { context ->
+            WebView(context).apply {
+                webViewClient = object : WebViewClient() {
+                    override fun onPageFinished(view: WebView?, url: String?) {
+                        onLoaded()
+                    }
+
+                    override fun onReceivedError(
+                        view: WebView?,
+                        request: WebResourceRequest?,
+                        error: WebResourceError?,
+                    ) {
+                        if (request?.isForMainFrame != false) {
+                            onError()
+                        }
+                    }
+                }
+                settings.javaScriptEnabled = true
+                settings.domStorageEnabled = true
+                settings.builtInZoomControls = true
+                settings.displayZoomControls = false
+                loadUrl(readerUrl)
+            }
+        },
+        update = { webView ->
+            if (webView.url != readerUrl) webView.loadUrl(readerUrl)
+        },
+    )
+}
+
+@Composable
+private fun EmbeddedPdfReader(
+    document: EmbeddedPdfDocument,
+    onStatusChange: (String) -> Unit,
+) {
+    var currentPage by rememberSaveable(document.file.absolutePath) { mutableStateOf(0) }
+    val pageBitmap = remember(document.file.absolutePath, currentPage) {
+        renderPdfPage(document.file, currentPage)
+    }
+
+    LaunchedEffect(currentPage, document.pageCount) {
+        onStatusChange("Pagina ${currentPage + 1} de ${document.pageCount} no leitor integrado.")
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(520.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            AssistChip(
+                onClick = {},
+                label = { Text("Pagina ${currentPage + 1}/${document.pageCount}") },
+            )
+            OutlinedButton(
+                onClick = { currentPage = (currentPage - 1).coerceAtLeast(0) },
+                enabled = currentPage > 0,
+                modifier = Modifier.weight(1f),
+            ) {
+                Text("Anterior")
+            }
+            Button(
+                onClick = { currentPage = (currentPage + 1).coerceAtMost(document.pageCount - 1) },
+                enabled = currentPage < document.pageCount - 1,
+                modifier = Modifier.weight(1f),
+            ) {
+                Text("Proxima")
+            }
+        }
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            shape = RoundedCornerShape(22.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+        ) {
+            Image(
+                bitmap = pageBitmap.asImageBitmap(),
+                contentDescription = "Pagina ${currentPage + 1} do PDF",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit,
+            )
+        }
+    }
+}
+
+private data class EmbeddedPdfDocument(
+    val file: File,
+    val pageCount: Int,
+)
+
+private const val LIBRARY_READER_TAG = "LibraryReader"
+
+private fun isDirectPdfUrl(url: String): Boolean = url.trim().lowercase().contains(".pdf")
+
+private fun cacheEmbeddedPdf(
+    context: Context,
+    book: NursingLibraryBook,
+): EmbeddedPdfDocument {
+    val cachedFile = File(context.cacheDir, "library-${book.id}.pdf")
+    if (!cachedFile.exists() || cachedFile.length() == 0L) {
+        val connection = (URL(book.url).openConnection() as HttpURLConnection).apply {
+            instanceFollowRedirects = true
+            connectTimeout = 20_000
+            readTimeout = 30_000
+            requestMethod = "GET"
+            setRequestProperty("User-Agent", "Mozilla/5.0 (Android) EstudaViva/1.1.0")
+            setRequestProperty("Accept", "application/pdf,*/*")
+        }
+        try {
+            connection.connect()
+            if (connection.responseCode !in 200..299) {
+                throw IllegalStateException("Falha ao baixar PDF: HTTP ${connection.responseCode}")
+            }
+            connection.inputStream.use { input ->
+                FileOutputStream(cachedFile).use { output ->
+                    input.copyTo(output)
+                }
+            }
+        } catch (error: Exception) {
+            Log.e(LIBRARY_READER_TAG, "Erro ao baixar PDF integrado para ${book.id}", error)
+            if (cachedFile.exists()) cachedFile.delete()
+            throw error
+        } finally {
+            connection.disconnect()
+        }
+    }
+
+    val descriptor = ParcelFileDescriptor.open(cachedFile, ParcelFileDescriptor.MODE_READ_ONLY)
+    val renderer = PdfRenderer(descriptor)
+    val pageCount = try {
+        renderer.pageCount
+    } catch (error: Exception) {
+        Log.e(LIBRARY_READER_TAG, "Erro ao abrir PDF integrado para ${book.id}", error)
+        throw error
+    } finally {
+        renderer.close()
+    }
+    descriptor.close()
+    return EmbeddedPdfDocument(file = cachedFile, pageCount = pageCount)
+}
+
+private fun renderPdfPage(
+    file: File,
+    pageIndex: Int,
+): Bitmap {
+    val descriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
+    val renderer = PdfRenderer(descriptor)
+    val page = renderer.openPage(pageIndex)
+    val width = (page.width * 2).coerceAtLeast(1200)
+    val height = (page.height * 2).coerceAtLeast(1600)
+    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    bitmap.eraseColor(android.graphics.Color.WHITE)
+    page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+    page.close()
+    renderer.close()
+    descriptor.close()
+    return bitmap
 }
 
 @Composable
@@ -1200,27 +1403,32 @@ private fun MedicationStudyCard(
             MedicationInfoLine("Principio ativo", medication.activeIngredient)
             MedicationInfoLine("Referencia oficial", medication.referenceProduct)
             MedicationInfoLine("Forma", medication.form)
-            MedicationInfoLine("Efeito terapeutico", medication.therapeuticEffect)
-            MedicationInfoLine("Foco de estudo", medication.studyFocus)
+            MedicationInfoLine("Para que serve", medication.therapeuticEffect)
+            MedicationInfoLine("O que mais cai no estudo", medication.studyFocus)
             MedicationBlock(
-                title = "Reacoes esperadas",
+                title = "Reacoes comuns",
                 accent = Color(0xFFE8FFF3),
                 items = medication.expectedReactions,
             )
             MedicationBlock(
-                title = "Reacoes inesperadas",
+                title = "Reacoes graves",
                 accent = Color(0xFFFFECE8),
                 items = medication.unexpectedReactions,
             )
             MedicationBlock(
-                title = "Nao misturar com ${medication.title} sem avaliacao",
+                title = "Interacoes importantes",
                 accent = Color(0xFFFFF6DA),
                 items = medication.avoidWith.map { item -> "${medication.title} + $item" },
             )
             MedicationBlock(
-                title = "Alertas de interacao",
+                title = "Pontos de atencao",
                 accent = Color(0xFFE8F4FF),
                 items = medication.interactionAlerts,
+            )
+            MedicationBlock(
+                title = "Quando revisar a bula",
+                accent = Color(0xFFF0EDFF),
+                items = legacyMedicationReviewChecklist(medication),
             )
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Button(
@@ -1273,22 +1481,32 @@ private fun OfficialMedicationCompactCard(
             MedicationInfoLine("Apresentacao", item.presentation)
             MedicationInfoLine("Laboratorio", item.laboratory)
             MedicationInfoLine("Registro", item.registration)
-            MedicationInfoLine("Efeito terapeutico", study.therapeuticEffect)
-            MedicationInfoLine("Foco de estudo", study.studyFocus)
+            MedicationInfoLine("Para que serve", study.therapeuticEffect)
+            MedicationInfoLine("O que mais cai no estudo", study.studyFocus)
             MedicationBlock(
-                title = "Ajuda para estudar: reacoes esperadas",
+                title = "Reacoes comuns",
                 accent = Color(0xFFE8FFF3),
                 items = study.expectedReactions.take(3),
             )
             MedicationBlock(
-                title = "Alertas para memorizar",
-                accent = Color(0xFFFFF6DA),
-                items = (study.unexpectedReactions + study.interactionAlerts).distinct().take(4),
+                title = "Reacoes graves",
+                accent = Color(0xFFFFECE8),
+                items = study.unexpectedReactions.take(3),
             )
             MedicationBlock(
-                title = "Nao associar sem avaliacao",
-                accent = Color(0xFFE8F4FF),
+                title = "Interacoes importantes",
+                accent = Color(0xFFFFF6DA),
                 items = study.avoidWith.map { avoid -> "${item.product} + $avoid" }.take(3),
+            )
+            MedicationBlock(
+                title = "Pontos de atencao",
+                accent = Color(0xFFE8F4FF),
+                items = study.attentionPoints.take(4),
+            )
+            MedicationBlock(
+                title = "Quando revisar a bula",
+                accent = Color(0xFFF0EDFF),
+                items = study.reviewChecklist.take(3),
             )
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 OutlinedButton(onClick = onOpenBulario, modifier = Modifier.weight(1f)) {
@@ -1410,27 +1628,32 @@ private fun OfficialCatalogDetailedCard(
             MedicationInfoLine("Referencia oficial", medication.referenceProduct)
             MedicationInfoLine("Forma", medication.form)
             MedicationInfoLine("Classe terapeutica", medication.pharmacologicalClass)
-            MedicationInfoLine("Efeito terapeutico", medication.therapeuticEffect)
-            MedicationInfoLine("Foco de estudo", medication.studyFocus)
+            MedicationInfoLine("Para que serve", medication.therapeuticEffect)
+            MedicationInfoLine("O que mais cai no estudo", medication.studyFocus)
             MedicationBlock(
-                title = "Reacoes esperadas",
+                title = "Reacoes comuns",
                 accent = Color(0xFFE8FFF3),
                 items = medication.expectedReactions,
             )
             MedicationBlock(
-                title = "Reacoes inesperadas",
+                title = "Reacoes graves",
                 accent = Color(0xFFFFECE8),
                 items = medication.unexpectedReactions,
             )
             MedicationBlock(
-                title = "Nao misturar com ${medication.title} sem avaliacao",
+                title = "Interacoes importantes",
                 accent = Color(0xFFFFF6DA),
                 items = medication.avoidWith.map { item -> "${medication.title} + $item" },
             )
             MedicationBlock(
-                title = "Alertas de interacao",
+                title = "Pontos de atencao",
                 accent = Color(0xFFE8F4FF),
-                items = medication.interactionAlerts,
+                items = medication.attentionPoints,
+            )
+            MedicationBlock(
+                title = "Quando revisar a bula",
+                accent = Color(0xFFF0EDFF),
+                items = medication.reviewChecklist,
             )
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 OutlinedButton(onClick = onOpenBulario, modifier = Modifier.fillMaxWidth()) {
@@ -1455,6 +1678,23 @@ private fun MedicationInfoLine(label: String, value: String) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(label, fontWeight = FontWeight.Bold, color = ui.accent)
         Text(value, color = MaterialTheme.colorScheme.onSurface)
+    }
+}
+
+private fun legacyMedicationReviewChecklist(medication: StudyMedication): List<String> {
+    val normalizedClass = medication.pharmacologicalClass.lowercase()
+    val normalizedTitle = medication.title.lowercase()
+    return when {
+        normalizedClass.contains("anticoagul") || normalizedClass.contains("antiagreg") || normalizedTitle.contains("varfar") ->
+            listOf("se houver sangramento", "se houver associacao com outro antitrombotico", "se houver procedimento invasivo ou mudanca clinica")
+        normalizedClass.contains("insulina") || normalizedClass.contains("antidiab") || normalizedTitle.contains("metform") ->
+            listOf("se houver hipoglicemia ou hiperglicemia persistente", "se houver doenca renal ou uso de contraste", "se houver mudanca de dose ou esquema")
+        normalizedClass.contains("anti inflam") || normalizedClass.contains("analg") ->
+            listOf("se houver dor gastrica importante ou sangramento", "se houver doenca renal ou hepatica", "se houver uso conjunto com anticoagulantes")
+        normalizedClass.contains("antibi") || normalizedClass.contains("cefalospor") || normalizedClass.contains("penicil") ->
+            listOf("se houver alergia previa", "se houver rash, diarreia intensa ou piora clinica", "se houver duvida sobre indicacao ou tempo de uso")
+        else ->
+            listOf("se houver reacao adversa importante", "se houver associacao com outros medicamentos", "se houver duvida sobre uso em grupos especiais")
     }
 }
 

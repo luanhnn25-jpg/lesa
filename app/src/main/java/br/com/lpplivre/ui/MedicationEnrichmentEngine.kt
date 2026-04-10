@@ -14,6 +14,8 @@ data class DetailedMedicationStudy(
     val unexpectedReactions: List<String>,
     val avoidWith: List<String>,
     val interactionAlerts: List<String>,
+    val attentionPoints: List<String>,
+    val reviewChecklist: List<String>,
     val anvisaUrl: String,
     val anvisaSearchUrl: String,
     val sourceNote: String,
@@ -37,8 +39,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize dose total diaria, seguranca hepatica e diferenca entre alivio de dor e reducao de febre.",
             expectedReactions = listOf("Alivio de dor", "reducao de febre", "nausea leve"),
             unexpectedReactions = listOf("Lesao hepatica importante", "rash relevante", "hipersensibilidade"),
-            avoidWith = listOf("alcool em excesso", "outros produtos com paracetamol", "doses acima do limite"),
-            interactionAlerts = listOf("Somar doses de combinacoes", "avaliar funcao hepatica", "cautela em doenca hepatica"),
+            avoidWith = listOf("outros produtos com paracetamol", "varfarina em uso frequente", "alcool em excesso"),
+            interactionAlerts = listOf("somar doses de combinacoes pode causar toxicidade hepatica", "avaliar funcao hepatica", "confirmar na bula se houver uso com anticoagulantes"),
         ),
         MedicationProfile(
             keys = listOf("ibuprofeno"),
@@ -46,8 +48,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize risco gastrico, funcao renal e interacoes com anticoagulantes e anti-hipertensivos.",
             expectedReactions = listOf("melhora de dor", "reducao de febre", "desconforto gastrico"),
             unexpectedReactions = listOf("sangramento digestivo", "insuficiencia renal aguda", "broncoespasmo"),
-            avoidWith = listOf("varfarina", "outros AINEs", "alcool em excesso"),
-            interactionAlerts = listOf("cautela com anti-hipertensivos", "avaliar risco gastrico", "monitorar funcao renal"),
+            avoidWith = listOf("aspirina em baixa dose", "varfarina e outros anticoagulantes", "naproxeno e outros AINEs", "prednisona e outros corticosteroides"),
+            interactionAlerts = listOf("pode aumentar sangramento", "pode reduzir efeito de anti-hipertensivos", "avaliar funcao renal e risco gastrico"),
         ),
         MedicationProfile(
             keys = listOf("dipirona"),
@@ -55,8 +57,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize sinais de hipersensibilidade, queda de pressao e reacoes hematologicas raras.",
             expectedReactions = listOf("alivio de dor", "reducao de febre", "nausea"),
             unexpectedReactions = listOf("agranulocitose", "anafilaxia", "hipotensao importante"),
-            avoidWith = listOf("historico de reacao a pirazolonas", "alcool em excesso"),
-            interactionAlerts = listOf("observar hipotensao", "cautela com drogas mielotoxicas", "monitorar reacoes de hipersensibilidade"),
+            avoidWith = listOf("metotrexato", "ciclosporina", "clorpromazina"),
+            interactionAlerts = listOf("observar hipotensao", "cautela com drogas mielotoxicas", "confirmar o produto exato na bula se houver politerapia"),
         ),
         MedicationProfile(
             keys = listOf("acido acetilsalicilico", "aspirina"),
@@ -64,8 +66,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize risco de sangramento, uso gastrico e diferenca entre dose analgesica e antiagregante.",
             expectedReactions = listOf("alivio de dor", "reducao de febre", "desconforto gastrico"),
             unexpectedReactions = listOf("sangramento importante", "broncoespasmo", "hipersensibilidade intensa"),
-            avoidWith = listOf("varfarina", "heparina", "outros AINEs"),
-            interactionAlerts = listOf("alto risco de sangramento", "cautela com anticoagulantes", "avaliar risco gastrico"),
+            avoidWith = listOf("varfarina e outros anticoagulantes", "ibuprofeno, naproxeno e outros AINEs", "prednisona e outros corticosteroides", "metotrexato"),
+            interactionAlerts = listOf("alto risco de sangramento", "avaliar risco gastrico", "revisar combinacoes antitromboticas antes do uso"),
         ),
         MedicationProfile(
             keys = listOf("amoxicilina"),
@@ -73,8 +75,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize alergia beta-lactamica, uso racional e observacao de reacoes cutaneas.",
             expectedReactions = listOf("melhora do quadro infeccioso", "diarreia", "nausea"),
             unexpectedReactions = listOf("anafilaxia", "colite associada a antibiotico", "rash importante"),
-            avoidWith = listOf("alergia confirmada a penicilinas", "antibioticoterapia sem criterio"),
-            interactionAlerts = listOf("avaliar alergias", "cautela com anticoagulantes", "vigiar diarreia intensa"),
+            avoidWith = listOf("probenecida", "varfarina e outros anticoagulantes orais", "alopurinol", "metotrexato"),
+            interactionAlerts = listOf("avaliar alergias", "vigiar diarreia intensa", "revisar INR se houver uso com anticoagulante oral"),
         ),
         MedicationProfile(
             keys = listOf("azitromicina"),
@@ -82,8 +84,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize risco de QT longo, funcao hepatica e criterio de uso racional.",
             expectedReactions = listOf("melhora do quadro infeccioso", "nausea", "diarreia"),
             unexpectedReactions = listOf("arritmia", "hepatotoxicidade", "hipersensibilidade importante"),
-            avoidWith = listOf("outros farmacos que prolongam QT", "antiarritmicos sem revisao"),
-            interactionAlerts = listOf("avaliar QT", "revisar interacoes cardiacas", "observar funcao hepatica"),
+            avoidWith = listOf("amiodarona", "sotalol", "quinidina", "pimozida"),
+            interactionAlerts = listOf("avaliar QT", "revisar interacoes cardiacas e anticoagulantes", "observar funcao hepatica"),
         ),
         MedicationProfile(
             keys = listOf("cefalexina"),
@@ -91,8 +93,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize uso racional, alergias cruzadas e resposta clinica ao tratamento.",
             expectedReactions = listOf("melhora de infeccao", "nausea", "diarreia"),
             unexpectedReactions = listOf("anafilaxia", "colite associada a antibiotico", "rash relevante"),
-            avoidWith = listOf("alergia a cefalosporinas", "associacoes sem criterio"),
-            interactionAlerts = listOf("avaliar alergias", "vigiar eventos gastrointestinais", "revisar necessidade de ajuste clinico"),
+            avoidWith = listOf("probenecida", "metformina"),
+            interactionAlerts = listOf("avaliar alergias", "vigiar eventos gastrointestinais", "monitorar glicemia se houver uso concomitante com metformina"),
         ),
         MedicationProfile(
             keys = listOf("losartana"),
@@ -100,8 +102,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize pressao arterial, creatinina, potassio e associacoes com poupadores de potassio.",
             expectedReactions = listOf("queda da pressao", "tontura", "fadiga"),
             unexpectedReactions = listOf("hipercalemia importante", "deterioracao renal", "angioedema"),
-            avoidWith = listOf("espironolactona sem controle", "suplementos de potassio sem avaliacao"),
-            interactionAlerts = listOf("monitorar potassio", "avaliar creatinina", "cautela com AINEs"),
+            avoidWith = listOf("espironolactona, eplerenona ou amilorida", "suplementos de potassio", "ibuprofeno e outros AINEs", "litio", "enalapril, ramipril ou aliscireno"),
+            interactionAlerts = listOf("monitorar potassio", "avaliar creatinina", "revisar dupla inibicao do sistema renina-angiotensina"),
         ),
         MedicationProfile(
             keys = listOf("enalapril", "captopril", "ramipril"),
@@ -109,8 +111,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize tosse, potassio, funcao renal e risco de angioedema.",
             expectedReactions = listOf("queda da pressao", "tontura", "tosse seca"),
             unexpectedReactions = listOf("angioedema", "hipercalemia importante", "deterioracao renal"),
-            avoidWith = listOf("suplementos de potassio sem avaliacao", "aliscireno em grupos de risco"),
-            interactionAlerts = listOf("avaliar creatinina", "monitorar potassio", "cautela com AINEs"),
+            avoidWith = listOf("espironolactona, eplerenona ou amilorida", "suplementos de potassio", "litio", "ibuprofeno e outros AINEs", "sacubitril/valsartana", "aliscireno"),
+            interactionAlerts = listOf("avaliar creatinina", "monitorar potassio", "vigiar angioedema e dupla inibicao do sistema renina-angiotensina"),
         ),
         MedicationProfile(
             keys = listOf("amlodipino"),
@@ -118,8 +120,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize edema periferico, pressao arterial e tolerancia clinica.",
             expectedReactions = listOf("queda da pressao", "rubor", "edema de membros inferiores"),
             unexpectedReactions = listOf("hipotensao importante", "taquicardia sintomatica", "hipersensibilidade"),
-            avoidWith = listOf("associacoes anti-hipertensivas sem revisao de dose"),
-            interactionAlerts = listOf("monitorar pressao", "observar edema", "avaliar tontura"),
+            avoidWith = listOf("simvastatina em dose alta", "claritromicina", "itraconazol", "ciclosporina ou tacrolimo"),
+            interactionAlerts = listOf("monitorar pressao", "observar edema", "revisar ajuste se houver estatina ou inibidor forte de CYP3A4"),
         ),
         MedicationProfile(
             keys = listOf("hidroclorotiazida"),
@@ -127,8 +129,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize pressao, hidratacao, sodio, potassio e glicemia quando pertinente.",
             expectedReactions = listOf("aumento da diurese", "queda da pressao", "sede"),
             unexpectedReactions = listOf("hiponatremia", "hipocalemia importante", "desidratacao"),
-            avoidWith = listOf("litio", "desidratacao nao corrigida"),
-            interactionAlerts = listOf("monitorar sodio e potassio", "avaliar volume", "cautela com litio"),
+            avoidWith = listOf("litio", "digoxina", "prednisona e outros corticosteroides", "ibuprofeno e outros AINEs"),
+            interactionAlerts = listOf("monitorar sodio e potassio", "avaliar volume", "cautela com litio e risco arritmico se houver digoxina"),
         ),
         MedicationProfile(
             keys = listOf("furosemida"),
@@ -136,8 +138,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize diurese, peso, potassio, volume e risco de hipovolemia.",
             expectedReactions = listOf("aumento da diurese", "queda de edema", "sede"),
             unexpectedReactions = listOf("hipocalemia importante", "desidratacao grave", "ototoxicidade"),
-            avoidWith = listOf("litio", "aminoglicosideos sem cautela", "desidratacao nao corrigida"),
-            interactionAlerts = listOf("monitorar potassio", "avaliar volume", "cautela com digoxina se houver hipocalemia"),
+            avoidWith = listOf("litio", "gentamicina e outros aminoglicosideos", "digoxina", "sucralfato", "aspirina em dose alta"),
+            interactionAlerts = listOf("monitorar potassio", "avaliar volume", "cautela com digoxina e ototoxicidade quando houver aminoglicosideo"),
         ),
         MedicationProfile(
             keys = listOf("metformina"),
@@ -145,8 +147,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize glicemia, tolerancia gastrointestinal, funcao renal e risco de acidose lactica.",
             expectedReactions = listOf("reducao da glicemia", "diarreia", "nausea"),
             unexpectedReactions = listOf("acidose lactica", "intolerancia gastrointestinal importante", "desidratacao clinica"),
-            avoidWith = listOf("alcool em excesso", "contraste iodado sem protocolo", "insuficiencia renal importante"),
-            interactionAlerts = listOf("avaliar funcao renal", "revisar protocolo peri-contraste", "monitorar sintomas gastrointestinais"),
+            avoidWith = listOf("contraste iodado sem protocolo", "cimetidina e outros cationicos renais", "topiramato ou acetazolamida", "alcool em excesso"),
+            interactionAlerts = listOf("avaliar funcao renal", "revisar protocolo peri-contraste", "vigiar risco de acidose lactica e interacoes por secrecao tubular"),
         ),
         MedicationProfile(
             keys = listOf("insulina glargina", "insulina regular", "insulina humana", "insulina asparte", "insulina lispro"),
@@ -154,8 +156,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize tecnica, glicemia, horario, armazenamento e risco de hipoglicemia.",
             expectedReactions = listOf("reducao da glicemia", "variacao glicemica", "reacao local"),
             unexpectedReactions = listOf("hipoglicemia grave", "hipocalemia", "reacao sistemica relevante"),
-            avoidWith = listOf("trocas de dose sem avaliacao", "mistura indevida sem protocolo"),
-            interactionAlerts = listOf("monitorar glicemia", "revisar horario e dieta", "vigiar hipoglicemia"),
+            avoidWith = listOf("outros antidiabeticos sem ajuste", "salicilatos em uso intensivo", "beta-bloqueadores", "alcool", "mistura indevida sem protocolo"),
+            interactionAlerts = listOf("monitorar glicemia", "revisar horario e dieta", "beta-bloqueadores podem mascarar hipoglicemia"),
         ),
         MedicationProfile(
             keys = listOf("loratadina", "dexclorfeniramina"),
@@ -163,8 +165,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize sedacao quando presente, alivio sintomatico e orientacao sobre uso conjunto com depressores do SNC.",
             expectedReactions = listOf("melhora de prurido", "reducao de rinorreia", "sonolencia leve em alguns casos"),
             unexpectedReactions = listOf("agitacao paradoxal", "hipersensibilidade", "sedacao importante"),
-            avoidWith = listOf("alcool", "outros depressores do sistema nervoso central sem orientacao"),
-            interactionAlerts = listOf("avaliar sonolencia", "cautela com sedativos", "revisar uso conjunto de anti-histaminicos"),
+            avoidWith = listOf("diazepam e outros benzodiazepinicos", "tramadol e outros opioides", "alcool", "outros anti-histaminicos"),
+            interactionAlerts = listOf("avaliar sonolencia", "cautela com sedativos", "na dexclorfeniramina o risco de depressao do SNC e maior"),
         ),
         MedicationProfile(
             keys = listOf("salbutamol"),
@@ -172,17 +174,26 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize tecnica inalatória, frequencia cardiaca e resposta respiratoria.",
             expectedReactions = listOf("melhora do broncoespasmo", "tremor", "palpitacao leve"),
             unexpectedReactions = listOf("taquicardia importante", "hipocalemia", "broncoespasmo paradoxal"),
-            avoidWith = listOf("uso excessivo sem revisao", "associacoes simpatomimeticas sem controle"),
-            interactionAlerts = listOf("monitorar frequencia cardiaca", "avaliar tecnica", "vigiar hipocalemia em cenarios de risco"),
+            avoidWith = listOf("propranolol e outros beta-bloqueadores", "amitriptilina e outros triciclicos", "selegilina e outros IMAO", "furosemida e outros diureticos nao poupadores"),
+            interactionAlerts = listOf("monitorar frequencia cardiaca", "avaliar tecnica", "vigiar hipocalemia e resposta reduzida se houver beta-bloqueador"),
         ),
         MedicationProfile(
-            keys = listOf("omeprazol", "pantoprazol"),
+            keys = listOf("omeprazol"),
             therapeuticEffect = "Reducao da secrecao acida gastrica conforme indicacao oficial.",
-            studyFocus = "Priorize indicacao correta, tempo de uso e monitorizacao em uso prolongado.",
+            studyFocus = "Priorize indicacao correta, tempo de uso e interacoes com farmacos dependentes de pH ou CYP2C19.",
             expectedReactions = listOf("melhora de sintomas gastricos", "cefaleia", "dor abdominal leve"),
             unexpectedReactions = listOf("diarreia importante", "hipomagnesemia", "reacoes de hipersensibilidade"),
-            avoidWith = listOf("uso cronico sem reavaliacao"),
-            interactionAlerts = listOf("revisar interacoes de absorcao", "avaliar uso prolongado", "observar sintomas gastrointestinais"),
+            avoidWith = listOf("clopidogrel", "rilpivirina", "metotrexato em altas doses", "erva-de-sao-joao", "rifampicina"),
+            interactionAlerts = listOf("revisar interacoes de absorcao", "avaliar uso prolongado", "confirmar alternativa se o paciente usar clopidogrel"),
+        ),
+        MedicationProfile(
+            keys = listOf("pantoprazol"),
+            therapeuticEffect = "Reducao da secrecao acida gastrica conforme indicacao oficial.",
+            studyFocus = "Priorize indicacao correta, tempo de uso e interacoes com farmacos dependentes de pH.",
+            expectedReactions = listOf("melhora de sintomas gastricos", "cefaleia", "dor abdominal leve"),
+            unexpectedReactions = listOf("diarreia importante", "hipomagnesemia", "reacoes de hipersensibilidade"),
+            avoidWith = listOf("rilpivirina", "metotrexato em altas doses", "digoxina com monitorizacao inadequada"),
+            interactionAlerts = listOf("revisar interacoes de absorcao", "avaliar uso prolongado", "monitorar magnesio se houver diuretico ou uso prolongado"),
         ),
         MedicationProfile(
             keys = listOf("simvastatina", "atorvastatina", "rosuvastatina"),
@@ -190,8 +201,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize seguranca muscular, funcao hepatica e adesao ao uso continuo.",
             expectedReactions = listOf("reducao de lipideos", "mialgia leve", "desconforto gastrointestinal"),
             unexpectedReactions = listOf("miopatia importante", "rabdomiolise", "hepatotoxicidade"),
-            avoidWith = listOf("associacoes que elevam risco muscular sem revisao", "alcool em excesso"),
-            interactionAlerts = listOf("monitorar queixa muscular", "avaliar enzimas hepaticas", "revisar interacoes metabolicas"),
+            avoidWith = listOf("claritromicina", "itraconazol e outros azolicos fortes", "ciclosporina", "gemfibrozila"),
+            interactionAlerts = listOf("monitorar queixa muscular", "avaliar enzimas hepaticas", "algumas estatinas pedem revisao especifica com amlodipino e ciclosporina"),
         ),
         MedicationProfile(
             keys = listOf("varfarina"),
@@ -199,8 +210,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize INR, risco de sangramento, dieta e interacoes medicamentosas.",
             expectedReactions = listOf("anticoagulacao esperada", "equimoses leves", "alteracao de INR"),
             unexpectedReactions = listOf("hemorragia importante", "necrose cutanea", "sangramento intracraniano"),
-            avoidWith = listOf("aspirina sem criterio", "AINEs", "fitoterapicos sem avaliacao"),
-            interactionAlerts = listOf("monitorizacao frequente de INR", "alto potencial de interacao", "vigiar sinais de sangramento"),
+            avoidWith = listOf("aspirina sem criterio", "ibuprofeno, naproxeno e outros AINEs", "clopidogrel", "sulfametoxazol-trimetoprim", "fluconazol", "amiodarona"),
+            interactionAlerts = listOf("monitorizacao frequente de INR", "alto potencial de interacao", "vigiar sinais de sangramento e mudancas de antibiotico"),
         ),
         MedicationProfile(
             keys = listOf("rivaroxabana", "apixabana", "dabigatrana"),
@@ -208,8 +219,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize sangramento, funcao renal e revisao de associacoes antitromboticas.",
             expectedReactions = listOf("anticoagulacao esperada", "equimoses", "sangramento leve"),
             unexpectedReactions = listOf("hemorragia importante", "sangramento oculto", "complicacao por interacao"),
-            avoidWith = listOf("AINEs", "outros anticoagulantes sem avaliacao", "aspirina sem criterio"),
-            interactionAlerts = listOf("vigiar sangramento", "avaliar funcao renal", "revisar associacoes antes do uso"),
+            avoidWith = listOf("ibuprofeno, naproxeno e outros AINEs", "outros anticoagulantes", "aspirina ou clopidogrel sem revisao", "cetoconazol", "ritonavir", "carbamazepina ou fenitoina"),
+            interactionAlerts = listOf("vigiar sangramento", "avaliar funcao renal", "revisar moduladores fortes de CYP3A4 e P-gp conforme o farmaco"),
         ),
         MedicationProfile(
             keys = listOf("clopidogrel"),
@@ -217,8 +228,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize sangramento, adesao e combinacoes com outros antitromboticos.",
             expectedReactions = listOf("antiagregacao esperada", "equimoses leves", "desconforto gastrico"),
             unexpectedReactions = listOf("sangramento importante", "purpura trombotica trombocitopenica", "hipersensibilidade"),
-            avoidWith = listOf("AINEs", "outros antiagregantes sem revisao", "anticoagulantes sem avaliacao"),
-            interactionAlerts = listOf("vigiar sinais de sangramento", "revisar interacoes", "avaliar necessidade de dupla antiagregacao"),
+            avoidWith = listOf("omeprazol ou esomeprazol", "ibuprofeno, naproxeno e outros AINEs", "varfarina e outros anticoagulantes", "repaglinida"),
+            interactionAlerts = listOf("vigiar sinais de sangramento", "revisar interacoes por CYP2C19", "avaliar necessidade real de dupla antiagregacao"),
         ),
         MedicationProfile(
             keys = listOf("levotiroxina"),
@@ -226,8 +237,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize horario correto, absorcao, interacoes com alimentos e ajuste por exames.",
             expectedReactions = listOf("melhora de sintomas de hipotireoidismo", "estabilizacao hormonal", "discreta palpitacao se dose elevada"),
             unexpectedReactions = listOf("taquicardia importante", "sinais de hipertireoidismo", "angina em pacientes suscetiveis"),
-            avoidWith = listOf("uso junto com ferro ou calcio sem espacamento", "ajustes de dose sem orientacao"),
-            interactionAlerts = listOf("administrar em jejum conforme orientacao", "revisar interacoes de absorcao", "acompanhar exames"),
+            avoidWith = listOf("sulfato ferroso", "carbonato de calcio", "sucralfato", "colestiramina", "sevelamer", "orlistate"),
+            interactionAlerts = listOf("administrar em jejum conforme orientacao", "revisar interacoes de absorcao", "acompanhar TSH e espacamento entre medicamentos"),
         ),
         MedicationProfile(
             keys = listOf("sertralina", "fluoxetina", "escitalopram"),
@@ -235,8 +246,8 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize adesao, inicio gradual de resposta, risco serotoninergico e observacao de efeitos psiquicos.",
             expectedReactions = listOf("melhora gradual de humor", "nausea", "alteracao do sono"),
             unexpectedReactions = listOf("sindrome serotoninergica", "ideacao suicida", "sangramento em associacoes de risco"),
-            avoidWith = listOf("IMAO", "outros serotoninergicos sem revisao", "alcool em excesso"),
-            interactionAlerts = listOf("avaliar risco serotoninergico", "monitorar humor no inicio", "cautela com antitromboticos"),
+            avoidWith = listOf("fenelzina e outros IMAO", "linezolida", "azul de metileno", "tramadol", "sumatriptano e outros triptanos", "varfarina, aspirina ou AINEs"),
+            interactionAlerts = listOf("avaliar risco serotoninergico", "monitorar humor no inicio", "cautela com antitromboticos e outras drogas serotoninergicas"),
         ),
     )
 
@@ -256,8 +267,10 @@ object MedicationEnrichmentEngine {
         val avoidWith = specificProfile?.avoidWith ?: inferAvoidWith(normalizedClass)
         val interactionAlerts = specificProfile?.interactionAlerts ?: inferInteractionAlerts(normalizedClass)
         val focus = specificProfile?.studyFocus ?: inferStudyFocus(normalizedClass, normalizedSubstance)
+        val attentionPoints = specificProfile?.interactionAlerts ?: inferAttentionPoints(normalizedClass, normalizedSubstance)
+        val reviewChecklist = inferReviewChecklist(normalizedClass, normalizedSubstance)
         val sourceNote = if (specificProfile != null) {
-            "Ficha enriquecida por perfil de substancia comum, mantendo links oficiais da Anvisa para consulta direta."
+            "Ficha enriquecida por principio ativo com foco em interacoes importantes de estudo, mantendo links oficiais da Anvisa para consulta do produto exato."
         } else {
             "Ficha enriquecida a partir da classe terapeutica oficial da Anvisa e do catalogo CMED. Confirme detalhes finos na bula oficial do produto."
         }
@@ -274,6 +287,8 @@ object MedicationEnrichmentEngine {
             unexpectedReactions = unexpectedReactions,
             avoidWith = avoidWith,
             interactionAlerts = interactionAlerts,
+            attentionPoints = attentionPoints,
+            reviewChecklist = reviewChecklist,
             anvisaUrl = item.anvisaBularioUrl,
             anvisaSearchUrl = item.anvisaSearchUrl,
             sourceNote = sourceNote,
@@ -381,6 +396,38 @@ object MedicationEnrichmentEngine {
             listOf("conferir alergias", "avaliar interacoes especificas em bula", "observar resposta clinica")
         else ->
             listOf("consultar bula oficial da Anvisa", "avaliar interacoes antes do uso", "monitorar resposta e evento adverso")
+    }
+
+    private fun inferAttentionPoints(normalizedClass: String, normalizedSubstance: String): List<String> = when {
+        normalizedClass.contains("anticoagul") || normalizedClass.contains("antiagreg") || normalizedSubstance.contains("varfar") ->
+            listOf("vigiar sangramento", "revisar associacoes antes do uso", "monitorar funcao renal quando indicado")
+        normalizedClass.contains("insulina") || normalizedClass.contains("antidiab") || normalizedSubstance.contains("metform") ->
+            listOf("monitorar glicemia", "revisar horario e dieta", "observar sinais de hipoglicemia ou intolerancia")
+        normalizedClass.contains("diuret") ->
+            listOf("monitorar diurese", "avaliar hidratacao", "acompanhar sodio e potassio")
+        normalizedClass.contains("anti hipert") || normalizedClass.contains("angiotensina") || normalizedClass.contains("betabloque") ->
+            listOf("monitorar pressao arterial", "avaliar tontura e tolerancia clinica", "revisar funcao renal e potassio quando indicado")
+        normalizedClass.contains("antibi") || normalizedClass.contains("cefalospor") || normalizedClass.contains("penicil") ->
+            listOf("confirmar alergias", "avaliar resposta clinica", "vigiar diarreia intensa e rash")
+        normalizedClass.contains("analg") || normalizedClass.contains("anti inflam") ->
+            listOf("revisar risco gastrico", "avaliar funcao renal se pertinente", "observar sinais de sangramento ou hipersensibilidade")
+        else ->
+            listOf("relacione indicacao, forma e monitorizacao", "confirme detalhes na bula oficial", "observe resposta clinica e eventos adversos")
+    }
+
+    private fun inferReviewChecklist(normalizedClass: String, normalizedSubstance: String): List<String> = when {
+        normalizedClass.contains("insulina") || normalizedSubstance.contains("metform") ->
+            listOf("se houver hipoglicemia ou hiperglicemia persistente", "se houver doenca renal ou uso de contraste", "se houver ajuste de dose ou mudanca de esquema")
+        normalizedClass.contains("anticoagul") || normalizedClass.contains("antiagreg") || normalizedSubstance.contains("varfar") ->
+            listOf("se houver sangramento", "se houver associacao com outro antitrombotico", "se houver procedimento invasivo ou mudanca clinica importante")
+        normalizedClass.contains("antibi") || normalizedClass.contains("cefalospor") || normalizedClass.contains("penicil") ->
+            listOf("se houver alergia previa", "se houver rash, colite ou piora clinica", "se houver duvida sobre indicacao ou tempo de uso")
+        normalizedClass.contains("anti inflam") || normalizedClass.contains("analg") ->
+            listOf("se houver sangramento ou dor gastrica importante", "se houver doenca renal ou hepatica", "se houver uso conjunto com anticoagulantes")
+        normalizedClass.contains("anti hipert") || normalizedClass.contains("angiotensina") || normalizedClass.contains("betabloque") || normalizedClass.contains("diuret") ->
+            listOf("se houver hipotensao, desidratacao ou tontura importante", "se houver alteracao de creatinina ou potassio", "se houver associacao com outros anti-hipertensivos")
+        else ->
+            listOf("se houver reacao adversa importante", "se houver associacao com outros medicamentos", "se houver duvida sobre uso em grupos especiais")
     }
 
     private fun inferStudyFocus(normalizedClass: String, normalizedSubstance: String): String = when {

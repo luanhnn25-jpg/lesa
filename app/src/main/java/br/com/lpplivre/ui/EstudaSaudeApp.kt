@@ -211,10 +211,10 @@ private fun StudyHomeScreen(
         ) {
             when (selectedSection) {
                 StudySection.Home -> {
-                    item { HeroCard() }
-                    item { UpdateCenterCard() }
                     item { PremiumMembersCard() }
+                    item { HeroCard() }
                     item { StudyMetricsCard() }
+                    item { UpdateCenterCard() }
                     itemsIndexed(modules) { index, module ->
                         StudyModuleCard(
                             module = module,
@@ -273,7 +273,7 @@ private fun HeroCard() {
                     color = ui.badgeBackground,
                 ) {
                     Text(
-                        text = "Agora com base funcional",
+                        text = "Inicio premium",
                         modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
                         color = ui.badgeText,
                         fontWeight = FontWeight.ExtraBold,
@@ -296,7 +296,7 @@ private fun HeroCard() {
                     fontWeight = FontWeight.Black,
                 )
                 Text(
-                    text = "O foco agora e estudo com conteudo oficial: revisao, cards coloridos, links primarios e um espaco para reconhecer quem apoia o projeto.",
+                    text = "A entrada do app agora destaca os apoiadores premium primeiro e depois organiza quiz, medicamentos por classe terapeutica e biblioteca com leitura mais direta.",
                     style = MaterialTheme.typography.bodyLarge,
                     color = ui.heroBody,
                 )
@@ -548,46 +548,74 @@ private fun PremiumMembersCard() {
 
     Card(
         shape = RoundedCornerShape(26.dp),
-        colors = CardDefaults.cardColors(containerColor = ui.card),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         modifier = Modifier.fillMaxWidth(),
     ) {
-        Column(
-            modifier = Modifier.padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp),
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Box(
-                    modifier = Modifier
-                        .size(54.dp)
-                        .clip(CircleShape)
-                        .background(horizontalGradient(listOf(Color(0xFFFFD66E), Color(0xFFFF8A3D)))),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text("VIP", color = Color.White, fontWeight = FontWeight.Black)
-                }
-                Column(modifier = Modifier.weight(1f)) {
-                    Text("Mural Premium", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
-                    Text(
-                        "Quem apoia o EstudaViva ganha destaque simbolico no inicio do app.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-            }
-
-            if (members.isEmpty()) {
-                Text(
-                    text = if (failedToLoad) "Nao foi possivel carregar o mural agora." else "Carregando apoiadores premium...",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    Brush.linearGradient(
+                        listOf(Color(0xFF0A2239), Color(0xFF0F4C81), Color(0xFF1C6EA4)),
+                    ),
                 )
-            } else {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    members.take(8).forEach { member ->
-                        PremiumMemberRow(member)
+                .padding(20.dp),
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Box(
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clip(CircleShape)
+                            .background(horizontalGradient(listOf(Color(0xFFFFD66E), Color(0xFFFF8A3D)))),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text("VIP", color = Color.White, fontWeight = FontWeight.Black)
+                    }
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text("Mural Premium", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Black, color = Color.White)
+                        Text(
+                            "Quem apoia o EstudaViva aparece primeiro na abertura do aplicativo.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White.copy(alpha = 0.82f),
+                        )
+                    }
+                }
+
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    HomeStatCapsule(label = "Entrada", value = "Premium")
+                    HomeStatCapsule(label = "Membros", value = if (members.isEmpty()) "--" else members.size.toString())
+                    HomeStatCapsule(label = "Destaque", value = "VIP")
+                }
+
+                if (members.isEmpty()) {
+                    Text(
+                        text = if (failedToLoad) "Nao foi possivel carregar o mural agora." else "Carregando apoiadores premium...",
+                        color = Color.White.copy(alpha = 0.82f),
+                    )
+                } else {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        members.take(8).forEach { member ->
+                            PremiumMemberRow(member)
+                        }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun HomeStatCapsule(label: String, value: String) {
+    Column(
+        modifier = Modifier
+            .clip(RoundedCornerShape(18.dp))
+            .background(Color.White.copy(alpha = 0.12f))
+            .padding(horizontal = 14.dp, vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        Text(value, color = Color.White, fontWeight = FontWeight.Black)
+        Text(label, color = Color.White.copy(alpha = 0.76f), style = MaterialTheme.typography.bodySmall)
     }
 }
 
@@ -603,7 +631,7 @@ private fun PremiumMemberRow(member: PublicPremiumMember) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(18.dp))
-            .background(Color(0xFFFFF7DE))
+            .background(Color.White.copy(alpha = 0.92f))
             .padding(14.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
