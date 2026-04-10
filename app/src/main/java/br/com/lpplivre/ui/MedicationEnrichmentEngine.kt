@@ -15,10 +15,13 @@ data class DetailedMedicationStudy(
     val avoidWith: List<String>,
     val interactionAlerts: List<String>,
     val attentionPoints: List<String>,
+    val administrationAndMonitoring: List<String>,
     val reviewChecklist: List<String>,
     val anvisaUrl: String,
     val anvisaSearchUrl: String,
     val sourceNote: String,
+    val studyBasisLabel: String,
+    val precisionLabel: String,
     val interactionSourceLabel: String,
     val interactionSourceOfficial: Boolean,
 )
@@ -271,13 +274,31 @@ object MedicationEnrichmentEngine {
         val interactionAlerts = structuredInteractions?.interactionAlerts ?: specificProfile?.interactionAlerts ?: inferInteractionAlerts(normalizedClass)
         val focus = specificProfile?.studyFocus ?: inferStudyFocus(normalizedClass, normalizedSubstance)
         val attentionPoints = structuredInteractions?.attentionPoints ?: specificProfile?.interactionAlerts ?: inferAttentionPoints(normalizedClass, normalizedSubstance)
+        val administrationAndMonitoring = inferAdministrationAndMonitoring(
+            normalizedClass = normalizedClass,
+            normalizedSubstance = normalizedSubstance,
+            interactionAlerts = interactionAlerts,
+            attentionPoints = attentionPoints,
+        )
         val reviewChecklist = structuredInteractions?.reviewChecklist ?: inferReviewChecklist(normalizedClass, normalizedSubstance)
         val sourceNote = if (structuredInteractions != null) {
-            "Interacoes importantes vindas da base estruturada por medicamento, preparada para receber revisao de bula oficial por produto. Mantenha a conferencia no link regulatorio da Anvisa."
+            "Esta ficha usa a base estruturada do app para interacoes e revisao pratica. Continue conferindo a bula oficial do produto porque fabricantes e apresentacoes podem variar."
         } else if (specificProfile != null) {
-            "Ficha enriquecida por principio ativo com foco em interacoes importantes de estudo, mantendo links oficiais da Anvisa para consulta do produto exato."
+            "Esta ficha foi reforcada por principio ativo. Ela ajuda no estudo, mas a validacao final continua sendo a bula oficial do produto consultado na Anvisa."
         } else {
-            "Ficha enriquecida a partir da classe terapeutica oficial da Anvisa e do catalogo CMED. Confirme detalhes finos na bula oficial do produto."
+            "Esta ficha foi montada a partir da classe terapeutica oficial e serve como resumo de estudo. Use a bula oficial para confirmar interacoes, restricoes e detalhes finos do produto."
+        }
+        val studyBasisLabel = when {
+            structuredInteractions != null -> "Base estruturada do app"
+            specificProfile != null -> "Resumo por principio ativo"
+            else -> "Resumo por classe terapeutica"
+        }
+        val precisionLabel = when {
+            structuredInteractions?.registration?.isNotBlank() == true -> "Precisao por registro"
+            structuredInteractions?.product?.isNotBlank() == true -> "Precisao por produto"
+            structuredInteractions != null -> "Precisao por substancia"
+            specificProfile != null -> "Precisao por principio ativo"
+            else -> "Precisao por classe"
         }
         val interactionSourceLabel = when {
             structuredInteractions != null -> "Base estruturada por medicamento"
@@ -299,10 +320,13 @@ object MedicationEnrichmentEngine {
             avoidWith = avoidWith,
             interactionAlerts = interactionAlerts,
             attentionPoints = attentionPoints,
+            administrationAndMonitoring = administrationAndMonitoring,
             reviewChecklist = reviewChecklist,
             anvisaUrl = item.anvisaBularioUrl,
             anvisaSearchUrl = item.anvisaSearchUrl,
             sourceNote = sourceNote,
+            studyBasisLabel = studyBasisLabel,
+            precisionLabel = precisionLabel,
             interactionSourceLabel = interactionSourceLabel,
             interactionSourceOfficial = interactionSourceOfficial,
         )
@@ -441,6 +465,54 @@ object MedicationEnrichmentEngine {
             listOf("se houver hipotensao, desidratacao ou tontura importante", "se houver alteracao de creatinina ou potassio", "se houver associacao com outros anti-hipertensivos")
         else ->
             listOf("se houver reacao adversa importante", "se houver associacao com outros medicamentos", "se houver duvida sobre uso em grupos especiais")
+    }
+
+    private fun inferAdministrationAndMonitoring(
+        normalizedClass: String,
+        normalizedSubstance: String,
+        interactionAlerts: List<String>,
+        attentionPoints: List<String>,
+    ): List<String> {
+        val combined = (interactionAlerts + attentionPoints).map { it.trim() }.filter { it.isNotBlank() }
+        val adminKeywords = listOf(
+            "jejum",
+            "espac",
+            "absor",
+            "horario",
+            "dieta",
+            "mistura",
+            "contraste",
+            "armazen",
+            "tecnica",
+            "via",
+            "dilu",
+            "inr",
+            "glicemia",
+        )
+        val matched = combined.filter { entry ->
+            adminKeywords.any { keyword -> entry.contains(keyword, ignoreCase = true) }
+        }.distinct()
+
+        if (matched.isNotEmpty()) return matched
+
+        return when {
+            normalizedClass.contains("insulina") || normalizedSubstance.contains("insulina") ->
+                listOf("revisar tecnica de aplicacao", "monitorar glicemia conforme rotina", "alinhar dose, refeicao e horario")
+            normalizedSubstance.contains("levotirox") ->
+                listOf("administrar em jejum conforme orientacao", "respeitar espacamento com calcio e ferro", "acompanhar TSH e resposta clinica")
+            normalizedSubstance.contains("metform") ->
+                listOf("revisar funcao renal periodicamente", "avaliar uso peri-contraste quando aplicavel", "observar tolerancia gastrointestinal")
+            normalizedClass.contains("anticoagul") || normalizedSubstance.contains("varfar") ->
+                listOf("acompanhar exames e sinais de sangramento", "revisar mudancas de dieta e antibioticos", "documentar qualquer sangramento novo")
+            normalizedClass.contains("anti hipert") || normalizedSubstance.contains("losart") || normalizedSubstance.contains("enalap") ->
+                listOf("monitorar pressao arterial", "acompanhar creatinina e potassio quando indicado", "reavaliar tontura ou hipotensao")
+            normalizedClass.contains("anti inflam") || normalizedSubstance.contains("ibuprof") || normalizedSubstance.contains("aspir") ->
+                listOf("avaliar risco gastrico", "monitorar sinais de sangramento", "considerar funcao renal quando pertinente")
+            else ->
+                combined.take(3).ifEmpty {
+                    listOf("revisar a bula oficial do produto", "monitorar resposta clinica", "registrar qualquer evento adverso relevante")
+                }
+        }
     }
 
     private fun inferStudyFocus(normalizedClass: String, normalizedSubstance: String): String = when {

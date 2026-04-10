@@ -28,7 +28,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.OpenInNew
+import androidx.compose.material.icons.rounded.CloseFullscreen
 import androidx.compose.material.icons.rounded.LocalHospital
+import androidx.compose.material.icons.rounded.OpenInFull
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
@@ -36,6 +38,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -66,6 +69,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import br.com.lpplivre.R
 import br.com.lpplivre.data.PublicChatMessage
 import br.com.lpplivre.data.SupabaseRestRepository
@@ -830,7 +834,13 @@ private fun LibraryReaderDialog(
     onClose: () -> Unit,
     onOpenExternal: () -> Unit,
 ) {
-    Dialog(onDismissRequest = onClose) {
+    Dialog(
+        onDismissRequest = onClose,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false,
+        ),
+    ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = Color(0xFF071A2B),
@@ -853,6 +863,7 @@ private fun LibraryReaderCard(
     val context = LocalContext.current
     val ui = studyUiTokens()
     val fallbackUrl = remember(book.url) { libraryFallbackUrl(book.url) }
+    var isFullscreen by rememberSaveable(book.id) { mutableStateOf(false) }
     var isLoading by remember(book.url) { mutableStateOf(true) }
     var readerStatus by remember(book.url) { mutableStateOf("Preparando leitor interno...") }
     var embeddedPdf by remember(book.url) { mutableStateOf<EmbeddedPdfDocument?>(null) }
@@ -893,14 +904,14 @@ private fun LibraryReaderCard(
     Card(
         modifier = Modifier
             .fillMaxSize()
-            .padding(12.dp),
-        shape = RoundedCornerShape(30.dp),
+            .padding(if (isFullscreen) 0.dp else 12.dp),
+        shape = RoundedCornerShape(if (isFullscreen) 0.dp else 30.dp),
         colors = CardDefaults.cardColors(containerColor = ui.cardAlt),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(if (isFullscreen) 10.dp else 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Row(
@@ -917,25 +928,33 @@ private fun LibraryReaderCard(
                         overflow = TextOverflow.Ellipsis,
                     )
                 }
+                FilledTonalIconButton(onClick = { isFullscreen = !isFullscreen }) {
+                    Icon(
+                        imageVector = if (isFullscreen) Icons.Rounded.CloseFullscreen else Icons.Rounded.OpenInFull,
+                        contentDescription = if (isFullscreen) "Sair da tela cheia" else "Tela cheia",
+                    )
+                }
                 OutlinedButton(onClick = onClose) {
                     Text("Fechar")
                 }
             }
-            Row(
-                modifier = Modifier.horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                AssistChip(onClick = {}, label = { Text(book.category) })
-                AssistChip(onClick = {}, label = { Text(book.authority) })
+            if (!isFullscreen) {
+                Row(
+                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    AssistChip(onClick = {}, label = { Text(book.category) })
+                    AssistChip(onClick = {}, label = { Text(book.authority) })
+                }
+                Text(
+                    text = readerStatus,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = ui.accent,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
-            Text(
-                text = readerStatus,
-                style = MaterialTheme.typography.bodySmall,
-                color = ui.accent,
-                fontWeight = FontWeight.Bold,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -990,10 +1009,12 @@ private fun LibraryReaderCard(
                   }
                 }
             }
-            OutlinedButton(onClick = onOpenExternal, modifier = Modifier.fillMaxWidth()) {
-                Icon(Icons.AutoMirrored.Rounded.OpenInNew, contentDescription = "Abrir externo")
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Abrir PDF na fonte original")
+            if (!isFullscreen) {
+                OutlinedButton(onClick = onOpenExternal, modifier = Modifier.fillMaxWidth()) {
+                    Icon(Icons.AutoMirrored.Rounded.OpenInNew, contentDescription = "Abrir externo")
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Abrir PDF na fonte original")
+                }
             }
         }
     }
@@ -1015,8 +1036,7 @@ private fun EmbeddedWebReader(
 ) {
     AndroidView(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(520.dp)
+            .fillMaxSize()
             .clip(RoundedCornerShape(18.dp)),
         factory = { context ->
             WebView(context).apply {
@@ -1587,8 +1607,13 @@ private fun MedicationStudyCard(
                 items = medication.avoidWith.map { item -> "${medication.title} + $item" },
             )
             MedicationBlock(
-                title = "Pontos de atencao",
+                title = "Alertas clinicos da associacao",
                 accent = Color(0xFFE8F4FF),
+                items = medication.interactionAlerts,
+            )
+            MedicationBlock(
+                title = "Administracao e monitorizacao",
+                accent = Color(0xFFEAF7FF),
                 items = medication.interactionAlerts,
             )
             MedicationBlock(
@@ -1660,6 +1685,10 @@ private fun OfficialMedicationCompactCard(
                     )
                 },
             )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                AssistChip(onClick = { }, label = { Text(study.studyBasisLabel) })
+                AssistChip(onClick = { }, label = { Text(study.precisionLabel) })
+            }
             MedicationInfoLine("Classe terapeutica", item.therapeuticClass)
             MedicationInfoLine("Apresentacao", item.presentation)
             MedicationInfoLine("Laboratorio", item.laboratory)
@@ -1679,12 +1708,17 @@ private fun OfficialMedicationCompactCard(
             MedicationBlock(
                 title = "Interacoes importantes",
                 accent = Color(0xFFFFF6DA),
-                items = study.avoidWith.map { avoid -> "${item.product} + $avoid" }.take(3),
+                items = study.avoidWith.take(3),
             )
             MedicationBlock(
-                title = "Pontos de atencao",
+                title = "Alertas clinicos da associacao",
                 accent = Color(0xFFE8F4FF),
                 items = study.attentionPoints.take(4),
+            )
+            MedicationBlock(
+                title = "Administracao e monitorizacao",
+                accent = Color(0xFFEAF7FF),
+                items = study.administrationAndMonitoring.take(4),
             )
             MedicationBlock(
                 title = "Quando revisar a bula",
@@ -1700,7 +1734,7 @@ private fun OfficialMedicationCompactCard(
                 }
             }
             Text(
-                text = "Estudo baseado no catalogo oficial Anvisa/CMED e em regras locais de apoio. Confirme detalhes individuais na bula oficial.",
+                text = study.sourceNote,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -1819,6 +1853,10 @@ private fun OfficialCatalogDetailedCard(
                     )
                 },
             )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                AssistChip(onClick = { }, label = { Text(medication.studyBasisLabel) })
+                AssistChip(onClick = { }, label = { Text(medication.precisionLabel) })
+            }
             MedicationInfoLine("Principio ativo", medication.activeIngredient)
             MedicationInfoLine("Referencia oficial", medication.referenceProduct)
             MedicationInfoLine("Forma", medication.form)
@@ -1838,12 +1876,17 @@ private fun OfficialCatalogDetailedCard(
             MedicationBlock(
                 title = "Interacoes importantes",
                 accent = Color(0xFFFFF6DA),
-                items = medication.avoidWith.map { item -> "${medication.title} + $item" },
+                items = medication.avoidWith,
             )
             MedicationBlock(
-                title = "Pontos de atencao",
+                title = "Alertas clinicos da associacao",
                 accent = Color(0xFFE8F4FF),
                 items = medication.attentionPoints,
+            )
+            MedicationBlock(
+                title = "Administracao e monitorizacao",
+                accent = Color(0xFFEAF7FF),
+                items = medication.administrationAndMonitoring,
             )
             MedicationBlock(
                 title = "Quando revisar a bula",

@@ -1,9 +1,9 @@
 {
-  "versionCode": 14,
-  "versionName": "1.1.3",
+  "versionCode": 15,
+  "versionName": "1.1.4",
   "packageName": "br.com.estudasaude.app",
-  "apkUrl": "https://luanhnn25-jpg.github.io/lesa/estudasaude-app-v1.1.3.apk",
-  "notes": "Atualizacao do EstudaViva com leitor PDF interno funcional, biblioteca corrigida e pipeline real de curadoria no Supabase.",
+  "apkUrl": "https://luanhnn25-jpg.github.io/lesa/estudasaude-app-v1.1.4.apk",
+  "notes": "Atualizacao do EstudaViva com tela cheia no leitor PDF e fichas de medicamentos mais organizadas para estudo.",
   "publishedAt": "2026-04-10",
   "mandatory": false
 }
