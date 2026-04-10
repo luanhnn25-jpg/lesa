@@ -601,7 +601,9 @@
     function humanizeAuthError(error) {
       const raw = String(error?.message || "").toLowerCase();
       if (raw.includes("failed to fetch")) return "Não foi possível conectar ao servidor de autenticação. Verifique sua internet e tente novamente.";
-      if (raw.includes("timeout")) return "O servidor demorou para responder. Tente novamente em alguns instantes.";
+      if (raw.includes("timeout") || raw.includes("abort") || raw.includes("aborted") || raw.includes("signal is aborted")) {
+        return "O servidor demorou para responder. Aguarde alguns instantes e tente enviar novamente.";
+      }
       if (raw.includes("email not confirmed") || raw.includes("confirm")) return "Seu e-mail ainda não foi confirmado. Confira a caixa de entrada e a pasta de spam.";
       if (raw.includes("invalid login credentials")) return "E-mail ou senha inválidos.";
       if (raw.includes("user already registered")) return "Este e-mail já está cadastrado. Tente entrar ou recuperar a senha.";
@@ -611,7 +613,7 @@
 
     async function requestPasswordRecovery(email) {
       const controller = new AbortController();
-      const timeoutId = window.setTimeout(() => controller.abort(), 12000);
+      const timeoutId = window.setTimeout(() => controller.abort("timeout"), 45000);
       const recoverUrl = `${SUPABASE_URL}/auth/v1/recover?redirect_to=${encodeURIComponent(CONFIRM_URL)}`;
 
       try {
@@ -638,6 +640,15 @@
           } catch {}
           throw new Error(message || `Falha ao enviar recuperação. Código ${response.status}.`);
         }
+      } catch (error) {
+        if (
+          error?.name === "AbortError" ||
+          String(error?.message || error).toLowerCase().includes("abort") ||
+          String(error?.message || error).toLowerCase().includes("signal is aborted")
+        ) {
+          throw new Error("timeout");
+        }
+        throw error;
       } finally {
         window.clearTimeout(timeoutId);
       }
