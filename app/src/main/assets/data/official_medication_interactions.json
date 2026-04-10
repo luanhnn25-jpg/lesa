@@ -1,0 +1,168 @@
+[
+  {
+    "registration": "",
+    "product": "",
+    "substanceKeys": ["ibuprofeno"],
+    "interactions": [
+      "aspirina em baixa dose",
+      "varfarina e outros anticoagulantes",
+      "naproxeno e outros AINEs",
+      "prednisona e outros corticosteroides"
+    ],
+    "interactionAlerts": [
+      "pode aumentar sangramento",
+      "pode reduzir efeito de anti-hipertensivos",
+      "avaliar funcao renal e risco gastrico"
+    ],
+    "attentionPoints": [
+      "revisar risco gastrico",
+      "avaliar funcao renal se pertinente",
+      "observar sinais de sangramento ou hipersensibilidade"
+    ],
+    "reviewChecklist": [
+      "se houver dor gastrica importante ou sangramento",
+      "se houver doenca renal ou hepatica",
+      "se houver uso conjunto com anticoagulantes"
+    ],
+    "official": false
+  },
+  {
+    "registration": "",
+    "product": "",
+    "substanceKeys": ["acido acetilsalicilico", "aspirina"],
+    "interactions": [
+      "varfarina e outros anticoagulantes",
+      "ibuprofeno, naproxeno e outros AINEs",
+      "prednisona e outros corticosteroides",
+      "metotrexato"
+    ],
+    "interactionAlerts": [
+      "alto risco de sangramento",
+      "avaliar risco gastrico",
+      "revisar combinacoes antitromboticas antes do uso"
+    ],
+    "attentionPoints": [
+      "vigiar sangramento",
+      "revisar associacoes antes do uso",
+      "monitorar funcao renal quando indicado"
+    ],
+    "reviewChecklist": [
+      "se houver sangramento",
+      "se houver associacao com outro antitrombotico",
+      "se houver procedimento invasivo ou mudanca clinica importante"
+    ],
+    "official": false
+  },
+  {
+    "registration": "",
+    "product": "",
+    "substanceKeys": ["varfarina"],
+    "interactions": [
+      "aspirina sem criterio",
+      "ibuprofeno, naproxeno e outros AINEs",
+      "clopidogrel",
+      "sulfametoxazol-trimetoprim",
+      "fluconazol",
+      "amiodarona"
+    ],
+    "interactionAlerts": [
+      "monitorizacao frequente de INR",
+      "alto potencial de interacao",
+      "vigiar sinais de sangramento e mudancas de antibiotico"
+    ],
+    "attentionPoints": [
+      "vigiar sangramento",
+      "revisar associacoes antes do uso",
+      "monitorar funcao renal quando indicado"
+    ],
+    "reviewChecklist": [
+      "se houver sangramento",
+      "se houver associacao com outro antitrombotico",
+      "se houver procedimento invasivo ou mudanca clinica importante"
+    ],
+    "official": false
+  },
+  {
+    "registration": "",
+    "product": "",
+    "substanceKeys": ["clopidogrel"],
+    "interactions": [
+      "omeprazol ou esomeprazol",
+      "ibuprofeno, naproxeno e outros AINEs",
+      "varfarina e outros anticoagulantes",
+      "repaglinida"
+    ],
+    "interactionAlerts": [
+      "vigiar sinais de sangramento",
+      "revisar interacoes por CYP2C19",
+      "avaliar necessidade real de dupla antiagregacao"
+    ],
+    "attentionPoints": [
+      "vigiar sangramento",
+      "revisar associacoes antes do uso",
+      "monitorar funcao renal quando indicado"
+    ],
+    "reviewChecklist": [
+      "se houver sangramento",
+      "se houver associacao com outro antitrombotico",
+      "se houver procedimento invasivo ou mudanca clinica importante"
+    ],
+    "official": false
+  },
+  {
+    "registration": "",
+    "product": "",
+    "substanceKeys": ["metformina"],
+    "interactions": [
+      "contraste iodado sem protocolo",
+      "cimetidina e outros cationicos renais",
+      "topiramato ou acetazolamida",
+      "alcool em excesso"
+    ],
+    "interactionAlerts": [
+      "avaliar funcao renal",
+      "revisar protocolo peri-contraste",
+      "vigiar risco de acidose lactica e interacoes por secrecao tubular"
+    ],
+    "attentionPoints": [
+      "monitorar glicemia",
+      "revisar horario e dieta",
+      "observar sinais de hipoglicemia ou intolerancia"
+    ],
+    "reviewChecklist": [
+      "se houver hipoglicemia ou hiperglicemia persistente",
+      "se houver doenca renal ou uso de contraste",
+      "se houver ajuste de dose ou mudanca de esquema"
+    ],
+    "official": false
+  },
+  {
+    "registration": "",
+    "product": "",
+    "substanceKeys": ["levotiroxina"],
+    "interactions": [
+      "sulfato ferroso",
+      "carbonato de calcio",
+      "sucralfato",
+      "colestiramina",
+      "sevelamer",
+      "orlistate"
+    ],
+    "interactionAlerts": [
+      "administrar em jejum conforme orientacao",
+      "revisar interacoes de absorcao",
+      "acompanhar TSH e espacamento entre medicamentos"
+    ],
+    "attentionPoints": [
+      "relacione indicacao, forma e monitorizacao",
+      "confirme detalhes na bula oficial",
+      "observe resposta clinica e eventos adversos"
+    ],
+    "reviewChecklist": [
+      "se houver reacao adversa importante",
+      "se houver associacao com outros medicamentos",
+      "se houver duvida sobre uso em grupos especiais"
+    ],
+    "official": false
+  }
+]

@@ -19,6 +19,8 @@ data class DetailedMedicationStudy(
     val anvisaUrl: String,
     val anvisaSearchUrl: String,
     val sourceNote: String,
+    val interactionSourceLabel: String,
+    val interactionSourceOfficial: Boolean,
 )
 
 private data class MedicationProfile(
@@ -255,6 +257,7 @@ object MedicationEnrichmentEngine {
         val normalizedTitle = normalize(item.product)
         val normalizedClass = normalize(item.therapeuticClass)
         val normalizedSubstance = normalize(item.substance)
+        val structuredInteractions = MedicationInteractionRepository.find(item)
         val specificProfile = specificProfiles.firstOrNull { profile ->
             profile.keys.any { key ->
                 normalizedSubstance.contains(normalize(key)) || normalizedTitle.contains(normalize(key))
@@ -264,16 +267,24 @@ object MedicationEnrichmentEngine {
         val therapeuticEffect = specificProfile?.therapeuticEffect ?: inferTherapeuticEffect(normalizedClass)
         val expectedReactions = specificProfile?.expectedReactions ?: inferExpectedReactions(normalizedClass)
         val unexpectedReactions = specificProfile?.unexpectedReactions ?: inferUnexpectedReactions(normalizedClass)
-        val avoidWith = specificProfile?.avoidWith ?: inferAvoidWith(normalizedClass)
-        val interactionAlerts = specificProfile?.interactionAlerts ?: inferInteractionAlerts(normalizedClass)
+        val avoidWith = structuredInteractions?.interactions ?: specificProfile?.avoidWith ?: inferAvoidWith(normalizedClass)
+        val interactionAlerts = structuredInteractions?.interactionAlerts ?: specificProfile?.interactionAlerts ?: inferInteractionAlerts(normalizedClass)
         val focus = specificProfile?.studyFocus ?: inferStudyFocus(normalizedClass, normalizedSubstance)
-        val attentionPoints = specificProfile?.interactionAlerts ?: inferAttentionPoints(normalizedClass, normalizedSubstance)
-        val reviewChecklist = inferReviewChecklist(normalizedClass, normalizedSubstance)
-        val sourceNote = if (specificProfile != null) {
+        val attentionPoints = structuredInteractions?.attentionPoints ?: specificProfile?.interactionAlerts ?: inferAttentionPoints(normalizedClass, normalizedSubstance)
+        val reviewChecklist = structuredInteractions?.reviewChecklist ?: inferReviewChecklist(normalizedClass, normalizedSubstance)
+        val sourceNote = if (structuredInteractions != null) {
+            "Interacoes importantes vindas da base estruturada por medicamento, preparada para receber revisao de bula oficial por produto. Mantenha a conferencia no link regulatorio da Anvisa."
+        } else if (specificProfile != null) {
             "Ficha enriquecida por principio ativo com foco em interacoes importantes de estudo, mantendo links oficiais da Anvisa para consulta do produto exato."
         } else {
             "Ficha enriquecida a partir da classe terapeutica oficial da Anvisa e do catalogo CMED. Confirme detalhes finos na bula oficial do produto."
         }
+        val interactionSourceLabel = when {
+            structuredInteractions != null -> "Base estruturada por medicamento"
+            specificProfile != null -> "Resumo por principio ativo"
+            else -> "Guia por classe terapeutica"
+        }
+        val interactionSourceOfficial = structuredInteractions?.official == true
 
         return DetailedMedicationStudy(
             title = item.product,
@@ -292,6 +303,8 @@ object MedicationEnrichmentEngine {
             anvisaUrl = item.anvisaBularioUrl,
             anvisaSearchUrl = item.anvisaSearchUrl,
             sourceNote = sourceNote,
+            interactionSourceLabel = interactionSourceLabel,
+            interactionSourceOfficial = interactionSourceOfficial,
         )
     }
 

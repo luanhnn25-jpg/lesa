@@ -1464,6 +1464,11 @@ private fun OfficialMedicationCompactCard(
     onOpenSearch: () -> Unit,
 ) {
     val ui = studyUiTokens()
+    val context = LocalContext.current
+    remember(context) {
+        MedicationInteractionRepository.ensureLoaded(context)
+        Unit
+    }
     val study = remember(item.registration, item.product, item.therapeuticClass) {
         MedicationEnrichmentEngine.enrich(item)
     }
@@ -1477,6 +1482,18 @@ private fun OfficialMedicationCompactCard(
         ) {
             Text(item.product, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
             Text(item.substance, color = ui.accent, fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis)
+            AssistChip(
+                onClick = { },
+                label = {
+                    Text(
+                        if (study.interactionSourceOfficial) {
+                            "${study.interactionSourceLabel} • oficial"
+                        } else {
+                            study.interactionSourceLabel
+                        },
+                    )
+                },
+            )
             MedicationInfoLine("Classe terapeutica", item.therapeuticClass)
             MedicationInfoLine("Apresentacao", item.presentation)
             MedicationInfoLine("Laboratorio", item.laboratory)
@@ -1624,6 +1641,18 @@ private fun OfficialCatalogDetailedCard(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(medication.title, fontWeight = FontWeight.Black, color = MaterialTheme.colorScheme.onSurface)
+            AssistChip(
+                onClick = { },
+                label = {
+                    Text(
+                        if (medication.interactionSourceOfficial) {
+                            "${medication.interactionSourceLabel} • oficial"
+                        } else {
+                            medication.interactionSourceLabel
+                        },
+                    )
+                },
+            )
             MedicationInfoLine("Principio ativo", medication.activeIngredient)
             MedicationInfoLine("Referencia oficial", medication.referenceProduct)
             MedicationInfoLine("Forma", medication.form)
