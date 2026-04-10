@@ -601,11 +601,46 @@
     function humanizeAuthError(error) {
       const raw = String(error?.message || "").toLowerCase();
       if (raw.includes("failed to fetch")) return "Não foi possível conectar ao servidor de autenticação. Verifique sua internet e tente novamente.";
+      if (raw.includes("timeout")) return "O servidor demorou para responder. Tente novamente em alguns instantes.";
       if (raw.includes("email not confirmed") || raw.includes("confirm")) return "Seu e-mail ainda não foi confirmado. Confira a caixa de entrada e a pasta de spam.";
       if (raw.includes("invalid login credentials")) return "E-mail ou senha inválidos.";
       if (raw.includes("user already registered")) return "Este e-mail já está cadastrado. Tente entrar ou recuperar a senha.";
       if (raw.includes("password should be at least")) return "A senha deve conter pelo menos 6 caracteres.";
       return error?.message || "Ocorreu um erro inesperado.";
+    }
+
+    async function requestPasswordRecovery(email) {
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(() => controller.abort(), 12000);
+      const recoverUrl = `${SUPABASE_URL}/auth/v1/recover?redirect_to=${encodeURIComponent(CONFIRM_URL)}`;
+
+      try {
+        const response = await fetch(recoverUrl, {
+          method: "POST",
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email,
+            gotrue_meta_security: {}
+          }),
+          signal: controller.signal
+        });
+
+        const responseText = await response.text();
+        if (!response.ok) {
+          let message = responseText;
+          try {
+            const parsed = JSON.parse(responseText);
+            message = parsed.msg || parsed.message || parsed.error_description || responseText;
+          } catch {}
+          throw new Error(message || `Falha ao enviar recuperação. Código ${response.status}.`);
+        }
+      } finally {
+        window.clearTimeout(timeoutId);
+      }
     }
 
     async function getAuthenticatedUser() {
@@ -731,13 +766,8 @@
       setBusy(true);
       setMsg("Enviando e-mail de recuperação...", "warn");
       try {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: CONFIRM_URL });
+        await requestPasswordRecovery(email);
         setBusy(false);
-        if (error) {
-          setMsg(humanizeAuthError(error), "bad");
-          startCooldown(3000);
-          return;
-        }
         setMsg("E-mail de recuperação enviado.\nConfira sua caixa de entrada e também a pasta de spam.", "ok");
         startCooldown(2500);
       } catch (err) {
