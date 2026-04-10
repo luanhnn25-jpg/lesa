@@ -1,5 +1,7 @@
 package br.com.lpplivre.ui
 
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -52,6 +54,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import br.com.lpplivre.R
 import br.com.lpplivre.data.PublicChatMessage
 import br.com.lpplivre.data.SupabaseRestRepository
@@ -777,32 +780,237 @@ fun MedicationStudySection() {
 fun OfficialSourcesSection() {
     val uriHandler = LocalUriHandler.current
     val ui = studyUiTokens()
+    var query by rememberSaveable { mutableStateOf("") }
+    val categories = remember { StudyContentRepository.nursingLibraryCategories }
+    var selectedCategory by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedBook by remember { mutableStateOf<NursingLibraryBook?>(null) }
+    val books = remember(query, selectedCategory) {
+        StudyContentRepository.libraryBooksFor(query, selectedCategory)
+    }
 
     Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
         SectionHeroCard(
-            title = "Biblioteca brasileira oficial",
-            body = "So entram aqui fontes brasileiras oficiais, rastreaveis e uteis para estudo.",
-            accent = listOf(Color(0xFF0F4C81), Color(0xFF7A3CFF)),
+            title = "Biblioteca de enfermagem",
+            body = "Livros digitais organizados por temas, com fontes oficiais e recomendadas para estudo de enfermagem.",
+            accent = listOf(Color(0xFF0F4C81), Color(0xFF4FC3A1)),
             imageRes = R.drawable.study_login_hero,
         )
-        StudyContentRepository.officialSources.forEach { source ->
+        Card(
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(containerColor = ui.card),
+        ) {
+            Column(
+                modifier = Modifier.padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp),
+            ) {
+                Text("Estante virtual", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                OutlinedTextField(
+                    value = query,
+                    onValueChange = { query = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(18.dp),
+                    label = { Text("Buscar por tema, livro, fonte ou procedimento") },
+                    leadingIcon = {
+                        Icon(Icons.Rounded.Search, contentDescription = "Buscar")
+                    },
+                )
+                Row(
+                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    FilterChip(
+                        selected = selectedCategory == null,
+                        onClick = { selectedCategory = null },
+                        label = { Text("Todos") },
+                    )
+                    categories.forEach { category ->
+                        FilterChip(
+                            selected = selectedCategory == category,
+                            onClick = { selectedCategory = category },
+                            label = { Text(category) },
+                        )
+                    }
+                }
+                Text(
+                    text = "${books.size} livros digitais encontrados | ${categories.size} categorias",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+        selectedBook?.let { book ->
+            LibraryReaderCard(
+                book = book,
+                onClose = { selectedBook = null },
+                onOpenExternal = { uriHandler.openUri(book.url) },
+            )
+        }
+        if (books.isEmpty()) {
             Card(
                 shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(containerColor = ui.card),
             ) {
-                Column(
+                Text(
+                    text = "Nenhum livro encontrado para essa busca. Tente temas como medicacao, SAE, puncao, urgencia, biosseguranca ou geriatria.",
                     modifier = Modifier.padding(20.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        } else {
+            books.forEach { book ->
+                NursingBookCard(
+                    book = book,
+                    onOpenInside = { selectedBook = book },
+                    onOpenExternal = { uriHandler.openUri(book.url) },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun NursingBookCard(
+    book: NursingLibraryBook,
+    onOpenInside: () -> Unit,
+    onOpenExternal: () -> Unit,
+) {
+    val ui = studyUiTokens()
+    Card(
+        shape = RoundedCornerShape(26.dp),
+        colors = CardDefaults.cardColors(containerColor = ui.card),
+    ) {
+        Row(
+            modifier = Modifier.padding(18.dp),
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
+            verticalAlignment = Alignment.Top,
+        ) {
+            DigitalBookCover(book = book)
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Text(book.title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                Text(book.authority, color = ui.accent, fontWeight = FontWeight.Bold)
+                Text(book.description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Row(
+                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Text(source.title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
-                    Text(source.authority, color = ui.accent, fontWeight = FontWeight.Bold)
-                    Text(source.summary, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    OutlinedButton(onClick = { uriHandler.openUri(source.url) }) {
-                        Icon(Icons.AutoMirrored.Rounded.OpenInNew, contentDescription = "Abrir fonte")
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Abrir fonte oficial")
-                    }
+                    AssistChip(onClick = {}, label = { Text(book.category) })
+                    AssistChip(onClick = {}, label = { Text(book.subcategory) })
                 }
+                Button(onClick = onOpenInside, modifier = Modifier.fillMaxWidth()) {
+                    Text("Abrir e visualizar no app")
+                }
+                OutlinedButton(onClick = onOpenExternal, modifier = Modifier.fillMaxWidth()) {
+                    Icon(Icons.AutoMirrored.Rounded.OpenInNew, contentDescription = "Abrir externo")
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Abrir fonte original")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DigitalBookCover(book: NursingLibraryBook) {
+    val gradients = listOf(
+        listOf(Color(0xFF0B2236), Color(0xFF4FC3A1)),
+        listOf(Color(0xFF102033), Color(0xFFFFB44A)),
+        listOf(Color(0xFF0F4C81), Color(0xFF7A3CFF)),
+        listOf(Color(0xFF163B2B), Color(0xFF73D99F)),
+        listOf(Color(0xFF3B1D4A), Color(0xFFFF7A59)),
+    )
+    val colors = gradients[book.coverSeed % gradients.size]
+    Box(
+        modifier = Modifier
+            .width(92.dp)
+            .height(136.dp)
+            .clip(RoundedCornerShape(18.dp))
+            .background(Brush.verticalGradient(colors)),
+    ) {
+        Box(
+            modifier = Modifier
+                .width(10.dp)
+                .height(136.dp)
+                .background(Color.White.copy(alpha = 0.16f))
+                .align(Alignment.CenterStart),
+        )
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Text(
+                text = book.coverLabel,
+                color = Color.White,
+                fontWeight = FontWeight.Black,
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                text = book.authority.uppercase(),
+                color = Color.White.copy(alpha = 0.82f),
+                style = MaterialTheme.typography.labelSmall,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+    }
+}
+
+@Composable
+private fun LibraryReaderCard(
+    book: NursingLibraryBook,
+    onClose: () -> Unit,
+    onOpenExternal: () -> Unit,
+) {
+    val ui = studyUiTokens()
+    Card(
+        shape = RoundedCornerShape(26.dp),
+        colors = CardDefaults.cardColors(containerColor = ui.cardAlt),
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("Leitor interno", style = MaterialTheme.typography.labelLarge, color = ui.accent, fontWeight = FontWeight.Bold)
+                    Text(book.title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
+                }
+                OutlinedButton(onClick = onClose) {
+                    Text("Fechar")
+                }
+            }
+            AndroidView(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(520.dp)
+                    .clip(RoundedCornerShape(18.dp)),
+                factory = { context ->
+                    WebView(context).apply {
+                        webViewClient = WebViewClient()
+                        settings.javaScriptEnabled = true
+                        settings.domStorageEnabled = true
+                        settings.builtInZoomControls = true
+                        settings.displayZoomControls = false
+                        loadUrl(book.url)
+                    }
+                },
+                update = { webView ->
+                    if (webView.url != book.url) webView.loadUrl(book.url)
+                },
+            )
+            OutlinedButton(onClick = onOpenExternal, modifier = Modifier.fillMaxWidth()) {
+                Icon(Icons.AutoMirrored.Rounded.OpenInNew, contentDescription = "Abrir externo")
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Se nao carregar, abrir no navegador")
             }
         }
     }

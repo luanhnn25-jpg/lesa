@@ -119,7 +119,7 @@ private fun StudyHomeScreen(
         listOf(
             StudyModule("Quiz", "Perguntas com gabarito e explicacao por fonte oficial.", Icons.Rounded.Quiz, Color(0xFFFFEDB6), Color(0xFF8D5200)),
             StudyModule("Medicamentos", "Cards de estudo com base e links da Anvisa.", Icons.Rounded.LocalHospital, Color(0xFFFFDCCD), Color(0xFFB44A27)),
-            StudyModule("Fontes Oficiais", "Biblioteca brasileira clicavel e rastreavel.", Icons.Rounded.AutoStories, Color(0xFFD8EFFF), Color(0xFF205FA3)),
+        StudyModule("Biblioteca", "Livros digitais de enfermagem com fontes oficiais e recomendadas.", Icons.Rounded.AutoStories, Color(0xFFD8EFFF), Color(0xFF205FA3)),
             StudyModule("Chat", "Conversa moderna para trocar duvidas, apoio e novidades dentro do app.", Icons.AutoMirrored.Rounded.Chat, Color(0xFFF2DEFF), Color(0xFF6B37D1)),
         )
     }
@@ -131,7 +131,7 @@ private fun StudyHomeScreen(
                     Column {
                         Text("EstudaViva", fontWeight = FontWeight.Black)
                         Text(
-                            text = "Quiz, Anvisa, fontes brasileiras e chat",
+        text = "Quiz, Anvisa, biblioteca e chat",
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -650,7 +650,7 @@ private fun StudyMetricsCard() {
                     modifier = Modifier.weight(1f),
                 )
                 MetricPill(
-                    label = "Fontes",
+            label = "Biblioteca",
                     value = "8",
                     accent = listOf(MaterialTheme.colorScheme.tertiary, ui.accent),
                     modifier = Modifier.weight(1f),
@@ -962,5 +962,5 @@ private enum class StudySection(
     Quiz("Quiz", Icons.Rounded.Quiz),
     Community("Chat", Icons.AutoMirrored.Rounded.Chat),
     Meds("Anvisa", Icons.Rounded.LocalHospital),
-    Library("Fontes", Icons.Rounded.AutoStories),
+    Library("Biblioteca", Icons.Rounded.AutoStories),
 }

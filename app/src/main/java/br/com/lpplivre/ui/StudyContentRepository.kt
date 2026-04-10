@@ -12,6 +12,19 @@ data class OfficialStudySource(
     val url: String,
 )
 
+data class NursingLibraryBook(
+    val id: String,
+    val title: String,
+    val description: String,
+    val category: String,
+    val subcategory: String,
+    val theme: String,
+    val authority: String,
+    val coverLabel: String,
+    val coverSeed: Int,
+    val url: String,
+)
+
 data class StudyMedication(
     val title: String,
     val activeIngredient: String,
@@ -41,6 +54,11 @@ data class AiStudyAnswer(
     val title: String,
     val body: String,
     val source: OfficialStudySource,
+)
+
+private data class KnowledgeMatch(
+    val answer: AiStudyAnswer,
+    val score: Int,
 )
 
 private enum class NursingAudience {
@@ -175,7 +193,7 @@ object StudyContentRepository {
             title = "Anvisa - Programa Nacional de Seguranca do Paciente",
             authority = "Anvisa",
             summary = "Base oficial com materiais de seguranca do paciente e reducao de eventos evitaveis.",
-            url = "https://bibliotecadigital.anvisa.gov.br/jspui/handle/anvisa/1539",
+            url = "https://www.gov.br/anvisa/pt-br/assuntos/servicosdesaude/seguranca-do-paciente",
         ),
         OfficialStudySource(
             id = "anvisa_rdc_15",
@@ -189,7 +207,7 @@ object StudyContentRepository {
             title = "Ministerio da Saude - Cuidado da pessoa com diabetes",
             authority = "Ministerio da Saude",
             summary = "Ficha tecnica oficial da APS para acompanhamento e cuidado da pessoa com diabetes.",
-            url = "https://www.gov.br/saude/pt-br/composicao/saps/publicacoes/fichas-tecnicas/equipe-de-atencao-primaria-e-saude-da-familia/cuidado-da-pessoa-com-diabetes/view",
+            url = "https://bvsms.saude.gov.br/bvs/publicacoes/estrategias_cuidado_pessoa_diabetes_mellitus_cab36.pdf",
         ),
         OfficialStudySource(
             id = "ms_dengue",
@@ -255,6 +273,260 @@ object StudyContentRepository {
             url = "https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/publicacoes/caderno-4-medidas-de-prevencao-de-infeccao-relacionada-a-assistencia-a-saude.pdf/%40%40download/file",
         ),
     )
+
+    val nursingLibraryBooks = listOf(
+        NursingLibraryBook(
+            id = "cofen_guia_tecnicas",
+            title = "Guia Pratico: Tecnicas de Enfermagem",
+            description = "Livro do Cofen para aperfeicoamento tecnico-cientifico de procedimentos de enfermagem, com foco em tecnica, etica e cuidado humanizado.",
+            category = "Fundamentos e tecnicas",
+            subcategory = "Semiotecnica e procedimentos",
+            theme = "tecnicas, procedimentos, semiotecnica, cuidado direto",
+            authority = "Cofen",
+            coverLabel = "TECNICAS",
+            coverSeed = 1,
+            url = "https://biblioteca.cofen.gov.br/guia-pratico-tecnicas-de-enfermagem/",
+        ),
+        NursingLibraryBook(
+            id = "cofen_manual_procedimentos_2024",
+            title = "Manual de Procedimentos Fundamentais do Processo de Cuidado de Enfermagem",
+            description = "Manual oficial com procedimentos fundamentais, administracao intramuscular, avaliacao de sitio, idade, volume e seguranca tecnica.",
+            category = "Fundamentos e tecnicas",
+            subcategory = "Procedimentos fundamentais",
+            theme = "procedimentos, intramuscular, tecnica, seguranca",
+            authority = "Cofen",
+            coverLabel = "COFEN",
+            coverSeed = 2,
+            url = "https://biblioteca.cofen.gov.br/wp-content/uploads/2024/08/Manual-procedimentos-fundamentais-processo-cuidado-enfermagem.pdf",
+        ),
+        NursingLibraryBook(
+            id = "profae_fundamentos",
+            title = "Fundamentos de Enfermagem",
+            description = "Material do Ministerio da Saude com bases praticas de fundamentos, higiene, conforto, sinais, cuidados e assistencia ao paciente.",
+            category = "Fundamentos e tecnicas",
+            subcategory = "Fundamentos",
+            theme = "fundamentos, higiene, conforto, sinais vitais",
+            authority = "Ministerio da Saude",
+            coverLabel = "FUND.",
+            coverSeed = 3,
+            url = "https://bvsms.saude.gov.br/bvs/publicacoes/profae/fundamentos_enfermagem.pdf",
+        ),
+        NursingLibraryBook(
+            id = "cofen_basicos",
+            title = "Manual de Procedimentos Basicos de Enfermagem",
+            description = "Referencia para vias de administracao, volumes, angulos, cuidados com cateteres, preparo e organizacao tecnica.",
+            category = "Medicamentos e calculos",
+            subcategory = "Administracao segura",
+            theme = "administracao de medicamentos, vias, calculo, cateteres",
+            authority = "Cofen",
+            coverLabel = "MEDS",
+            coverSeed = 4,
+            url = "https://biblioteca.cofen.gov.br/wp-content/uploads/2020/09/Manual-Procedimentos-Basicos-Enfermagem.pdf",
+        ),
+        NursingLibraryBook(
+            id = "ms_fundamentos_calculo",
+            title = "Fundamentos de Enfermagem - Calculo, Diluicao e Gotejamento",
+            description = "Material de apoio com calculo de medicacao, diluicao, gotejamento, sondas, cateteres e fundamentos para a pratica assistencial.",
+            category = "Medicamentos e calculos",
+            subcategory = "Calculo de medicacao",
+            theme = "calculo, diluicao, gotejamento, medicamentos",
+            authority = "Ministerio da Saude",
+            coverLabel = "CALC.",
+            coverSeed = 5,
+            url = "https://bvsms.saude.gov.br/bvs/publicacoes/profae/fundamentos_enfermagem.pdf",
+        ),
+        NursingLibraryBook(
+            id = "anvisa_bulario",
+            title = "Bulario Eletronico da Anvisa",
+            description = "Portal oficial para consulta de bulas de medicamentos por pacientes e profissionais, essencial para farmacologia e seguranca medicamentosa.",
+            category = "Medicamentos e calculos",
+            subcategory = "Farmacologia e bulas",
+            theme = "farmacologia, bula, interacoes, reacoes adversas",
+            authority = "Anvisa",
+            coverLabel = "ANVISA",
+            coverSeed = 6,
+            url = "https://www.gov.br/anvisa/pt-br/sistemas/bulario-eletronico",
+        ),
+        NursingLibraryBook(
+            id = "cofen_736",
+            title = "Resolucao Cofen 736/2024",
+            description = "Base normativa atual do Processo de Enfermagem no Brasil, essencial para SAE, avaliacao, diagnosticos, planejamento, implementacao e evolucao.",
+            category = "SAE e processo de enfermagem",
+            subcategory = "Processo de enfermagem",
+            theme = "SAE, processo de enfermagem, documentacao, consulta",
+            authority = "Cofen",
+            coverLabel = "SAE",
+            coverSeed = 7,
+            url = "https://www.cofen.gov.br/resolucao-cofen-no-736-de-17-de-janeiro-de-2024/",
+        ),
+        NursingLibraryBook(
+            id = "educapes_processo_enfermagem",
+            title = "Traduzindo o Processo de Enfermagem",
+            description = "Cartilha educacional recente sobre a Resolucao Cofen 736/2024 para estudantes compreenderem o Processo de Enfermagem.",
+            category = "SAE e processo de enfermagem",
+            subcategory = "Estudo guiado",
+            theme = "processo de enfermagem, estudantes, resolucao 736",
+            authority = "eduCAPES",
+            coverLabel = "PE",
+            coverSeed = 8,
+            url = "https://educapes.capes.gov.br/handle/capes/1134209",
+        ),
+        NursingLibraryBook(
+            id = "nanda_2024_2026",
+            title = "NANDA-I Diagnosticos de Enfermagem 2024-2026",
+            description = "Pagina oficial da NANDA International sobre a classificacao de diagnosticos de enfermagem. Conteudo recomendado e licenciado.",
+            category = "SAE e processo de enfermagem",
+            subcategory = "NANDA-I",
+            theme = "diagnosticos de enfermagem, NANDA, taxonomia",
+            authority = "NANDA International",
+            coverLabel = "NANDA",
+            coverSeed = 9,
+            url = "https://nanda.org/publications-resources/publications/nanda-international-nursing-diagnoses/",
+        ),
+        NursingLibraryBook(
+            id = "noc_7",
+            title = "Nursing Outcomes Classification - NOC",
+            description = "Classificacao de resultados de enfermagem da Elsevier, recomendada para planejamento e avaliacao de resultados assistenciais.",
+            category = "SAE e processo de enfermagem",
+            subcategory = "NOC",
+            theme = "resultados de enfermagem, NOC, avaliacao",
+            authority = "Elsevier",
+            coverLabel = "NOC",
+            coverSeed = 10,
+            url = "https://shop.elsevier.com/books/nursing-outcomes-classification-noc/moorhead/978-0-323-88252-1",
+        ),
+        NursingLibraryBook(
+            id = "anvisa_higiene_maos",
+            title = "Higiene das Maos em Servicos de Saude",
+            description = "Documentos oficiais da Anvisa para higienizacao das maos, controle de infeccao e prevencao de IRAS.",
+            category = "Biosseguranca e infeccao",
+            subcategory = "Higiene das maos",
+            theme = "higienizacao das maos, IRAS, biosseguranca",
+            authority = "Anvisa",
+            coverLabel = "IRAS",
+            coverSeed = 11,
+            url = "https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/higiene-das-maos/documentos/documentos",
+        ),
+        NursingLibraryBook(
+            id = "anvisa_cateter_periferico",
+            title = "Medidas de Prevencao de Infeccao Relacionada a Assistencia",
+            description = "Caderno oficial da Anvisa com recomendacoes para cateter venoso periferico, avaliacao diaria, permanencia e prevencao de infeccao.",
+            category = "Procedimentos invasivos",
+            subcategory = "Puncao venosa e cateteres",
+            theme = "puncao venosa, cateter periferico, flebite, infeccao",
+            authority = "Anvisa",
+            coverLabel = "CVP",
+            coverSeed = 12,
+            url = "https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/publicacoes/caderno-4-medidas-de-prevencao-de-infeccao-relacionada-a-assistencia-a-saude.pdf/%40%40download/file",
+        ),
+        NursingLibraryBook(
+            id = "cofen_puncao_periferica",
+            title = "Parecer Cofen sobre Puncao Venosa Periferica",
+            description = "Parecer tecnico sobre puncao venosa periferica com cateter sobre agulha, responsabilidade profissional e seguranca.",
+            category = "Procedimentos invasivos",
+            subcategory = "Puncao venosa",
+            theme = "puncao venosa, cateter sobre agulha, atribuicoes",
+            authority = "Cofen",
+            coverLabel = "PUNCAO",
+            coverSeed = 13,
+            url = "https://www.cofen.gov.br/parecer-de-camara-tecnica-no-0112-2020-ctas-cofen/",
+        ),
+        NursingLibraryBook(
+            id = "ms_dengue_2026",
+            title = "Dengue: Manual de Enfermagem - 3a edicao",
+            description = "Manual atualizado pelo Ministerio da Saude para acolhimento, classificacao de risco, sinais de alarme e manejo de enfermagem na dengue.",
+            category = "Urgencia e emergencia",
+            subcategory = "Classificacao de risco",
+            theme = "dengue, urgencia, classificacao de risco, sinais de alarme",
+            authority = "Ministerio da Saude",
+            coverLabel = "URG.",
+            coverSeed = 14,
+            url = "https://www.gov.br/saude/pt-br/assuntos/noticias/2026/janeiro/ministerio-da-saude-atualiza-manual-de-enfermagem-para-qualificar-o-cuidado-as-pessoas-com-dengue",
+        ),
+        NursingLibraryBook(
+            id = "anvisa_seguranca_paciente",
+            title = "Programa Nacional de Seguranca do Paciente",
+            description = "Material oficial de seguranca do paciente, metas, reducao de eventos evitaveis e cultura de seguranca nos servicos de saude.",
+            category = "Seguranca do paciente",
+            subcategory = "Metas e eventos evitaveis",
+            theme = "seguranca do paciente, eventos adversos, metas",
+            authority = "Anvisa",
+            coverLabel = "SEG.",
+            coverSeed = 15,
+            url = "https://www.gov.br/anvisa/pt-br/assuntos/servicosdesaude/seguranca-do-paciente",
+        ),
+        NursingLibraryBook(
+            id = "ms_vacinacao",
+            title = "Manual de Normas e Procedimentos para Vacinacao",
+            description = "Manual oficial para sala de vacina, preparo, administracao, registro e organizacao do processo vacinal.",
+            category = "Pediatria e saude coletiva",
+            subcategory = "Vacinacao",
+            theme = "vacinacao, pediatria, sala de vacina, intramuscular",
+            authority = "Ministerio da Saude",
+            coverLabel = "VAC.",
+            coverSeed = 16,
+            url = "https://bvsms.saude.gov.br/bvs/publicacoes/manual_normas_procedimentos_vacinacao.pdf",
+        ),
+        NursingLibraryBook(
+            id = "ms_diabetes",
+            title = "Cuidado da Pessoa com Diabetes",
+            description = "Ficha tecnica oficial da APS para acompanhamento de diabetes, glicemia, educacao em saude e cuidado longitudinal.",
+            category = "Saude coletiva",
+            subcategory = "Condicoes cronicas",
+            theme = "diabetes, glicemia, APS, educacao em saude",
+            authority = "Ministerio da Saude",
+            coverLabel = "APS",
+            coverSeed = 17,
+            url = "https://bvsms.saude.gov.br/bvs/publicacoes/estrategias_cuidado_pessoa_diabetes_mellitus_cab36.pdf",
+        ),
+        NursingLibraryBook(
+            id = "ms_prenatal",
+            title = "Atencao ao Pre-Natal de Baixo Risco",
+            description = "Caderno do Ministerio da Saude para acompanhamento pre-natal, estratificacao, educacao e cuidado materno-infantil.",
+            category = "Obstetricia",
+            subcategory = "Pre-natal",
+            theme = "gestante, pre-natal, obstetricia, saude da mulher",
+            authority = "Ministerio da Saude",
+            coverLabel = "OBST.",
+            coverSeed = 18,
+            url = "https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/s/saude-da-mulher/publicacoes",
+        ),
+        NursingLibraryBook(
+            id = "ms_pessoa_idosa",
+            title = "Caderneta de Saude da Pessoa Idosa",
+            description = "Material do Ministerio da Saude para acompanhamento de idosos, avaliacao funcional, riscos e cuidado continuado.",
+            category = "Geriatria",
+            subcategory = "Pessoa idosa",
+            theme = "idoso, geriatria, avaliacao, cuidado longitudinal",
+            authority = "Ministerio da Saude",
+            coverLabel = "IDOSO",
+            coverSeed = 19,
+            url = "https://bvsms.saude.gov.br/bvs/publicacoes/caderneta_saude_pessoa_idosa_5ed_1re.pdf",
+        ),
+    )
+
+    val nursingLibraryCategories: List<String>
+        get() = nursingLibraryBooks.map { it.category }.distinct().sorted()
+
+    fun libraryBooksFor(query: String, selectedCategory: String?): List<NursingLibraryBook> {
+        val normalizedQuery = normalize(query)
+        val tokens = significantTokens(normalizedQuery)
+        return nursingLibraryBooks.filter { book ->
+            val categoryMatches = selectedCategory.isNullOrBlank() || book.category == selectedCategory
+            val indexedText = normalize(
+                listOf(
+                    book.title,
+                    book.description,
+                    book.category,
+                    book.subcategory,
+                    book.theme,
+                    book.authority,
+                ).joinToString(" "),
+            )
+            val queryMatches = normalizedQuery.isBlank() || tokens.all { token -> indexedText.contains(token) }
+            categoryMatches && queryMatches
+        }
+    }
 
     val medications = listOf(
         medication(
@@ -977,41 +1249,58 @@ object StudyContentRepository {
     )
 
     fun answerStudyQuestion(question: String): AiStudyAnswer {
-        if (question.isBlank()) return enrichAnswer(aiAnswers.first { it.title == "Sinais vitais" }, normalize(question))
-
         val normalized = normalize(question)
-        val queryTokens = significantTokens(normalized)
-
-        basicNursingAnswer(normalized)?.let { return enrichAnswer(it, normalized) }
-
-        val medicationMatch = medications
-            .map { medication ->
-                val indexedText = normalize("${medication.title} ${medication.activeIngredient}")
-                val score = queryTokens.count { token -> indexedText.contains(token) }
-                medication to score
-            }
-            .sortedByDescending { it.second }
-            .firstOrNull { it.second > 0 }
-            ?.first
-
-        if (medicationMatch != null) {
-            return enrichAnswer(
-                AiStudyAnswer(
-                    title = medicationMatch.title,
-                    body = "Tema encontrado na base de medicamentos. Estude ${medicationMatch.activeIngredient}, ${medicationMatch.therapeuticEffect.lowercase()} e revise reacoes esperadas, inesperadas e interacoes na fonte oficial da Anvisa.",
-                    source = officialSources.first { it.id == "anvisa_bulario" },
-                ),
-                normalized,
+        if (normalized.isBlank()) {
+            return AiStudyAnswer(
+                title = "Busca interna de enfermagem",
+                body = buildString {
+                    append("A IA consulta apenas a base interna do aplicativo.\n\n")
+                    append("[Como funciona]\n")
+                    append("- identifica palavras-chave da sua pergunta\n")
+                    append("- compara com perguntas relacionadas e palavras-chave da base\n")
+                    append("- combina os tópicos mais próximos sem inventar conteúdo\n\n")
+                    append("[Como perguntar melhor]\n")
+                    append("- cite o tema principal, como puncao venosa, SAE, curativo ou medicacao\n")
+                    append("- diga se quer definicao, passo a passo, cuidados ou complicacoes\n")
+                    append("- se quiser, inclua a via, o procedimento ou o medicamento\n\n")
+                    append("[Limite desta resposta]\n")
+                    append("Ainda nao ha pergunta para consultar. Digite sua duvida para buscar na base.")
+                },
+                source = officialSources.first { it.id == "cofen_736" },
             )
         }
 
-        val rankedTopic = aiAnswers
-            .map { answer -> answer to scoreTopic(answer, normalized, queryTokens) }
-            .sortedByDescending { it.second }
-            .firstOrNull { it.second > 0 }
-            ?.first
+        val queryTokens = significantTokens(normalized)
+        val priorityTopic = basicNursingAnswer(normalized)
 
-        return enrichAnswer(rankedTopic ?: aiAnswers.first { it.title == "Administracao segura de medicamentos" }, normalized)
+        val matches = buildKnowledgeMatches(normalized, queryTokens, priorityTopic)
+        val relevantMatches = matches.filter { it.score > 0 }.take(3)
+
+        if (relevantMatches.isEmpty() || relevantMatches.first().score < 3) {
+            return AiStudyAnswer(
+                title = "Busca sem resultado completo",
+                body = "Não encontrei uma resposta completa para isso. Tente reformular sua pergunta.",
+                source = officialSources.first { it.id == "cofen_736" },
+            )
+        }
+
+        val primary = relevantMatches.first()
+        val isPartial = primary.score < 5 || relevantMatches.size == 1
+        val introduction = if (isPartial) {
+            "Encontrei informações parciais, veja o que posso ajudar:"
+        } else {
+            "Resposta organizada apenas com base no conteúdo interno mais relevante."
+        }
+
+        return AiStudyAnswer(
+            title = primary.answer.title,
+            body = composeKnowledgeAnswer(
+                question = question.trim(),
+                matches = relevantMatches,
+                introduction = introduction,
+            ),
+            source = primary.answer.source,
+        )
     }
 
     fun medicationsFor(query: String, selectedClass: String?): List<StudyMedication> {
@@ -1049,6 +1338,141 @@ object StudyContentRepository {
     fun quizQuestionsForCategory(category: String?): List<QuizQuestionItem> {
         if (category.isNullOrBlank() || category == "Todos") return quizQuestions
         return quizQuestions.filter { inferQuizCategory(it) == category }
+    }
+
+    private fun buildKnowledgeMatches(
+        normalizedQuestion: String,
+        queryTokens: List<String>,
+        priorityTopic: AiStudyAnswer?,
+    ): List<KnowledgeMatch> {
+        val answerMatches = aiAnswers.map { answer ->
+            val boostedScore = scoreTopic(answer, normalizedQuestion, queryTokens) +
+                if (priorityTopic?.title == answer.title) 7 else 0
+            KnowledgeMatch(answer, boostedScore)
+        }
+
+        val medicationMatches = medications.map { medication ->
+            val answer = medicationKnowledgeAnswer(medication)
+            KnowledgeMatch(answer, scoreMedicationTopic(medication, normalizedQuestion, queryTokens))
+        }
+
+        return (answerMatches + medicationMatches)
+            .sortedByDescending { it.score }
+            .distinctBy { it.answer.title }
+    }
+
+    private fun medicationKnowledgeAnswer(medication: StudyMedication): AiStudyAnswer {
+        return AiStudyAnswer(
+            title = medication.title,
+            body = buildString {
+                append("Base interna de medicamentos com foco em ${medication.activeIngredient}. ")
+                append("${medication.therapeuticEffect} ")
+                append("Foco de estudo: ${medication.studyFocus} ")
+                append("Reacoes esperadas: ${medication.expectedReactions.joinToString(", ")}. ")
+                append("Reacoes inesperadas: ${medication.unexpectedReactions.joinToString(", ")}. ")
+                append("Alertas de interacao: ${medication.interactionAlerts.joinToString(", ")}.")
+            },
+            source = officialSources.first { it.id == "anvisa_bulario" },
+        )
+    }
+
+    private fun scoreMedicationTopic(
+        medication: StudyMedication,
+        normalizedQuestion: String,
+        queryTokens: List<String>,
+    ): Int {
+        val indexedText = normalize(
+            listOf(
+                medication.title,
+                medication.activeIngredient,
+                medication.referenceProduct,
+                medication.pharmacologicalClass,
+                medication.therapeuticEffect,
+                medication.studyFocus,
+                medication.expectedReactions.joinToString(" "),
+                medication.unexpectedReactions.joinToString(" "),
+                medication.avoidWith.joinToString(" "),
+                medication.interactionAlerts.joinToString(" "),
+            ).joinToString(" "),
+        )
+
+        var score = queryTokens.count { token -> indexedText.contains(token) }
+        if (normalize(medication.title) in normalizedQuestion) score += 6
+        if (normalize(medication.activeIngredient) in normalizedQuestion) score += 5
+        if (normalizedQuestion.contains("anvisa") || normalizedQuestion.contains("bula")) score += 1
+        return score
+    }
+
+    private fun composeKnowledgeAnswer(
+        question: String,
+        matches: List<KnowledgeMatch>,
+        introduction: String,
+    ): String {
+        val primary = matches.first()
+        val combinedSources = matches
+            .map { "${it.answer.source.authority} - ${it.answer.source.title}" }
+            .distinct()
+        val relatedTopics = matches
+            .map { it.answer.title }
+            .distinct()
+        val synthesizedBody = matches
+            .flatMap { extractRelevantSentences(it.answer.body) }
+            .distinct()
+            .take(6)
+
+        val shouldUseSteps = looksLikeProcessQuestion(question)
+
+        return buildString {
+            append(introduction)
+            append("\n\n[Como a base interpretou sua pergunta]\n")
+            append("Pergunta analisada: ")
+            append(question.ifBlank { "sem texto" })
+            append("\nTema principal encontrado: ")
+            append(primary.answer.title)
+            append("\nTopicos relacionados encontrados na base: ")
+            append(relatedTopics.joinToString(", "))
+            append("\n\n[Resposta baseada na base]\n")
+            synthesizedBody.forEach { sentence ->
+                append("- ")
+                append(sentence)
+                append('\n')
+            }
+            if (shouldUseSteps) {
+                append("\n[Passo a passo com base interna]\n")
+                relatedTopics.take(3).forEachIndexed { index, topic ->
+                    append("${index + 1}. Revise primeiro o topico \"$topic\" e aplique os cuidados descritos na base para esse tema.\n")
+                }
+            }
+            append("\n[Base utilizada]\n")
+            combinedSources.forEach { source ->
+                append("- ")
+                append(source)
+                append('\n')
+            }
+            append("\n[Limite desta resposta]\n")
+            append("A resposta foi montada apenas com a base interna do aplicativo. Se a sua pergunta exigir detalhe que nao aparece nesses topicos, a informacao pode estar incompleta.")
+        }.trim()
+    }
+
+    private fun extractRelevantSentences(body: String): List<String> {
+        return body
+            .replace('\n', ' ')
+            .split(".")
+            .map { it.trim() }
+            .filter { it.length >= 35 }
+    }
+
+    private fun looksLikeProcessQuestion(question: String): Boolean {
+        val normalizedQuestion = normalize(question)
+        return normalizedQuestion.hasKeyword(
+            "como",
+            "passo a passo",
+            "tecnica",
+            "procedimento",
+            "como fazer",
+            "como aplicar",
+            "como estudar",
+        )
     }
 
     private fun medication(
