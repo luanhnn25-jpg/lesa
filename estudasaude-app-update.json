@@ -1,8 +1,8 @@
 {
-  "versionCode": 8,
-  "versionName": "1.0.7",
+  "versionCode": 9,
+  "versionName": "1.0.8",
   "packageName": "br.com.estudasaude.app",
-  "apkUrl": "https://luanhnn25-jpg.github.io/lesa/estudasaude-app-v1.0.7.apk",
+  "apkUrl": "https://luanhnn25-jpg.github.io/lesa/estudasaude-app-v1.0.8.apk",
   "notes": "Atualizacao do EstudaViva com mural de apoiadores premium no inicio, remocao da aba de IA e destaque atualizado no site.",
   "publishedAt": "2026-04-09",
   "mandatory": false

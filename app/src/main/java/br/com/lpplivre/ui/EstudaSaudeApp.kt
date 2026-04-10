@@ -148,22 +148,27 @@ private fun StudyHomeScreen(
             )
         },
         bottomBar = {
-            Surface(color = MaterialTheme.colorScheme.surface) {
+            Surface(color = Color.Transparent) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(Color(0xFF071727), Color(0xFF102A43), Color(0xFF0F4C81)),
+                            ),
+                        )
+                        .padding(horizontal = 10.dp, vertical = 10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     StudySection.entries.forEach { section ->
                         val selected = selectedSection == section
                         Column(
                             modifier = Modifier
-                                .width(50.dp)
+                                .weight(1f)
                                 .clip(RoundedCornerShape(18.dp))
                                 .background(
-                                    if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.14f)
-                                    else Color.Transparent,
+                                    if (selected) Color.White.copy(alpha = 0.18f)
+                                    else Color.White.copy(alpha = 0.06f),
                                 )
                                 .clickable { selectedSection = section }
                                 .padding(horizontal = 4.dp, vertical = 10.dp),
@@ -173,11 +178,11 @@ private fun StudyHomeScreen(
                             androidx.compose.material3.Icon(
                                 imageVector = section.icon,
                                 contentDescription = section.label,
-                                tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                tint = if (selected) Color(0xFFFFD58A) else Color(0xFFE7F4FF),
                             )
                             Text(
                                 text = section.label,
-                                color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                color = if (selected) Color(0xFFFFD58A) else Color(0xFFE7F4FF),
                                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
