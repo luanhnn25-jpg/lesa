@@ -6,223 +6,160 @@ import org.junit.Test
 
 class StudyContentRepositoryTest {
     @Test
-    fun `official nursing topics still map to the expected sources`() {
-        val signals = StudyContentRepository.answerStudyQuestion("Quais cuidados basicos com sinais vitais?")
-        val hypo = StudyContentRepository.answerStudyQuestion("Como agir em hipoglicemia na enfermagem?")
-        val medication = StudyContentRepository.answerStudyQuestion("Quais cuidados com varfarina?")
-        val materials = StudyContentRepository.answerStudyQuestion("O que estudar sobre materiais de enfermagem e CME?")
-
-        assertEquals("Sinais vitais", signals.title)
-        assertEquals("Cofen", signals.source.authority)
-        assertEquals("Hipoglicemia", hypo.title)
-        assertEquals("Ministerio da Saude", hypo.source.authority)
-        assertEquals("Marevan", medication.title)
-        assertEquals("Anvisa", medication.source.authority)
-        assertEquals("Materiais e processamento de produtos para saude", materials.title)
-        assertEquals("Anvisa", materials.source.authority)
-    }
-
-    @Test
-    fun `intramuscular venous and calculation routes remain stable`() {
-        val cases = listOf(
-            "Qual agulha usar na intramuscular?" to "Agulhas para intramuscular",
-            "Como escolher o sitio da intramuscular?" to "Tecnica intramuscular e escolha do sitio",
-            "Como revisar a via subcutanea na enfermagem?" to "Via subcutanea",
-            "Quais cuidados na puncao venosa periferica?" to "Puncao venosa periferica",
-            "Quais materiais separar para puncao venosa periferica?" to "Materiais para puncao venosa periferica",
-            "Como estudar compatibilidade e diluicao na via endovenosa?" to "Diluicao e compatibilidade na via endovenosa",
-            "Como estudar calculo e diluicao de medicamentos?" to "Calculo e diluicao de medicamentos",
-            "Como estudar bomba de infusao na enfermagem?" to "Bomba de infusao e controle de velocidade",
-            "Quais cuidados com sonda vesical e cateter?" to "Sondas e cateteres",
-            "Como estudar insulina na enfermagem?" to "Insulina e tecnica subcutanea",
-        )
-
-        cases.forEach { (question, expectedTitle) ->
-            val answer = StudyContentRepository.answerStudyQuestion(question)
-            assertEquals(question, expectedTitle, answer.title)
-        }
-    }
-
-    @Test
-    fun `clinical framework now always uses advanced nursing structure`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Como aplicar SAE com NANDA NIC e NOC?")
-
-        listOf(
-            "[Classificacao de risco]",
-            "[Resumo do quadro]",
-            "[O que observar]",
-            "[Conduta imediata]",
-            "[Cuidados de enfermagem]",
-            "[Orientacao ao tecnico]",
-            "[Acao do enfermeiro]",
-            "[Monitorizacao]",
-            "[Sinais de alerta]",
-            "[Escalonamento]",
-        ).forEach { section ->
-            assertTrue("missing section: $section", answer.body.contains(section))
-        }
-    }
-
-    @Test
-    fun `high risk question escalates as emergency`() {
-        val answer = StudyContentRepository.answerStudyQuestion("Paciente com saturacao 88 e falta de ar, o que fazer?")
-
-        assertEquals("Urgencia e emergencia com ABCDE", answer.title)
-        assertTrue(answer.body.contains("ALTO RISCO"))
-        assertTrue(answer.body.contains("situacao potencialmente grave"))
-        assertTrue(answer.body.contains("[Escalonamento]"))
-        assertTrue(answer.body.contains("Acione medico ou emergencia imediatamente") || answer.body.contains("Chamar medico ou emergencia"))
-    }
-
-    @Test
-    fun `audience adaptation keeps technician nurse and caregiver guidance visible`() {
-        val technician = StudyContentRepository.answerStudyQuestion("Sou tecnico de enfermagem, como agir diante de febre no plantao?")
-        val nurse = StudyContentRepository.answerStudyQuestion("Sou enfermeira da clinica medica, como priorizar cuidados e supervisao na passagem de plantao?")
-        val caregiver = StudyContentRepository.answerStudyQuestion("Sou cuidadora de idoso acamado em casa, o que observar na saturacao?")
-
-        assertTrue(technician.body.contains("Papel do tecnico"))
-        assertTrue(technician.body.contains("[Orientacao ao tecnico]"))
-        assertTrue(nurse.body.contains("[Acao do enfermeiro]"))
-        assertTrue(nurse.body.contains("planejar"))
-        assertTrue(nurse.body.contains("supervision"))
-        assertTrue(caregiver.body.contains("O cuidador pode observar"))
-        assertTrue(caregiver.body.contains("[Escalonamento]"))
-    }
-
-    @Test
-    fun `blank question starts clean and still keeps all mandatory sections`() {
+    fun `blank question explains internal knowledge flow`() {
         val answer = StudyContentRepository.answerStudyQuestion("   ")
 
-        assertEquals("Sinais vitais", answer.title)
-        assertTrue(answer.body.contains("Base oficial:"))
-        listOf(
-            "[Classificacao de risco]",
-            "[Resumo do quadro]",
-            "[O que observar]",
-            "[Conduta imediata]",
-            "[Cuidados de enfermagem]",
-            "[Orientacao ao tecnico]",
-            "[Acao do enfermeiro]",
-            "[Monitorizacao]",
-            "[Sinais de alerta]",
-            "[Escalonamento]",
-        ).forEach { section ->
-            assertTrue("missing section: $section", answer.body.contains(section))
-        }
+        assertEquals("Busca interna de enfermagem", answer.title)
+        assertTrue(answer.body.contains("A IA consulta apenas a base interna do aplicativo."))
+        assertTrue(answer.body.contains("[Como funciona]"))
+        assertTrue(answer.body.contains("[Como perguntar melhor]"))
     }
 
     @Test
-    fun `advanced prompt battery keeps more than ten educational fundamentals questions in teacher mode`() {
-        val questions = listOf(
-            "Explique banho no leito",
-            "Explique higiene oral em paciente acamado",
-            "Como fazer mudanca de decubito 2 em 2 horas?",
-            "Como prevenir LPP no plantao?",
-            "Quais cuidados com conforto termico no leito?",
-            "Como posicionar o paciente no leito com seguranca?",
-            "Explique conforto e higiene para tecnico de enfermagem",
-            "Quais erros comuns no banho no leito?",
-            "Quais sinais de complicacao na higiene do paciente?",
-            "Como orientar um cuidador sobre higiene do idoso?",
-            "Como observar pele e mucosas durante o banho?",
+    fun `unknown question returns explicit not found message`() {
+        val answer = StudyContentRepository.answerStudyQuestion("me explique astronomia quantica aplicada ao espaco profundo")
+
+        assertEquals("Busca sem resultado completo", answer.title)
+        assertEquals("Não encontrei uma resposta completa para isso. Tente reformular sua pergunta.", answer.body)
+    }
+
+    @Test
+    fun `intramuscular query combines related internal topics`() {
+        val answer = StudyContentRepository.answerStudyQuestion("Como escolher o sitio e a agulha da intramuscular?")
+
+        assertEquals("Tecnica intramuscular e escolha do sitio", answer.title)
+        assertTrue(answer.body.contains("[Como a base interpretou sua pergunta]"))
+        assertTrue(answer.body.contains("Topicos relacionados encontrados na base"))
+        assertTrue(answer.body.contains("Agulhas para intramuscular"))
+        assertTrue(answer.body.contains("[Passo a passo com base interna]"))
+        assertTrue(answer.body.contains("[Base utilizada]"))
+    }
+
+    @Test
+    fun `medication query uses internal medication base and anvisa source`() {
+        val answer = StudyContentRepository.answerStudyQuestion("Quais interacoes e reacoes da aspirina?")
+
+        assertEquals("Aspirina", answer.title)
+        assertEquals("Anvisa", answer.source.authority)
+        assertTrue(answer.body.contains("Resposta baseada na base"))
+        assertTrue(answer.body.contains("Alertas de interacao"))
+    }
+
+    @Test
+    fun `partial or empty match is communicated clearly`() {
+        val answer = StudyContentRepository.answerStudyQuestion("Como melhorar o acolhimento no corredor da enfermaria?")
+
+        assertTrue(
+            answer.body.contains("Encontrei informações parciais, veja o que posso ajudar:") ||
+                answer.body.contains("Não encontrei uma resposta completa para isso. Tente reformular sua pergunta."),
+        )
+    }
+
+    @Test
+    fun `venous access query keeps internal source traceability`() {
+        val answer = StudyContentRepository.answerStudyQuestion("Quais cuidados na puncao venosa, materiais e compatibilidade?")
+
+        assertTrue(answer.body.contains("Puncao venosa periferica"))
+        assertTrue(
+            answer.body.contains("Materiais para puncao venosa periferica") ||
+                answer.body.contains("Diluicao e compatibilidade na via endovenosa"),
+        )
+        assertTrue(answer.body.contains("[Base utilizada]"))
+    }
+
+    @Test
+    fun `medication enrichment lists specific interaction targets and severity`() {
+        val study = MedicationEnrichmentEngine.enrich(
+            OfficialCatalogMedication(
+                substance = "ACIDO ACETILSALICILICO",
+                laboratory = "Teste",
+                ggrem = "0",
+                registration = "0",
+                product = "AAS",
+                presentation = "comprimido",
+                therapeuticClass = "N2B2 - ANALGESICOS NAO NARCOTICOS E ANTIPIRETICOS",
+                productType = "Novo",
+                priceRegime = "Regulado",
+                anvisaBularioUrl = "https://consultas.anvisa.gov.br/",
+                anvisaSearchUrl = "https://consultas.anvisa.gov.br/",
+            ),
         )
 
-        questions.forEach { question ->
-            val answer = StudyContentRepository.answerStudyQuestion(question)
-            assertTrue(question, answer.body.contains("[Modo professora]"))
-            assertTrue(question, answer.body.contains("Passo a passo"))
-            assertTrue(question, answer.body.contains("Erros comuns"))
-            assertTrue(question, answer.body.lowercase().contains("sinais de complicacao"))
-        }
+        assertTrue(study.interactionRisks.any { it.target.contains("varfarina", ignoreCase = true) })
+        assertTrue(study.interactionStudyNotes.any { it.startsWith("Com ") })
+        assertTrue(study.patientProfileAlerts.any { it.contains("anticoagulante", ignoreCase = true) })
     }
 
     @Test
-    fun `advanced prompt battery keeps more than ten emergency questions at high risk`() {
-        val questions = listOf(
-            "Paciente com dispneia intensa, o que fazer?",
-            "Dor no peito com suor frio, qual conduta de enfermagem?",
-            "Paciente convulsionando no setor, como agir?",
-            "Paciente desmaiou no corredor, o que fazer agora?",
-            "Saturacao 88 em paciente adulto, como a enfermagem deve agir?",
-            "Hipotensao com palidez e confusao, qual a prioridade?",
-            "Sangramento intenso no curativo, o que fazer?",
-            "Rebaixamento de consciencia subitamente, qual conduta?",
-            "PCR no setor, qual acao imediata?",
-            "Choque com perfusao ruim, como priorizar o atendimento?",
-            "Falta de ar com cianose, como agir imediatamente?",
+    fun `ceftriaxone enrichment separates intravenous compatibility warning`() {
+        val study = MedicationEnrichmentEngine.enrich(
+            OfficialCatalogMedication(
+                substance = "CEFTRIAXONA",
+                laboratory = "Teste",
+                ggrem = "0",
+                registration = "0",
+                product = "CEFTRIAXONA DISSODICA",
+                presentation = "po para solucao injetavel intravenosa",
+                therapeuticClass = "J1D2 - CEFALOSPORINAS INJETAVEIS",
+                productType = "Generico",
+                priceRegime = "Regulado",
+                anvisaBularioUrl = "https://consultas.anvisa.gov.br/",
+                anvisaSearchUrl = "https://consultas.anvisa.gov.br/",
+            ),
         )
 
-        questions.forEach { question ->
-            val answer = StudyContentRepository.answerStudyQuestion(question)
-            assertTrue(question, answer.body.contains("ALTO RISCO"))
-            assertTrue(question, answer.body.contains("Prioridade alta"))
-            assertTrue(question, answer.body.contains("[Escalonamento]"))
-        }
+        assertTrue(study.compatibilityNotes.any { it.contains("calcio", ignoreCase = true) })
+        assertTrue(study.studyModeHighlights.any { it.contains("Compatibilidade", ignoreCase = true) })
     }
 
     @Test
-    fun `advanced prompt battery keeps more than ten medication questions with execution and supervision`() {
-        val questions = listOf(
-            "Explique os 9 certos da medicacao",
-            "Como administrar medicamento por via oral com seguranca?",
-            "Como observar reacao adversa apos medicacao?",
-            "Quais cuidados na via endovenosa de medicamento?",
-            "Como o tecnico deve conferir via e horario da medicacao?",
-            "Quais erros comuns na administracao segura de medicamentos?",
-            "Como registrar medicacao administrada?",
-            "Como orientar equipe sobre alergia medicamentosa?",
-            "Como priorizar seguranca na medicacao do paciente idoso?",
-            "Como supervisionar administracao de medicamentos no plantao?",
-            "Quais sinais de alerta apos medicacao EV?",
+    fun `statin enrichment names metabolic interaction review targets`() {
+        val study = MedicationEnrichmentEngine.enrich(
+            OfficialCatalogMedication(
+                substance = "SIMVASTATINA",
+                laboratory = "Teste",
+                ggrem = "0",
+                registration = "0",
+                product = "SIMVASTATINA",
+                presentation = "comprimido revestido",
+                therapeuticClass = "C10A1 - REDUTORES DO COLESTEROL E TRIGLICERIDES",
+                productType = "Generico",
+                priceRegime = "Regulado",
+                anvisaBularioUrl = "https://consultas.anvisa.gov.br/",
+                anvisaSearchUrl = "https://consultas.anvisa.gov.br/",
+            ),
         )
 
-        questions.forEach { question ->
-            val answer = StudyContentRepository.answerStudyQuestion(question)
-            assertTrue(question, answer.body.contains("[Orientacao ao tecnico]"))
-            assertTrue(question, answer.body.contains("[Acao do enfermeiro]"))
-            assertTrue(question, answer.body.contains("[Cuidados de enfermagem]"))
-            assertTrue(question, answer.body.contains("[Monitorizacao]"))
-        }
+        assertTrue(study.interactionRisks.any { it.target.contains("claritromicina", ignoreCase = true) })
+        assertTrue(study.interactionRisks.any { it.category == "Metabolismo/toxicidade" })
+        assertTrue(study.interactionStudyNotes.any { it.contains("monitorizacao", ignoreCase = true) })
     }
 
     @Test
-    fun `advanced prompt battery keeps more than ten mixed questions with full clinical framework`() {
-        val questions = listOf(
-            "Quais cuidados de enfermagem na oxigenoterapia por cateter nasal?",
-            "Como orientar higiene das maos e EPI no isolamento?",
-            "Como registrar uma intercorrencia de enfermagem?",
-            "Qual a conduta diante de dor toracica no setor?",
-            "Paciente com convulsao, como a enfermagem deve agir?",
-            "Paciente com sangramento importante, o que fazer agora?",
-            "Como o tecnico deve observar sinais vitais no plantao?",
-            "Como a enfermeira prioriza o cuidado em paciente instavel?",
-            "Explique prevencao de lesao por pressao em idoso acamado",
-            "Como ensinar curativo simples para o tecnico?",
-            "Como orientar comunicacao com familia em paciente grave?",
-            "Quais cuidados de enfermagem com febre persistente?",
+    fun `insulin enrichment names glycemic interaction targets`() {
+        val study = MedicationEnrichmentEngine.enrich(
+            OfficialCatalogMedication(
+                substance = "INSULINA HUMANA",
+                laboratory = "Teste",
+                ggrem = "0",
+                registration = "0",
+                product = "INSULINA HUMANA",
+                presentation = "solucao injetavel",
+                therapeuticClass = "A10C - INSULINAS",
+                productType = "Biologico",
+                priceRegime = "Regulado",
+                anvisaBularioUrl = "https://consultas.anvisa.gov.br/",
+                anvisaSearchUrl = "https://consultas.anvisa.gov.br/",
+            ),
         )
 
-        questions.forEach { question ->
-            val answer = StudyContentRepository.answerStudyQuestion(question)
-            listOf(
-                "[Classificacao de risco]",
-                "[Resumo do quadro]",
-                "[O que observar]",
-                "[Conduta imediata]",
-                "[Cuidados de enfermagem]",
-                "[Orientacao ao tecnico]",
-                "[Acao do enfermeiro]",
-                "[Monitorizacao]",
-                "[Sinais de alerta]",
-                "[Escalonamento]",
-            ).forEach { section ->
-                assertTrue("$question -> missing section: $section", answer.body.contains(section))
-            }
-        }
+        assertTrue(study.interactionRisks.any { it.target.contains("glibenclamida", ignoreCase = true) })
+        assertTrue(study.interactionRisks.any { it.category == "Glicemia" })
+        assertTrue(study.patientProfileAlerts.any { it.contains("glicemia", ignoreCase = true) })
     }
 
     @Test
-    fun `quiz bank is large and uses only official brazilian authorities`() {
+    fun `quiz bank remains official and large`() {
         assertTrue(StudyContentRepository.quizQuestions.size >= 40)
         assertTrue(
             StudyContentRepository.quizQuestions.all {

@@ -83,6 +83,7 @@ import java.net.HttpURLConnection
 import java.net.URLEncoder
 import java.net.URL
 import java.nio.charset.StandardCharsets
+import java.text.Normalizer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -461,9 +462,20 @@ fun MedicationStudySection() {
     val ui = studyUiTokens()
     var query by rememberSaveable { mutableStateOf("") }
     var selectedClass by rememberSaveable { mutableStateOf<String?>(null) }
-    var officialVisibleCount by rememberSaveable(query, selectedClass) { mutableStateOf(80) }
+    var officialVisibleCount by rememberSaveable(query, selectedClass) { mutableStateOf(32) }
     var officialCatalog by remember { mutableStateOf<List<OfficialCatalogMedication>>(emptyList()) }
     var officialCatalogLoading by remember { mutableStateOf(false) }
+    val medicationQuickFilters = remember {
+        listOf(
+            "Sangramento" to "varfarina anticoagulante sangramento",
+            "Rim/potassio" to "potassio renal litio digoxina",
+            "Absorcao" to "calcio ferro levotiroxina absorcao",
+            "QT/arritmia" to "amiodarona sotalol pimozida QT",
+            "EV/Y-site" to "ceftriaxona calcio vancomicina Y-site",
+            "Hipoglicemia" to "insulina hipoglicemia glicemia",
+            "Sedacao" to "diazepam alcool sedacao opioide",
+        )
+    }
     LaunchedEffect(Unit) {
         if (officialCatalog.isEmpty() && !officialCatalogLoading) {
             officialCatalogLoading = true
@@ -480,24 +492,62 @@ fun MedicationStudySection() {
             .filterKeys { it.isNotBlank() }
     }
     val officialClassMenu = remember(query, officialCatalog, officialClassCounts) {
-        val normalizedQuery = query.trim().lowercase()
-        officialClassCounts.keys
+        val normalizedQuery = normalizeMedicationSearch(query)
+        val classesFromName = officialClassCounts.keys
             .filter { medicationClass ->
-                normalizedQuery.isBlank() || medicationClass.lowercase().contains(normalizedQuery)
+                normalizeMedicationSearch(medicationClass).contains(normalizedQuery) ||
+                    medicationClassStudySearchText(medicationClass).contains(normalizedQuery)
             }
-            .sortedByDescending { officialClassCounts[it] ?: 0 }
+
+        val classesFromMedication = if (normalizedQuery.isBlank()) {
+            emptyList()
+        } else {
+            officialCatalog
+                .asSequence()
+                .filter { item ->
+                    medicationCatalogSearchText(item).contains(normalizedQuery) ||
+                        medicationClassStudySearchText(item.therapeuticClass).contains(normalizedQuery)
+                }
+                .map { it.therapeuticClass }
+                .filter { it.isNotBlank() }
+                .distinct()
+                .toList()
+        }
+
+        val menuSource = if (normalizedQuery.isBlank()) {
+            officialClassCounts.keys.toList()
+        } else {
+            (classesFromName + classesFromMedication).distinct()
+        }
+
+        menuSource
+            .filter { medicationClass ->
+                medicationClass.isNotBlank()
+            }
+            .sortedWith(
+                compareBy<String> { medicationClassPriority(it) }
+                    .thenByDescending { officialClassCounts[it] ?: 0 },
+            )
             .take(36)
+    }
+    LaunchedEffect(query, officialClassMenu) {
+        if (officialClassMenu.isNotEmpty()) {
+            val shouldAutoSelect = selectedClass.isNullOrBlank() ||
+                (query.isNotBlank() && selectedClass !in officialClassMenu)
+            if (shouldAutoSelect) {
+                selectedClass = officialClassMenu.first()
+                officialVisibleCount = 32
+            }
+        }
     }
     val officialMatches = remember(query, selectedClass, officialCatalog) {
         if (selectedClass.isNullOrBlank()) return@remember emptyList()
-        val normalizedQuery = query.trim().lowercase()
+        val normalizedQuery = normalizeMedicationSearch(query)
         officialCatalog.filter { item ->
             val classMatches = item.therapeuticClass == selectedClass
             val queryMatches = normalizedQuery.isBlank() ||
-                listOf(item.product, item.substance, item.presentation, item.therapeuticClass, item.laboratory)
-                    .joinToString(" ")
-                    .lowercase()
-                    .contains(normalizedQuery)
+                medicationCatalogSearchText(item).contains(normalizedQuery) ||
+                medicationClassStudySearchText(item.therapeuticClass).contains(normalizedQuery)
             classMatches && queryMatches
         }
     }
@@ -528,11 +578,34 @@ fun MedicationStudySection() {
                     onValueChange = { query = it },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(18.dp),
-                    label = { Text("Pesquisar classe, medicamento ou principio ativo") },
+                    label = { Text("Pesquisar classe, medicamento, interacao ou risco") },
                     leadingIcon = {
                         Icon(Icons.Rounded.Search, contentDescription = "Pesquisar")
                     },
                 )
+                Text(
+                    text = "Filtros rapidos por risco e interacao",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = ui.accent,
+                    fontWeight = FontWeight.Black,
+                )
+                Row(
+                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    medicationQuickFilters.forEach { (label, filterQuery) ->
+                        FilterChip(
+                            selected = normalizeMedicationSearch(query) == normalizeMedicationSearch(filterQuery),
+                            onClick = { query = filterQuery },
+                            label = { Text(label) },
+                        )
+                    }
+                    FilterChip(
+                        selected = query.isBlank(),
+                        onClick = { query = "" },
+                        label = { Text("Limpar") },
+                    )
+                }
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     MetricMiniCard("Classes", officialClassCounts.size.toString(), MaterialTheme.colorScheme.tertiaryContainer, ui.accent, Modifier.weight(1f))
                     MetricMiniCard("Medicamentos", officialCatalog.size.toString(), MaterialTheme.colorScheme.secondaryContainer, ui.warning, Modifier.weight(1f))
@@ -542,7 +615,7 @@ fun MedicationStudySection() {
                     text = if (officialCatalogLoading) {
                         "Carregando catalogo oficial Anvisa/CMED..."
                     } else {
-                        "Classe atual: ${selectedClass ?: "nenhuma selecionada"}"
+                        "Classe atual: ${selectedClass ?: officialClassMenu.firstOrNull() ?: "carregando"}"
                     },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -564,7 +637,7 @@ fun MedicationStudySection() {
             ) {
                 Text("Menu de classes terapeuticas", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
                 Text(
-                    text = "As classes com mais medicamentos aparecem primeiro. Use a busca para localizar classes ou medicamentos especificos.",
+                    text = "As classes de maior uso no estudo aparecem primeiro. A busca tambem encontra classe quando voce digita produto, principio ativo, risco, interacao, laboratorio ou apresentacao.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -579,7 +652,7 @@ fun MedicationStudySection() {
                             selected = selectedClass == medicationClass,
                             onClick = {
                                 selectedClass = medicationClass
-                                officialVisibleCount = 80
+                                officialVisibleCount = 32
                             },
                         )
                     }
@@ -613,12 +686,16 @@ fun MedicationStudySection() {
                 ) {
                     Text(selectedClass ?: "", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
                     Text(
-                        text = "Mostrando ${officialPreview.size} de $totalOfficialResults medicamentos desta classe. Todos ficam disponiveis aqui em blocos para manter o app rapido.",
+                        text = "Mostrando ${officialPreview.size} de $totalOfficialResults medicamentos desta classe. Todos ficam disponiveis em blocos menores para manter o app rapido.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
+            MedicationClassStudyGuide(
+                className = selectedClass ?: "",
+                totalMedications = totalOfficialResults,
+            )
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 officialPreview.forEach { item ->
                     OfficialMedicationCompactCard(
@@ -629,7 +706,7 @@ fun MedicationStudySection() {
                 }
                 if (totalOfficialResults > officialPreview.size) {
                     Button(
-                        onClick = { officialVisibleCount = (officialVisibleCount + 80).coerceAtMost(totalOfficialResults) },
+                        onClick = { officialVisibleCount = (officialVisibleCount + 32).coerceAtMost(totalOfficialResults) },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         Text("Mostrar mais medicamentos da classe")
@@ -1602,7 +1679,7 @@ private fun MedicationStudyCard(
                 items = medication.unexpectedReactions,
             )
             MedicationBlock(
-                title = "Interacoes importantes",
+                title = "Com quais medicamentos revisar",
                 accent = Color(0xFFFFF6DA),
                 items = medication.avoidWith.map { item -> "${medication.title} + $item" },
             )
@@ -1689,6 +1766,7 @@ private fun OfficialMedicationCompactCard(
                 AssistChip(onClick = { }, label = { Text(study.studyBasisLabel) })
                 AssistChip(onClick = { }, label = { Text(study.precisionLabel) })
             }
+            MedicationPriorityChips(study)
             MedicationInfoLine("Classe terapeutica", item.therapeuticClass)
             MedicationInfoLine("Apresentacao", item.presentation)
             MedicationInfoLine("Laboratorio", item.laboratory)
@@ -1706,10 +1784,16 @@ private fun OfficialMedicationCompactCard(
                 items = study.unexpectedReactions.take(3),
             )
             MedicationBlock(
-                title = "Interacoes importantes",
-                accent = Color(0xFFFFF6DA),
-                items = study.avoidWith.take(3),
+                title = "Modo estudar",
+                accent = Color(0xFFEAF7FF),
+                items = study.studyModeHighlights.take(3),
             )
+            MedicationBlock(
+                title = "Checklist antes de administrar",
+                accent = Color(0xFFEFFFF3),
+                items = medicationPreAdministrationChecklist(study).take(4),
+            )
+            MedicationInteractionRiskSection(risks = study.interactionRisks.take(4))
             MedicationBlock(
                 title = "Alertas clinicos da associacao",
                 accent = Color(0xFFE8F4FF),
@@ -1719,6 +1803,22 @@ private fun OfficialMedicationCompactCard(
                 title = "Administracao e monitorizacao",
                 accent = Color(0xFFEAF7FF),
                 items = study.administrationAndMonitoring.take(4),
+            )
+            MedicationBlock(
+                title = "Compatibilidade EV e preparo",
+                accent = Color(0xFFEAF7FF),
+                items = study.compatibilityNotes.take(2),
+            )
+            MedicationBlock(
+                title = "Perfis que pedem atencao",
+                accent = Color(0xFFF3EFFF),
+                items = study.patientProfileAlerts.take(3),
+            )
+            MedicationRiskGroupSection(groups = study.riskGroups.take(3))
+            MedicationBlock(
+                title = "Quando escalar",
+                accent = Color(0xFFFFECE8),
+                items = medicationEscalationTriggers(study).take(4),
             )
             MedicationBlock(
                 title = "Quando revisar a bula",
@@ -1740,6 +1840,165 @@ private fun OfficialMedicationCompactCard(
             )
         }
     }
+}
+
+@Composable
+private fun MedicationClassStudyGuide(
+    className: String,
+    totalMedications: Int,
+) {
+    if (className.isBlank()) return
+
+    val ui = studyUiTokens()
+    val guideItems = medicationClassStudyGuideItems(className)
+    Card(
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(containerColor = ui.cardAlt),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(
+            modifier = Modifier.padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("Roteiro de estudo da classe", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
+                    Text(
+                        text = "$totalMedications medicamentos nesta classe. Revise primeiro o que muda risco, preparo e monitorizacao.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                AssistChip(onClick = { }, label = { Text("Estudo") })
+            }
+            MedicationBlock(
+                title = className,
+                accent = Color(0xFFEAF7FF),
+                items = guideItems,
+            )
+        }
+    }
+}
+
+private fun medicationClassStudyGuideItems(className: String): List<String> {
+    val normalized = className.lowercase()
+    return when {
+        listOf("antibi", "antibac", "cefalospor", "penicil", "quinolon", "macrol", "carbapen").any { it in normalized } ->
+            listOf(
+                "Conferir alergia, indicacao, tempo de tratamento e resposta clinica.",
+                "Revisar diluente, tempo de infusao, compatibilidade em Y/equipo e funcao renal quando aplicavel.",
+                "Observar rash, diarreia importante, piora clinica, flebite, reacao infusional e sinais de anafilaxia.",
+            )
+        listOf("anticoagul", "antitrom", "antiagreg", "hepar", "varfar", "plaquet").any { it in normalized } ->
+            listOf(
+                "Priorizar risco de sangramento, duplicidade terapeutica e associacao com AINEs ou antiplaquetarios.",
+                "Observar hematomas, sangramento gengival, melena, hematuria, queda de pressao e queda de hemoglobina quando disponivel.",
+                "Revisar procedimento invasivo, queda recente, funcao renal/hepatica e necessidade de comunicacao rapida ao enfermeiro.",
+            )
+        listOf("diuret", "cardi", "hipertens", "anti-hipertens", "vasodilat", "bloqueador").any { it in normalized } ->
+            listOf(
+                "Estudar junto com PA, FC, diurese, edema, perfusao e tendencia dos sinais vitais.",
+                "Revisar risco de hipotensao, tontura, queda, alteracao renal e disturbios de potassio/sodio.",
+                "Antes de administrar, correlacionar prescricao, sinais atuais e queixas como fraqueza, palpitao ou dispneia.",
+            )
+        listOf("insulin", "diabet", "hipoglic", "antidiab", "glicem").any { it in normalized } ->
+            listOf(
+                "Ligar cada medicamento a glicemia capilar, horario de refeicao e risco de hipoglicemia.",
+                "Observar sudorese, tremor, confusao, sonolencia, fraqueza e alteracao do nivel de consciencia.",
+                "Revisar funcao renal, jejum, dieta suspensa, contraste iodado e protocolo institucional.",
+            )
+        listOf("analges", "anti-inflam", "aine", "opio", "anest").any { it in normalized } ->
+            listOf(
+                "Separar analgesico simples, AINE e opioide, porque o risco principal muda muito entre eles.",
+                "Monitorar dor, sedacao, FR, SpO2, PA, nausea, constipacao, sangramento e funcao renal/hepatica quando pertinente.",
+                "Evitar banalizar associacoes com anticoagulantes, alcool, sedativos e outros depressores do sistema nervoso central.",
+            )
+        listOf("psico", "ansiol", "antidepress", "antipsic", "sedat", "antiepile").any { it in normalized } ->
+            listOf(
+                "Focar em nivel de consciencia, risco de queda, respiracao, comportamento e interacoes com alcool/sedativos.",
+                "Observar sonolencia excessiva, confusao, agitacao paradoxal, hipotensao e sinais neurologicos novos.",
+                "Revisar prolongamento de QT, sindrome serotoninergica e retirada abrupta quando a bula indicar risco.",
+            )
+        listOf("horm", "cortico", "tireo", "contracept").any { it in normalized } ->
+            listOf(
+                "Estudar horario, absorcao, metabolismo e efeitos sobre glicemia, pressao, humor, pele e imunidade.",
+                "Revisar interacoes de absorcao, como calcio/ferro com levotiroxina, quando aplicavel.",
+                "Monitorar resposta clinica e sinais de uso prolongado quando houver corticoide ou terapia hormonal continua.",
+            )
+        else ->
+            listOf(
+                "Comece por principio ativo, indicacao, via, apresentacao, dose prescrita e principal risco da classe.",
+                "Revise interacoes que exigem revisao, grupos de maior risco, alergias e necessidade de monitorizacao.",
+                "Use a bula/registro Anvisa quando houver duvida sobre contraindicao, preparo, compatibilidade ou evento adverso.",
+            )
+    }
+}
+
+private fun medicationCatalogSearchText(item: OfficialCatalogMedication): String {
+    return normalizeMedicationSearch(
+        listOf(
+            item.product,
+            item.substance,
+            item.presentation,
+            item.therapeuticClass,
+            item.laboratory,
+            medicationClassStudySearchText(item.therapeuticClass),
+        ).joinToString(" "),
+    )
+}
+
+private fun medicationClassStudySearchText(className: String): String {
+    val normalized = normalizeMedicationSearch(className)
+    val terms = mutableListOf(className)
+    when {
+        listOf("anticoagul", "antiagreg", "antitrom", "plaquet").any { normalized.contains(it) } -> {
+            terms += listOf("varfarina", "heparina", "enoxaparina", "rivaroxabana", "apixabana", "clopidogrel", "aas", "aspirina", "sangramento")
+        }
+        listOf("analg", "anti inflam", "antipir", "aine").any { normalized.contains(it) } -> {
+            terms += listOf("dipirona", "paracetamol", "ibuprofeno", "naproxeno", "diclofenaco", "aas", "aspirina", "varfarina", "anticoagulante", "sangramento", "dor", "febre")
+        }
+        listOf("antibi", "cefalospor", "penicil", "macrol", "quinolon", "carbapen").any { normalized.contains(it) } -> {
+            terms += listOf("ceftriaxona", "amoxicilina", "azitromicina", "cefazolina", "vancomicina", "metotrexato", "probenecida", "alergia")
+        }
+        listOf("diuret", "anti hipert", "cardi", "angiotensina").any { normalized.contains(it) } -> {
+            terms += listOf("furosemida", "hidroclorotiazida", "losartana", "enalapril", "captopril", "litio", "digoxina", "potassio", "pressao")
+        }
+        listOf("insulina", "antidiab", "diabet", "glicem").any { normalized.contains(it) } -> {
+            terms += listOf("metformina", "insulina", "glibenclamida", "gliclazida", "hipoglicemia", "glicemia", "corticoide")
+        }
+        listOf("psico", "antiepile", "ansiol", "sedat", "antidepress").any { normalized.contains(it) } -> {
+            terms += listOf("diazepam", "midazolam", "sertralina", "fluoxetina", "alcool", "sedacao", "queda", "tramadol")
+        }
+        listOf("horm", "tireo", "cortico").any { normalized.contains(it) } -> {
+            terms += listOf("levotiroxina", "calcio", "ferro", "prednisona", "dexametasona", "absorcao", "horario")
+        }
+    }
+    return normalizeMedicationSearch(terms.joinToString(" "))
+}
+
+private fun medicationClassPriority(className: String): Int {
+    val normalized = normalizeMedicationSearch(className)
+    return when {
+        listOf("analg", "antipir", "anti inflam").any { normalized.contains(it) } -> 0
+        listOf("antibi", "cefalospor", "penicil", "macrol", "quinolon", "carbapen").any { normalized.contains(it) } -> 1
+        listOf("anticoagul", "antiagreg", "antitrom", "plaquet").any { normalized.contains(it) } -> 2
+        listOf("anti hipert", "angiotensina", "betabloque", "cardi").any { normalized.contains(it) } -> 3
+        normalized.contains("diuret") -> 4
+        listOf("insulina", "antidiab", "diabet", "glicem").any { normalized.contains(it) } -> 5
+        listOf("psico", "antiepile", "ansiol", "sedat", "antidepress").any { normalized.contains(it) } -> 6
+        listOf("horm", "tireo", "cortico").any { normalized.contains(it) } -> 7
+        else -> 20
+    }
+}
+
+private fun normalizeMedicationSearch(value: String): String {
+    val withoutAccents = Normalizer.normalize(value, Normalizer.Form.NFD)
+        .replace("\\p{Mn}+".toRegex(), "")
+    return withoutAccents.lowercase()
 }
 
 @Composable
@@ -1857,6 +2116,7 @@ private fun OfficialCatalogDetailedCard(
                 AssistChip(onClick = { }, label = { Text(medication.studyBasisLabel) })
                 AssistChip(onClick = { }, label = { Text(medication.precisionLabel) })
             }
+            MedicationPriorityChips(medication)
             MedicationInfoLine("Principio ativo", medication.activeIngredient)
             MedicationInfoLine("Referencia oficial", medication.referenceProduct)
             MedicationInfoLine("Forma", medication.form)
@@ -1874,10 +2134,16 @@ private fun OfficialCatalogDetailedCard(
                 items = medication.unexpectedReactions,
             )
             MedicationBlock(
-                title = "Interacoes importantes",
-                accent = Color(0xFFFFF6DA),
-                items = medication.avoidWith,
+                title = "Modo estudar",
+                accent = Color(0xFFEAF7FF),
+                items = medication.studyModeHighlights,
             )
+            MedicationBlock(
+                title = "Checklist antes de administrar",
+                accent = Color(0xFFEFFFF3),
+                items = medicationPreAdministrationChecklist(medication),
+            )
+            MedicationInteractionRiskSection(risks = medication.interactionRisks)
             MedicationBlock(
                 title = "Alertas clinicos da associacao",
                 accent = Color(0xFFE8F4FF),
@@ -1887,6 +2153,22 @@ private fun OfficialCatalogDetailedCard(
                 title = "Administracao e monitorizacao",
                 accent = Color(0xFFEAF7FF),
                 items = medication.administrationAndMonitoring,
+            )
+            MedicationBlock(
+                title = "Compatibilidade EV e preparo",
+                accent = Color(0xFFEAF7FF),
+                items = medication.compatibilityNotes,
+            )
+            MedicationBlock(
+                title = "Perfis que pedem atencao",
+                accent = Color(0xFFF3EFFF),
+                items = medication.patientProfileAlerts,
+            )
+            MedicationRiskGroupSection(groups = medication.riskGroups)
+            MedicationBlock(
+                title = "Quando escalar",
+                accent = Color(0xFFFFECE8),
+                items = medicationEscalationTriggers(medication),
             )
             MedicationBlock(
                 title = "Quando revisar a bula",
@@ -1916,6 +2198,171 @@ private fun MedicationInfoLine(label: String, value: String) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(label, fontWeight = FontWeight.Bold, color = ui.accent)
         Text(value, color = MaterialTheme.colorScheme.onSurface)
+    }
+}
+
+private fun medicationPreAdministrationChecklist(study: DetailedMedicationStudy): List<String> {
+    val normalized = normalizeMedicationSearch(
+        listOf(
+            study.title,
+            study.activeIngredient,
+            study.form,
+            study.pharmacologicalClass,
+            study.interactionRisks.joinToString(" ") { "${it.target} ${it.category} ${it.reason}" },
+        ).joinToString(" "),
+    )
+    val items = mutableListOf(
+        "Conferir paciente, alergias, prescricao, dose, via, horario e registro.",
+        "Comparar principio ativo com outros medicamentos em uso para evitar duplicidade.",
+    )
+
+    if (study.interactionRisks.isNotEmpty()) {
+        items += "Antes de associar, revisar especialmente: ${study.interactionRisks.take(3).joinToString(", ") { it.target }}."
+    }
+    if (listOf("injet", "intraven", "ev", "iv", "infus", "y-site", "dilu").any { normalized.contains(it) }) {
+        items += "Se for EV/injetavel, confirmar diluente, concentracao, tempo de infusao e compatibilidade em Y-site/equipo."
+    }
+    if (listOf("sangramento", "anticoagul", "antiagreg", "varfar", "hepar", "rivarox", "apixab", "clopidogrel").any { normalized.contains(it) }) {
+        items += "Se houver anticoagulante/antiagregante, procurar sinais de sangramento antes e depois da administracao."
+    }
+    if (listOf("renal", "creatinina", "potassio", "litio", "digoxina", "metformina", "diuret").any { normalized.contains(it) }) {
+        items += "Verificar se ha risco renal/eletrolitico e se existe monitorizacao recente quando o protocolo exigir."
+    }
+    if (listOf("glicemia", "hipoglic", "insulina", "antidiab").any { normalized.contains(it) }) {
+        items += "Relacionar dose, refeicao, jejum e glicemia capilar antes de administrar."
+    }
+
+    return items.distinct().take(6)
+}
+
+private fun medicationEscalationTriggers(study: DetailedMedicationStudy): List<String> {
+    val normalized = normalizeMedicationSearch(
+        listOf(
+            study.title,
+            study.activeIngredient,
+            study.unexpectedReactions.joinToString(" "),
+            study.riskGroups.joinToString(" ") { it.title },
+        ).joinToString(" "),
+    )
+    val triggers = mutableListOf(
+        "Reacao alergica, falta de ar, edema de face/labios, queda de pressao ou urticaria extensa.",
+        "Piora clinica importante apos administracao ou evento adverso inesperado.",
+    )
+
+    if (listOf("sangramento", "hemorragia", "anticoagul", "antiagreg").any { normalized.contains(it) }) {
+        triggers += "Sangramento ativo, melena, hematuria, hematomas extensos, tontura intensa ou queda de pressao."
+    }
+    if (listOf("hipoglic", "glicem", "insulina", "antidiab").any { normalized.contains(it) }) {
+        triggers += "Sudorese, tremor, confusao, sonolencia, convulsao ou glicemia muito baixa/alta conforme protocolo."
+    }
+    if (listOf("renal", "potassio", "litio", "digoxina", "diuret").any { normalized.contains(it) }) {
+        triggers += "Oliguria, arritmia, fraqueza intensa, vomitos persistentes ou suspeita de disturbio eletrolitico."
+    }
+    if (listOf("sedacao", "opioide", "benzodiazep", "morfina", "diazepam", "tramadol").any { normalized.contains(it) }) {
+        triggers += "Sedacao excessiva, FR baixa, queda de saturacao, confusao importante ou risco de queda."
+    }
+
+    return triggers.distinct().take(6)
+}
+
+@Composable
+private fun MedicationPriorityChips(study: DetailedMedicationStudy) {
+    val topRisk = study.interactionRisks.minByOrNull { it.severity.ordinal }
+    Row(
+        modifier = Modifier.horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        topRisk?.let { risk ->
+            AssistChip(
+                onClick = { },
+                label = { Text("Prioridade: ${risk.severity.label}") },
+            )
+            AssistChip(
+                onClick = { },
+                label = { Text("Revisar: ${shortMedicationTarget(risk.target)}") },
+            )
+        }
+        if (study.compatibilityNotes.any { it.contains("IV", ignoreCase = true) || it.contains("EV", ignoreCase = true) || it.contains("Y-site", ignoreCase = true) }) {
+            AssistChip(onClick = { }, label = { Text("EV/Y-site") })
+        }
+        if (study.patientProfileAlerts.any { it.contains("renal", ignoreCase = true) || it.contains("idoso", ignoreCase = true) }) {
+            AssistChip(onClick = { }, label = { Text("Perfil de risco") })
+        }
+    }
+}
+
+@Composable
+private fun MedicationInteractionRiskSection(risks: List<MedicationInteractionRisk>) {
+    if (risks.isEmpty()) return
+
+    val grouped = risks.groupBy { it.severity }
+    val severityOrder = listOf(
+        MedicationInteractionSeverity.AVOID,
+        MedicationInteractionSeverity.REVIEW,
+        MedicationInteractionSeverity.SPACING,
+        MedicationInteractionSeverity.MONITOR,
+    )
+
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text(
+            text = "Com quais medicamentos revisar",
+            fontWeight = FontWeight.Black,
+            color = studyUiTokens().accent,
+        )
+        Text(
+            text = "Lista objetiva para estudar a bula: medicamento/grupo, tipo de risco, motivo e acao segura.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        severityOrder.forEach { severity ->
+            val items = grouped[severity].orEmpty()
+            if (items.isNotEmpty()) {
+                val accent = when (severity) {
+                    MedicationInteractionSeverity.AVOID -> Color(0xFFFFECE8)
+                    MedicationInteractionSeverity.REVIEW -> Color(0xFFFFF6DA)
+                    MedicationInteractionSeverity.SPACING -> Color(0xFFEAF7FF)
+                    MedicationInteractionSeverity.MONITOR -> Color(0xFFEFFFF3)
+                }
+                MedicationBlock(
+                    title = severity.label,
+                    accent = accent,
+                    items = items.map { risk ->
+                        "${risk.target}: ${risk.category}. Motivo: ${risk.reason}. Acao: ${risk.action}."
+                    },
+                )
+            }
+        }
+    }
+}
+
+private fun shortMedicationTarget(target: String): String {
+    val cleaned = target.replace(" e outros ", "/").replace(" ou ", "/").trim()
+    return if (cleaned.length <= 30) cleaned else cleaned.take(27).trimEnd() + "..."
+}
+
+@Composable
+private fun MedicationRiskGroupSection(groups: List<MedicationRiskGroup>) {
+    if (groups.isEmpty()) return
+
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text(
+            text = "Mapa rapido de riscos",
+            fontWeight = FontWeight.Black,
+            color = studyUiTokens().accent,
+        )
+        groups.forEachIndexed { index, group ->
+            val accent = when (index % 4) {
+                0 -> Color(0xFFFFF1E8)
+                1 -> Color(0xFFEAF7FF)
+                2 -> Color(0xFFEFFFF3)
+                else -> Color(0xFFF3EFFF)
+            }
+            MedicationBlock(
+                title = group.title,
+                accent = accent,
+                items = group.items,
+            )
+        }
     }
 }
 

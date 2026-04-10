@@ -13,9 +13,15 @@ data class DetailedMedicationStudy(
     val expectedReactions: List<String>,
     val unexpectedReactions: List<String>,
     val avoidWith: List<String>,
+    val interactionRisks: List<MedicationInteractionRisk>,
+    val interactionStudyNotes: List<String>,
     val interactionAlerts: List<String>,
     val attentionPoints: List<String>,
     val administrationAndMonitoring: List<String>,
+    val compatibilityNotes: List<String>,
+    val patientProfileAlerts: List<String>,
+    val studyModeHighlights: List<String>,
+    val riskGroups: List<MedicationRiskGroup>,
     val reviewChecklist: List<String>,
     val anvisaUrl: String,
     val anvisaSearchUrl: String,
@@ -25,6 +31,28 @@ data class DetailedMedicationStudy(
     val interactionSourceLabel: String,
     val interactionSourceOfficial: Boolean,
 )
+
+data class MedicationRiskGroup(
+    val title: String,
+    val items: List<String>,
+)
+
+enum class MedicationInteractionSeverity(val label: String) {
+    AVOID("Evitar / contraindicado"),
+    REVIEW("Revisar antes de associar"),
+    MONITOR("Monitorar com atencao"),
+    SPACING("Separar horario"),
+}
+
+data class MedicationInteractionRisk(
+    val target: String,
+    val severity: MedicationInteractionSeverity,
+    val reason: String,
+    val action: String,
+    val category: String,
+) {
+    fun studyLine(): String = "Com $target: $reason; $action."
+}
 
 private data class MedicationProfile(
     val keys: List<String>,
@@ -161,7 +189,7 @@ object MedicationEnrichmentEngine {
             studyFocus = "Priorize tecnica, glicemia, horario, armazenamento e risco de hipoglicemia.",
             expectedReactions = listOf("reducao da glicemia", "variacao glicemica", "reacao local"),
             unexpectedReactions = listOf("hipoglicemia grave", "hipocalemia", "reacao sistemica relevante"),
-            avoidWith = listOf("outros antidiabeticos sem ajuste", "salicilatos em uso intensivo", "beta-bloqueadores", "alcool", "mistura indevida sem protocolo"),
+            avoidWith = listOf("glibenclamida, gliclazida, glimepirida ou outros antidiabeticos sem ajuste", "salicilatos em uso intensivo", "beta-bloqueadores", "alcool", "mistura indevida sem protocolo"),
             interactionAlerts = listOf("monitorar glicemia", "revisar horario e dieta", "beta-bloqueadores podem mascarar hipoglicemia"),
         ),
         MedicationProfile(
@@ -271,6 +299,13 @@ object MedicationEnrichmentEngine {
         val expectedReactions = specificProfile?.expectedReactions ?: inferExpectedReactions(normalizedClass)
         val unexpectedReactions = specificProfile?.unexpectedReactions ?: inferUnexpectedReactions(normalizedClass)
         val avoidWith = structuredInteractions?.interactions ?: specificProfile?.avoidWith ?: inferAvoidWith(normalizedClass)
+        val interactionRisks = buildInteractionRisks(
+            medicationTitle = item.product,
+            interactions = avoidWith,
+            normalizedClass = normalizedClass,
+            normalizedSubstance = normalizedSubstance,
+        )
+        val interactionStudyNotes = buildInteractionStudyNotes(interactionRisks)
         val interactionAlerts = structuredInteractions?.interactionAlerts ?: specificProfile?.interactionAlerts ?: inferInteractionAlerts(normalizedClass)
         val focus = specificProfile?.studyFocus ?: inferStudyFocus(normalizedClass, normalizedSubstance)
         val attentionPoints = structuredInteractions?.attentionPoints ?: specificProfile?.interactionAlerts ?: inferAttentionPoints(normalizedClass, normalizedSubstance)
@@ -279,6 +314,30 @@ object MedicationEnrichmentEngine {
             normalizedSubstance = normalizedSubstance,
             interactionAlerts = interactionAlerts,
             attentionPoints = attentionPoints,
+        )
+        val compatibilityNotes = buildCompatibilityNotes(
+            normalizedClass = normalizedClass,
+            normalizedSubstance = normalizedSubstance,
+            normalizedPresentation = normalize(item.presentation),
+            interactions = avoidWith,
+        )
+        val patientProfileAlerts = buildPatientProfileAlerts(
+            normalizedClass = normalizedClass,
+            normalizedSubstance = normalizedSubstance,
+            interactionRisks = interactionRisks,
+            attentionPoints = attentionPoints,
+        )
+        val studyModeHighlights = buildStudyModeHighlights(
+            normalizedClass = normalizedClass,
+            normalizedSubstance = normalizedSubstance,
+            interactionRisks = interactionRisks,
+            compatibilityNotes = compatibilityNotes,
+        )
+        val riskGroups = buildRiskGroups(
+            normalizedClass = normalizedClass,
+            normalizedSubstance = normalizedSubstance,
+            interactions = avoidWith,
+            alerts = interactionAlerts + attentionPoints,
         )
         val reviewChecklist = structuredInteractions?.reviewChecklist ?: inferReviewChecklist(normalizedClass, normalizedSubstance)
         val sourceNote = if (structuredInteractions != null) {
@@ -318,9 +377,15 @@ object MedicationEnrichmentEngine {
             expectedReactions = expectedReactions,
             unexpectedReactions = unexpectedReactions,
             avoidWith = avoidWith,
+            interactionRisks = interactionRisks,
+            interactionStudyNotes = interactionStudyNotes,
             interactionAlerts = interactionAlerts,
             attentionPoints = attentionPoints,
             administrationAndMonitoring = administrationAndMonitoring,
+            compatibilityNotes = compatibilityNotes,
+            patientProfileAlerts = patientProfileAlerts,
+            studyModeHighlights = studyModeHighlights,
+            riskGroups = riskGroups,
             reviewChecklist = reviewChecklist,
             anvisaUrl = item.anvisaBularioUrl,
             anvisaSearchUrl = item.anvisaSearchUrl,
@@ -407,17 +472,46 @@ object MedicationEnrichmentEngine {
 
     private fun inferAvoidWith(normalizedClass: String): List<String> = when {
         normalizedClass.contains("anticoagul") || normalizedClass.contains("fator xa") || normalizedClass.contains("antiagreg") ->
-            listOf("AINEs", "aspirina sem criterio", "outros anticoagulantes sem avaliacao")
+            listOf(
+                "ibuprofeno, naproxeno, diclofenaco ou outros AINEs",
+                "AAS/aspirina ou clopidogrel sem revisao",
+                "heparina, enoxaparina, varfarina, rivaroxabana ou apixabana sem avaliacao",
+            )
         normalizedClass.contains("anti inflam") || normalizedClass.contains("analg") ->
-            listOf("anticoagulantes", "outros AINEs", "alcool em excesso")
+            listOf(
+                "varfarina, heparina, enoxaparina, rivaroxabana ou apixabana",
+                "AAS/aspirina, clopidogrel ou outros antiagregantes",
+                "ibuprofeno, naproxeno, diclofenaco ou outro AINE simultaneo",
+                "alcool em excesso",
+            )
         normalizedClass.contains("diuret") ->
-            listOf("litio", "outros diureticos sem revisao", "farmacos que alteram potassio")
+            listOf(
+                "litio",
+                "digoxina",
+                "espironolactona, eplerenona, amilorida ou suplementos de potassio",
+                "ibuprofeno, naproxeno, diclofenaco ou outros AINEs",
+            )
         normalizedClass.contains("insulina") || normalizedClass.contains("antidiab") ->
-            listOf("outros hipoglicemiantes sem ajuste", "alcool em excesso")
+            listOf(
+                "glibenclamida, gliclazida ou glimepirida",
+                "insulina regular, NPH, glargina ou outro esquema hipoglicemiante",
+                "corticoides como prednisona ou dexametasona",
+                "alcool em excesso",
+            )
         normalizedClass.contains("antibi") || normalizedClass.contains("cefalospor") || normalizedClass.contains("penicil") ->
-            listOf("associacoes antibioticas sem criterio", "medicacoes com interacao descrita em bula")
+            listOf(
+                "varfarina e outros anticoagulantes orais quando descrito em bula",
+                "metotrexato",
+                "probenecida",
+                "outros antibioticos simultaneos sem criterio clinico",
+            )
         else ->
-            listOf("associacoes sem consulta da bula oficial", "automedicacao simultanea")
+            listOf(
+                "varfarina, heparina, enoxaparina, rivaroxabana ou apixabana se houver risco de sangramento",
+                "ibuprofeno, naproxeno, diclofenaco ou outros AINEs se houver risco renal/gastrico",
+                "alcool, sedativos ou psicotropicos quando houver risco neurologico",
+                "automedicacao simultanea sem consulta da bula oficial",
+            )
     }
 
     private fun inferInteractionAlerts(normalizedClass: String): List<String> = when {
@@ -433,6 +527,238 @@ object MedicationEnrichmentEngine {
             listOf("conferir alergias", "avaliar interacoes especificas em bula", "observar resposta clinica")
         else ->
             listOf("consultar bula oficial da Anvisa", "avaliar interacoes antes do uso", "monitorar resposta e evento adverso")
+    }
+
+    private fun buildInteractionRisks(
+        medicationTitle: String,
+        interactions: List<String>,
+        normalizedClass: String,
+        normalizedSubstance: String,
+    ): List<MedicationInteractionRisk> {
+        val sourceInteractions = if (interactions.isEmpty()) inferAvoidWith(normalizedClass) else interactions
+
+        return sourceInteractions.distinct().take(8).map { rawInteraction ->
+            val interaction = rawInteraction.trim()
+            val normalizedInteraction = normalize(interaction)
+            val reason = when {
+                normalizedInteraction.contains("varfar") ||
+                    normalizedInteraction.contains("anticoagul") ||
+                    normalizedInteraction.contains("antiagreg") ||
+                    normalizedInteraction.contains("clopidogrel") ||
+                    normalizedInteraction.contains("aspirina") ||
+                    normalizedInteraction.contains("aas") ||
+                    normalizedInteraction.contains("aine") ||
+                    normalizedInteraction.contains("diclofen") ||
+                    normalizedInteraction.contains("naprox") ||
+                    normalizedInteraction.contains("ibuprof") ->
+                    "risco de sangramento ou alteracao da hemostasia"
+                normalizedInteraction.contains("calcio") ||
+                    normalizedInteraction.contains("ferro") ||
+                    normalizedInteraction.contains("sucralfato") ||
+                    normalizedInteraction.contains("colestiramina") ||
+                    normalizedInteraction.contains("sevelamer") ||
+                    normalizedInteraction.contains("orlistate") ->
+                    "risco de reduzir absorcao ou exigir espacamento de horario"
+                normalizedInteraction.contains("litio") ||
+                    normalizedInteraction.contains("digoxina") ||
+                    normalizedInteraction.contains("potassio") ||
+                    normalizedInteraction.contains("espironolactona") ||
+                    normalizedInteraction.contains("eplerenona") ||
+                    normalizedInteraction.contains("amilorida") ->
+                    "risco renal, eletrolitico ou cardiaco"
+                normalizedInteraction.contains("metotrexato") ||
+                    normalizedInteraction.contains("probenecida") ||
+                    normalizedInteraction.contains("ciclosporina") ||
+                    normalizedInteraction.contains("tacrolimo") ->
+                    "risco de toxicidade por alteracao de eliminacao ou imunossupressao"
+                normalizedInteraction.contains("claritromicina") ||
+                    normalizedInteraction.contains("itraconazol") ||
+                    normalizedInteraction.contains("cetoconazol") ||
+                    normalizedInteraction.contains("ritonavir") ||
+                    normalizedInteraction.contains("gemfibrozila") ->
+                    "risco de aumento de concentracao, toxicidade muscular ou interacao metabolica"
+                normalizedInteraction.contains("carbamazepina") ||
+                    normalizedInteraction.contains("fenitoina") ||
+                    normalizedInteraction.contains("rifampicina") ||
+                    normalizedInteraction.contains("erva-de-sao-joao") ->
+                    "risco de reduzir efeito terapeutico por inducao metabolica"
+                normalizedInteraction.contains("glibenclamida") ||
+                    normalizedInteraction.contains("gliclazida") ||
+                    normalizedInteraction.contains("glimepirida") ||
+                    normalizedInteraction.contains("outros antidiabeticos") ->
+                    "risco de hipoglicemia ou descontrole glicemico"
+                normalizedInteraction.contains("beta-bloqueador") ||
+                    normalizedInteraction.contains("propranolol") ->
+                    "risco de reduzir resposta broncodilatadora ou mascarar hipoglicemia"
+                normalizedInteraction.contains("alcool") ||
+                    normalizedSubstance.contains("paracetamol") ->
+                    "risco hepatometabolico ou piora de evento adverso"
+                normalizedInteraction.contains("diazepam") ||
+                    normalizedInteraction.contains("benzodiazep") ||
+                    normalizedInteraction.contains("opioide") ->
+                    "risco de sedacao, queda, depressao respiratoria ou evento neurologico"
+                normalizedInteraction.contains("tramadol") ||
+                    normalizedInteraction.contains("imao") ||
+                    normalizedInteraction.contains("linezolida") ||
+                    normalizedInteraction.contains("sumatriptano") ->
+                    "risco neurologico ou serotoninergico"
+                normalizedInteraction.contains("amiodarona") ||
+                    normalizedInteraction.contains("sotalol") ||
+                    normalizedInteraction.contains("quinidina") ||
+                    normalizedInteraction.contains("pimozida") ->
+                    "risco de arritmia ou prolongamento de QT"
+                normalizedInteraction.contains("gentamicina") ||
+                    normalizedInteraction.contains("aminoglicosideo") ->
+                    "risco de nefrotoxicidade ou ototoxicidade"
+                normalizedInteraction.contains("contraste") ->
+                    "risco ligado a funcao renal e protocolo peri-exame"
+                normalizedInteraction.contains("corticosteroide") ||
+                    normalizedInteraction.contains("prednisona") ||
+                    normalizedInteraction.contains("dexametasona") ->
+                    "risco de somar efeito gastrico, metabolico ou infeccioso"
+                else ->
+                    "associacao que exige revisao da bula e do contexto clinico"
+            }
+            val severity = when {
+                normalizedInteraction.contains("contraind") ||
+                    normalizedInteraction.contains("rilpivirina") ||
+                    normalizedInteraction.contains("pimozida") ||
+                    normalizedInteraction.contains("sacubitril") ||
+                    normalizedInteraction.contains("aliscireno") ||
+                    normalizedInteraction.contains("fenelzina") ||
+                    normalizedInteraction.contains("linezolida") ||
+                    normalizedInteraction.contains("azul de metileno") ||
+                    normalizedInteraction.contains("metotrexato em altas doses") ||
+                    normalizedInteraction.contains("mistura indevida") ||
+                    normalizedInteraction.contains("sem criterio") ||
+                    normalizedInteraction.contains("sem avaliacao") ||
+                    normalizedInteraction.contains("sem revisao") ->
+                    MedicationInteractionSeverity.AVOID
+                normalizedInteraction.contains("calcio") ||
+                    normalizedInteraction.contains("ferro") ||
+                    normalizedInteraction.contains("sucralfato") ||
+                    normalizedInteraction.contains("colestiramina") ||
+                    normalizedInteraction.contains("sevelamer") ||
+                    normalizedInteraction.contains("orlistate") ->
+                    MedicationInteractionSeverity.SPACING
+                normalizedInteraction.contains("varfar") ||
+                    normalizedInteraction.contains("anticoagul") ||
+                    normalizedInteraction.contains("antiagreg") ||
+                    normalizedInteraction.contains("clopidogrel") ||
+                    normalizedInteraction.contains("aspirina") ||
+                    normalizedInteraction.contains("aine") ||
+                    normalizedInteraction.contains("litio") ||
+                    normalizedInteraction.contains("digoxina") ||
+                    normalizedInteraction.contains("metotrexato") ||
+                    normalizedInteraction.contains("amiodarona") ||
+                    normalizedInteraction.contains("sotalol") ||
+                    normalizedInteraction.contains("quinidina") ||
+                    normalizedInteraction.contains("pimozida") ||
+                    normalizedInteraction.contains("claritromicina") ||
+                    normalizedInteraction.contains("itraconazol") ||
+                    normalizedInteraction.contains("cetoconazol") ||
+                    normalizedInteraction.contains("ritonavir") ||
+                    normalizedInteraction.contains("gemfibrozila") ||
+                    normalizedInteraction.contains("ciclosporina") ||
+                    normalizedInteraction.contains("tacrolimo") ||
+                    normalizedInteraction.contains("carbamazepina") ||
+                    normalizedInteraction.contains("fenitoina") ||
+                    normalizedInteraction.contains("rifampicina") ||
+                    normalizedInteraction.contains("gentamicina") ||
+                    normalizedInteraction.contains("aminoglicosideo") ||
+                    normalizedInteraction.contains("contraste") ||
+                    normalizedInteraction.contains("glibenclamida") ||
+                    normalizedInteraction.contains("gliclazida") ||
+                    normalizedInteraction.contains("glimepirida") ||
+                    normalizedInteraction.contains("beta-bloqueador") ||
+                    normalizedInteraction.contains("propranolol") ->
+                    MedicationInteractionSeverity.REVIEW
+                else ->
+                    MedicationInteractionSeverity.MONITOR
+            }
+            val action = when (severity) {
+                MedicationInteractionSeverity.AVOID ->
+                    "evitar ou nao usar sem revisar prescricao, bula e protocolo"
+                MedicationInteractionSeverity.SPACING ->
+                    "separar horario conforme bula/protocolo e monitorar resposta"
+                MedicationInteractionSeverity.REVIEW ->
+                    "revisar antes de associar e definir monitorizacao"
+                MedicationInteractionSeverity.MONITOR ->
+                    "monitorar com atencao e confirmar se houver polifarmacia"
+            }
+            val category = when {
+                normalizedInteraction.contains("varfar") ||
+                    normalizedInteraction.contains("anticoagul") ||
+                    normalizedInteraction.contains("antiagreg") ||
+                    normalizedInteraction.contains("clopidogrel") ||
+                    normalizedInteraction.contains("aspirina") ||
+                    normalizedInteraction.contains("aine") ->
+                    "Sangramento"
+                normalizedInteraction.contains("calcio") ||
+                    normalizedInteraction.contains("ferro") ||
+                    normalizedInteraction.contains("sucralfato") ||
+                    normalizedInteraction.contains("colestiramina") ||
+                    normalizedInteraction.contains("sevelamer") ||
+                    normalizedInteraction.contains("orlistate") ->
+                    "Absorcao"
+                normalizedInteraction.contains("litio") ||
+                    normalizedInteraction.contains("digoxina") ||
+                    normalizedInteraction.contains("potassio") ||
+                    normalizedInteraction.contains("espironolactona") ->
+                    "Rim/eletrolitos"
+                normalizedInteraction.contains("glibenclamida") ||
+                    normalizedInteraction.contains("gliclazida") ||
+                    normalizedInteraction.contains("glimepirida") ||
+                    normalizedInteraction.contains("insulina") ||
+                    normalizedInteraction.contains("antidiabetico") ->
+                    "Glicemia"
+                normalizedInteraction.contains("amiodarona") ||
+                    normalizedInteraction.contains("sotalol") ||
+                    normalizedInteraction.contains("quinidina") ||
+                    normalizedInteraction.contains("pimozida") ->
+                    "Ritmo cardiaco"
+                normalizedInteraction.contains("claritromicina") ||
+                    normalizedInteraction.contains("itraconazol") ||
+                    normalizedInteraction.contains("cetoconazol") ||
+                    normalizedInteraction.contains("ritonavir") ||
+                    normalizedInteraction.contains("gemfibrozila") ||
+                    normalizedInteraction.contains("ciclosporina") ||
+                    normalizedInteraction.contains("tacrolimo") ||
+                    normalizedInteraction.contains("carbamazepina") ||
+                    normalizedInteraction.contains("fenitoina") ||
+                    normalizedInteraction.contains("rifampicina") ->
+                    "Metabolismo/toxicidade"
+                normalizedInteraction.contains("diazepam") ||
+                    normalizedInteraction.contains("benzodiazep") ||
+                    normalizedInteraction.contains("opioide") ||
+                    normalizedInteraction.contains("tramadol") ||
+                    normalizedInteraction.contains("sedativo") ->
+                    "Sedacao/SNC"
+                normalizedInteraction.contains("metotrexato") ||
+                    normalizedInteraction.contains("probenecida") ->
+                    "Eliminacao/toxicidade"
+                normalizedInteraction.contains("gentamicina") ||
+                    normalizedInteraction.contains("aminoglicosideo") ->
+                    "Nefro/ototoxicidade"
+                normalizedInteraction.contains("alcool") ->
+                    "Alcool/metabolismo"
+                else ->
+                    "Revisao clinica"
+            }
+            MedicationInteractionRisk(
+                target = interaction.ifBlank { medicationTitle },
+                severity = severity,
+                reason = reason,
+                action = action,
+                category = category,
+            )
+        }
+    }
+
+    private fun buildInteractionStudyNotes(
+        interactionRisks: List<MedicationInteractionRisk>,
+    ): List<String> {
+        return interactionRisks.map { it.studyLine() }
     }
 
     private fun inferAttentionPoints(normalizedClass: String, normalizedSubstance: String): List<String> = when {
@@ -513,6 +839,189 @@ object MedicationEnrichmentEngine {
                     listOf("revisar a bula oficial do produto", "monitorar resposta clinica", "registrar qualquer evento adverso relevante")
                 }
         }
+    }
+
+    private fun buildCompatibilityNotes(
+        normalizedClass: String,
+        normalizedSubstance: String,
+        normalizedPresentation: String,
+        interactions: List<String>,
+    ): List<String> {
+        val text = normalize((listOf(normalizedClass, normalizedSubstance, normalizedPresentation) + interactions).joinToString(" "))
+        val isInjectableOrEv = listOf("injet", "intraven", "infus", "solucao", "ampola", "frasco", "ev", "iv").any { text.contains(it) }
+        val notes = mutableListOf<String>()
+
+        if (normalizedSubstance.contains("ceftriaxona")) {
+            notes += "Ceftriaxona + solucoes com calcio IV: nao administrar na mesma linha/mesmo momento; em neonatos o risco e especialmente grave."
+        }
+        if (normalizedSubstance.contains("vancomicina")) {
+            notes += "Vancomicina IV: revisar diluente, concentracao e tempo de infusao para reduzir reacao infusional e flebite."
+        }
+        if (normalizedSubstance.contains("cloreto de potassio") || normalizedSubstance.contains("potassio")) {
+            notes += "Potassio IV concentrado: nunca administrar direto; exige diluicao, bomba/controle de velocidade e monitorizacao conforme protocolo."
+        }
+        if (normalizedSubstance.contains("furosemida")) {
+            notes += "Furosemida injetavel: revisar compatibilidade no equipo/Y-site e observar irritacao venosa, pressao e diurese."
+        }
+        if (normalizedSubstance.contains("diazepam") || normalizedSubstance.contains("fenitoina")) {
+            notes += "Medicamentos com baixa compatibilidade em solucao: confirmar diluente e linha exclusiva quando a bula/protocolo exigir."
+        }
+        if (isInjectableOrEv && notes.isEmpty()) {
+            notes += "Medicamento injetavel/EV: confirmar diluente, concentracao final, tempo de administracao e compatibilidade em Y-site antes de preparar."
+        }
+        if (!isInjectableOrEv && notes.isEmpty()) {
+            notes += "Sem alerta EV especifico nesta ficha; para uso oral/topico, priorize horario, absorcao, duplicidade e interacoes sistemicas."
+        }
+        return notes.distinct().take(4)
+    }
+
+    private fun buildPatientProfileAlerts(
+        normalizedClass: String,
+        normalizedSubstance: String,
+        interactionRisks: List<MedicationInteractionRisk>,
+        attentionPoints: List<String>,
+    ): List<String> {
+        val text = normalize((listOf(normalizedClass, normalizedSubstance) + attentionPoints + interactionRisks.map { "${it.target} ${it.reason}" }).joinToString(" "))
+        val alerts = mutableListOf<String>()
+
+        alerts += "Idoso/polifarmacia: revisar duplicidades, quedas, sedacao, funcao renal e risco de interacao antes de associar."
+        if (listOf("renal", "rim", "creatinina", "metformina", "litio", "digoxina", "diuret", "potassio", "aine").any { text.contains(it) }) {
+            alerts += "Doenca renal/desidratacao: confirmar dose, intervalo e necessidade de creatinina/eletrolitos conforme bula e protocolo."
+        }
+        if (listOf("hepatic", "hepat", "figado", "paracetamol", "estat", "alcool").any { text.contains(it) }) {
+            alerts += "Doenca hepatica/alcool: revisar dose total, sinais de toxicidade e outros produtos com o mesmo principio ativo."
+        }
+        if (listOf("sangramento", "anticoagul", "antiagreg", "varfar", "hepar", "rivarox", "apixab", "clopidogrel").any { text.contains(it) }) {
+            alerts += "Uso de anticoagulante/antiagregante: vigiar sangramento, hematomas, melena, hematuria e queda clinica inexplicada."
+        }
+        if (listOf("glicemia", "hipoglic", "insulina", "antidiab", "metformina").any { text.contains(it) }) {
+            alerts += "Diabetes/risco metabolico: alinhar dose, refeicao, jejum e glicemia capilar; observar sinais de hipoglicemia."
+        }
+        if (listOf("gestante", "gravidez", "pediatr", "crianca", "neonato").any { text.contains(it) } || normalizedClass.contains("antibi")) {
+            alerts += "Gestante, crianca ou neonato: confirmar restricoes especificas na bula e seguir protocolo institucional."
+        }
+        return alerts.distinct().take(5)
+    }
+
+    private fun buildStudyModeHighlights(
+        normalizedClass: String,
+        normalizedSubstance: String,
+        interactionRisks: List<MedicationInteractionRisk>,
+        compatibilityNotes: List<String>,
+    ): List<String> {
+        val topSeverity = interactionRisks.minByOrNull { it.severity.ordinal }?.severity?.label ?: "Revisao clinica"
+        val topTarget = interactionRisks.firstOrNull()?.target ?: "interacoes principais da classe"
+        val classFocus = when {
+            normalizedClass.contains("antibi") || normalizedClass.contains("cefalospor") || normalizedClass.contains("penicil") ->
+                "Antibiotico: estudar alergia, indicacao, tempo de uso, funcao renal e resposta clinica."
+            normalizedClass.contains("anticoagul") || normalizedClass.contains("antiagreg") || normalizedSubstance.contains("varfar") ->
+                "Antitrombotico: estudar sangramento, exame/monitorizacao, quedas e procedimentos invasivos."
+            normalizedClass.contains("diuret") || normalizedClass.contains("anti hipert") ->
+                "Cardiovascular: estudar PA, FC, diurese, potassio, creatinina e risco de queda."
+            normalizedClass.contains("insulina") || normalizedClass.contains("antidiab") ->
+                "Metabolico: estudar glicemia, horario da refeicao, jejum e sinais de hipoglicemia."
+            normalizedClass.contains("analg") || normalizedClass.contains("anti inflam") ->
+                "Dor/febre: estudar diferenca entre analgesico simples, AINE e opioide, com seus riscos."
+            else ->
+                "Comece por classe, principio ativo, via, indicacao, principal risco e monitorizacao."
+        }
+        return listOf(
+            classFocus,
+            "Interacao prioritaria: $topTarget ($topSeverity).",
+            "Compatibilidade/preparo: ${compatibilityNotes.firstOrNull() ?: "confirmar na bula oficial antes de preparar ou associar."}",
+            "Para fixar: diga em voz alta para que serve, o que monitorar e quando chamar o enfermeiro/medico.",
+        )
+    }
+
+    private fun buildRiskGroups(
+        normalizedClass: String,
+        normalizedSubstance: String,
+        interactions: List<String>,
+        alerts: List<String>,
+    ): List<MedicationRiskGroup> {
+        val text = normalize((interactions + alerts + normalizedClass + normalizedSubstance).joinToString(" "))
+        val groups = mutableListOf<MedicationRiskGroup>()
+
+        fun hasAny(vararg keywords: String): Boolean = keywords.any { text.contains(normalize(it)) }
+
+        if (hasAny("sangramento", "anticoagul", "antiagreg", "varfar", "rivarox", "apixab", "clopidogrel", "aspirina", "aine")) {
+            groups += MedicationRiskGroup(
+                title = "Risco de sangramento",
+                items = listOf(
+                    "revisar uso com anticoagulantes, antiagregantes, AINEs ou aspirina",
+                    "vigiar equimoses, sangramento gengival, urina escura, melena ou queda inexplicada",
+                    "avaliar necessidade de bula/protocolo antes de associar antitromboticos",
+                ),
+            )
+        }
+
+        if (hasAny("renal", "creatinina", "rim", "litio", "metformina", "diuret", "aine", "contraste", "potassio")) {
+            groups += MedicationRiskGroup(
+                title = "Risco renal e eletrolitico",
+                items = listOf(
+                    "considerar funcao renal quando houver idoso, desidratacao, contraste ou polifarmacia",
+                    "acompanhar potassio, sodio ou creatinina quando a classe exigir",
+                    "ter cautela com associacoes que somam nefrotoxicidade ou alteram potassio",
+                ),
+            )
+        }
+
+        if (hasAny("hepatic", "figado", "hepat", "paracetamol", "estat", "azitromicina", "alcool")) {
+            groups += MedicationRiskGroup(
+                title = "Risco hepatico",
+                items = listOf(
+                    "revisar dose total, alcool e outros produtos com o mesmo principio ativo",
+                    "observar ictericia, urina escura, dor abdominal importante ou piora clinica",
+                    "confirmar restricoes na bula se houver hepatopatia ou uso prolongado",
+                ),
+            )
+        }
+
+        if (hasAny("glicemia", "hipoglic", "hiperglic", "insulina", "metformina", "antidiab")) {
+            groups += MedicationRiskGroup(
+                title = "Risco glicemico",
+                items = listOf(
+                    "relacionar dose, horario, refeicao e glicemia capilar",
+                    "vigiar tremor, sudorese, confusao, sonolencia ou mal-estar",
+                    "revisar ajuste se houver jejum, vomitos, infeccao, exercicio ou mudanca de dieta",
+                ),
+            )
+        }
+
+        if (hasAny("pressao", "hipotens", "anti hipert", "losart", "enalap", "captopril", "amlodipino", "diuret")) {
+            groups += MedicationRiskGroup(
+                title = "Risco pressorico",
+                items = listOf(
+                    "monitorar pressao, tontura, queda, fraqueza e hidratacao",
+                    "avaliar associacao com diureticos ou outros anti-hipertensivos",
+                    "revisar conduta se houver hipotensao sintomatica ou desidratacao",
+                ),
+            )
+        }
+
+        if (hasAny("absorcao", "jejum", "calcio", "ferro", "sucralfato", "omeprazol", "levotiroxina", "horario")) {
+            groups += MedicationRiskGroup(
+                title = "Absorcao e horario",
+                items = listOf(
+                    "conferir se precisa de jejum, espacamento ou horario fixo",
+                    "separar medicamentos que reduzem absorcao quando a bula orientar",
+                    "revisar suplementos, antiacidos, calcio, ferro e alimentos relevantes",
+                ),
+            )
+        }
+
+        if (hasAny("alerg", "anafil", "hipersens", "rash", "penicil", "cefalospor", "antibi")) {
+            groups += MedicationRiskGroup(
+                title = "Alergia e hipersensibilidade",
+                items = listOf(
+                    "confirmar alergias previas antes de administrar ou orientar uso",
+                    "vigiar rash, prurido, edema facial, broncoespasmo ou queda de pressao",
+                    "em sinais de anafilaxia, tratar como urgencia e acionar equipe imediatamente",
+                ),
+            )
+        }
+
+        return groups.distinctBy { it.title }.take(4)
     }
 
     private fun inferStudyFocus(normalizedClass: String, normalizedSubstance: String): String = when {
