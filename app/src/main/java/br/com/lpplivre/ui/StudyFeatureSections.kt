@@ -82,8 +82,8 @@ fun AiStudySection() {
 
     Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
         SectionHeroCard(
-            title = "IA assistencial de enfermagem",
-            body = "Especialista em enfermagem assistencial com foco tecnico, seguro, humanizado e alinhado a fontes oficiais brasileiras.",
+            title = "Base inteligente de enfermagem",
+            body = "Consulta a base interna do app, cruza topicos relacionados e responde sem inventar informacoes fora do conteudo salvo.",
             accent = listOf(Color(0xFF0F4C81), Color(0xFF55B5FF)),
             imageRes = R.drawable.study_feature_banner,
         )
@@ -111,16 +111,16 @@ fun AiStudySection() {
                         .padding(18.dp),
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Text("Central de estudo com IA", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                        Text("Busca interna orientada", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
                         Text(
-                            "A IA responde com cabeca de enfermeiro e orientacao pratica para o trabalho do tecnico, sempre com limites profissionais, seguranca do paciente e escalonamento correto.",
+                            "Ela identifica palavras-chave, compara com a base do aplicativo e combina os topicos mais relevantes. Se a base estiver incompleta, isso aparece claramente na resposta.",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                            MetricMiniCard("Perfil", "Assistencial", MaterialTheme.colorScheme.primaryContainer, ui.info, Modifier.weight(1f))
-                            MetricMiniCard("Foco", "Seguranca", MaterialTheme.colorScheme.secondaryContainer, ui.accent, Modifier.weight(1f))
-                            MetricMiniCard("Base", "Brasil", Color(0xFF1E4A33).copy(alpha = 0.18f), ui.success, Modifier.weight(1f))
+                            MetricMiniCard("Fonte", "Interna", MaterialTheme.colorScheme.primaryContainer, ui.info, Modifier.weight(1f))
+                            MetricMiniCard("Busca", "Top 3", MaterialTheme.colorScheme.secondaryContainer, ui.accent, Modifier.weight(1f))
+                            MetricMiniCard("Estilo", "Claro", Color(0xFF1E4A33).copy(alpha = 0.18f), ui.success, Modifier.weight(1f))
                         }
                     }
                 }
@@ -142,7 +142,7 @@ fun AiStudySection() {
                         },
                         enabled = question.isNotBlank(),
                     ) {
-                        Text("Quero revisar")
+                        Text("Consultar base")
                     }
                     OutlinedButton(
                         modifier = Modifier.weight(1f),
@@ -162,8 +162,8 @@ fun AiStudySection() {
                         modifier = Modifier.padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
-                        Text("A IA comeca perguntando", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
-                        guidedAiQuestions(question).forEach { guidedQuestion ->
+                        Text("Sugestoes para refinar a busca", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
+                        guidedKnowledgeQuestions(question).forEach { guidedQuestion ->
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.Top) {
                                 Text("•", color = ui.accent, fontWeight = FontWeight.Black)
                                 Text(guidedQuestion, color = MaterialTheme.colorScheme.onSurface)
@@ -179,9 +179,9 @@ fun AiStudySection() {
                         modifier = Modifier.padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
-                        Text("Atalhos clinicos", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
+                        Text("Atalhos da base", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
                         Text(
-                            "Toque em um tema para preencher a pergunta rapidamente e testar a IA como se fosse um painel de apoio ao estudo.",
+                            "Toque em um tema para abrir uma busca pronta e ver como a base combina perguntas relacionadas, palavras-chave e respostas internas.",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -242,7 +242,7 @@ fun AiStudySection() {
                         ) {
                             Text("Pronta para te orientar", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
                             Text(
-                                "Escolha um atalho ou escreva sua duvida. A resposta aparece aqui com resumo do quadro, observacao, cuidados, momento de avisar o enfermeiro e quando acionar medico ou emergencia.",
+                                "Escreva uma pergunta ou use um atalho. A resposta vai mostrar como a base interpretou o pedido, quais topicos ela encontrou e se a informacao ficou parcial.",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -258,7 +258,7 @@ fun AiStudySection() {
                             modifier = Modifier.padding(18.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
-                            Text("Resposta guiada", style = MaterialTheme.typography.labelLarge, color = ui.accent, fontWeight = FontWeight.Bold)
+                            Text("Resposta encontrada na base", style = MaterialTheme.typography.labelLarge, color = ui.accent, fontWeight = FontWeight.Bold)
                             Text(currentAnswer.title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
                             Card(
                                 shape = RoundedCornerShape(18.dp),
@@ -433,22 +433,55 @@ fun MedicationStudySection() {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
     val ui = studyUiTokens()
-    val officialCatalog = remember(context) { AnvisaCatalogRepository.load(context) }
     val curatedStats = remember { StudyContentRepository.medicationStats() }
     var query by rememberSaveable { mutableStateOf("") }
-    var selectedClass by rememberSaveable { mutableStateOf<String?>(null) }
+    val curatedClasses = remember { StudyContentRepository.medicationClasses }
+    var selectedClass by rememberSaveable { mutableStateOf(curatedClasses.firstOrNull()) }
+    var selectedSection by rememberSaveable { mutableStateOf("guias") }
     var officialVisibleCount by rememberSaveable(query, selectedClass) { mutableStateOf(24) }
     var officialCatalogExpanded by rememberSaveable { mutableStateOf(false) }
+    var officialCatalog by remember { mutableStateOf<List<OfficialCatalogMedication>>(emptyList()) }
+    var officialCatalogLoading by remember { mutableStateOf(false) }
     val medications = remember(query, selectedClass) {
         StudyContentRepository.medicationsFor(query = query, selectedClass = selectedClass)
     }
+    val curatedClassCounts = remember {
+        curatedClasses.associateWith { medicationClass ->
+            StudyContentRepository.medicationsFor(query = "", selectedClass = medicationClass).size
+        }
+    }
     val allClasses = remember(officialCatalog) {
-        (StudyContentRepository.medicationClasses + officialCatalog.map { it.therapeuticClass })
+        (curatedClasses + officialCatalog.map { it.therapeuticClass })
             .filter { it.isNotBlank() }
             .distinct()
             .sorted()
     }
-    val shouldShowOfficialCatalog = officialCatalogExpanded || query.trim().length >= 2 || !selectedClass.isNullOrBlank()
+    val shouldLoadOfficialCatalog = selectedSection == "oficial" && (officialCatalogExpanded || query.trim().length >= 2 || !selectedClass.isNullOrBlank())
+    LaunchedEffect(shouldLoadOfficialCatalog) {
+        if (shouldLoadOfficialCatalog && officialCatalog.isEmpty() && !officialCatalogLoading) {
+            officialCatalogLoading = true
+            officialCatalog = withContext(Dispatchers.IO) {
+                AnvisaCatalogRepository.load(context)
+            }
+            officialCatalogLoading = false
+        }
+    }
+    val officialClassCounts = remember(officialCatalog) {
+        officialCatalog
+            .groupingBy { it.therapeuticClass }
+            .eachCount()
+            .filterKeys { it.isNotBlank() }
+    }
+    val officialClassMenu = remember(query, officialCatalog, officialClassCounts) {
+        val normalizedQuery = query.trim().lowercase()
+        officialClassCounts.keys
+            .filter { medicationClass ->
+                normalizedQuery.isBlank() || medicationClass.lowercase().contains(normalizedQuery)
+            }
+            .sortedByDescending { officialClassCounts[it] ?: 0 }
+            .take(36)
+    }
+    val shouldShowOfficialCatalog = shouldLoadOfficialCatalog && officialCatalog.isNotEmpty()
     val officialMatches = remember(query, selectedClass, officialCatalog, shouldShowOfficialCatalog, officialVisibleCount) {
         if (!shouldShowOfficialCatalog) return@remember emptyList()
         val normalizedQuery = query.trim().lowercase()
@@ -491,8 +524,8 @@ fun MedicationStudySection() {
 
     Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
         SectionHeroCard(
-            title = "Medicamentos pela Anvisa",
-            body = "Pesquisa rapida, efeito terapeutico, reacoes, interacoes e links oficiais da Anvisa em uma tela feita para estudar.",
+            title = "Central de medicamentos",
+            body = "Agora organizada por classes medicamentosas, com guia interno do app e catalogo oficial da Anvisa em uma navegacao mais leve.",
             accent = listOf(Color(0xFF7A3CFF), Color(0xFFFF7A59)),
             imageRes = R.drawable.study_feature_banner,
         )
@@ -504,12 +537,12 @@ fun MedicationStudySection() {
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
-                Text("Busca de medicamentos", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                Text("Menu de medicamentos", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
                 OutlinedTextField(
                     value = query,
                     onValueChange = {
                         query = it
-                        if (it.trim().length >= 2) officialCatalogExpanded = true
+                        if (selectedSection == "oficial" && it.trim().length >= 2) officialCatalogExpanded = true
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(18.dp),
@@ -528,49 +561,139 @@ fun MedicationStudySection() {
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     FilterChip(
-                        selected = selectedClass == null,
-                        onClick = { selectedClass = null },
-                        label = { Text("Todas") },
+                        selected = selectedSection == "guias",
+                        onClick = { selectedSection = "guias" },
+                        label = { Text("Guias por classe") },
                     )
-                    allClasses.forEach { medicationClass ->
+                    FilterChip(
+                        selected = selectedSection == "oficial",
+                        onClick = {
+                            selectedSection = "oficial"
+                            officialCatalogExpanded = true
+                            selectedClass = null
+                        },
+                        label = { Text("Catalogo oficial") },
+                    )
+                }
+                Row(
+                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    curatedClasses.forEach { medicationClass ->
                         FilterChip(
                             selected = selectedClass == medicationClass,
                             onClick = {
                                 selectedClass = medicationClass
-                                officialCatalogExpanded = true
+                                if (selectedSection == "oficial") officialCatalogExpanded = true
                             },
                             label = { Text(medicationClass) },
                         )
                     }
                 }
                 Text(
-                    text = "Detalhados: ${medications.size} | Catalogo oficial: ${if (shouldShowOfficialCatalog) totalOfficialResults else "sob demanda"}",
+                    text = "Classe atual: ${selectedClass ?: "sem filtro"} | Guias internos: ${medications.size} | Catalogo oficial: ${if (officialCatalog.isNotEmpty()) officialCatalog.size else "sob demanda"}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
-                    text = "A base oficial da Anvisa carregada no app usa a planilha CMED de 09/03/2026 com 24.664 apresentacoes. O catalogo oficial agora abre sob demanda para evitar travadas na entrada da tela e manter a revisao mais leve.",
+                    text = "A entrada da tela agora prioriza classes medicamentosas. Ao tocar numa classe, a tela abre todos os medicamentos dela. O catalogo oficial da Anvisa continua separado em um menu proprio para evitar travadas.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                if (!shouldShowOfficialCatalog) {
+                if (selectedSection == "guias") {
+                    Card(
+                        shape = RoundedCornerShape(22.dp),
+                        colors = CardDefaults.cardColors(containerColor = ui.cardAlt),
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            Text("Classes do app", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
+                            Text(
+                                "Escolha uma classe para abrir todos os medicamentos estudados nessa categoria.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                            Row(
+                                modifier = Modifier.horizontalScroll(rememberScrollState()),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            ) {
+                                curatedClasses.forEach { medicationClass ->
+                                    MedicationClassMenuCard(
+                                        title = medicationClass,
+                                        count = curatedClassCounts[medicationClass] ?: 0,
+                                        selected = selectedClass == medicationClass,
+                                        onClick = { selectedClass = medicationClass },
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                if (selectedSection == "oficial" && !shouldShowOfficialCatalog) {
                     OutlinedButton(
                         onClick = { officialCatalogExpanded = true },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text("Abrir catalogo oficial da Anvisa")
+                        Text(if (officialCatalogLoading) "Carregando catalogo oficial..." else "Abrir catalogo oficial da Anvisa")
                     }
                 }
             }
         }
-        medications.forEach { medication ->
-            MedicationStudyCard(
-                medication = medication,
-                onOpenBulario = { uriHandler.openUri(medication.anvisaUrl) },
-                onOpenSearch = { uriHandler.openUri(medication.anvisaSearchUrl) },
-            )
+        if (selectedSection == "guias") {
+            if (medications.isEmpty()) {
+                Card(
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(containerColor = ui.card),
+                ) {
+                    Text(
+                        text = "Nenhum medicamento interno encontrado para essa busca nessa classe.",
+                        modifier = Modifier.padding(20.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            } else {
+                Card(
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(containerColor = ui.card),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp),
+                        verticalArrangement = Arrangement.spacedBy(14.dp),
+                    ) {
+                        Text("Medicamentos da classe", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                        Text(
+                            "Todos os medicamentos encontrados nessa classe aparecem abaixo, em sequencia.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Row(
+                            modifier = Modifier.horizontalScroll(rememberScrollState()),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        ) {
+                            medications.forEach { medication ->
+                                FilterChip(
+                                    selected = false,
+                                    onClick = { },
+                                    label = { Text(medication.title) },
+                                )
+                            }
+                        }
+                    }
+                }
+                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    medications.forEach { medication ->
+                        MedicationStudyCard(
+                            medication = medication,
+                            onOpenBulario = { uriHandler.openUri(medication.anvisaUrl) },
+                            onOpenSearch = { uriHandler.openUri(medication.anvisaSearchUrl) },
+                        )
+                    }
+                }
+            }
         }
-        if (shouldShowOfficialCatalog && officialPreview.isNotEmpty()) {
+        if (selectedSection == "oficial" && shouldShowOfficialCatalog) {
             Card(
                 shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(containerColor = ui.card),
@@ -581,10 +704,40 @@ fun MedicationStudySection() {
                 ) {
                     Text("Catalogo oficial Anvisa", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
                     Text(
-                        text = "Esses cards usam o mesmo formato dos principais. O enriquecimento clinico e derivado da classe terapeutica oficial da Anvisa e deve ser confirmado na bula do produto quando voce precisar do detalhe fino.",
+                        text = "Escolha uma classe farmacologica oficial para abrir os medicamentos dessa classe. A lista vem do catalogo Anvisa/CMED incluido no app e e carregada sob demanda para evitar travadas.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
+                    Row(
+                        modifier = Modifier.horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        officialClassMenu.forEach { medicationClass ->
+                            MedicationClassMenuCard(
+                                title = medicationClass,
+                                count = officialClassCounts[medicationClass] ?: 0,
+                                selected = selectedClass == medicationClass,
+                                onClick = {
+                                    selectedClass = medicationClass
+                                    officialVisibleCount = 24
+                                },
+                            )
+                        }
+                    }
+                    if (officialClassMenu.isEmpty()) {
+                        Text(
+                            text = "Nenhuma classe oficial encontrada para essa busca.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    if (selectedClass.isNullOrBlank() && query.trim().isBlank()) {
+                        Text(
+                            text = "Toque em uma classe para abrir os medicamentos. Use a busca para localizar classes especificas, como antibioticos, antihipertensivos ou analgesicos.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                     officialPreview.forEach { item ->
                         val detailedItem = MedicationEnrichmentEngine.enrich(item)
                         OfficialCatalogDetailedCard(
@@ -987,6 +1140,43 @@ private fun MedicationStudyCard(
 }
 
 @Composable
+private fun MedicationClassMenuCard(
+    title: String,
+    count: Int,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    val ui = studyUiTokens()
+    Card(
+        modifier = Modifier
+            .width(190.dp)
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(22.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (selected) ui.inputHighlight else ui.card,
+        ),
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Text(
+                text = if (selected) "Classe ativa" else "Classe",
+                style = MaterialTheme.typography.labelMedium,
+                color = ui.accent,
+                fontWeight = FontWeight.Bold,
+            )
+            Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
+            Text(
+                "$count medicamentos estudados",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
 private fun PublicChatMessageCard(
     message: PublicChatMessage,
     isOwnMessage: Boolean,
@@ -1212,6 +1402,37 @@ private fun guidedAiQuestions(question: String): List<String> {
             "Qual parte desse tema voce quer aprofundar primeiro?",
             "Voce quer uma explicacao tecnica, um resumo rapido ou conduta de enfermagem?",
             "Quer que a resposta priorize sinais e sintomas, intervencoes ou riscos?",
+        )
+    }
+}
+
+private fun guidedKnowledgeQuestions(question: String): List<String> {
+    val normalized = question.trim().lowercase()
+    return when {
+        normalized.isBlank() -> listOf(
+            "Qual e o tema principal da sua busca: medicacao, procedimento, urgencia, SAE ou infeccao?",
+            "Voce quer definicao, passo a passo, cuidados, riscos ou complicacoes?",
+            "Se for possivel, cite a via, o procedimento ou o medicamento para melhorar a busca.",
+        )
+        "intramuscular" in normalized || "agulha" in normalized || "im" in normalized -> listOf(
+            "Voce quer que a base procure sitio, material, volume, tecnica ou complicacoes da intramuscular?",
+            "A duvida e sobre medicacao IM geral ou vacinacao?",
+            "Vale citar o local desejado, como deltoide, ventroglutea ou vasto lateral.",
+        )
+        "venosa" in normalized || "endovenosa" in normalized || "puncao" in normalized || "ev" in normalized -> listOf(
+            "Seu foco e puncao, materiais, compatibilidade, diluicao ou complicacoes do acesso?",
+            "Voce quer revisar puncao periferica, cateter ou administracao da medicacao?",
+            "Se quiser, inclua o nome do medicamento ou dispositivo para a base cruzar melhor o conteudo.",
+        )
+        "sae" in normalized || "nanda" in normalized || "nic" in normalized || "noc" in normalized -> listOf(
+            "Voce quer ajuda para montar diagnostico, resultado esperado, intervencao ou avaliacao?",
+            "Essa revisao e para prova, evolucao clinica ou caso pratico?",
+            "Vale citar se o foco e coleta de dados, planejamento ou reavaliacao.",
+        )
+        else -> listOf(
+            "Qual parte desse tema voce quer aprofundar primeiro?",
+            "Voce quer uma explicacao tecnica, um resumo rapido ou um passo a passo?",
+            "Quer que a busca priorize sinais e sintomas, intervencoes, riscos ou documentacao?",
         )
     }
 }

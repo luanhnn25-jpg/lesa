@@ -1,0 +1,17 @@
+<div style="margin:0;padding:28px 12px;background:#071727;font-family:Arial,Helvetica,sans-serif">
+  <div style="max-width:540px;margin:auto;background:#f7fbff;border-radius:24px;overflow:hidden;color:#102033">
+    <div style="padding:26px;background:linear-gradient(135deg,#0b2236,#123e5d);color:white">
+      <div style="font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#ffd58a">EstudaViva</div>
+      <h1 style="margin:10px 0 8px;font-size:28px;line-height:1.08">Recuperar senha</h1>
+      <p style="margin:0;color:#d8ecff;line-height:1.55">Recebemos uma solicitacao para redefinir seu acesso.</p>
+    </div>
+    <div style="padding:26px">
+      <p style="font-size:16px;line-height:1.65">Clique no botao abaixo para criar uma nova senha com seguranca.</p>
+      <p style="text-align:center;margin:24px 0">
+        <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#ffb44a;color:#102033;text-decoration:none;font-weight:900;border-radius:999px;padding:15px 24px">Criar nova senha</a>
+      </p>
+      <p style="font-size:13px;line-height:1.6;color:#52657a">Se voce nao pediu essa recuperacao, ignore este e-mail. Nenhuma alteracao sera feita sem abrir o link.</p>
+      <p style="font-size:12px;line-height:1.5;color:#718096">Link direto:<br><span style="word-break:break-all;color:#2f6f9f">{{ .ConfirmationURL }}</span></p>
+    </div>
+  </div>
+</div>
