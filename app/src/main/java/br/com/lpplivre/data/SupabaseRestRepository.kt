@@ -22,6 +22,12 @@ data class PublicChatRoom(
     val description: String,
 )
 
+data class PublicPremiumMember(
+    val displayName: String,
+    val memberNumber: Int,
+    val premiumActivatedAt: String,
+)
+
 object SupabaseRestRepository {
     private val jsonContentType = "application/json; charset=utf-8"
 
@@ -203,6 +209,27 @@ object SupabaseRestRepository {
             bearerToken = accessToken,
             body = "{}",
         )
+    }
+
+    fun loadPublicPremiumMembers(): List<PublicPremiumMember> {
+        ensureConfigured()
+        val response = requestJsonArray(
+            method = "GET",
+            path = "/rest/v1/lpp_public_premium_members?select=display_name,member_number,premium_activated_at&order=member_number.asc&limit=24",
+            bearerToken = null,
+        )
+        return buildList {
+            for (index in 0 until response.length()) {
+                val item = response.getJSONObject(index)
+                add(
+                    PublicPremiumMember(
+                        displayName = item.optString("display_name").ifBlank { "Usuario Premium" },
+                        memberNumber = item.optInt("member_number", index + 1),
+                        premiumActivatedAt = item.optString("premium_activated_at"),
+                    ),
+                )
+            }
+        }
     }
 
     private fun loadOwnProfile(accessToken: String, userId: String): Pair<String, String> {

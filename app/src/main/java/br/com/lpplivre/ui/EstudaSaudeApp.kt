@@ -30,7 +30,6 @@ import androidx.compose.material.icons.automirrored.rounded.Chat
 import androidx.compose.material.icons.rounded.AutoStories
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.LocalHospital
-import androidx.compose.material.icons.rounded.Psychology
 import androidx.compose.material.icons.rounded.Quiz
 import androidx.compose.material.icons.rounded.SystemUpdateAlt
 import androidx.compose.material3.Button
@@ -72,6 +71,7 @@ import br.com.lpplivre.AppUpdateRepository
 import br.com.lpplivre.InAppUpdateInstaller
 import br.com.lpplivre.UpdateCheckResult
 import br.com.lpplivre.R
+import br.com.lpplivre.data.PublicPremiumMember
 import br.com.lpplivre.data.SupabaseRestRepository
 import br.com.lpplivre.data.UserSession
 import br.com.lpplivre.ui.theme.studyUiTokens
@@ -117,7 +117,6 @@ private fun StudyHomeScreen(
     val ui = studyUiTokens()
     val modules = remember {
         listOf(
-            StudyModule("IA de Estudo", "Assistente visual de enfermagem com resposta guiada por fontes oficiais.", Icons.Rounded.Psychology, Color(0xFFD8F7EE), Color(0xFF0F4C81)),
             StudyModule("Quiz", "Perguntas com gabarito e explicacao por fonte oficial.", Icons.Rounded.Quiz, Color(0xFFFFEDB6), Color(0xFF8D5200)),
             StudyModule("Medicamentos", "Cards de estudo com base e links da Anvisa.", Icons.Rounded.LocalHospital, Color(0xFFFFDCCD), Color(0xFFB44A27)),
             StudyModule("Fontes Oficiais", "Biblioteca brasileira clicavel e rastreavel.", Icons.Rounded.AutoStories, Color(0xFFD8EFFF), Color(0xFF205FA3)),
@@ -132,7 +131,7 @@ private fun StudyHomeScreen(
                     Column {
                         Text("EstudaViva", fontWeight = FontWeight.Black)
                         Text(
-                            text = "Estudo com IA, quiz, Anvisa e fontes brasileiras",
+                            text = "Quiz, Anvisa, fontes brasileiras e chat",
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -209,6 +208,7 @@ private fun StudyHomeScreen(
                 StudySection.Home -> {
                     item { HeroCard() }
                     item { UpdateCenterCard() }
+                    item { PremiumMembersCard() }
                     item { StudyMetricsCard() }
                     itemsIndexed(modules) { index, module ->
                         StudyModuleCard(
@@ -217,10 +217,6 @@ private fun StudyHomeScreen(
                         )
                     }
                     item { StudyRoadmapCard() }
-                }
-
-                StudySection.AI -> {
-                    item { AiStudySection() }
                 }
 
                 StudySection.Quiz -> {
@@ -289,13 +285,13 @@ private fun HeroCard() {
                     contentScale = ContentScale.Crop,
                 )
                 Text(
-                    text = "IA, quiz, medicamentos da Anvisa e fontes brasileiras.",
+                    text = "Quiz, medicamentos da Anvisa, fontes brasileiras e comunidade.",
                     style = MaterialTheme.typography.headlineMedium,
                     color = ui.heroText,
                     fontWeight = FontWeight.Black,
                 )
                 Text(
-                    text = "O foco agora e estudo com conteudo oficial: respostas guiadas, revisao, cards coloridos e links primarios para consulta.",
+                    text = "O foco agora e estudo com conteudo oficial: revisao, cards coloridos, links primarios e um espaco para reconhecer quem apoia o projeto.",
                     style = MaterialTheme.typography.bodyLarge,
                     color = ui.heroBody,
                 )
@@ -530,6 +526,100 @@ private fun StudyModuleCard(module: StudyModule, imageRes: Int) {
 }
 
 @Composable
+private fun PremiumMembersCard() {
+    val ui = studyUiTokens()
+    var members by remember { mutableStateOf<List<PublicPremiumMember>>(emptyList()) }
+    var failedToLoad by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        runCatching {
+            withContext(Dispatchers.IO) { SupabaseRestRepository.loadPublicPremiumMembers() }
+        }.onSuccess { loadedMembers ->
+            members = loadedMembers
+        }.onFailure {
+            failedToLoad = true
+        }
+    }
+
+    Card(
+        shape = RoundedCornerShape(26.dp),
+        colors = CardDefaults.cardColors(containerColor = ui.card),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Box(
+                    modifier = Modifier
+                        .size(54.dp)
+                        .clip(CircleShape)
+                        .background(horizontalGradient(listOf(Color(0xFFFFD66E), Color(0xFFFF8A3D)))),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text("VIP", color = Color.White, fontWeight = FontWeight.Black)
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("Mural Premium", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                    Text(
+                        "Quem apoia o EstudaViva ganha destaque simbolico no inicio do app.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+
+            if (members.isEmpty()) {
+                Text(
+                    text = if (failedToLoad) "Nao foi possivel carregar o mural agora." else "Carregando apoiadores premium...",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            } else {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    members.take(8).forEach { member ->
+                        PremiumMemberRow(member)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PremiumMemberRow(member: PublicPremiumMember) {
+    val medal = when (member.memberNumber) {
+        1 -> "Ouro"
+        2 -> "Prata"
+        3 -> "Bronze"
+        else -> "VIP"
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(18.dp))
+            .background(Color(0xFFFFF7DE))
+            .padding(14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Box(
+            modifier = Modifier
+                .size(42.dp)
+                .clip(CircleShape)
+                .background(horizontalGradient(listOf(Color(0xFFFFD66E), Color(0xFFFF8A3D)))),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text("#${member.memberNumber}", color = Color.White, fontWeight = FontWeight.Black, fontSize = 12.sp)
+        }
+        Column(modifier = Modifier.weight(1f)) {
+            Text(member.displayName, fontWeight = FontWeight.Black, color = Color(0xFF442A00))
+            Text("Apoiador Premium - Selo $medal", color = Color(0xFF7A4D00), style = MaterialTheme.typography.bodySmall)
+        }
+    }
+}
+
+@Composable
 private fun StudyMetricsCard() {
     val ui = studyUiTokens()
     Card(
@@ -548,9 +638,9 @@ private fun StudyMetricsCard() {
             )
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 MetricPill(
-                    label = "IA",
-                    value = "BR",
-                    accent = listOf(MaterialTheme.colorScheme.primary, ui.info),
+                    label = "Premium",
+                    value = "VIP",
+                    accent = listOf(Color(0xFFFFD66E), Color(0xFFFF8A3D)),
                     modifier = Modifier.weight(1f),
                 )
                 MetricPill(
@@ -613,12 +703,12 @@ private fun StudyRoadmapCard() {
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             Text(
-                text = "Foco da reconstrução",
+                text = "Foco da reconstrucao",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Black,
             )
             Text(
-                text = "1. IA com base oficial brasileira.\n2. Quiz explicado por fonte primaria.\n3. Medicamentos usando Anvisa.\n4. Biblioteca clicavel e rastreavel.",
+                text = "1. Reconhecer apoiadores premium.\n2. Quiz explicado por fonte primaria.\n3. Medicamentos usando Anvisa.\n4. Biblioteca clicavel e rastreavel.",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -714,7 +804,7 @@ private fun StudyLoginScreen(
                         fontWeight = FontWeight.Black,
                     )
                     Text(
-                        text = "Entre para revisar temas brasileiros oficiais, testar quiz, estudar medicamentos da Anvisa e usar a IA como guia de estudo.",
+                        text = "Entre para revisar temas brasileiros oficiais, testar quiz, estudar medicamentos da Anvisa e acompanhar os apoiadores premium.",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -817,8 +907,8 @@ private fun StudyLoginScreen(
 private fun QuickAccessBanner() {
     Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         QuickAccessChip(
-            label = "IA",
-            accent = listOf(MaterialTheme.colorScheme.primary, studyUiTokens().info),
+            label = "Premium",
+            accent = listOf(Color(0xFFFFD66E), Color(0xFFFF8A3D)),
             modifier = Modifier.weight(1f),
         )
         QuickAccessChip(
@@ -869,7 +959,6 @@ private enum class StudySection(
     val icon: ImageVector,
 ) {
     Home("Inicio", Icons.Rounded.Home),
-    AI("IA", Icons.Rounded.Psychology),
     Quiz("Quiz", Icons.Rounded.Quiz),
     Community("Chat", Icons.AutoMirrored.Rounded.Chat),
     Meds("Anvisa", Icons.Rounded.LocalHospital),

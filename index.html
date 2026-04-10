@@ -561,6 +561,134 @@
       gap:12px;
     }
 
+    .premium-wall{
+      background:
+        radial-gradient(circle at top left, rgba(255,214,110,.28), transparent 34%),
+        linear-gradient(180deg,#fffaf0,#ffffff);
+      border:1px solid rgba(217,119,6,.16);
+    }
+
+    .premium-wall-head{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:16px;
+      align-items:center;
+      margin-bottom:16px;
+    }
+
+    .premium-kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border-radius:999px;
+      padding:8px 12px;
+      background:#fff1c2;
+      color:#8a4b00;
+      font-size:12px;
+      font-weight:950;
+      letter-spacing:.03em;
+      margin-bottom:10px;
+      text-transform:uppercase;
+    }
+
+    .premium-wall h2{
+      margin:0 0 8px;
+      color:#5c3300;
+      font-size:28px;
+      line-height:1.15;
+    }
+
+    .premium-wall p{
+      margin:0;
+      color:#6b4a1a;
+      line-height:1.7;
+    }
+
+    .premium-seal{
+      width:92px;
+      height:92px;
+      border-radius:28px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(145deg,#ffd66e,#f59e0b);
+      color:#fff;
+      font-weight:1000;
+      font-size:22px;
+      box-shadow:0 18px 34px rgba(217,119,6,.24);
+      transform:rotate(5deg);
+    }
+
+    .premium-members{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .premium-member{
+      position:relative;
+      overflow:hidden;
+      border-radius:20px;
+      padding:16px;
+      background:#fff;
+      border:1px solid rgba(217,119,6,.14);
+      box-shadow:0 14px 26px rgba(120,53,15,.08);
+      min-height:132px;
+    }
+
+    .premium-member::after{
+      content:"";
+      position:absolute;
+      right:-28px;
+      bottom:-28px;
+      width:92px;
+      height:92px;
+      border-radius:50%;
+      background:rgba(245,158,11,.12);
+    }
+
+    .premium-rank{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:42px;
+      height:32px;
+      border-radius:999px;
+      background:linear-gradient(145deg,#ffd66e,#f59e0b);
+      color:#fff;
+      font-weight:1000;
+      font-size:12px;
+      margin-bottom:12px;
+    }
+
+    .premium-name{
+      position:relative;
+      z-index:1;
+      color:#1f2937;
+      font-size:17px;
+      font-weight:1000;
+      line-height:1.25;
+      word-break:break-word;
+    }
+
+    .premium-label{
+      position:relative;
+      z-index:1;
+      margin-top:8px;
+      color:#9a5a00;
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .premium-empty{
+      grid-column:1 / -1;
+      border-radius:18px;
+      padding:16px;
+      background:#fff;
+      color:#6b4a1a;
+      border:1px dashed rgba(217,119,6,.28);
+      font-weight:800;
+    }
+
     .stat-box{
       border-radius:16px;
       padding:16px;
@@ -1111,6 +1239,20 @@
         grid-template-columns:1fr;
       }
 
+      .premium-wall-head{
+        grid-template-columns:1fr;
+      }
+
+      .premium-seal{
+        width:72px;
+        height:72px;
+        border-radius:22px;
+      }
+
+      .premium-members{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
       .lpp-nav-inner{
         grid-template-columns:1fr;
       }
@@ -1148,6 +1290,7 @@
       .hero-points,
       .stats-grid,
       .risk-grid,
+      .premium-members,
       .ai-summary,
       .ai-grid{
         grid-template-columns:1fr;
@@ -1276,6 +1419,23 @@
           </div>
         </div>
       </aside>
+    </section>
+
+    <section class="lpp-card premium-wall" id="premium-membros">
+      <div class="premium-wall-head">
+        <div>
+          <div class="premium-kicker">Mural Premium</div>
+          <h2>Quem apoia o EstudaViva</h2>
+          <p>
+            Este espaco simboliza os usuarios premium do projeto. Mostramos apenas o nome publico de exibicao,
+            sem expor e-mail, id ou dados sensiveis.
+          </p>
+        </div>
+        <div class="premium-seal" aria-hidden="true">VIP</div>
+      </div>
+      <div class="premium-members" id="premiumMembers">
+        <div class="premium-empty">Carregando apoiadores premium...</div>
+      </div>
     </section>
 
     <section class="lpp-card app-download" id="aplicativo">
@@ -1782,6 +1942,56 @@
     }).format(new Date()) + ' (America/Sao_Paulo)';
 
     document.querySelectorAll('.auto-timestamp').forEach(el => el.textContent = stamp);
+  </script>
+  <script>
+    (function(){
+      const target = document.getElementById('premiumMembers');
+      if(!target) return;
+
+      const fallbackMembers = ['Luanhnn25', 'nauramatoos', 'cristianomariano185', 'matheusfernandobarros'];
+      const endpoint = 'https://owpswekkfaleauwjmahc.supabase.co/rest/v1/lpp_public_premium_members?select=display_name,member_number,premium_activated_at&order=member_number.asc&limit=24';
+      const anonKey = 'sb_publishable_I58BBfTZcWtPEIIDSuN5MA_sV8jfPfq';
+
+      function escapeHtml(value){
+        return String(value || '').replace(/[&<>"']/g, (char) => ({
+          '&':'&amp;',
+          '<':'&lt;',
+          '>':'&gt;',
+          '"':'&quot;',
+          "'":'&#039;'
+        }[char]));
+      }
+
+      function render(members){
+        if(!members.length){
+          target.innerHTML = '<div class="premium-empty">Ainda nao ha apoiadores premium para exibir.</div>';
+          return;
+        }
+        target.innerHTML = members.map((member, index) => {
+          const number = member.member_number || index + 1;
+          const name = member.display_name || member;
+          const seal = number === 1 ? 'Ouro' : number === 2 ? 'Prata' : number === 3 ? 'Bronze' : 'VIP';
+          return `
+            <article class="premium-member">
+              <div class="premium-rank">#${number}</div>
+              <div class="premium-name">${escapeHtml(name)}</div>
+              <div class="premium-label">Apoiador Premium - Selo ${seal}</div>
+            </article>
+          `;
+        }).join('');
+      }
+
+      fetch(endpoint, {
+        headers: {
+          apikey: anonKey,
+          Authorization: `Bearer ${anonKey}`
+        },
+        cache: 'no-store'
+      })
+        .then((response) => response.ok ? response.json() : Promise.reject(new Error('premium-list')))
+        .then((members) => render(Array.isArray(members) && members.length ? members : fallbackMembers))
+        .catch(() => render(fallbackMembers));
+    })();
   </script>
   <script>
     (function(){
