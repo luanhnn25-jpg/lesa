@@ -285,7 +285,7 @@ object StudyContentRepository {
             authority = "Cofen",
             coverLabel = "TECNICAS",
             coverSeed = 1,
-            url = "https://biblioteca.cofen.gov.br/guia-pratico-tecnicas-de-enfermagem/",
+            url = "https://biblioteca.cofen.gov.br/wp-content/uploads/2024/07/guia-pratico-tecnicas-de-enfermagem.pdf",
         ),
         NursingLibraryBook(
             id = "cofen_manual_procedimentos_2024",
@@ -357,7 +357,7 @@ object StudyContentRepository {
             authority = "Cofen",
             coverLabel = "SAE",
             coverSeed = 7,
-            url = "https://www.cofen.gov.br/resolucao-cofen-no-736-de-17-de-janeiro-de-2024/",
+            url = "https://www.cofen.gov.br/wp-content/uploads/2024/01/Resolucao-Cofen-no-736-2024-Dispoe-sobre-a-implementacao-do-Processo-de-Enfermagem-em-todo-contexto-socioambiental-onde-ocorre-o-cuidado-de-enfermagem.pdf",
         ),
         NursingLibraryBook(
             id = "educapes_processo_enfermagem",
@@ -369,7 +369,7 @@ object StudyContentRepository {
             authority = "eduCAPES",
             coverLabel = "PE",
             coverSeed = 8,
-            url = "https://educapes.capes.gov.br/handle/capes/1134209",
+            url = "https://educapes.capes.gov.br/bitstream/capes/1134209/2/Cartilha_%20Traduzindo%20o%20Processo%20de%20Enfermagem.pdf",
         ),
         NursingLibraryBook(
             id = "nanda_2024_2026",
@@ -441,7 +441,7 @@ object StudyContentRepository {
             authority = "Ministerio da Saude",
             coverLabel = "URG.",
             coverSeed = 14,
-            url = "https://www.gov.br/saude/pt-br/assuntos/noticias/2026/janeiro/ministerio-da-saude-atualiza-manual-de-enfermagem-para-qualificar-o-cuidado-as-pessoas-com-dengue",
+            url = "https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/guias-e-manuais/2026/dengue-manual-de-enfermagem.pdf",
         ),
         NursingLibraryBook(
             id = "anvisa_seguranca_paciente",

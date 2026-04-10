@@ -11,8 +11,8 @@ android {
         applicationId = "br.com.estudasaude.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 13
-        versionName = "1.1.2"
+        versionCode = 14
+        versionName = "1.1.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -62,6 +62,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("com.google.android.material:material:1.13.0")
+    implementation("com.github.mhiew:android-pdf-viewer:3.2.0-beta.3")
     implementation("org.json:json:20250517")
 
     debugImplementation("androidx.compose.ui:ui-tooling")

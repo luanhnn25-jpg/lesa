@@ -1,10 +1,10 @@
 package br.com.lpplivre.ui
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
 import android.util.Log
+import android.webkit.URLUtil
 import android.webkit.WebView
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -34,6 +34,7 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -56,7 +57,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -71,8 +71,10 @@ import br.com.lpplivre.data.PublicChatMessage
 import br.com.lpplivre.data.SupabaseRestRepository
 import br.com.lpplivre.data.UserSession
 import br.com.lpplivre.ui.theme.studyUiTokens
+import com.github.barteksc.pdfviewer.PDFView
 import java.io.File
 import java.io.FileOutputStream
+import java.io.BufferedInputStream
 import java.net.HttpURLConnection
 import java.net.URLEncoder
 import java.net.URL
@@ -850,33 +852,42 @@ private fun LibraryReaderCard(
 ) {
     val context = LocalContext.current
     val ui = studyUiTokens()
-    val readerUrl = remember(book.url) { libraryReaderUrl(book.url) }
-    val directPdf = remember(book.url) { isDirectPdfUrl(book.url) }
-    var readerStatus by remember(book.url) { mutableStateOf(if (directPdf) "Preparando leitor PDF integrado..." else "Abrindo visualizacao interna...") }
+    val fallbackUrl = remember(book.url) { libraryFallbackUrl(book.url) }
+    var isLoading by remember(book.url) { mutableStateOf(true) }
+    var readerStatus by remember(book.url) { mutableStateOf("Preparando leitor interno...") }
     var embeddedPdf by remember(book.url) { mutableStateOf<EmbeddedPdfDocument?>(null) }
-    var pdfFallback by remember(book.url) { mutableStateOf(false) }
+    var webFallbackUrl by remember(book.url) { mutableStateOf<String?>(null) }
 
     LaunchedEffect(book.url) {
         embeddedPdf = null
-        pdfFallback = false
-        if (directPdf) {
-            val result = runCatching {
-                withContext(Dispatchers.IO) {
-                    cacheEmbeddedPdf(context, book)
+        webFallbackUrl = null
+        isLoading = true
+        readerStatus = "Preparando leitor interno..."
+        val result = runCatching {
+            withContext(Dispatchers.IO) {
+                prepareLibraryDocument(context, book)
+            }
+        }
+        result
+            .onSuccess { prepared ->
+                when (prepared) {
+                    is PreparedLibraryDocument.Pdf -> {
+                        embeddedPdf = prepared.document
+                        readerStatus = "PDF carregado no leitor integrado."
+                    }
+
+                    is PreparedLibraryDocument.Web -> {
+                        webFallbackUrl = prepared.url
+                        readerStatus = "Livro carregado na visualizacao interna."
+                    }
                 }
             }
-            result
-                .onSuccess {
-                    embeddedPdf = it
-                    readerStatus = "PDF carregado no leitor integrado."
-                }
-                .onFailure {
-                    pdfFallback = true
-                    readerStatus = "Falha no modo PDF nativo. Abrindo a visualizacao interna alternativa."
-                }
-        } else {
-            readerStatus = "Abrindo visualizacao interna..."
-        }
+            .onFailure {
+                Log.e(LIBRARY_READER_TAG, "Falha ao preparar leitor para ${book.id}", it)
+                webFallbackUrl = fallbackUrl
+                readerStatus = "Nao foi possivel abrir o PDF no modo nativo. Tentando a visualizacao interna."
+            }
+        isLoading = false
     }
 
     Card(
@@ -887,7 +898,9 @@ private fun LibraryReaderCard(
         colors = CardDefaults.cardColors(containerColor = ui.cardAlt),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Row(
@@ -896,49 +909,97 @@ private fun LibraryReaderCard(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text("Leitor PDF", style = MaterialTheme.typography.labelLarge, color = ui.accent, fontWeight = FontWeight.Bold)
-                    Text(book.title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black)
+                    Text(
+                        text = book.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Black,
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
+                    )
                 }
                 OutlinedButton(onClick = onClose) {
                     Text("Fechar")
                 }
             }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
                 AssistChip(onClick = {}, label = { Text(book.category) })
                 AssistChip(onClick = {}, label = { Text(book.authority) })
-                AssistChip(onClick = {}, label = { Text(book.theme) })
             }
-              Text(
-                  text = readerStatus,
-                  style = MaterialTheme.typography.bodySmall,
-                  color = ui.accent,
-                  fontWeight = FontWeight.Bold,
-              )
-              when {
-                  directPdf && embeddedPdf != null && !pdfFallback -> {
+            Text(
+                text = readerStatus,
+                style = MaterialTheme.typography.bodySmall,
+                color = ui.accent,
+                fontWeight = FontWeight.Bold,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+            ) {
+                when {
+                  isLoading -> {
+                      Box(
+                          modifier = Modifier
+                              .fillMaxSize(),
+                          contentAlignment = Alignment.Center,
+                      ) {
+                          Column(
+                              horizontalAlignment = Alignment.CenterHorizontally,
+                              verticalArrangement = Arrangement.spacedBy(12.dp),
+                          ) {
+                              CircularProgressIndicator(color = ui.accent)
+                              Text(
+                                  text = "Preparando o leitor do livro...",
+                                  color = MaterialTheme.colorScheme.onSurfaceVariant,
+                              )
+                          }
+                      }
+                  }
+
+                  embeddedPdf != null -> {
                       EmbeddedPdfReader(
                           document = embeddedPdf!!,
                           onStatusChange = { readerStatus = it },
                       )
                   }
 
-                  else -> {
+                  webFallbackUrl != null -> {
                       EmbeddedWebReader(
-                          readerUrl = readerUrl,
-                          onLoaded = { readerStatus = if (directPdf) "Modo alternativo aberto dentro do app." else "Livro carregado no leitor interno." },
+                          readerUrl = webFallbackUrl!!,
+                          onLoaded = { readerStatus = "Livro carregado no leitor interno." },
                           onError = { readerStatus = "Nao foi possivel carregar o leitor interno. Abra a fonte original pelo botao abaixo." },
                       )
                   }
-              }
-              OutlinedButton(onClick = onOpenExternal, modifier = Modifier.fillMaxWidth()) {
-                  Icon(Icons.AutoMirrored.Rounded.OpenInNew, contentDescription = "Abrir externo")
-                  Spacer(modifier = Modifier.width(8.dp))
-                  Text("Abrir PDF na fonte original")
-              }
+
+                  else -> {
+                      Box(
+                          modifier = Modifier
+                              .fillMaxSize(),
+                          contentAlignment = Alignment.Center,
+                      ) {
+                          Text(
+                              text = "Nao foi possivel preparar o leitor interno deste livro.",
+                              color = MaterialTheme.colorScheme.onSurfaceVariant,
+                          )
+                      }
+                  }
+                }
+            }
+            OutlinedButton(onClick = onOpenExternal, modifier = Modifier.fillMaxWidth()) {
+                Icon(Icons.AutoMirrored.Rounded.OpenInNew, contentDescription = "Abrir externo")
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Abrir PDF na fonte original")
+            }
         }
     }
 }
 
-private fun libraryReaderUrl(url: String): String {
+private fun libraryFallbackUrl(url: String): String {
     val cleanUrl = url.trim()
     val lower = cleanUrl.lowercase()
     if (!lower.contains(".pdf")) return cleanUrl
@@ -978,6 +1039,10 @@ private fun EmbeddedWebReader(
                 settings.domStorageEnabled = true
                 settings.builtInZoomControls = true
                 settings.displayZoomControls = false
+                settings.setSupportZoom(true)
+                settings.loadWithOverviewMode = true
+                settings.useWideViewPort = true
+                settings.mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
                 loadUrl(readerUrl)
             }
         },
@@ -992,44 +1057,16 @@ private fun EmbeddedPdfReader(
     document: EmbeddedPdfDocument,
     onStatusChange: (String) -> Unit,
 ) {
-    var currentPage by rememberSaveable(document.file.absolutePath) { mutableStateOf(0) }
-    val pageBitmap = remember(document.file.absolutePath, currentPage) {
-        renderPdfPage(document.file, currentPage)
-    }
-
-    LaunchedEffect(currentPage, document.pageCount) {
-        onStatusChange("Pagina ${currentPage + 1} de ${document.pageCount} no leitor integrado.")
-    }
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(520.dp),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            AssistChip(
-                onClick = {},
-                label = { Text("Pagina ${currentPage + 1}/${document.pageCount}") },
-            )
-            OutlinedButton(
-                onClick = { currentPage = (currentPage - 1).coerceAtLeast(0) },
-                enabled = currentPage > 0,
-                modifier = Modifier.weight(1f),
-            ) {
-                Text("Anterior")
-            }
-            Button(
-                onClick = { currentPage = (currentPage + 1).coerceAtMost(document.pageCount - 1) },
-                enabled = currentPage < document.pageCount - 1,
-                modifier = Modifier.weight(1f),
-            ) {
-                Text("Proxima")
-            }
-        }
+        AssistChip(
+            onClick = {},
+            label = { Text("${document.pageCount} paginas disponiveis") },
+        )
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1037,11 +1074,38 @@ private fun EmbeddedPdfReader(
             shape = RoundedCornerShape(22.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White),
         ) {
-            Image(
-                bitmap = pageBitmap.asImageBitmap(),
-                contentDescription = "Pagina ${currentPage + 1} do PDF",
+            AndroidView(
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Fit,
+                factory = { context ->
+                    PDFView(context, null).apply {
+                        fromFile(document.file)
+                            .defaultPage(0)
+                            .enableSwipe(true)
+                            .swipeHorizontal(false)
+                            .enableDoubletap(true)
+                            .pageFitPolicy(com.github.barteksc.pdfviewer.util.FitPolicy.WIDTH)
+                            .fitEachPage(true)
+                            .spacing(12)
+                            .autoSpacing(true)
+                            .pageSnap(true)
+                            .pageFling(true)
+                            .onLoad { totalPages ->
+                                onStatusChange("PDF carregado com $totalPages paginas no leitor integrado.")
+                            }
+                            .onPageChange { page, totalPages ->
+                                onStatusChange("Pagina ${page + 1} de $totalPages no leitor integrado.")
+                            }
+                            .onError { error ->
+                                Log.e(LIBRARY_READER_TAG, "Erro ao renderizar PDF integrado ${document.file.name}", error)
+                                onStatusChange("Nao foi possivel renderizar este PDF no leitor interno.")
+                            }
+                            .onPageError { page, error ->
+                                Log.e(LIBRARY_READER_TAG, "Erro na pagina $page do PDF ${document.file.name}", error)
+                                onStatusChange("Falha ao abrir a pagina ${page + 1} deste PDF.")
+                            }
+                            .load()
+                    }
+                },
             )
         }
     }
@@ -1052,30 +1116,76 @@ private data class EmbeddedPdfDocument(
     val pageCount: Int,
 )
 
+private sealed interface PreparedLibraryDocument {
+    data class Pdf(val document: EmbeddedPdfDocument) : PreparedLibraryDocument
+    data class Web(val url: String) : PreparedLibraryDocument
+}
+
 private const val LIBRARY_READER_TAG = "LibraryReader"
 
 private fun isDirectPdfUrl(url: String): Boolean = url.trim().lowercase().contains(".pdf")
 
+private val pdfHrefRegex = Regex("""href\s*=\s*["']([^"']+)["']""", RegexOption.IGNORE_CASE)
+
+private fun prepareLibraryDocument(
+    context: Context,
+    book: NursingLibraryBook,
+): PreparedLibraryDocument {
+    val cachedPdf = runCatching { cacheEmbeddedPdf(context, book) }.getOrNull()
+    if (cachedPdf != null) {
+        return PreparedLibraryDocument.Pdf(cachedPdf)
+    }
+    return PreparedLibraryDocument.Web(libraryFallbackUrl(book.url))
+}
+
 private fun cacheEmbeddedPdf(
     context: Context,
     book: NursingLibraryBook,
+    allowRedownload: Boolean = true,
 ): EmbeddedPdfDocument {
-    val cachedFile = File(context.cacheDir, "library-${book.id}.pdf")
+    val resolvedPdfUrl = resolvePdfUrlForBook(book)
+    val cacheKey = resolvedPdfUrl.hashCode().toUInt().toString(16)
+    val cachedFile = File(context.cacheDir, "library-${book.id}-$cacheKey.pdf")
     if (!cachedFile.exists() || cachedFile.length() == 0L) {
-        val connection = (URL(book.url).openConnection() as HttpURLConnection).apply {
+        val connection = (URL(resolvedPdfUrl).openConnection() as HttpURLConnection).apply {
             instanceFollowRedirects = true
             connectTimeout = 20_000
             readTimeout = 30_000
             requestMethod = "GET"
-            setRequestProperty("User-Agent", "Mozilla/5.0 (Android) EstudaViva/1.1.0")
+            setRequestProperty("User-Agent", "Mozilla/5.0 (Android) EstudaViva/1.1.2")
             setRequestProperty("Accept", "application/pdf,*/*")
+            setRequestProperty("Accept-Language", "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7")
         }
         try {
             connection.connect()
             if (connection.responseCode !in 200..299) {
                 throw IllegalStateException("Falha ao baixar PDF: HTTP ${connection.responseCode}")
             }
-            connection.inputStream.use { input ->
+            val contentType = connection.contentType.orEmpty().lowercase()
+            val finalUrl = connection.url?.toString().orEmpty()
+            val disposition = connection.getHeaderField("Content-Disposition").orEmpty().lowercase()
+            val likelyPdf = contentType.contains("pdf") ||
+                disposition.contains(".pdf") ||
+                isDirectPdfUrl(finalUrl) ||
+                finalUrl.contains("/@@download/file") ||
+                URLUtil.guessFileName(finalUrl, disposition, contentType).lowercase().endsWith(".pdf")
+
+            BufferedInputStream(connection.inputStream).use { input ->
+                input.mark(32)
+                val header = ByteArray(5)
+                val bytesRead = input.read(header)
+                input.reset()
+                val headerLooksLikePdf =
+                    bytesRead >= 4 &&
+                    header[0] == '%'.code.toByte() &&
+                    header[1] == 'P'.code.toByte() &&
+                    header[2] == 'D'.code.toByte() &&
+                    header[3] == 'F'.code.toByte()
+
+                if (!likelyPdf && !headerLooksLikePdf) {
+                    throw IllegalStateException("O recurso retornado nao parece ser um PDF valido.")
+                }
+
                 FileOutputStream(cachedFile).use { output ->
                     input.copyTo(output)
                 }
@@ -1089,36 +1199,92 @@ private fun cacheEmbeddedPdf(
         }
     }
 
-    val descriptor = ParcelFileDescriptor.open(cachedFile, ParcelFileDescriptor.MODE_READ_ONLY)
-    val renderer = PdfRenderer(descriptor)
-    val pageCount = try {
-        renderer.pageCount
-    } catch (error: Exception) {
-        Log.e(LIBRARY_READER_TAG, "Erro ao abrir PDF integrado para ${book.id}", error)
-        throw error
-    } finally {
-        renderer.close()
+    return openEmbeddedPdfDocument(book.id, cachedFile, retryOnFailure = allowRedownload) {
+        if (cachedFile.exists()) cachedFile.delete()
+        cacheEmbeddedPdf(context, book, allowRedownload = false)
     }
-    descriptor.close()
-    return EmbeddedPdfDocument(file = cachedFile, pageCount = pageCount)
 }
 
-private fun renderPdfPage(
-    file: File,
-    pageIndex: Int,
-): Bitmap {
-    val descriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
+private fun resolvePdfUrlForBook(book: NursingLibraryBook): String {
+    val cleanUrl = book.url.trim()
+    if (cleanUrl.isBlank()) {
+        throw IllegalStateException("Livro sem URL para leitura.")
+    }
+    if (isDirectPdfUrl(cleanUrl) || cleanUrl.lowercase().contains("/@@download/file")) {
+        return cleanUrl
+    }
+
+    val discoveredPdf = discoverPdfUrlFromWebPage(cleanUrl)
+    if (discoveredPdf != null) {
+        Log.d(LIBRARY_READER_TAG, "PDF descoberto dinamicamente para ${book.id}: $discoveredPdf")
+        return discoveredPdf
+    }
+
+    throw IllegalStateException("Nao foi encontrado PDF direto para ${book.id}.")
+}
+
+private fun discoverPdfUrlFromWebPage(pageUrl: String): String? {
+    val connection = (URL(pageUrl).openConnection() as HttpURLConnection).apply {
+        instanceFollowRedirects = true
+        connectTimeout = 20_000
+        readTimeout = 30_000
+        requestMethod = "GET"
+        setRequestProperty("User-Agent", "Mozilla/5.0 (Android) EstudaViva/1.1.2")
+        setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+        setRequestProperty("Accept-Language", "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7")
+    }
+
+    return try {
+        connection.connect()
+        if (connection.responseCode !in 200..299) return null
+        val finalUrl = connection.url?.toString().orEmpty().ifBlank { pageUrl }
+        val body = BufferedInputStream(connection.inputStream).bufferedReader().use { it.readText() }
+        val candidates = pdfHrefRegex
+            .findAll(body)
+            .map { match -> match.groupValues[1] }
+            .map { href ->
+                URL(URL(finalUrl), href.replace("&amp;", "&")).toString()
+            }
+            .filter { candidate ->
+                val lower = candidate.lowercase()
+                lower.contains(".pdf") || lower.contains("/@@download/file")
+            }
+            .distinct()
+            .toList()
+
+        candidates.firstOrNull()
+    } catch (error: Exception) {
+        Log.e(LIBRARY_READER_TAG, "Erro ao procurar PDF dentro da pagina $pageUrl", error)
+        null
+    } finally {
+        connection.disconnect()
+    }
+}
+
+private fun openEmbeddedPdfDocument(
+    bookId: String,
+    cachedFile: File,
+    retryOnFailure: Boolean,
+    onRetry: () -> EmbeddedPdfDocument,
+): EmbeddedPdfDocument {
+    val descriptor = ParcelFileDescriptor.open(cachedFile, ParcelFileDescriptor.MODE_READ_ONLY)
     val renderer = PdfRenderer(descriptor)
-    val page = renderer.openPage(pageIndex)
-    val width = (page.width * 2).coerceAtLeast(1200)
-    val height = (page.height * 2).coerceAtLeast(1600)
-    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-    bitmap.eraseColor(android.graphics.Color.WHITE)
-    page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-    page.close()
-    renderer.close()
-    descriptor.close()
-    return bitmap
+    return try {
+        val pageCount = renderer.pageCount
+        EmbeddedPdfDocument(file = cachedFile, pageCount = pageCount)
+    } catch (error: Exception) {
+        Log.e(LIBRARY_READER_TAG, "Erro ao abrir PDF integrado para $bookId", error)
+        renderer.close()
+        descriptor.close()
+        if (retryOnFailure && cachedFile.exists()) {
+            cachedFile.delete()
+            return onRetry()
+        }
+        throw error
+    } finally {
+        runCatching { renderer.close() }
+        runCatching { descriptor.close() }
+    }
 }
 
 @Composable
