@@ -1,496 +1,660 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Avaliação do Projeto</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b3d91">
+  <meta name="description" content="Avalie o site e o produto LPP GUARD.">
+  <title>Avaliação | LPP GUARD</title>
 
-<style>
-html, body{
-  margin:0;
-  padding:0;
-}
+  <style>
+    :root {
+      --blue-900: #082c63;
+      --blue-800: #0b3d91;
+      --blue-600: #0f5bd3;
+      --blue-100: #eaf2ff;
+      --ink: #17243b;
+      --muted: #5b6880;
+      --border: #dce5f2;
+      --surface: #ffffff;
+      --page: #f3f6fb;
+      --radius: 22px;
+      --shadow: 0 16px 42px rgba(8, 44, 99, .09);
+    }
 
-body.avaliacao{
-  margin:0;
-  font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color:#0f172a;
-  background:
-    radial-gradient(1200px 600px at 10% -10%, rgba(11,91,211,.14), transparent 55%),
-    radial-gradient(900px 500px at 90% 10%, rgba(11,61,145,.12), transparent 55%),
-    #eef2f6;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-body.avaliacao{
-  --a-blue-1:#0b3d91;
-  --a-blue-2:#0f5bd3;
-  --a-blue-3:#0b5bd3;
-  --a-navy:#082c63;
-  --a-card:#ffffff;
-  --a-muted:#475569;
-  --a-border:rgba(15, 23, 42, .10);
-  --a-radius:20px;
-  --a-shadow:0 12px 30px rgba(2,6,23,.10);
-  --a-shadow-2:0 18px 45px rgba(2,6,23,.14);
-  --a-soft:0 10px 24px rgba(2,6,23,.08);
-  --a-ring:0 0 0 4px rgba(56,130,246,.18);
-}
+    html {
+      scroll-behavior: smooth;
+    }
 
-body.avaliacao *{ box-sizing:border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(850px 420px at 0% 0%,
+          rgba(15, 91, 211, .10), transparent 65%),
+        radial-gradient(700px 380px at 100% 8%,
+          rgba(8, 44, 99, .08), transparent 60%),
+        var(--page);
+      line-height: 1.55;
+    }
 
-body.avaliacao header{
-  background:
-    radial-gradient(circle at top center, rgba(255,255,255,.18), transparent 40%),
-    linear-gradient(90deg, var(--a-blue-1), var(--a-blue-2));
-  color:#fff;
-  text-align:center;
-  padding:46px 15px 28px;
-  position:relative;
-  overflow:hidden;
-  box-shadow:0 14px 28px rgba(2,6,23,.18);
-  border-bottom:1px solid rgba(255,255,255,.10);
-}
+    .hero {
+      position: relative;
+      overflow: hidden;
+      color: white;
+      text-align: center;
+      padding: 46px 18px 38px;
+      background: linear-gradient(
+        125deg, var(--blue-900), var(--blue-600)
+      );
+    }
 
-body.avaliacao header::after{
-  content:"";
-  position:absolute;
-  inset:-40px -120px auto -120px;
-  height:180px;
-  background:radial-gradient(circle at 50% 40%, rgba(255,255,255,.20), transparent 60%);
-  pointer-events:none;
-}
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      background: rgba(255,255,255,.07);
+    }
 
-body.avaliacao header h1{
-  margin:0;
-  font-size:clamp(24px, 3.6vw, 34px);
-  font-weight:1000;
-  letter-spacing:.2px;
-  text-shadow:0 10px 24px rgba(2,6,23,.18);
-  position:relative;
-  z-index:1;
-}
+    .hero::before {
+      width: 280px;
+      height: 280px;
+      top: -180px;
+      left: -40px;
+    }
 
-body.avaliacao header p{
-  margin-top:8px;
-  font-size:14px;
-  opacity:.94;
-  position:relative;
-  z-index:1;
-  font-weight:700;
-}
+    .hero::after {
+      width: 360px;
+      height: 360px;
+      right: -170px;
+      bottom: -280px;
+    }
 
-body.avaliacao nav{
-  background:rgba(8,44,99,.94);
-  backdrop-filter:blur(10px);
-  position:sticky;
-  top:0;
-  z-index:50;
-  padding:10px 12px;
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
-  box-shadow:0 12px 24px rgba(2,6,23,.12);
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+    }
 
-body.avaliacao nav a{
-  color:#eaf2ff;
-  text-decoration:none;
-  font-weight:900;
-  font-size:14px;
-  padding:10px 12px;
-  border-radius:12px;
-  white-space:nowrap;
-  transition:transform .15s ease, background .15s ease, box-shadow .15s ease;
-  outline:none;
-  background:rgba(255,255,255,.04);
-}
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 7px 12px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 999px;
+      background: rgba(255,255,255,.10);
+      font-size: .82rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
 
-body.avaliacao nav a:hover{
-  background:rgba(255,255,255,0.14);
-  transform:translateY(-1px);
-  box-shadow:0 10px 18px rgba(2,6,23,.18);
-}
+    .brand-mark {
+      display: inline-grid;
+      place-items: center;
+      width: 23px;
+      height: 23px;
+      border-radius: 7px;
+      background: white;
+      color: var(--blue-800);
+      font-weight: 950;
+    }
 
-body.avaliacao nav a:focus-visible{
-  box-shadow:var(--a-ring);
-  background:rgba(255,255,255,0.14);
-}
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      line-height: 1.12;
+      letter-spacing: -.035em;
+    }
 
-body.avaliacao nav a[aria-current="page"]{
-  background:rgba(255,255,255,0.18);
-  outline:1px solid rgba(255,255,255,.16);
-}
+    .hero p {
+      max-width: 590px;
+      margin: 13px auto 0;
+      color: #eaf2ff;
+    }
 
-body.avaliacao main{
-  max-width:760px;
-  margin:24px auto 60px;
-  padding:0 14px;
-}
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(8, 44, 99, .96);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 22px rgba(8,44,99,.12);
+    }
 
-body.avaliacao .intro{
-  background:linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
-  padding:22px;
-  border-radius:var(--a-radius);
-  box-shadow:var(--a-shadow);
-  border:1px solid var(--a-border);
-  margin-bottom:18px;
-  position:relative;
-  overflow:hidden;
-}
+    nav {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 9px 14px;
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
 
-body.avaliacao .intro::before{
-  content:"";
-  position:absolute;
-  inset:auto -80px -90px auto;
-  width:220px;
-  height:220px;
-  border-radius:50%;
-  background:radial-gradient(circle at center, rgba(11,91,211,.10), transparent 65%);
-  pointer-events:none;
-}
+    nav::-webkit-scrollbar {
+      display: none;
+    }
 
-body.avaliacao .intro h2{
-  margin:0 0 10px;
-  color:#0b2b63;
-  font-size:24px;
-  font-weight:1000;
-  line-height:1.15;
-  position:relative;
-  z-index:1;
-}
+    nav a {
+      flex: 0 0 auto;
+      color: #edf4ff;
+      text-decoration: none;
+      font-weight: 750;
+      font-size: .88rem;
+      padding: 9px 12px;
+      border-radius: 11px;
+      transition: background .18s ease;
+    }
 
-body.avaliacao .intro p{
-  margin:0;
-  color:#334155;
-  line-height:1.7;
-  font-size:15px;
-  position:relative;
-  z-index:1;
-}
+    nav a:hover,
+    nav a[aria-current="page"] {
+      background: rgba(255,255,255,.16);
+    }
 
-body.avaliacao .card{
-  background:linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.98));
-  padding:24px;
-  border-radius:var(--a-radius);
-  box-shadow:var(--a-shadow);
-  border:1px solid var(--a-border);
-  position:relative;
-  overflow:hidden;
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-  will-change:transform;
-}
+    nav a:focus-visible,
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid #8bbcff;
+      outline-offset: 3px;
+    }
 
-body.avaliacao .card::before{
-  content:"";
-  position:absolute;
-  inset:-2px;
-  background:radial-gradient(700px 260px at 20% 0%, rgba(11,91,211,.10), transparent 55%);
-  opacity:0;
-  transition:opacity .18s ease;
-  pointer-events:none;
-}
+    main {
+      width: min(100% - 28px, 760px);
+      margin: 28px auto 60px;
+    }
 
-body.avaliacao .card:hover{
-  transform:translateY(-3px);
-  box-shadow:var(--a-shadow-2);
-  border-color:rgba(11,91,211,.22);
-}
+    .intro,
+    .form-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
 
-body.avaliacao .card:hover::before{ opacity:1; }
+    .intro {
+      padding: 23px 25px;
+      margin-bottom: 18px;
+    }
 
-body.avaliacao .card:focus-within{
-  box-shadow:var(--a-shadow-2), var(--a-ring);
-  border-color:rgba(11,91,211,.30);
-}
+    .eyebrow {
+      color: var(--blue-600);
+      font-size: .78rem;
+      font-weight: 900;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin: 0 0 7px;
+    }
 
-body.avaliacao .section-title{
-  font-size:22px;
-  font-weight:950;
-  margin:0 0 12px;
-  color:#0b2b63;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  position:relative;
-  z-index:1;
-}
+    .intro h2 {
+      margin: 0 0 8px;
+      color: var(--blue-900);
+      font-size: clamp(1.25rem, 3vw, 1.65rem);
+    }
 
-body.avaliacao .section-title::before{
-  content:"";
-  width:4px;
-  height:22px;
-  border-radius:999px;
-  background:var(--a-blue-3);
-  box-shadow:0 10px 18px rgba(11,91,211,.25);
-}
+    .intro p {
+      color: var(--muted);
+    }
 
-body.avaliacao .muted{
-  color:var(--a-muted);
-  font-size:14px;
-  line-height:1.65;
-  margin:0 0 4px;
-  position:relative;
-  z-index:1;
-}
+    .form-card {
+      padding: clamp(20px, 4vw, 30px);
+    }
 
-body.avaliacao label{
-  font-weight:900;
-  display:block;
-  margin-top:16px;
-  color:#0b2b63;
-  position:relative;
-  z-index:1;
-}
+    .form-heading {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      margin-bottom: 22px;
+    }
 
-body.avaliacao .estrelas{
-  display:flex;
-  gap:10px;
-  margin-top:10px;
-  flex-wrap:wrap;
-  position:relative;
-  z-index:1;
-}
+    .heading-icon {
+      display: grid;
+      place-items: center;
+      flex: 0 0 44px;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--blue-100);
+      color: var(--blue-800);
+      font-size: 1.4rem;
+    }
 
-body.avaliacao .estrelas input{
-  position:absolute;
-  opacity:0;
-  pointer-events:none;
-}
+    .form-heading h2 {
+      margin: 0;
+      color: var(--blue-900);
+      font-size: 1.35rem;
+    }
 
-body.avaliacao .estrelas label{
-  font-size:22px;
-  cursor:pointer;
-  background:#f6f8ff;
-  padding:10px 12px;
-  border-radius:14px;
-  border:1px solid rgba(15,23,42,.12);
-  box-shadow:var(--a-soft);
-  transition:transform .14s ease, box-shadow .14s ease, background .14s ease, border-color .14s ease;
-  user-select:none;
-}
+    .form-heading p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: .93rem;
+    }
 
-body.avaliacao .estrelas label:hover{
-  transform:translateY(-1px);
-  box-shadow:0 16px 28px rgba(2,6,23,.10);
-  border-color:rgba(11,91,211,.20);
-}
+    fieldset {
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      padding: 18px;
+      margin: 0 0 17px;
+      min-width: 0;
+    }
 
-body.avaliacao .estrelas input:checked + label{
-  background:#ffe8a3;
-  border-color:rgba(148,111,0,.25);
-  box-shadow:0 18px 34px rgba(2,6,23,.12);
-}
+    legend {
+      padding: 0 6px;
+      color: var(--blue-900);
+      font-weight: 850;
+    }
 
-body.avaliacao textarea{
-  width:100%;
-  padding:13px 14px;
-  border-radius:14px;
-  border:1px solid rgba(15,23,42,.16);
-  margin-top:8px;
-  min-height:130px;
-  resize:vertical;
-  font-size:15px;
-  outline:none;
-  transition:box-shadow .14s ease, border-color .14s ease;
-  background:#fff;
-  position:relative;
-  z-index:1;
-}
+    .question-number {
+      display: inline-grid;
+      place-items: center;
+      width: 25px;
+      height: 25px;
+      margin-right: 6px;
+      border-radius: 8px;
+      color: white;
+      background: var(--blue-800);
+      font-size: .8rem;
+    }
 
-body.avaliacao textarea:focus{
-  border-color:#9cc3ff;
-  box-shadow:var(--a-ring);
-}
+    .field-help {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
 
-body.avaliacao button{
-  margin-top:18px;
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:14px;
-  background:linear-gradient(180deg, var(--a-blue-2), var(--a-blue-1));
-  color:white;
-  font-weight:1000;
-  font-size:15px;
-  cursor:pointer;
-  box-shadow:0 16px 34px rgba(15,91,211,.22);
-  transition:transform .14s ease, box-shadow .14s ease, filter .14s ease;
-  position:relative;
-  z-index:1;
-}
+    .text-input {
+      display: block;
+      width: 100%;
+      min-height: 50px;
+      padding: 13px 14px;
+      border: 1px solid #cbd7e7;
+      border-radius: 12px;
+      background: #fbfdff;
+      color: var(--ink);
+      font: inherit;
+    }
 
-body.avaliacao button:hover{
-  transform:translateY(-1px);
-  box-shadow:0 20px 44px rgba(15,91,211,.28);
-  filter:brightness(1.02);
-}
+    .text-input:focus {
+      outline: none;
+      border-color: var(--blue-600);
+      box-shadow: 0 0 0 4px rgba(15,91,211,.12);
+    }
 
-body.avaliacao button:active{
-  transform:translateY(0px);
-}
+    .choices {
+      display: grid;
+      gap: 9px;
+    }
 
-body.avaliacao .obs{
-  font-size:12px;
-  margin-top:12px;
-  color:var(--a-muted);
-  position:relative;
-  z-index:1;
-}
+    .choice {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 12px 13px;
+      min-height: 48px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      background: white;
+      transition: background .15s ease, border-color .15s ease;
+    }
 
-body.avaliacao .toast{
-  margin-top:14px;
-  display:none;
-  padding:12px 12px;
-  border-radius:14px;
-  border:1px solid rgba(15,23,42,.10);
-  background:rgba(255,255,255,.85);
-  box-shadow:var(--a-soft);
-  color:#0b2b63;
-  line-height:1.4;
-  position:relative;
-  z-index:1;
-}
+    .choice:hover {
+      background: #f7faff;
+      border-color: #9cbbe8;
+    }
 
-@media (max-width: 720px){
-  body.avaliacao nav{
-    justify-content:flex-start;
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-    scroll-snap-type:x mandatory;
-  }
+    .choice:has(input:checked) {
+      background: var(--blue-100);
+      border-color: #8bb4f0;
+    }
 
-  body.avaliacao nav::-webkit-scrollbar{ display:none; }
+    .choice input {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      accent-color: var(--blue-600);
+      flex: 0 0 auto;
+    }
 
-  body.avaliacao nav a{
-    flex:0 0 auto;
-    scroll-snap-align:start;
-  }
-}
+    .stars {
+      color: #f4b400;
+      font-size: 1.35rem;
+      letter-spacing: .06em;
+      line-height: 1;
+    }
 
-@media (max-width: 480px){
-  body.avaliacao .intro,
-  body.avaliacao .card{
-    padding:18px;
-  }
-}
+    .choice-text {
+      color: var(--ink);
+      font-weight: 650;
+    }
 
-@media (prefers-reduced-motion: reduce){
-  *{ transition:none !important; animation:none !important; }
-}
-</style>
+    .required {
+      color: #b42318;
+    }
+
+    .submit-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 9px;
+      width: 100%;
+      min-height: 54px;
+      margin-top: 20px;
+      border: 0;
+      border-radius: 14px;
+      background: linear-gradient(
+        135deg, var(--blue-600), var(--blue-800)
+      );
+      color: white;
+      font: inherit;
+      font-weight: 850;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 12px 25px rgba(15,91,211,.22);
+      transition: transform .15s ease, opacity .15s ease;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .submit-btn:disabled {
+      opacity: .65;
+      cursor: wait;
+      transform: none;
+    }
+
+    .privacy-note {
+      margin: 13px 2px 0;
+      color: var(--muted);
+      font-size: .82rem;
+      text-align: center;
+    }
+
+    .status {
+      display: none;
+      margin-top: 16px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      line-height: 1.5;
+      background: #eff6ff;
+      color: #17458a;
+      border: 1px solid #c9ddff;
+    }
+
+    .status.visible {
+      display: block;
+    }
+
+    footer {
+      padding: 0 14px 30px;
+      text-align: center;
+      color: var(--muted);
+      font-size: .83rem;
+    }
+
+    footer strong {
+      color: var(--blue-900);
+    }
+
+    @media (max-width: 520px) {
+      .hero {
+        padding: 35px 16px 30px;
+      }
+
+      nav {
+        justify-content: flex-start;
+      }
+
+      main {
+        width: min(100% - 20px, 760px);
+        margin-top: 18px;
+      }
+
+      .intro {
+        padding: 19px;
+      }
+
+      fieldset {
+        padding: 15px 13px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
 </head>
 
-<body class="avaliacao">
-
-<header>
-  <h1>Avaliação do Site e do Produto</h1>
-  <p>Sua opinião é fundamental para a melhoria contínua do projeto</p>
-</header>
-
-<nav>
-  <a href="index.html">Início</a>
-  <a href="nosso-produto.html">Nosso Produto</a>
-  <a href="tratamento.html">Tratamento</a>
-  <a href="impacto-economico.html">Impacto Econômico</a>
-  <a href="guia-simples.html">Guia Simples</a>
-  <a href="avaliacao.html" aria-current="page">Avaliação</a>
-</nav>
-
-<main>
-  <section class="intro">
-    <h2>Ajude a aprimorar a experiência do usuário</h2>
-    <p>
-      Sua avaliação contribui para melhorar o conteúdo, a navegação e a apresentação do site.
-      O feedback é importante para fortalecer a utilidade do projeto para estudantes, profissionais
-      e cuidadores.
-    </p>
-  </section>
-
-  <div class="card" id="cardAvaliacao">
-    <div class="section-title">Formulário de avaliação</div>
-    <p class="muted">
-      Selecione sua nota e, se desejar, registre um comentário ou sugestão.
-    </p>
-
-    <form id="formAvaliacao"
-      action="https://docs.google.com/forms/d/e/1FAIpQLSfXAKuJVOlM61B3tOnuUcdMldM70VHZzGrRpcMOQwswzu4rLg/formResponse"
-      method="POST"
-      target="_blank">
-
-      <label>Como você avalia nosso site?</label>
-
-      <div class="estrelas" aria-label="Avaliação por estrelas">
-        <input type="radio" id="s1" name="entry.1369984255" value="⭐" required>
-        <label for="s1" title="1 estrela" aria-label="1 estrela">⭐</label>
-
-        <input type="radio" id="s2" name="entry.1369984255" value="⭐⭐">
-        <label for="s2" title="2 estrelas" aria-label="2 estrelas">⭐⭐</label>
-
-        <input type="radio" id="s3" name="entry.1369984255" value="⭐⭐⭐">
-        <label for="s3" title="3 estrelas" aria-label="3 estrelas">⭐⭐⭐</label>
-
-        <input type="radio" id="s4" name="entry.1369984255" value="⭐⭐⭐⭐">
-        <label for="s4" title="4 estrelas" aria-label="4 estrelas">⭐⭐⭐⭐</label>
-
-        <input type="radio" id="s5" name="entry.1369984255" value="⭐⭐⭐⭐⭐">
-        <label for="s5" title="5 estrelas" aria-label="5 estrelas">⭐⭐⭐⭐⭐</label>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="brand">
+        <span class="brand-mark">L</span>
+        LPP GUARD
       </div>
 
-      <label>Comentário ou sugestão</label>
-      <textarea name="entry.1896760324" placeholder="Escreva aqui sua opinião, sugestão ou ponto de melhoria..."></textarea>
+      <h1>Avaliação do Site e do Produto</h1>
 
-      <button type="submit">Enviar avaliação</button>
+      <p>
+        Sua opinião ajuda a aprimorar a experiência,
+        a utilidade e a apresentação do nosso projeto.
+      </p>
+    </div>
+  </header>
 
-      <div class="obs">
-        * As respostas serão enviadas automaticamente para o Google Forms vinculado ao projeto.
-      </div>
-
-      <div class="toast" id="toast">
-        ✅ Obrigado! Sua avaliação será enviada em uma nova aba.
-      </div>
-    </form>
+  <div class="nav-wrap">
+    <nav aria-label="Navegação principal">
+      <a href="index.html">Início</a>
+      <a href="nosso-produto.html">Nosso Produto</a>
+      <a href="tratamento.html">Tratamento</a>
+      <a href="impacto-economico.html">Impacto Econômico</a>
+      <a href="guia-simples.html">Guia Simples</a>
+      <a href="avaliacao.html" aria-current="page">Avaliação</a>
+    </nav>
   </div>
-</main>
 
-<script>
-(function(){
-  const card = document.getElementById('cardAvaliacao');
-  const canHover = window.matchMedia('(hover:hover)').matches;
+  <main>
+    <section class="intro">
+      <p class="eyebrow">Sua participação importa</p>
+      <h2>Ajude a melhorar o LPP GUARD</h2>
+      <p>
+        Responda às três perguntas abaixo. Leva apenas alguns
+        instantes e seu retorno contribui para a evolução do site
+        e do produto.
+      </p>
+    </section>
 
-  function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+    <section class="form-card" aria-labelledby="form-title">
+      <div class="form-heading">
+        <div class="heading-icon" aria-hidden="true">✦</div>
+        <div>
+          <h2 id="form-title">Formulário de avaliação</h2>
+          <p>
+            Preencha os campos e envie sua resposta ao formulário
+            do projeto.
+          </p>
+        </div>
+      </div>
 
-  if(canHover && card){
-    card.addEventListener('mousemove', (e) => {
-      const r = card.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width;
-      const y = (e.clientY - r.top) / r.height;
+      <form
+        id="formAvaliacao"
+        action="https://docs.google.com/forms/d/e/1FAIpQLSeK8McHX_F83hPlv9l_K-ePUQNqXWOz1iBK-TpXnYa5YV722A/formResponse"
+        method="POST"
+        target="googleFormsTarget"
+      >
+        <fieldset>
+          <legend>
+            <span class="question-number">1</span>
+            O que você achou sobre o site e o nosso produto?
+            <span class="required">*</span>
+          </legend>
 
-      const rx = clamp((0.5 - y) * 5, -5, 5);
-      const ry = clamp((x - 0.5) * 5, -5, 5);
+          <p class="field-help">Conte brevemente sua opinião.</p>
 
-      card.style.transform = `translateY(-3px) rotateX(${rx}deg) rotateY(${ry}deg)`;
-    });
+          <input
+            class="text-input"
+            type="text"
+            name="entry.263793015"
+            maxlength="500"
+            placeholder="Escreva sua opinião aqui..."
+            autocomplete="off"
+            required
+          >
+        </fieldset>
 
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = '';
-    });
-  }
+        <fieldset>
+          <legend>
+            <span class="question-number">2</span>
+            Como você avalia tudo?
+            <span class="required">*</span>
+          </legend>
 
-  const form = document.getElementById('formAvaliacao');
-  const toast = document.getElementById('toast');
+          <p class="field-help">
+            Selecione uma nota de 1 a 5 estrelas.
+          </p>
 
-  if(form && toast){
-    form.addEventListener('submit', () => {
-      toast.style.display = 'block';
-      toast.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    });
-  }
-})();
-</script>
+          <div class="choices">
+            <label class="choice">
+              <input type="radio" name="entry.591963312"
+                value="⭐" required>
+              <span class="stars">★</span>
+              <span class="choice-text">1 estrela</span>
+            </label>
 
+            <label class="choice">
+              <input type="radio" name="entry.591963312"
+                value="⭐⭐">
+              <span class="stars">★★</span>
+              <span class="choice-text">2 estrelas</span>
+            </label>
+
+            <label class="choice">
+              <input type="radio" name="entry.591963312"
+                value="⭐⭐⭐">
+              <span class="stars">★★★</span>
+              <span class="choice-text">3 estrelas</span>
+            </label>
+
+            <label class="choice">
+              <input type="radio" name="entry.591963312"
+                value="⭐⭐⭐⭐">
+              <span class="stars">★★★★</span>
+              <span class="choice-text">4 estrelas</span>
+            </label>
+
+            <label class="choice">
+              <input type="radio" name="entry.591963312"
+                value="⭐⭐⭐⭐⭐">
+              <span class="stars">★★★★★</span>
+              <span class="choice-text">5 estrelas</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>
+            <span class="question-number">3</span>
+            Você conhecia lesão por pressão?
+            <span class="required">*</span>
+          </legend>
+
+          <div class="choices">
+            <label class="choice">
+              <input type="radio" name="entry.1188813564"
+                value="Sim" required>
+              <span class="choice-text">Sim</span>
+            </label>
+
+            <label class="choice">
+              <input type="radio" name="entry.1188813564"
+                value="Não">
+              <span class="choice-text">Não</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <button class="submit-btn" id="submitBtn" type="submit">
+          <span>Enviar avaliação</span>
+          <span aria-hidden="true">→</span>
+        </button>
+
+        <p class="privacy-note">
+          Ao enviar, suas respostas serão encaminhadas ao Google Forms.
+        </p>
+
+        <div class="status" id="status" role="status"
+          aria-live="polite"></div>
+      </form>
+    </section>
+  </main>
+
+  <iframe
+    name="googleFormsTarget"
+    id="googleFormsTarget"
+    title="Envio do formulário"
+    hidden
+  ></iframe>
+
+  <footer>
+    <strong>LPP GUARD</strong> · Projeto de prevenção e
+    conscientização sobre lesão por pressão.
+  </footer>
+
+  <script>
+    (() => {
+      const form = document.getElementById("formAvaliacao");
+      const status = document.getElementById("status");
+      const button = document.getElementById("submitBtn");
+      const target = document.getElementById("googleFormsTarget");
+
+      let pending = false;
+
+      form.addEventListener("submit", () => {
+        pending = true;
+        button.disabled = true;
+        button.querySelector("span").textContent = "Enviando...";
+
+        status.className = "status visible";
+        status.textContent =
+          "Sua resposta está sendo encaminhada. Aguarde alguns segundos.";
+      });
+
+      target.addEventListener("load", () => {
+        if (!pending) return;
+
+        pending = false;
+        button.disabled = false;
+        button.querySelector("span").textContent = "Enviar avaliação";
+
+        status.className = "status visible";
+        status.textContent =
+          "O navegador terminou o envio. Para confirmar que a resposta foi registrada, confira a aba Respostas do Google Forms.";
+
+        status.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest"
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
